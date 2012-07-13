@@ -1,0 +1,35 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at http://mozilla.org/MPL/2.0/.
+
+DEPTH		= ../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+DIRS = test
+
+LIBICAL_MODULES = designData.js \
+                  ical.jsm \
+                  icalxpcom.jsm \
+                  icalcomponent.js \
+				  icalhelpers.js \
+                  icalduration.js \
+                  icalparser.js \
+                  icalperiod.js \
+                  icalproperty.js \
+                  icalrecur.js \
+                  icaltime.js \
+                  icaltimezone.js \
+				  icalvalue.js \
+                  $(NULL)
+
+libs:: $(LIBICAL_MODULES)
+ifndef NO_DIST_INSTALL
+	$(NSINSTALL) -D $(FINAL_TARGET)/modules/libical
+	$(INSTALL) $(IFLAGS1) $^ $(FINAL_TARGET)/modules/libical
+endif
+
+include $(topsrcdir)/config/rules.mk
