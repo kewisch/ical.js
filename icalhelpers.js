@@ -19,6 +19,20 @@ ICAL.helpers = {
         return { name: aName, type: "COMPONENT", value: [] };
     },
 
+    dumpn: function() {
+      if (typeof(console) !== 'undefined' && 'log' in console) {
+          ICAL.helpers.dumpn = function consoleDumpn(input) {
+              return console.log(input);
+          }
+      } else {
+          ICAL.helpers.dumpn = function geckoDumpn(input) {
+              dump(input + '\n');
+          }
+      }
+
+      return ICAL.helpers.dumpn(arguments[0]);
+    },
+
     mixin: function (obj, data) {
         if (data) {
             for (var k in data) {

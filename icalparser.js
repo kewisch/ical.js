@@ -58,10 +58,10 @@ var ICAL = ICAL || {};
             try {
             return new ICAL.icalcomponent(state.currentData);
             } catch (e) {
-                dumpn(e);
-                dumpn(e.stack);
-                dumpn(e.lineNumber);
-                dumpn(e.filename);
+                ICAL.helpers.dumpn(e);
+                ICAL.helpers.dumpn(e.stack);
+                ICAL.helpers.dumpn(e.lineNumber);
+                ICAL.helpers.dumpn(e.filename);
                 return null;
             }
         } else {
@@ -238,10 +238,10 @@ var ICAL = ICAL || {};
                 }
                 break;
             default:
-                dumpn("parse " + aLineData.toSource());
+                ICAL.helpers.dumpn("parse " + aLineData.toSource());
                 parser.detectParameterType(aLineData);
                 parser.detectValueType(aLineData);
-                dumpn("parse " + aLineData.toSource());
+                ICAL.helpers.dumpn("parse " + aLineData.toSource());
                 aState.currentData.value.push(aLineData);
                 break;
         }
@@ -273,7 +273,7 @@ var ICAL = ICAL || {};
         }
 
         if ("parameters" in aLineData && "VALUE" in aLineData.parameters) {
-            dumpn("VAAAA: " + aLineData.parameters.VALUE.toSource());
+            ICAL.helpers.dumpn("VAAAA: " + aLineData.parameters.VALUE.toSource());
             valueType = aLineData.parameters.VALUE.value.toUpperCase();
         }
 
@@ -326,7 +326,7 @@ var ICAL = ICAL || {};
         // validators don't really need the whole linedata
 
         if (!aValue.match) {
-            dumpn("MAAA: " + aValue + " ? " + aValue.toSource());
+            ICAL.helpers.dumpn("MAAA: " + aValue + " ? " + aValue.toSource());
         }
 
         if (valueData.matches) {
@@ -379,7 +379,7 @@ var ICAL = ICAL || {};
     };
 
     parser.stringifyProperty = function stringifyProperty(aLineData) {
-        dumpn("Stringify: " + aLineData.toSource());
+        ICAL.helpers.dumpn("Stringify: " + aLineData.toSource());
         var str = aLineData.name;
         if (aLineData.parameters) {
             for (var key in aLineData.parameters) {

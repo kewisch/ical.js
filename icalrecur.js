@@ -62,13 +62,13 @@ var ICAL = ICAL || {};
         },
 
         getNextOccurrence: function getNextOccurrence(aStartTime, aRecurrenceId) {
-            dumpn("GNO: " + aRecurrenceId + " / " + aStartTime);
+            ICAL.helpers.dumpn("GNO: " + aRecurrenceId + " / " + aStartTime);
             var iter = this.iterator(aStartTime);
             var next, cdt;
 
             do {
                 next = iter.next();
-                dumpn("Checking " + next + " <= " + aRecurrenceId);
+                ICAL.helpers.dumpn("Checking " + next + " <= " + aRecurrenceId);
             } while (next && next.compare(aRecurrenceId) <= 0);
 
             if (next && aRecurrenceId.zone) {
@@ -141,8 +141,8 @@ var ICAL = ICAL || {};
             };
             return ICAL.icalproperty.fromData(valueData);
             } catch (e) {
-                dumpn("EICALPROP: " + this.toString() + "//"  + e);
-                dumpn(e.stack);
+                ICAL.helpers.dumpn("EICALPROP: " + this.toString() + "//"  + e);
+                ICAL.helpers.dumpn(e.stack);
             }
         },
         fromIcalProperty: function fromIcalProperty(aProp) {

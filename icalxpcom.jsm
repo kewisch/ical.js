@@ -111,25 +111,25 @@ function unwrapValue(val) {
     }
 }
 
-function dumpn(x) dump(x + "\n");
+function ICAL.helpers.dumpn(x) dump(x + "\n");
 
 function forwardInnerFunc(proto, name, innername, unwrapIndices) {
-    dumpn("Defining " + name + " => " + innername + " unwrap " + unwrapIndices);
+    ICAL.helpers.dumpn("Defining " + name + " => " + innername + " unwrap " + unwrapIndices);
     proto[name] = function() {
         var newArgs = arguments;
         if (unwrapIndices) {
-            dumpn("Unwrapping " + name);
+            ICAL.helpers.dumpn("Unwrapping " + name);
             newArgs = Array.slice(arguments);
             for each (let index in unwrapIndices) {
-                dumpn("Unwrapping " + newArgs[index]);
+                ICAL.helpers.dumpn("Unwrapping " + newArgs[index]);
                 if (newArgs[index] && "wrappedJSObject" in newArgs[index]) {
-                    dumpn("  to  " + newArgs[index].wrappedJSObject.mInner +
+                    ICAL.helpers.dumpn("  to  " + newArgs[index].wrappedJSObject.mInner +
                            " what about " + newArgs[index].wrappedJSObject);
                     newArgs[index] = newArgs[index].wrappedJSObject.mInner;
                 }
             }
         }
-        dumpn("Forwarding " + name + " to " + (innername || name));
+        ICAL.helpers.dumpn("Forwarding " + name + " to " + (innername || name));
         return this.mInner[innername || name].apply(this.mInner, arguments);
     };
 }
