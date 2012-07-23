@@ -17,13 +17,13 @@ ICAL.helpers = {
   initComponentData: function initComponentData(aName) {
     return {
       name: aName,
-      type: "COMPONENT",
+      type: 'COMPONENT',
       value: []
     };
   },
 
-  dumpn: function () {
-    if(typeof (console) !== 'undefined' && 'log' in console) {
+  dumpn: function() {
+    if (typeof (console) !== 'undefined' && 'log' in console) {
       ICAL.helpers.dumpn = function consoleDumpn(input) {
         return console.log(input);
       }
@@ -36,9 +36,9 @@ ICAL.helpers = {
     return ICAL.helpers.dumpn(arguments[0]);
   },
 
-  mixin: function (obj, data) {
-    if(data) {
-      for(var k in data) {
+  mixin: function(obj, data) {
+    if (data) {
+      for (var k in data) {
         obj[k] = data[k];
       }
     }
@@ -52,15 +52,15 @@ ICAL.helpers = {
 
     // then remove the CRLF and the whitespace to unsplit the line
     var moreLines = true;
-    var line = "";
+    var line = '';
 
-    while(moreLines) {
+    while (moreLines) {
       moreLines = false;
       var pos = aState.buffer.search(/\r?\n/);
-      if(pos > -1) {
-        var len = (aState.buffer[pos] == "\r" ? 2 : 1);
-        var nextChar = aState.buffer.substr(pos + len, 1)
-        if(nextChar.match(/^[ \t]$/)) {
+      if (pos > -1) {
+        var len = (aState.buffer[pos] == '\r' ? 2 : 1);
+        var nextChar = aState.buffer.substr(pos + len, 1);
+        if (nextChar.match(/^[ \t]$/)) {
           moreLines = true;
           line += aState.buffer.substr(0, pos);
           aState.buffer = aState.buffer.substr(pos + len + 1);
@@ -71,38 +71,38 @@ ICAL.helpers = {
         }
       } else {
         line += aState.buffer;
-        aState.buffer = "";
+        aState.buffer = '';
       }
     }
     return line;
   },
 
   foldline: function foldline(aLine) {
-    var result = "";
-    var line = aLine || "";
+    var result = '';
+    var line = aLine || '';
 
-    while(line.length) {
-      result += ICAL.newLineChar + " " + line.substr(0, ICAL.foldLength);
+    while (line.length) {
+      result += ICAL.newLineChar + ' ' + line.substr(0, ICAL.foldLength);
       line = line.substr(ICAL.foldLength);
     }
     return result.substr(ICAL.newLineChar.length + 1);
   },
 
-  ensureKeyExists: function (obj, key, defvalue) {
-    if(!(key in obj)) {
+  ensureKeyExists: function(obj, key, defvalue) {
+    if (!(key in obj)) {
       obj[key] = defvalue;
     }
   },
 
-  hasKey: function (obj, key) {
-    return(obj && key in obj && obj[key]);
+  hasKey: function(obj, key) {
+    return (obj && key in obj && obj[key]);
   },
 
   pad2: function pad(data) {
-    return("00" + data).substr(-2);
+    return ('00' + data).substr(-2);
   },
 
   trunc: function trunc(number) {
-    return(number < 0 ? Math.ceil(number) : Math.floor(number));
+    return (number < 0 ? Math.ceil(number) : Math.floor(number));
   }
 };

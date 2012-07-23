@@ -1,9 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */'use strict';
 
 var ICAL = ICAL || {};
-(function () {
+(function() {
   ICAL.icaltime = function icaltime(data) {
     this.wrappedJSObject = this;
     this.fromData(data);
@@ -23,8 +23,8 @@ var ICAL = ICAL || {};
     zone: null,
 
     auto_normalize: false,
-    icalclass: "icaltime",
-    icaltype: "DATE-TIME",
+    icalclass: 'icaltime',
+    icaltype: 'DATE-TIME',
 
     clone: function icaltime_clone() {
       return new ICAL.icaltime(this);
@@ -35,7 +35,7 @@ var ICAL = ICAL || {};
       this.zone = ICAL.icaltimezone.utc_timezone;
     },
 
-    resetTo: function icaltime_resetTo(year, month, day, hour, minute, second, timezone) {
+    resetTo: function(year, month, day, hour, minute, second, timezone) {
       this.fromData({
         year: year,
         month: month,
@@ -50,20 +50,20 @@ var ICAL = ICAL || {};
     fromString: function icaltime_fromString(str) {
       var data;
       try {
-        data = ICAL.icalparser.parseValue(str, "DATE");
+        data = ICAL.icalparser.parseValue(str, 'DATE');
         data.isDate = true;
-      } catch(e) {
-        data = ICAL.icalparser.parseValue(str, "DATE-TIME");
+      } catch (e) {
+        data = ICAL.icalparser.parseValue(str, 'DATE-TIME');
         data.isDate = false;
       }
       return this.fromData(data);
     },
 
     fromJSDate: function icaltime_fromJSDate(aDate, useUTC) {
-      if(!aDate) {
+      if (!aDate) {
         this.reset();
       } else {
-        if(useUTC) {
+        if (useUTC) {
           this.zone = ICAL.icaltimzone.utc_timezone;
           this.year = aDate.getUTCFullYear();
           this.month = aDate.getUTCMonth() + 1;
@@ -97,32 +97,32 @@ var ICAL = ICAL || {};
         minute: 0,
         second: 0
       };
-      for(var key in propsToCopy) {
-        if(aData && key in aData) {
+      for (var key in propsToCopy) {
+        if (aData && key in aData) {
           this[key] = aData[key];
         } else {
           this[key] = propsToCopy[key];
         }
       }
-      if(aData && !("isDate" in aData)) {
-        this.isDate = !("hour" in aData);
-      } else if(aData && ("isDate" in aData)) {
+      if (aData && !('isDate' in aData)) {
+        this.isDate = !('hour' in aData);
+      } else if (aData && ('isDate' in aData)) {
         this.isDate = aData.isDate;
       }
 
-      if(aData && "timezone" in aData && aData.timezone == "Z") {
+      if (aData && 'timezone' in aData && aData.timezone == 'Z') {
         this.zone = ICAL.icaltimezone.utc_timezone;
       }
-      if(aData && "zone" in aData) {
+      if (aData && 'zone' in aData) {
         this.zone = aData.zone;
       }
 
-      if(!this.zone) {
+      if (!this.zone) {
         this.zone = ICAL.icaltimezone.local_timezone;
       }
 
       this.auto_normalize = old_auto_normalize;
-      if(this.auto_normalize) {
+      if (this.auto_normalize) {
         this.normalize();
       }
       return this;
@@ -134,8 +134,10 @@ var ICAL = ICAL || {};
       var m = this.month + (this.month < 3 ? 12 : 0);
       var Y = this.year - (this.month < 3 ? 1 : 0);
 
-      var h = (q + Y + ICAL.helpers.trunc(((m + 1) * 26) / 10) + ICAL.helpers.trunc(Y / 4));
-      if(true /* gregorian */ ) {
+      var h = (q + Y + ICAL.helpers.trunc(((m + 1) * 26) / 10) +
+               ICAL.helpers.trunc(Y / 4));
+
+      if (true /* gregorian */) {
         h += ICAL.helpers.trunc(Y / 100) * 6 + ICAL.helpers.trunc(Y / 400);
       } else {
         h += 5;
@@ -148,7 +150,10 @@ var ICAL = ICAL || {};
 
     day_of_year: function icaltime_day_of_year() {
       var is_leap = (ICAL.icaltime.is_leap_year(this.year) ? 1 : 0);
-      return ICAL.icaltime._days_in_year_passed_month[is_leap][this.month - 1] + this.day;
+      var daysInMonth = ICAL.icaltime._days_in_year_passed_month[is_leap];
+
+
+      return daysInMonth[this.month - 1] + this.day;
     },
 
     start_of_week: function start_of_week() {
@@ -208,7 +213,7 @@ var ICAL = ICAL || {};
     start_doy_week: function start_doy_week(aFirstDayOfWeek) {
       var firstDow = aFirstDayOfWeek || ICAL.icaltime.SUNDAY;
       var delta = this.day_of_week() - firstDow;
-      if(delta < 0) delta += 7;
+      if (delta < 0) delta += 7;
       return this.day_of_year() - delta;
     },
 
@@ -219,17 +224,17 @@ var ICAL = ICAL || {};
 
       var otherday = this.clone();
 
-      if(pos >= 0) {
+      if (pos >= 0) {
         otherday.day = 1;
         var start_dow = otherday.day_of_week();
 
-        if(pos != 0) {
+        if (pos != 0) {
           pos--;
         }
 
         weekday = aDayOfWeek - start_dow + 1;
 
-        if(weekday <= 0) {
+        if (weekday <= 0) {
           weekday += 7;
         }
       } else {
@@ -240,7 +245,7 @@ var ICAL = ICAL || {};
 
         weekday = (end_dow - dow);
 
-        if(weekday < 0) {
+        if (weekday < 0) {
           weekday += 7;
         }
 
@@ -253,7 +258,8 @@ var ICAL = ICAL || {};
     },
 
     week_number: function week_number(aWeekStart) {
-      // This function courtesty of Julian Bucknall, published under the MIT license
+      // This function courtesty of Julian Bucknall,
+      // published under the MIT license
       // http://www.boyet.com/articles/publishedarticles/calculatingtheisoweeknumb.html
       var doy = this.day_of_year();
       var dow = this.day_of_week();
@@ -265,16 +271,16 @@ var ICAL = ICAL || {};
       var first_dow = dt.day_of_week();
       var isoyear = this.year;
 
-      if(dt.month == 12 && dt.day > 28) {
+      if (dt.month == 12 && dt.day > 28) {
         week1 = ICAL.icaltime.week_one_starts(isoyear + 1, aWeekStart);
-        if(dt.compare(week1) < 0) {
+        if (dt.compare(week1) < 0) {
           week1 = ICAL.icaltime.week_one_starts(isoyear, aWeekStart);
         } else {
           isoyear++;
         }
       } else {
         week1 = ICAL.icaltime.week_one_starts(isoyear, aWeekStart);
-        if(dt.compare(week1) < 0) {
+        if (dt.compare(week1) < 0) {
           week1 = ICAL.icaltime.week_one_starts(--isoyear, aWeekStart);
         }
       }
@@ -297,11 +303,13 @@ var ICAL = ICAL || {};
 
     subtractDate: function icaltime_subtract(aDate) {
       function leap_years_until(aYear) {
-        return ICAL.helpers.trunc(aYear / 4) - ICAL.helpers.trunc(aYear / 100) + ICAL.helpers.trunc(aYear / 400);
+        return ICAL.helpers.trunc(aYear / 4) -
+               ICAL.helpers.trunc(aYear / 100) +
+               ICAL.helpers.trunc(aYear / 400);
       }
 
       function leap_years_between(aStart, aEnd) {
-        if(aStart >= aEnd) {
+        if (aStart >= aEnd) {
           return 0;
         } else {
           return leap_years_until(aEnd - 1) - leap_years_until(aStart);
@@ -313,18 +321,20 @@ var ICAL = ICAL || {};
       dur.minutes = this.minute - aDate.minute;
       dur.hours = this.hour - aDate.hour;
 
-      if(this.year == aDate.year) {
+      if (this.year == aDate.year) {
         var this_doy = this.day_of_year();
         var that_doy = aDate.day_of_year();
         dur.days = this_doy - that_doy;
-      } else if(this.year < aDate.year) {
-        var days_left_thisyear = 365 + (ICAL.icaltime.is_leap_year(this.year) ? 1 : 0) - this.day_of_year();
+      } else if (this.year < aDate.year) {
+        var isLeap = ICAL.icaltime.is_leap_year(this.year);
+        var days_left_thisyear = 365 + (isLeap ? 1 : 0) - this.day_of_year();
 
         dur.days -= days_left_thisyear + aDate.day_of_year();
         dur.days -= leap_years_between(this.year + 1, aDate.year);
         dur.days -= 365 * (aDate.year - this.year - 1);
       } else {
-        var days_left_thatyear = 365 + (ICAL.icaltime.is_leap_year(aDate.year) ? 1 : 0) - aDate.day_of_year();
+        var isLeap = ICAL.icaltime.is_leap_year(aDate.year);
+        var days_left_thatyear = 365 + (isLeap ? 1 : 0) - aDate.day_of_year();
 
         dur.days += days_left_thatyear + this.day_of_year();
         dur.days += leap_years_between(aDate.year + 1, this.year);
@@ -339,14 +349,16 @@ var ICAL = ICAL || {};
         return ICAL.icaltime._cmp_attr(a, b, attr);
       }
 
-      if(!other) return 0;
+      if (!other) return 0;
 
-      if(this.isDate || other.isDate) {
+      if (this.isDate || other.isDate) {
         return this.compare_date_only_tz(other, this.zone);
       }
 
       var target_zone;
-      if(this.zone == ICAL.icaltimezone.local_timezone || other.zone == ICAL.icaltimezone.local_timezone) {
+      if (this.zone == ICAL.icaltimezone.local_timezone ||
+          other.zone == ICAL.icaltimezone.local_timezone) {
+
         target_zone = ICAL.icaltimezone.local_timezone;
       } else {
         target_zone = ICAL.icaltimezone.utc_timezone;
@@ -356,24 +368,24 @@ var ICAL = ICAL || {};
       var b = other.convert_to_zone(target_zone);
       var rc = 0;
 
-      if((rc = cmp("year")) != 0) return rc;
-      if((rc = cmp("month")) != 0) return rc;
-      if((rc = cmp("day")) != 0) return rc;
+      if ((rc = cmp('year')) != 0) return rc;
+      if ((rc = cmp('month')) != 0) return rc;
+      if ((rc = cmp('day')) != 0) return rc;
 
-      if(a.isDate && b.isDate) {
+      if (a.isDate && b.isDate) {
         // If both are dates, we are done
         return 0;
-      } else if(b.isDate) {
+      } else if (b.isDate) {
         // If b is a date, then a is greater
         return 1;
-      } else if(a.isDate) {
+      } else if (a.isDate) {
         // If a is a date, then b is greater
         return -1;
       }
 
-      if((rc = cmp("hour")) != 0) return rc;
-      if((rc = cmp("minute")) != 0) return rc;
-      if((rc = cmp("second")) != 0) return rc;
+      if ((rc = cmp('hour')) != 0) return rc;
+      if ((rc = cmp('minute')) != 0) return rc;
+      if ((rc = cmp('second')) != 0) return rc;
 
       // Now rc is 0 and the dates are equal
       return rc;
@@ -387,9 +399,9 @@ var ICAL = ICAL || {};
       var b = other.convert_to_zone(tz);
       var rc = 0;
 
-      if((rc = cmp("year")) != 0) return rc;
-      if((rc = cmp("month")) != 0) return rc;
-      if((rc = cmp("day")) != 0) return rc;
+      if ((rc = cmp('year')) != 0) return rc;
+      if ((rc = cmp('month')) != 0) return rc;
+      if ((rc = cmp('day')) != 0) return rc;
 
       return rc;
     },
@@ -398,8 +410,8 @@ var ICAL = ICAL || {};
       var copy = this.clone();
       var zone_equals = (this.zone.tzid == zone.tzid);
 
-      if(!this.isDate && !zone_equals) {
-        ICAL.icaltimezone.convert_time(copy, this.zone, zone)
+      if (!this.isDate && !zone_equals) {
+        ICAL.icaltimezone.convert_time(copy, this.zone, zone);
       }
 
       copy.zone = zone;
@@ -407,7 +419,9 @@ var ICAL = ICAL || {};
     },
 
     utc_offset: function utc_offset() {
-      if(this.zone == ICAL.icaltimezone.local_timezone || this.zone == ICAL.icaltimezone.utc_timezone) {
+      if (this.zone == ICAL.icaltimezone.local_timezone ||
+          this.zone == ICAL.icaltimezone.utc_timezone) {
+
         return 0;
       } else {
         return this.zone.utc_offset(this);
@@ -415,49 +429,63 @@ var ICAL = ICAL || {};
     },
 
     toString: function toString() {
-      return("0000" + this.year).substr(-4) + ("00" + this.month).substr(-2) + ("00" + this.day).substr(-2) + (this.isDate ? "" : "T" + ("00" + this.hour).substr(-2) + ("00" + this.minute).substr(-2) + ("00" + this.second).substr(-2) + (this.zone && this.zone.tzid == "UTC" ? "Z" : ""));
+      // Simplify this.
+      return ('0000' + this.year).substr(-4) +
+             ('00' + this.month).substr(-2) +
+             ('00' + this.day).substr(-2) +
+             (this.isDate ?
+                '' :
+                'T' + ('00' + this.hour).substr(-2) +
+                ('00' + this.minute).substr(-2) +
+                ('00' + this.second).substr(-2) +
+                (this.zone && this.zone.tzid == 'UTC' ? 'Z' : ''));
     },
 
     toJSDate: function toJSDate() {
-      if(this.zone == ICAL.icaltimezone.local_timezone) {
-        if(this.isDate) {
+      if (this.zone == ICAL.icaltimezone.local_timezone) {
+        if (this.isDate) {
           return new Date(this.year, this.month - 1, this.day);
         } else {
-          return new Date(this.year, this.month - 1, this.day, this.hour, this.minute, this.second, 0);
+          return new Date(
+            this.year, this.month - 1, this.day,
+            this.hour, this.minute, this.second, 0
+          );
         }
       } else {
         var utcDate = this.convert_to_zone(ICAL.icaltimezone.utc_timezone);
-        if(this.isDate) {
+        if (this.isDate) {
           return Date.UTC(this.year, this.month - 1, this.day);
         } else {
-          return Date.UTC(this.year, this.month - 1, this.day, this.hour, this.minute, this.second, 0);
+          return Date.UTC(
+            this.year, this.month - 1, this.day,
+            this.hour, this.minute, this.second, 0);
         }
       }
     },
 
     normalize: function icaltime_normalize() {
-      if(this.isDate) {
+      if (this.isDate) {
         this.hour = 0;
         this.minute = 0;
         this.second = 0;
       }
-      this.icaltype = (this.isDate ? "DATE" : "DATE-TIME");
+      this.icaltype = (this.isDate ? 'DATE' : 'DATE-TIME');
 
       this.adjust(0, 0, 0, 0);
       return this;
     },
 
-    adjust: function icaltime_adjust(aExtraDays, aExtraHours, aExtraMinutes, aExtraSeconds) {
+    adjust: function(aExtraDays, aExtraHours, aExtraMinutes, aExtraSeconds) {
       var second, minute, hour, day;
       var minutes_overflow, hours_overflow, days_overflow = 0,
         years_overflow = 0;
       var days_in_month;
 
-      if(!this.isDate) {
+      if (!this.isDate) {
         second = this.second + aExtraSeconds;
         this.second = second % 60;
         minutes_overflow = ICAL.helpers.trunc(second / 60);
-        if(this.second < 0) {
+        if (this.second < 0) {
           this.second += 60;
           minutes_overflow--;
         }
@@ -465,7 +493,7 @@ var ICAL = ICAL || {};
         minute = this.minute + aExtraMinutes + minutes_overflow;
         this.minute = minute % 60;
         hours_overflow = ICAL.helpers.trunc(minute / 60);
-        if(this.minute < 0) {
+        if (this.minute < 0) {
           this.minute += 60;
           hours_overflow--;
         }
@@ -473,17 +501,17 @@ var ICAL = ICAL || {};
         hour = this.hour + aExtraHours + hours_overflow;
         this.hour = hour % 24;
         days_overflow = ICAL.helpers.trunc(hour / 24);
-        if(this.hour < 0) {
+        if (this.hour < 0) {
           this.hour += 24;
           days_overflow--;
         }
       }
 
-      // Adjust month and year first, because we need to know what month the day is in
-      // before adjusting it.
-      if(this.month > 12) {
+      // Adjust month and year first, because we need to
+      // know what month the day is in before adjusting it.
+      if (this.month > 12) {
         years_overflow = ICAL.helpers.trunc((this.month - 1) / 12);
-      } else if(this.month < 1) {
+      } else if (this.month < 1) {
         years_overflow = ICAL.helpers.trunc(this.month / 12) - 1;
       }
 
@@ -492,15 +520,18 @@ var ICAL = ICAL || {};
 
       // Now take care of the days (and adjust month if needed)
       day = this.day + aExtraDays + days_overflow;
-      if(day > 0) {
-        for(;;) {
-          var days_in_month = ICAL.icaltime.days_in_month(this.month, this.year);
-          if(day <= days_in_month) {
+      if (day > 0) {
+        for (;;) {
+          var days_in_month = ICAL.icaltime.days_in_month(
+            this.month, this.year
+          );
+
+          if (day <= days_in_month) {
             break;
           }
 
           this.month++;
-          if(this.month > 12) {
+          if (this.month > 12) {
             this.year++;
             this.month = 1;
           }
@@ -508,8 +539,8 @@ var ICAL = ICAL || {};
           day -= days_in_month;
         }
       } else {
-        while(day <= 0) {
-          if(this.month == 1) {
+        while (day <= 0) {
+          if (this.month == 1) {
             this.year--;
             this.month = 12;
           } else {
@@ -543,12 +574,12 @@ var ICAL = ICAL || {};
       ICAL.icaltime.prototype[mattr] = ICAL.icaltime.prototype[attr];
 
       Object.defineProperty(ICAL.icaltime.prototype, attr, {
-        get: function () {
+        get: function() {
           return this[mattr];
         },
-        set: function (val) {
+        set: function(val) {
           this[mattr] = val;
-          if(this.auto_normalize) {
+          if (this.auto_normalize) {
             var old_normalize = this.auto_normalize;
             this.auto_normalize = false;
             this.normalize();
@@ -560,14 +591,14 @@ var ICAL = ICAL || {};
 
     }
 
-    if("defineProperty" in Object) {
-      addAutoNormalizeAttribute("year", "mYear");
-      addAutoNormalizeAttribute("month", "mMonth");
-      addAutoNormalizeAttribute("day", "mDay");
-      addAutoNormalizeAttribute("hour", "mHour");
-      addAutoNormalizeAttribute("minute", "mMinute");
-      addAutoNormalizeAttribute("second", "mSecond");
-      addAutoNormalizeAttribute("isDate", "mIsDate");
+    if ('defineProperty' in Object) {
+      addAutoNormalizeAttribute('year', 'mYear');
+      addAutoNormalizeAttribute('month', 'mMonth');
+      addAutoNormalizeAttribute('day', 'mDay');
+      addAutoNormalizeAttribute('hour', 'mHour');
+      addAutoNormalizeAttribute('minute', 'mMinute');
+      addAutoNormalizeAttribute('second', 'mSecond');
+      addAutoNormalizeAttribute('isDate', 'mIsDate');
 
       ICAL.icaltime.prototype.auto_normalize = true;
     }
@@ -578,11 +609,11 @@ var ICAL = ICAL || {};
 
     var days = 30;
 
-    if(month < 1 || month > 12) return days;
+    if (month < 1 || month > 12) return days;
 
     days = _days_in_month[month];
 
-    if(month == 2) {
+    if (month == 2) {
       days += ICAL.icaltime.is_leap_year(year);
     }
 
@@ -590,25 +621,25 @@ var ICAL = ICAL || {};
   };
 
   ICAL.icaltime.is_leap_year = function icaltime_is_leap_year(year) {
-    if(year <= 1752) {
-      return((year % 4) == 0);
+    if (year <= 1752) {
+      return ((year % 4) == 0);
     } else {
-      return(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
+      return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
     }
   };
 
-  ICAL.icaltime.from_day_of_year = function icaltime_from_day_of_year(aDayOfYear, aYear) {
+  ICAL.icaltime.from_day_of_year = function(aDayOfYear, aYear) {
     var year = aYear;
     var doy = aDayOfYear;
     var tt = new ICAL.icaltime();
     tt.auto_normalize = false;
     var is_leap = (ICAL.icaltime.is_leap_year(year) ? 1 : 0);
 
-    if(doy < 1) {
+    if (doy < 1) {
       year--;
       is_leap = (ICAL.icaltime.is_leap_year(year) ? 1 : 0);
       doy += ICAL.icaltime._days_in_year_passed_month[is_leap][12];
-    } else if(doy > ICAL.icaltime._days_in_year_passed_month[is_leap][12]) {
+    } else if (doy > ICAL.icaltime._days_in_year_passed_month[is_leap][12]) {
       is_leap = (ICAL.icaltime.is_leap_year(year) ? 1 : 0);
       doy -= ICAL.icaltime._days_in_year_passed_month[is_leap][12];
       year++;
@@ -617,8 +648,8 @@ var ICAL = ICAL || {};
     tt.year = year;
     tt.isDate = true;
 
-    for(var month = 11; month >= 0; month--) {
-      if(doy > ICAL.icaltime._days_in_year_passed_month[is_leap][month]) {
+    for (var month = 11; month >= 0; month--) {
+      if (doy > ICAL.icaltime._days_in_year_passed_month[is_leap][month]) {
         tt.month = month + 1;
         tt.day = doy - ICAL.icaltime._days_in_year_passed_month[is_leap][month];
         break;
@@ -669,12 +700,12 @@ var ICAL = ICAL || {};
     minute: 0,
     second: 0,
     isDate: false,
-    timezone: "Z"
+    timezone: 'Z'
   });
 
   ICAL.icaltime._cmp_attr = function _cmp_attr(a, b, attr) {
-    if(a[attr] > b[attr]) return 1;
-    if(a[attr] < b[attr]) return -1;
+    if (a[attr] > b[attr]) return 1;
+    if (a[attr] < b[attr]) return -1;
     return 0;
   };
 

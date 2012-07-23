@@ -1,9 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */'use strict';
 
 var ICAL = ICAL || {};
-(function () {
+(function() {
   ICAL.icaltimezone = function icaltimezone(data) {
     this.wrappedJSObject = this;
     this.fromData(data);
@@ -11,9 +11,9 @@ var ICAL = ICAL || {};
 
   ICAL.icaltimezone.prototype = {
 
-    tzid: "",
-    location: "",
-    tznames: "",
+    tzid: '',
+    location: '',
+    tznames: '',
 
     latitude: 0.0,
     longitude: 0.0,
@@ -24,12 +24,15 @@ var ICAL = ICAL || {};
     expand_start_year: 0,
 
     changes: null,
-    icalclass: "icaltimezone",
+    icalclass: 'icaltimezone',
 
     fromData: function fromData(aData) {
-      const propsToCopy = ["tzid", "location", "tznames", "latitude", "longitude"];
+      const propsToCopy = [
+        'tzid', 'location', 'tznames', 'latitude', 'longitude'
+      ];
+
       for each(var key in propsToCopy) {
-        if(aData && key in aData) {
+        if (aData && key in aData) {
           this[key] = aData[key];
         } else {
           this[key] = 0;
@@ -38,10 +41,10 @@ var ICAL = ICAL || {};
 
       this.expand_end_year = 0;
       this.expand_start_year = 0;
-      if(aData && "component" in aData) {
-        if(typeof aData.component == "string") {
+      if (aData && 'component' in aData) {
+        if (typeof aData.component == 'string') {
           this.component = this.componentFromString(aData.component);
-        } else if(aData.component.icalclass == "icalcomponent") {
+        } else if (aData.component.icalclass == 'icalcomponent') {
           this.component = aData.component.clone();
         } else {
           this.component = eval(aData.component.toSource());
@@ -58,13 +61,14 @@ var ICAL = ICAL || {};
     },
 
     utc_offset: function utc_offset(tt) {
-      if(this == ICAL.icaltimezone.utc_timezone || this == ICAL.icaltimezone.local_timezone) {
+      if (this == ICAL.icaltimezone.utc_timezone ||
+          this == ICAL.icaltimezone.local_timezone) {
         return 0;
       }
 
       this.ensure_coverage(tt.year);
 
-      if(!this.changes || this.changes.length == 0) {
+      if (!this.changes || this.changes.length == 0) {
         return 0;
       }
 
@@ -81,53 +85,61 @@ var ICAL = ICAL || {};
       var change_num_to_use = -1;
       var step = 1;
 
-      for(;;) {
+      for (;;) {
         var change = eval(this.changes[change_num].toSource()); // TODO clone
-        if(change.utc_offset < change.prev_utc_offset) {
-          ICAL.helpers.dumpn("Adjusting " + change.utc_offset);
+        if (change.utc_offset < change.prev_utc_offset) {
+          ICAL.helpers.dumpn('Adjusting ' + change.utc_offset);
           ICAL.icaltimezone.adjust_change(change, 0, 0, 0, change.utc_offset);
         } else {
-          ICAL.helpers.dumpn("Adjusting prev " + change.prev_utc_offset);
-          ICAL.icaltimezone.adjust_change(change, 0, 0, 0, change.prev_utc_offset);
+          ICAL.helpers.dumpn('Adjusting prev ' + change.prev_utc_offset);
+          ICAL.icaltimezone.adjust_change(
+            change, 0, 0, 0, change.prev_utc_offset
+          );
         }
 
         var cmp = ICAL.icaltimezone._compare_change_fn(tt_change, change);
-        ICAL.helpers.dumpn("Compare" + cmp + " / " + change.toSource());
+        ICAL.helpers.dumpn('Compare' + cmp + ' / ' + change.toSource());
 
-        if(cmp >= 0) {
+        if (cmp >= 0) {
           change_num_to_use = change_num;
         } else {
           step = -1;
         }
 
-        if(step == -1 && change_num_to_use != -1) {
+        if (step == -1 && change_num_to_use != -1) {
           break;
         }
 
         change_num += step;
 
-        if(change_num < 0) {
+        if (change_num < 0) {
           return 0;
         }
 
-        if(change_num >= this.changes.length) {
+        if (change_num >= this.changes.length) {
           break;
         }
       }
 
       var zone_change = this.changes[change_num_to_use];
-      var utc_offset_change = zone_change.utc_offset - zone_change.prev_utc_offset;
 
-      if(utc_offset_change < 0 && change_num_to_use > 0) {
+      var utc_offset_change = zone_change.utc_offset -
+                              zone_change.prev_utc_offset;
+
+      if (utc_offset_change < 0 && change_num_to_use > 0) {
         var tmp_change = eval(zone_change.toSource()); // TODO copy
-        ICAL.icaltimezone.adjust_change(tmp_change, 0, 0, 0, tmp_change.prev_utc_offset);
+        ICAL.icaltimezone.adjust_change(
+          tmp_change, 0, 0, 0, tmp_change.prev_utc_offset
+        );
 
-        if(ICAL.icaltimezone._compare_change_fn(tt_change, tmp_change) < 0) {
+        if (ICAL.icaltimezone._compare_change_fn(tt_change, tmp_change) < 0) {
           var prev_zone_change = this.changes[change_num_to_use - 1];
 
           var want_daylight = false; // TODO
 
-          if(zone_change.is_daylight != want_daylight && prev_zone_change.is_daylight == want_daylight) {
+          if (zone_change.is_daylight != want_daylight &&
+              prev_zone_change.is_daylight == want_daylight) {
+
             zone_change = prev_zone_change;
           }
         }
@@ -142,13 +154,13 @@ var ICAL = ICAL || {};
         middle = 0;
       var upper = this.changes.length;
 
-      while(lower < upper) {
+      while (lower < upper) {
         middle = ICAL.helpers.trunc(lower + upper / 2);
         var zone_change = this.changes[middle];
         var cmp = ICAL.icaltimezone._compare_change_fn(change, zone_change);
-        if(cmp == 0) {
+        if (cmp == 0) {
           break;
-        } else if(cmp > 0) {
+        } else if (cmp > 0) {
           upper = middle;
         } else {
           lower = middle;
@@ -159,30 +171,30 @@ var ICAL = ICAL || {};
     },
 
     ensure_coverage: function ensure_coverage(aYear) {
-      if(ICAL.icaltimezone._minimum_expansion_year == -1) {
+      if (ICAL.icaltimezone._minimum_expansion_year == -1) {
         var today = ICAL.icaltime.now();
         ICAL.icaltimezone._minimum_expansion_year = today.year;
       }
 
       var changes_end_year = aYear;
-      if(changes_end_year < ICAL.icaltimezone._minimum_expansion_year) {
+      if (changes_end_year < ICAL.icaltimezone._minimum_expansion_year) {
         changes_end_year = ICAL.icaltimezone._minimum_expansion_year;
       }
 
       changes_end_year += ICAL.icaltimezone.EXTRA_COVERAGE;
 
-      if(changes_end_year > ICAL.icaltimezone.MAX_YEAR) {
+      if (changes_end_year > ICAL.icaltimezone.MAX_YEAR) {
         changes_end_year = ICAL.icaltimezone.MAX_YEAR;
       }
 
-      if(!this.changes || this.expand_end_year < aYear) {
+      if (!this.changes || this.expand_end_year < aYear) {
         this.expand_changes(changes_end_year);
       }
     },
 
     expand_changes: function expand_changes(aYear) {
       var changes = [];
-      if(this.component) {
+      if (this.component) {
         // HACK checking for component only needed for floating tz, which
         // is not in core libical.
         for each(var comp in this.component.getAllSubcomponents()) {
@@ -197,11 +209,14 @@ var ICAL = ICAL || {};
     },
 
     expand_vtimezone: function expand_vtimezone(aComponent, aYear, changes) {
-      if(!aComponent.hasProperty("DTSTART") || !aComponent.hasProperty("TZOFFSETTO") || !aComponent.hasProperty("TZOFFSETFROM")) {
+      if (!aComponent.hasProperty('DTSTART') ||
+          !aComponent.hasProperty('TZOFFSETTO') ||
+          !aComponent.hasProperty('TZOFFSETFROM')) {
+
         return;
       }
 
-      var dtstart = aComponent.getFirstProperty("DTSTART").getFirstValue();
+      var dtstart = aComponent.getFirstProperty('DTSTART').getFirstValue();
 
       function convert_tzoffset(offset) {
         return offset.factor * (offset.hours * 3600 + offset.minutes * 60);
@@ -209,13 +224,19 @@ var ICAL = ICAL || {};
 
       function init_changes() {
         var changebase = {};
-        changebase.is_daylight = (aComponent.name == "DAYLIGHT");
-        changebase.utc_offset = convert_tzoffset(aComponent.getFirstProperty("TZOFFSETTO").data);
-        changebase.prev_utc_offset = convert_tzoffset(aComponent.getFirstProperty("TZOFFSETFROM").data);
+        changebase.is_daylight = (aComponent.name == 'DAYLIGHT');
+        changebase.utc_offset = convert_tzoffset(
+          aComponent.getFirstProperty('TZOFFSETTO').data
+        );
+
+        changebase.prev_utc_offset = convert_tzoffset(
+          aComponent.getFirstProperty('TZOFFSETFROM').data
+        );
         return changebase;
       }
 
-      if(!aComponent.hasProperty("RRULE") && !aComponent.hasProperty("RDATE")) {
+      if (!aComponent.hasProperty('RRULE') &&
+          !aComponent.hasProperty('RDATE')) {
         var change = init_changes();
         change.year = dtstart.year;
         change.month = dtstart.month;
@@ -224,16 +245,19 @@ var ICAL = ICAL || {};
         change.minute = dtstart.minute;
         change.second = dtstart.second;
 
-        ICAL.icaltimezone.adjust_change(change, 0, 0, 0, - change.prev_utc_offset);
+        ICAL.icaltimezone.adjust_change(
+          change, 0, 0, 0, - change.prev_utc_offset
+        );
+
         changes.push(change);
       } else {
-        for each(var rdate in aComponent.getAllProperties("RDATE")) {
+        for each(var rdate in aComponent.getAllProperties('RDATE')) {
           var change = init_changes();
           change.year = rdate.time.year;
           change.month = rdate.time.month;
           change.day = rdate.time.day;
 
-          if(rdate.time.isDate) {
+          if (rdate.time.isDate) {
             change.hour = dtstart.hour;
             change.minute = dtstart.minute;
             change.second = dtstart.second;
@@ -242,20 +266,22 @@ var ICAL = ICAL || {};
             change.minute = rdate.time.minute;
             change.second = rdate.time.second;
 
-            if(rdate.time.zone == ICAL.icaltimezone.utc_timezone) {
-              ICAL.icaltimezone.adjust_change(change, 0, 0, 0, - change.prev_utc_offset);
+            if (rdate.time.zone == ICAL.icaltimezone.utc_timezone) {
+              ICAL.icaltimezone.adjust_change(
+                change, 0, 0, 0, - change.prev_utc_offset
+              );
             }
           }
 
           changes.push(change);
         }
 
-        var rrule = aComponent.getFirstProperty("RRULE").getFirstValue();
+        var rrule = aComponent.getFirstProperty('RRULE').getFirstValue();
         // TODO multiple rrules?
 
         var change = init_changes();
 
-        if(rrule.until && rrule.until.zone == ICAL.icaltimezone.utc_timezone) {
+        if (rrule.until && rrule.until.zone == ICAL.icaltimezone.utc_timezone) {
           rrule.until.adjust(0, 0, 0, change.prev_utc_offset);
           rrule.until.zone = ICAL.icaltimezone.local_timezone;
         }
@@ -263,9 +289,9 @@ var ICAL = ICAL || {};
         var iterator = rrule.iterator(dtstart);
 
         var occ;
-        while((occ = iterator.next())) {
+        while ((occ = iterator.next())) {
           var change = init_changes();
-          if(occ.year > aYear || !occ) {
+          if (occ.year > aYear || !occ) {
             break;
           }
 
@@ -277,7 +303,9 @@ var ICAL = ICAL || {};
           change.second = occ.second;
           change.isDate = occ.isDate;
 
-          ICAL.icaltimezone.adjust_change(change, 0, 0, 0, - change.prev_utc_offset);
+          ICAL.icaltimezone.adjust_change(
+            change, 0, 0, 0, - change.prev_utc_offset
+          );
           changes.push(change);
         }
       }
@@ -286,35 +314,39 @@ var ICAL = ICAL || {};
     },
 
     toString: function toString() {
-      return(this.tznames ? this.tznames : this.tzid);
+      return (this.tznames ? this.tznames : this.tzid);
     }
 
   };
 
-  ICAL.icaltimezone._compare_change_fn = function icaltimezone_compare_change_fn(a, b) {
-    if(a.year < b.year) return -1;
-    else if(a.year > b.year) return 1;
+  ICAL.icaltimezone._compare_change_fn = function(a, b) {
+    if (a.year < b.year) return -1;
+    else if (a.year > b.year) return 1;
 
-    if(a.month < b.month) return -1;
-    else if(a.month > b.month) return 1;
+    if (a.month < b.month) return -1;
+    else if (a.month > b.month) return 1;
 
-    if(a.day < b.day) return -1;
-    else if(a.day > b.day) return 1;
+    if (a.day < b.day) return -1;
+    else if (a.day > b.day) return 1;
 
-    if(a.hour < b.hour) return -1;
-    else if(a.hour > b.hour) return 1;
+    if (a.hour < b.hour) return -1;
+    else if (a.hour > b.hour) return 1;
 
-    if(a.minute < b.minute) return -1;
-    else if(a.minute > b.minute) return 1;
+    if (a.minute < b.minute) return -1;
+    else if (a.minute > b.minute) return 1;
 
-    if(a.second < b.second) return -1;
-    else if(a.second > b.second) return 1;
+    if (a.second < b.second) return -1;
+    else if (a.second > b.second) return 1;
 
     return 0;
   };
 
-  ICAL.icaltimezone.convert_time = function icaltimezone_convert_time(tt, from_zone, to_zone) {
-    if(tt.isDate || from_zone.tzid == to_zone.tzid || from_zone == ICAL.icaltimezone.local_timezone || to_zone == ICAL.icaltimezone.local_timezone) {
+  ICAL.icaltimezone.convert_time = function(tt, from_zone, to_zone) {
+    if (tt.isDate ||
+        from_zone.tzid == to_zone.tzid ||
+        from_zone == ICAL.icaltimezone.local_timezone ||
+        to_zone == ICAL.icaltimezone.local_timezone) {
+
       tt.zone = to_zone;
       return tt;
     }
@@ -332,17 +364,22 @@ var ICAL = ICAL || {};
   };
 
   ICAL.icaltimezone.utc_timezone = ICAL.icaltimezone.fromData({
-    tzid: "UTC"
+    tzid: 'UTC'
   });
   ICAL.icaltimezone.local_timezone = ICAL.icaltimezone.fromData({
-    tzid: "floating"
+    tzid: 'floating'
   });
 
-  ICAL.icaltimezone.adjust_change = function icaltimezone_adjust_change(change, days, hours, minutes, seconds) {
-    return ICAL.icaltime.prototype.adjust.call(change, days, hours, minutes, seconds);
+  ICAL.icaltimezone.adjust_change = function(change, days, hours,
+                                             minutes, seconds) {
+
+    return ICAL.icaltime.prototype.adjust.call(
+      change, days, hours, minutes, seconds
+    );
   };
 
   ICAL.icaltimezone._minimum_expansion_year = -1;
-  ICAL.icaltimezone.MAX_YEAR = 2035; // TODO this is because of time_t, which we don't need. Still usefull?
+  // TODO this is because of time_t, which we don't need. Still usefull?
+  ICAL.icaltimezone.MAX_YEAR = 2035;
   ICAL.icaltimezone.EXTRA_COVERAGE = 5;
 })();
