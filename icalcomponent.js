@@ -185,12 +185,12 @@ var ICAL = ICAL || {};
             });
 
             var prop = ICAL.icalproperty.fromData(lineData);
-            dumpn("Adding property " + ucName + "=" + aValue);
+            ICAL.helpers.dumpn("Adding property " + ucName + "=" + aValue);
             return this.addProperty(prop);
         },
 
         addProperty: function addProperty(aProp) {
-            dumpn("Adding property " + aProp + "STK " + STACK());
+            ICAL.helpers.dumpn("Adding property " + aProp + "STK " + STACK());
             var prop = aProp;
             if (aProp.parent) {
                 prop = aProp.clone();
@@ -199,9 +199,9 @@ var ICAL = ICAL || {};
 
             ICAL.helpers.ensureKeyExists(this.properties, aProp.name, []);
             this.properties[aProp.name].push(aProp);
-            dumpn("DATA IS: " + this.data.toSource());
+            ICAL.helpers.dumpn("DATA IS: " + this.data.toSource());
             this.data.value.push(aProp);
-            dumpn("Adding property " + aProp);
+            ICAL.helpers.dumpn("Adding property " + aProp);
         },
 
         removeProperty: function removeProperty(aName) {

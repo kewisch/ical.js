@@ -4,7 +4,6 @@
 
 var loadScript;
 var ICAL = {};
-var dumpn;
 
 if (typeof window != "undefined" && navigator && document) {
     // Looks like we are on a webpage, use script tags to load them
@@ -18,7 +17,6 @@ if (typeof window != "undefined" && navigator && document) {
         head.appendChild(script);
     };
 
-    dumpn = console.log;
 } else if (typeof Components != "undefined") {
     // We are on a mozilla browser, hopefully privileged
     Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -38,15 +36,12 @@ if (typeof window != "undefined" && navigator && document) {
             throw e;
         }
     };
-
-    dumpn = function dumpn(str) dump(str + "\n");
 } else if (typeof importScripts != "undefined") {
     // We are on a mozilla browser, in a (Chrome)Worker
 
     loadScript = function loadScript(path, scope) {
         importScripts(path);
     }
-    dumpn = function dumpn(str) dump(str + "\n");
 }
 
 function WARN(aMessage) {
