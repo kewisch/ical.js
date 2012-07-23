@@ -1,6 +1,7 @@
 VENDOR_FILE=./ical.js
 LIB=../
 
+.PHONY: package
 package::
 	rm -f ical.js
 	cat $(LIB)/icalhelpers.js >> $(VENDOR_FILE);
