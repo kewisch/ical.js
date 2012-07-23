@@ -1,9 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */'use strict';
 
 var ICAL = ICAL || {};
-(function () {
+(function() {
   ICAL.icalvalue = function icalvalue(aData, aParent, aType) {
     this.parent = aParent;
     this.fromData(aData, aType);
@@ -19,8 +19,8 @@ var ICAL = ICAL || {};
       var type = (aType || (aData && aData.type) || this.icaltype);
       this.icaltype = type;
 
-      if(aData && type) {
-        aData.type = type
+      if (aData && type) {
+        aData.type = type;
       }
 
       this.data = aData;
@@ -35,7 +35,7 @@ var ICAL = ICAL || {};
       return this.toString();
     },
 
-    toString: function () {
+    toString: function() {
       return this.data.value.toString();
     }
   };
@@ -46,7 +46,7 @@ var ICAL = ICAL || {};
     return val;
   };
 
-  ICAL.icalvalue._createFromString = function icalvalue__createFromString(ctor) {
+  ICAL.icalvalue._createFromString = function(ctor) {
     ctor.fromString = function icalvalue_derived_fromString(aStr) {
       var val = new ctor();
       val.fromString(aStr);
@@ -55,14 +55,14 @@ var ICAL = ICAL || {};
   };
 
   ICAL.icalbinary = function icalbinary(aData, aParent) {
-    ICAL.icalvalue.call(this, aData, aParent, "BINARY");
+    ICAL.icalvalue.call(this, aData, aParent, 'BINARY');
   };
 
   ICAL.icalbinary.prototype = {
 
     __proto__: ICAL.icalvalue.prototype,
 
-    icaltype: "BINARY",
+    icaltype: 'BINARY',
 
     decodeValue: function decodeValue() {
       return this._b64_decode(this.data.value);
@@ -88,13 +88,15 @@ var ICAL = ICAL || {};
       //if (typeof this.window['atob'] == 'function') {
       //    return atob(data);
       //}
-      var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcde' +
+                'fghijklmnopqrstuvwxyz0123456789+/=';
+
       var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
         ac = 0,
-        enc = "",
+        enc = '',
         tmp_arr = [];
 
-      if(!data) {
+      if (!data) {
         return data;
       }
 
@@ -111,14 +113,17 @@ var ICAL = ICAL || {};
         h4 = bits & 0x3f;
 
         // use hexets to index into b64, and append result to encoded string
-        tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+        tmp_arr[ac++] = b64.charAt(h1) +
+                        b64.charAt(h2) +
+                        b64.charAt(h3) + b64.charAt(h4);
+
       } while (i < data.length);
 
       enc = tmp_arr.join('');
 
       var r = data.length % 3;
 
-      return(r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
+      return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
 
     },
 
@@ -140,13 +145,15 @@ var ICAL = ICAL || {};
       //if (typeof this.window['btoa'] == 'function') {
       //    return btoa(data);
       //}
-      var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZa' +
+                'bcdefghijklmnopqrstuvwxyz0123456789+/=';
+
       var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
         ac = 0,
-        dec = "",
+        dec = '',
         tmp_arr = [];
 
-      if(!data) {
+      if (!data) {
         return data;
       }
 
@@ -164,9 +171,9 @@ var ICAL = ICAL || {};
         o2 = bits >> 8 & 0xff;
         o3 = bits & 0xff;
 
-        if(h3 == 64) {
+        if (h3 == 64) {
           tmp_arr[ac++] = String.fromCharCode(o1);
-        } else if(h4 == 64) {
+        } else if (h4 == 64) {
           tmp_arr[ac++] = String.fromCharCode(o1, o2);
         } else {
           tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
@@ -181,7 +188,7 @@ var ICAL = ICAL || {};
   ICAL.icalvalue._createFromString(ICAL.icalbinary);
 
   ICAL.icalutcoffset = function icalutcoffset(aData, aParent) {
-    ICAL.icalvalue.call(this, aData, aParent, "UTC-OFFSET");
+    ICAL.icalvalue.call(this, aData, aParent, 'UTC-OFFSET');
   };
 
   ICAL.icalutcoffset.prototype = {
@@ -192,10 +199,10 @@ var ICAL = ICAL || {};
     minutes: null,
     factor: null,
 
-    icaltype: "UTC-OFFSET",
+    icaltype: 'UTC-OFFSET',
 
     fromData: function fromData(aData) {
-      if(aData) {
+      if (aData) {
         this.hours = aData.hours;
         this.minutes = aData.minutes;
         this.factor = aData.factor;
@@ -203,7 +210,8 @@ var ICAL = ICAL || {};
     },
 
     toString: function toString() {
-      return(this.factor == 1 ? "+" : "-") + ICAL.helpers.pad2(this.hours) + ICAL.helpers.pad2(this.minutes);
+      return (this.factor == 1 ? '+' : '-') +
+             ICAL.helpers.pad2(this.hours) + ICAL.helpers.pad2(this.minutes);
     }
   };
   ICAL.icalvalue._createFromString(ICAL.icalutcoffset);

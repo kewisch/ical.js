@@ -1,9 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */'use strict';
 
 var ICAL = ICAL || {};
-(function () {
+(function() {
   ICAL.icalrecur = function icalrecur(data) {
     this.wrappedJSObject = this;
     this.parts = {};
@@ -19,10 +19,10 @@ var ICAL = ICAL || {};
     until: null,
     count: null,
     freq: null,
-    icalclass: "icalrecur",
-    icaltype: "RECUR",
+    icalclass: 'icalrecur',
+    icaltype: 'RECUR',
 
-    iterator: function (aStart) {
+    iterator: function(aStart) {
       return new icalrecur_iterator(this, aStart);
     },
 
@@ -32,15 +32,15 @@ var ICAL = ICAL || {};
     },
 
     is_finite: function isfinite() {
-      return(this.count || this.until);
+      return (this.count || this.until);
     },
 
     is_by_count: function isbycount() {
-      return(this.count && !this.until);
+      return (this.count && !this.until);
     },
 
     addComponent: function addPart(aType, aValue) {
-      if(!(aType in this.parts)) {
+      if (!(aType in this.parts)) {
         this.parts[aType] = [aValue];
       } else {
         this.parts[aType].push(aValue);
@@ -55,21 +55,21 @@ var ICAL = ICAL || {};
       var ucName = aType.toUpperCase();
       var components = (ucName in this.parts ? this.parts[ucName] : []);
 
-      if(aCount) aCount.value = components.length;
+      if (aCount) aCount.value = components.length;
       return components;
     },
 
     getNextOccurrence: function getNextOccurrence(aStartTime, aRecurrenceId) {
-      ICAL.helpers.dumpn("GNO: " + aRecurrenceId + " / " + aStartTime);
+      ICAL.helpers.dumpn('GNO: ' + aRecurrenceId + ' / ' + aStartTime);
       var iter = this.iterator(aStartTime);
       var next, cdt;
 
       do {
         next = iter.next();
-        ICAL.helpers.dumpn("Checking " + next + " <= " + aRecurrenceId);
+        ICAL.helpers.dumpn('Checking ' + next + ' <= ' + aRecurrenceId);
       } while (next && next.compare(aRecurrenceId) <= 0);
 
-      if(next && aRecurrenceId.zone) {
+      if (next && aRecurrenceId.zone) {
         next.zone = aRecurrenceId.zone;
       }
 
@@ -77,34 +77,38 @@ var ICAL = ICAL || {};
     },
 
     fromData: function fromData(aData) {
-      const propsToCopy = ["freq", "count", "wkst", "interval"];
+      const propsToCopy = ['freq', 'count', 'wkst', 'interval'];
       for each(var key in propsToCopy) {
-        if(aData && key.toUpperCase() in aData) {
+        if (aData && key.toUpperCase() in aData) {
           this[key] = aData[key.toUpperCase()];
           // TODO casing sucks, fix the parser!
-        } else if(aData && key in aData) {
+        } else if (aData && key in aData) {
           this[key] = aData[key];
           // TODO casing sucks, fix the parser!
         }
       }
 
-      if(aData && "until" in aData && aData.until) {
+      if (aData && 'until' in aData && aData.until) {
         this.until = aData.until.clone();
       }
 
-      const partsToCopy = ["BYSECOND", "BYMINUTE", "BYHOUR", "BYDAY", "BYMONTHDAY", "BYYEARDAY", "BYWEEKNO", "BYMONTH", "BYSETPOS"]
+      const partsToCopy = [
+        'BYSECOND', 'BYMINUTE', 'BYHOUR', 'BYDAY',
+        'BYMONTHDAY', 'BYYEARDAY', 'BYWEEKNO', 'BYMONTH', 'BYSETPOS'
+      ];
+
       this.parts = {};
-      if(aData) {
+      if (aData) {
         for each(var key in partsToCopy) {
-          if(key in aData) {
+          if (key in aData) {
             this.parts[key] = aData[key];
             // TODO casing sucks, fix the parser!
           }
         }
         // TODO oh god, make it go away!
-        if(aData.parts) {
+        if (aData.parts) {
           for each(var key in partsToCopy) {
-            if(key in aData.parts) {
+            if (key in aData.parts) {
               this.parts[key] = aData.parts[key];
               // TODO casing sucks, fix the parser!
             }
@@ -116,29 +120,29 @@ var ICAL = ICAL || {};
 
     toString: function icalrecur_toString() {
       // TODO retain order
-      var str = "FREQ=" + this.freq;
-      if(this.count) {
-        str += ";COUNT=" + this.count;
+      var str = 'FREQ=' + this.freq;
+      if (this.count) {
+        str += ';COUNT=' + this.count;
       }
-      if(this.interval != 1) {
-        str += ";INTERVAL=" + this.interval;
+      if (this.interval != 1) {
+        str += ';INTERVAL=' + this.interval;
       }
-      str += [";" + k + "=" + this.parts[k]
-      for(k in this.parts)].join("");
+      str += [';' + k + '=' + this.parts[k]
+      for (k in this.parts)].join('');
       return str;
     },
 
     toIcalProperty: function toIcalProperty() {
       try {
         var valueData = {
-          name: this.isNegative ? "EXRULE" : "RRULE",
-          type: "RECUR",
-          value: [this.toString()],
+          name: this.isNegative ? 'EXRULE' : 'RRULE',
+          type: 'RECUR',
+          value: [this.toString()]
           // TODO more props?
         };
         return ICAL.icalproperty.fromData(valueData);
-      } catch(e) {
-        ICAL.helpers.dumpn("EICALPROP: " + this.toString() + "//" + e);
+      } catch (e) {
+        ICAL.helpers.dumpn('EICALPROP: ' + this.toString() + '//' + e);
         ICAL.helpers.dumpn(e.stack);
       }
     },
@@ -146,22 +150,22 @@ var ICAL = ICAL || {};
       var propval = aProp.getFirstValue();
       this.fromData(propval);
       this.parts = eval(propval.parts.toSource());
-      if(aProp.name == "EXRULE") {
+      if (aProp.name == 'EXRULE') {
         this.isNegative = true;
-      } else if(aProp.name == "RRULE") {
+      } else if (aProp.name == 'RRULE') {
         this.isNegative = false;
       } else {
-        throw new Error("Invalid Property " + aProp.name + " passed");
+        throw new Error('Invalid Property ' + aProp.name + ' passed');
       }
-    },
+    }
   };
 
   ICAL.icalrecur.fromData = function icalrecur_fromData(data) {
-    return(new ICAL.icalrecur(data));
+    return (new ICAL.icalrecur(data));
   }
 
   ICAL.icalrecur.fromString = function icalrecur_fromString(str) {
-    var data = ICAL.icalparser.parseValue(str, "RECUR");
+    var data = ICAL.icalparser.parseValue(str, 'RECUR');
     return ICAL.icalrecur.fromData(data);
   };
 
@@ -196,68 +200,96 @@ var ICAL = ICAL || {};
       var parts = this.by_data;
 
       this.by_indices = {
-        "BYSECOND": 0,
-        "BYMINUTE": 0,
-        "BYHOUR": 0,
-        "BYDAY": 0,
-        "BYMONTH": 0,
-        "BYWEEKNO": 0,
-        "BYMONTHDAY": 0,
+        'BYSECOND': 0,
+        'BYMINUTE': 0,
+        'BYHOUR': 0,
+        'BYDAY': 0,
+        'BYMONTH': 0,
+        'BYWEEKNO': 0,
+        'BYMONTHDAY': 0
       };
 
       // If the BYYEARDAY appares, no other date rule part may appear
-      if("BYYEARDAY" in parts) {
-        if("BYMONTH" in parts || "BYWEEKNO" in parts || "BYMONTHDAY" in parts || "BYDAY" in parts) {
-          throw new Error("Invalid BYYEARDAY rule");
+      if ('BYYEARDAY' in parts) {
+        if ('BYMONTH' in parts ||
+            'BYWEEKNO' in parts ||
+            'BYMONTHDAY' in parts ||
+            'BYDAY' in parts) {
+
+          throw new Error('Invalid BYYEARDAY rule');
         }
       }
 
       // BYWEEKNO and BYMONTHDAY rule parts may not both appear
-      if("BYWEEKNO" in parts && "BYMONTHDAY" in parts) {
-        throw new Error("BYWEEKNO does not fit to BYMONTHDAY");
+      if ('BYWEEKNO' in parts && 'BYMONTHDAY' in parts) {
+        throw new Error('BYWEEKNO does not fit to BYMONTHDAY');
       }
 
       // For MONTHLY recurrences (FREQ=MONTHLY) neither BYYEARDAY nor
       // BYWEEKNO may appear.
-      if(this.rule.freq == "MONTHLY" && ("BYYEARDAY" in parts || "BYWEEKNO" in parts)) {
-        throw new Error("For MONTHLY recurrences neither BYYEARDAY nor BYWEEKNO may appear");
+      if (this.rule.freq == 'MONTHLY' &&
+          ('BYYEARDAY' in parts || 'BYWEEKNO' in parts)) {
+
+        throw new Error(
+          'For MONTHLY recurrences neither BYYEARDAY nor BYWEEKNO may appear'
+        );
       }
 
       // For WEEKLY recurrences (FREQ=WEEKLY) neither BYMONTHDAY nor
       // BYYEARDAY may appear.
-      if(this.rule.freq == "WEEKLY" && ("BYYEARDAY" in parts || "BYMONTHDAY" in parts)) {
-        throw new Error("For WEEKLY recurrences neither BYMONTHDAY nor BYYEARDAY may appear");
+      if (this.rule.freq == 'WEEKLY' &&
+          ('BYYEARDAY' in parts || 'BYMONTHDAY' in parts)) {
+
+        throw new Error(
+          'For WEEKLY recurrences neither BYMONTHDAY nor BYYEARDAY may appear'
+        );
       }
 
       // BYYEARDAY may only appear in YEARLY rules
-      if(this.rule.freq != "YEARLY" && "BYYEARDAY" in parts) {
-        throw new Error("BYYEARDAY may only appear in YEARLY rules");
+      if (this.rule.freq != 'YEARLY' && 'BYYEARDAY' in parts) {
+        throw new Error('BYYEARDAY may only appear in YEARLY rules');
       }
 
-      this.last.second = this.setup_defaults("BYSECOND", "SECONDLY", this.dtstart.second);
-      this.last.minute = this.setup_defaults("BYMINUTE", "MINUTELY", this.dtstart.minute);
-      this.last.hour = this.setup_defaults("BYHOUR", "HOURLY", this.dtstart.hour);
-      this.last.day = this.setup_defaults("BYMONTHDAY", "DAILY", this.dtstart.day);
-      this.last.month = this.setup_defaults("BYMONTH", "MONTHLY", this.dtstart.month);
+      this.last.second = this.setup_defaults(
+        'BYSECOND', 'SECONDLY', this.dtstart.second
+      );
 
-      if(this.rule.freq == "WEEKLY") {
-        if("BYDAY" in parts) {
+      this.last.minute = this.setup_defaults(
+        'BYMINUTE', 'MINUTELY', this.dtstart.minute
+      );
+
+      this.last.hour = this.setup_defaults(
+        'BYHOUR', 'HOURLY', this.dtstart.hour
+      );
+
+      this.last.day = this.setup_defaults(
+        'BYMONTHDAY', 'DAILY', this.dtstart.day
+      );
+
+      this.last.month = this.setup_defaults(
+        'BYMONTH', 'MONTHLY', this.dtstart.month
+      );
+
+      if (this.rule.freq == 'WEEKLY') {
+        if ('BYDAY' in parts) {
           var [pos, rule_dow] = this.rule_day_of_week(parts.BYDAY[0]);
           var dow = rule_dow - this.last.day_of_week();
-          if((this.last.day_of_week() < rule_dow && dow >= 0) || dow < 0) {
+          if ((this.last.day_of_week() < rule_dow && dow >= 0) || dow < 0) {
             // Initial time is after first day of BYDAY data
             this.last.day += dow;
             this.last.normalize();
           }
         } else {
-          parts.BYDAY = [icalrecur_iterator._wkdayMap[this.dtstart.day_of_week()]];
+          parts.BYDAY = [
+            icalrecur_iterator._wkdayMap[this.dtstart.day_of_week()]
+          ];
         }
       }
 
-      if(this.rule.freq == "YEARLY") {
-        for(;;) {
+      if (this.rule.freq == 'YEARLY') {
+        for (;;) {
           this.expand_year_days(this.last.year);
-          if(this.days.length > 0) {
+          if (this.days.length > 0) {
             break;
           }
           this.increment_year(this.rule.interval);
@@ -269,38 +301,53 @@ var ICAL = ICAL || {};
         this.last.month = next.month;
       }
 
-      if(this.rule.freq == "MONTHLY" && this.has_by_data("BYDAY")) {
-        var [pos, dow] = this.rule_day_of_week(this.by_data.BYDAY[this.by_indices.BYDAY]);
+      if (this.rule.freq == 'MONTHLY' &&
+          this.has_by_data('BYDAY')) {
 
-        var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+        var [pos, dow] = this.rule_day_of_week(
+          this.by_data.BYDAY[this.by_indices.BYDAY]
+        );
+
+        var days_in_month = ICAL.icaltime.days_in_month(
+          this.last.month, this.last.year
+        );
+
         var poscount = 0;
 
-        if(pos >= 0) {
-          for(this.last.day = 1; this.last.day <= days_in_month; this.last.day++) {
-            if(this.last.day_of_week() == dow) {
-              if(++poscount == pos || pos == 0) {
+        if (pos >= 0) {
+          for (this.last.day = 1;
+               this.last.day <= days_in_month; this.last.day++) {
+
+            if (this.last.day_of_week() == dow) {
+              if (++poscount == pos || pos == 0) {
                 break;
               }
             }
           }
         } else {
           pos = -pos;
-          for(this.last.day = days_in_month; this.last.day != 0; this.last.day--) {
-            if(this.last.day_of_week() == dow) {
-              if(++poscount == pos) {
+
+          for (this.last.day = days_in_month;
+               this.last.day != 0; this.last.day--) {
+
+            if (this.last.day_of_week() == dow) {
+              if (++poscount == pos) {
                 break;
               }
             }
           }
         }
 
-        if(this.last.day > days_in_month || this.last.day == 0) {
-          throw new Error("Malformed values in BYDAY part");
+        if (this.last.day > days_in_month || this.last.day == 0) {
+          throw new Error('Malformed values in BYDAY part');
         }
 
-      } else if(this.has_by_data("BYMONTHDAY")) {
-        if(this.last.day < 0) {
-          var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+      } else if (this.has_by_data('BYMONTHDAY')) {
+        if (this.last.day < 0) {
+          var days_in_month = ICAL.icaltime.days_in_month(
+            this.last.month, this.last.year
+          );
+
           this.last.day = days_in_month + this.last.day + 1;
         }
 
@@ -311,11 +358,13 @@ var ICAL = ICAL || {};
     next: function icalrecur_iterator_next() {
       var before = (this.last ? this.last.clone() : null);
 
-      if((this.rule.count && this.occurrence_number >= this.rule.count) || (this.rule.until && this.last.compare(this.rule.until) > 0)) {
+      if ((this.rule.count && this.occurrence_number >= this.rule.count) ||
+          (this.rule.until && this.last.compare(this.rule.until) > 0)) {
+
         return null;
       }
 
-      if(this.occurrence_number == 0 && this.last.compare(this.dtstart) >= 0) {
+      if (this.occurrence_number == 0 && this.last.compare(this.dtstart) >= 0) {
         // First of all, give the instance that was initialized
         this.occurrence_number++;
         return this.last;
@@ -324,41 +373,45 @@ var ICAL = ICAL || {};
       do {
         var valid = 1;
 
-        switch(this.rule.freq) {
-        case "SECONDLY":
+        switch (this.rule.freq) {
+        case 'SECONDLY':
           this.next_second();
           break;
-        case "MINUTELY":
+        case 'MINUTELY':
           this.next_minute();
           break;
-        case "HOURLY":
+        case 'HOURLY':
           this.next_hour();
           break;
-        case "DAILY":
+        case 'DAILY':
           this.next_day();
           break;
 
-        case "WEEKLY":
+        case 'WEEKLY':
           this.next_week();
           break;
-        case "MONTHLY":
+        case 'MONTHLY':
           valid = this.next_month();
           break;
-        case "YEARLY":
+        case 'YEARLY':
           this.next_year();
           break;
 
         default:
           return null;
         }
-      } while (!this.check_contracting_rules() || this.last.compare(this.dtstart) < 0 || !valid);
+      } while (!this.check_contracting_rules() ||
+               this.last.compare(this.dtstart) < 0 || !valid);
 
       // TODO is this valid?
-      if(this.last.compare(before) == 0) {
-        throw new Error("Same occurrence found twice, protecting " + " you from death by recursion");
+      if (this.last.compare(before) == 0) {
+        throw new Error(
+          'Same occurrence found twice, protecting ' +
+          ' you from death by recursion'
+        );
       }
 
-      if(this.rule.until && this.last.compare(this.rule.until) > 0) {
+      if (this.rule.until && this.last.compare(this.rule.until) > 0) {
         return null;
       } else {
         this.occurrence_number++;
@@ -367,38 +420,42 @@ var ICAL = ICAL || {};
     },
 
     next_second: function next_second() {
-      return this.next_generic("BYSECOND", "SECONDLY", "second", "minute");
+      return this.next_generic('BYSECOND', 'SECONDLY', 'second', 'minute');
     },
 
     increment_second: function increment_second(inc) {
-      return this.increment_generic(inc, "second", 60, "minute");
+      return this.increment_generic(inc, 'second', 60, 'minute');
     },
 
     next_minute: function next_minute() {
-      return this.next_generic("BYMINUTE", "MINUTELY", "minute", "hour", "next_second");
+      return this.next_generic(
+        'BYMINUTE', 'MINUTELY', 'minute', 'hour', 'next_second'
+      );
     },
 
     increment_minute: function increment_minute(inc) {
-      return this.increment_generic(inc, "minute", 60, "hour");
+      return this.increment_generic(inc, 'minute', 60, 'hour');
     },
 
     next_hour: function next_hour() {
-      return this.next_generic("BYHOUR", "HOURLY", "hour", "monthday", "next_minute");
+      return this.next_generic(
+        'BYHOUR', 'HOURLY', 'hour', 'monthday', 'next_minute'
+      );
     },
 
     increment_hour: function increment_hour(inc) {
-      this.increment_generic(inc, "hour", 24, "monthday");
+      this.increment_generic(inc, 'hour', 24, 'monthday');
     },
 
     next_day: function next_day() {
-      var has_by_day = ("BYDAY" in this.by_data);
-      var this_freq = (this.rule.freq == "DAILY");
+      var has_by_day = ('BYDAY' in this.by_data);
+      var this_freq = (this.rule.freq == 'DAILY');
 
-      if(this.next_hour() == 0) {
+      if (this.next_hour() == 0) {
         return 0;
       }
 
-      if(this_freq) {
+      if (this_freq) {
         this.increment_monthday(this.rule.interval);
       } else {
         this.increment_monthday(1);
@@ -410,14 +467,14 @@ var ICAL = ICAL || {};
     next_week: function next_week() {
       var end_of_data = 0;
 
-      if(this.next_weekday_by_week() == 0) {
+      if (this.next_weekday_by_week() == 0) {
         return end_of_data;
       }
 
-      if(this.has_by_data("BYWEEKNO")) {
+      if (this.has_by_data('BYWEEKNO')) {
         var idx = ++this.by_indices.BYWEEKNO;
 
-        if(this.by_indices.BYWEEKNO == this.by_data.BYWEEKNO.length) {
+        if (this.by_indices.BYWEEKNO == this.by_data.BYWEEKNO.length) {
           this.by_indices.BYWEEKNO = 0;
           end_of_data = 1;
         }
@@ -431,8 +488,8 @@ var ICAL = ICAL || {};
         this.last.day += 7 * week_no;
         this.last.normalize();
 
-        if(end_of_data) {
-          this.increment_year(1)
+        if (end_of_data) {
+          this.increment_year(1);
         }
       } else {
         // Jump to the next week
@@ -443,60 +500,77 @@ var ICAL = ICAL || {};
     },
 
     next_month: function next_month() {
-      var this_freq = (this.rule.freq == "MONTHLY");
+      var this_freq = (this.rule.freq == 'MONTHLY');
       var data_valid = 1;
 
-      if(this.next_hour() == 0) {
+      if (this.next_hour() == 0) {
         return data_valid;
       }
 
-      if(this.has_by_data("BYDAY") && this.has_by_data("BYMONTHDAY")) {
-        var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+      if (this.has_by_data('BYDAY') && this.has_by_data('BYMONTHDAY')) {
+        var days_in_month = ICAL.icaltime.days_in_month(
+          this.last.month, this.last.year
+        );
+
         var notFound = true;
         var day;
+        var dayLen = this.by_data.BYDAY.length;
+        var monthLen = this.by_data.BYMONTHDAY.length;
 
-        for(day = last.day + 1; notFound && day <= days_in_month; day++) {
-          for(var dayIdx = 0; dayIdx < this.by_data.BYDAY.length; dayIdx++) {
-            for(var mdIdx = 0; mdIdx < this.by_data.BYMONTHDAY.length; mdIdx++) {
-              var [pos, dow] = this.rule_day_of_week(this.by_data.BYDAY[dayIdx]);
+        for (day = last.day + 1; notFound && day <= days_in_month; day++) {
+          for (var dayIdx = 0; dayIdx < dayLen; dayIdx++) {
+            for (var mdIdx = 0; mdIdx < monthLen; mdIdx++) {
+              var [pos, dow] = this.rule_day_of_week(
+                this.by_data.BYDAY[dayIdx]
+              );
+
               var mday = this.by_data.BYMONTHDAY[mdIdx];
 
               this.last.day = day;
               var this_dow = this.last.day_of_week();
 
-              if((pos == 0 && dow == this_dow && mday == day) || (this.last.nth_weekday(dow, pos))) {
+              if ((pos == 0 && dow == this_dow && mday == day) ||
+                  (this.last.nth_weekday(dow, pos))) {
                 notFound = false;
               }
             }
           }
         }
-        if(day > days_in_month) {
+        if (day > days_in_month) {
           this.last.day = 1;
           this.increment_month();
           this.last.day--;
           data_valid = 0;
         }
 
-      } else if(this.has_by_data("BYDAY")) {
-        var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+      } else if (this.has_by_data('BYDAY')) {
+        var days_in_month = ICAL.icaltime.days_in_month(
+          this.last.month, this.last.year
+        );
+
         var setpos = 0;
 
-        if(this.has_by_data("BYSETPOS")) {
+        if (this.has_by_data('BYSETPOS')) {
           var lastday = this.last.day;
-          for(var day = 1; day <= days_in_month; day++) {
+          for (var day = 1; day <= days_in_month; day++) {
             this.last.day = day;
-            if(this.is_day_in_byday(this.last) && day <= last_day) {
-              setpos++
+            if (this.is_day_in_byday(this.last) && day <= last_day) {
+              setpos++;
             }
           }
           this.last.day = last_day;
         }
 
-        for(var day = this.last.day + 1; day <= days_in_month; day++) {
+        for (var day = this.last.day + 1; day <= days_in_month; day++) {
           this.last.day = day;
 
-          if(this.is_day_in_byday(this.last)) {
-            if(!this.has_by_data("BYSETPOS") || this.check_set_position(++setpos) || this.check_set_position(setpos - this.by_data.BYSETPOS.length - 1)) {
+          var setPosLen = setpos - this.by_data.BYSETPOS.length - 1;
+
+          if (this.is_day_in_byday(this.last)) {
+            if (!this.has_by_data('BYSETPOS') ||
+                this.check_set_position(++setpos) ||
+                this.check_set_position(setPosLen)) {
+
               found = 1;
               break;
             }
@@ -505,35 +579,37 @@ var ICAL = ICAL || {};
 
         data_valid = found;
 
-        if(day > days_in_month) {
+        if (day > days_in_month) {
           this.last.day = 1;
           this.increment_month();
 
-          if(this.is_day_in_byday(this.last)) {
-            if(!this.has_by_data("BYSETPOS") || this.check_set_position(1)) {
+          if (this.is_day_in_byday(this.last)) {
+            if (!this.has_by_data('BYSETPOS') || this.check_set_position(1)) {
               data_valid = 1;
             }
           } else {
             data_valid = 0;
           }
         }
-      } else if(this.has_by_data("BYMONTHDAY")) {
+      } else if (this.has_by_data('BYMONTHDAY')) {
         this.by_indices.BYMONTHDAY++;
 
-        if(this.by_indices.BYMONTHDAY >= this.by_data.BYMONTHDAY.length) {
+        if (this.by_indices.BYMONTHDAY >= this.by_data.BYMONTHDAY.length) {
           this.by_indices.BYMONTHDAY = 0;
           this.increment_month();
         }
 
-        var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+        var days_in_month = ICAL.icaltime.days_in_month(
+          this.last.month, this.last.year
+        );
 
         var day = this.by_data.BYMONTHDAY[this.by_indices.BYMONTHDAY];
 
-        if(day < 0) {
+        if (day < 0) {
           day = days_in_month + day + 1;
         }
 
-        if(day > days_in_month) {
+        if (day > days_in_month) {
           this.last.day = 1;
           data_valid = this.is_day_in_byday(this.last);
         }
@@ -542,7 +618,9 @@ var ICAL = ICAL || {};
       } else {
         this.last.day = this.by_data.BYMONTHDAY[0];
         this.increment_month();
-        var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+        var days_in_month = ICAL.icaltime.days_in_month(
+          this.last.month, this.last.year
+        );
         this.last.day = Math.min(this.last.day, days_in_month);
       }
 
@@ -552,29 +630,32 @@ var ICAL = ICAL || {};
     next_weekday_by_week: function next_weekday_by_week() {
       var end_of_data = 0;
 
-      if(this.next_hour() == 0) {
+      if (this.next_hour() == 0) {
         return end_of_data;
       }
 
-      if(!this.has_by_data("BYDAY")) {
+      if (!this.has_by_data('BYDAY')) {
         return 1;
       }
 
       //this.sort_byday_rules(this.by_data.BYDAY, this.rule.wkst);
 
-      for(;;) {
+      for (;;) {
         var tt = new ICAL.icaltime();
         tt.auto_normalize = false;
         this.by_indices.BYDAY++;
 
-        if(this.by_indices.BYDAY == this.by_data.BYDAY.length) {
+        if (this.by_indices.BYDAY == this.by_data.BYDAY.length) {
           this.by_indices.BYDAY = 0;
           end_of_data = 1;
         }
 
-        var [, dow] = this.rule_day_of_week(this.by_data.BYDAY[this.by_indices.BYDAY]);
+        var [, dow] = this.rule_day_of_week(
+          this.by_data.BYDAY[this.by_indices.BYDAY]
+        );
+
         dow -= this.rule.wkst;
-        if(dow < 0) {
+        if (dow < 0) {
           dow += 7;
         }
 
@@ -584,14 +665,16 @@ var ICAL = ICAL || {};
 
         var start_of_week = tt.start_doy_week(this.rule.wkst);
 
-        if(dow + start_of_week < 1) {
+        if (dow + start_of_week < 1) {
           // The selected date is in the previous year
-          if(!end_of_data) {
+          if (!end_of_data) {
             continue;
           }
         }
 
-        var next = ICAL.icaltime.from_day_of_year(start_of_week + dow, this.last.year);
+        var next = ICAL.icaltime.from_day_of_year(
+          start_of_week + dow, this.last.year
+        );
 
         this.last.day = next.day;
         this.last.month = next.month;
@@ -603,11 +686,11 @@ var ICAL = ICAL || {};
 
     next_year: function next_year() {
 
-      if(this.next_hour() == 0) {
+      if (this.next_hour() == 0) {
         return 0;
       }
 
-      if(++this.days_index == this.days.length) {
+      if (++this.days_index == this.days.length) {
         this.days_index = 0;
         do {
           this.increment_year(this.rule.interval);
@@ -615,7 +698,9 @@ var ICAL = ICAL || {};
         } while (this.days.length == 0);
       }
 
-      var next = ICAL.icaltime.from_day_of_year(this.days[this.days_index], this.last.year);
+      var next = ICAL.icaltime.from_day_of_year(
+        this.days[this.days_index], this.last.year
+      );
 
       this.last.day = next.day;
       this.last.month = next.month;
@@ -634,44 +719,51 @@ var ICAL = ICAL || {};
         SA: 7
       };
       var matches = dow.match(/([+-]?[0-9])?(MO|TU|WE|TH|FR|SA|SU)/);
-      return(matches ? [parseInt(matches[1] || 0, 10), dowMap[matches[2]]] || 0 : [0, 0]);
+      return ((matches) ?
+        [parseInt(matches[1] || 0, 10), dowMap[matches[2]]] || 0 : [0, 0]
+      );
     },
 
-    next_generic: function next_generic(aRuleType, aInterval, aDateAttr, aFollowingAttr, aPreviousIncr) {
+    next_generic: function(aRuleType, aInterval, date,
+                            aFollowingAttr, aPreviousIncr) {
+
       var has_by_rule = (aRuleType in this.by_data);
       var this_freq = (this.rule.freq == aInterval);
       var end_of_data = 0;
 
-      if(aPreviousIncr && this[aPreviousIncr]() == 0) {
+      if (aPreviousIncr && this[aPreviousIncr]() == 0) {
         return end_of_data;
       }
 
-      if(has_by_rule) {
+      if (has_by_rule) {
         this.by_indices[aRuleType]++;
         var idx = this.by_indices[aRuleType];
 
-        if(this.by_indices[aRuleType] == this.by_data[aRuleType].length) {
+        if (this.by_indices[aRuleType] == this.by_data[aRuleType].length) {
           this.by_indices[aRuleType] = 0;
           end_of_data = 1;
         }
-        this.last[aDateAttr] = this.by_data[aRuleType][this.by_indices[aRuleType]];
-      } else if(this_freq) {
-        this["increment_" + aDateAttr](this.rule.interval);
+        this.last[date] = this.by_data[aRuleType][this.by_indices[aRuleType]];
+      } else if (this_freq) {
+        this['increment_' + date](this.rule.interval);
       }
 
-      if(has_by_rule && end_of_data && this_freq) {
-        this["increment_" + aFollowingAttr](1);
+      if (has_by_rule && end_of_data && this_freq) {
+        this['increment_' + aFollowingAttr](1);
       }
 
       return end_of_data;
     },
 
     increment_monthday: function increment_monthday(inc) {
-      for(var i = 0; i < inc; i++) {
-        var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
+      for (var i = 0; i < inc; i++) {
+        var days_in_month = ICAL.icaltime.days_in_month(
+          this.last.month, this.last.year
+        );
+
         this.last.day++;
 
-        if(this.last.day > days_in_month) {
+        if (this.last.day > days_in_month) {
           this.last.day -= days_in_month;
           this.increment_month();
         }
@@ -679,10 +771,10 @@ var ICAL = ICAL || {};
     },
 
     increment_month: function increment_month() {
-      if(this.has_by_data("BYMONTH")) {
+      if (this.has_by_data('BYMONTH')) {
         this.by_indices.BYMONTH++;
 
-        if(this.by_indices.BYMONTH == this.by_data.BYMONTH.length) {
+        if (this.by_indices.BYMONTH == this.by_data.BYMONTH.length) {
           this.by_indices.BYMONTH = 0;
           this.increment_year(1);
         }
@@ -690,7 +782,7 @@ var ICAL = ICAL || {};
         this.last.month = this.by_data.BYMONTH[this.by_indices.BYMONTH];
       } else {
         var inc;
-        if(this.rule.freq == "MONTHLY") {
+        if (this.rule.freq == 'MONTHLY') {
           this.last.month += this.rule.interval;
         } else {
           this.last.month++;
@@ -701,7 +793,7 @@ var ICAL = ICAL || {};
         this.last.month %= 12;
         this.last.month++;
 
-        if(years != 0) {
+        if (years != 0) {
           this.increment_year(years);
         }
       }
@@ -711,59 +803,67 @@ var ICAL = ICAL || {};
       this.last.year += inc;
     },
 
-    increment_generic: function increment_generic(inc, aDateAttr, aFactor, aNextIncrement) {
+    increment_generic: function(inc, aDateAttr, aFactor, aNextIncrement) {
       this.last[aDateAttr] += inc;
       var nextunit = ICAL.helpers.trunc(this.last[aDateAttr] / aFactor);
       this.last[aDateAttr] %= aFactor;
-      if(nextunit != 0) {
-        this["increment_" + aNextIncrement](nextunit);
+      if (nextunit != 0) {
+        this['increment_' + aNextIncrement](nextunit);
       }
     },
 
     has_by_data: function has_by_data(aRuleType) {
-      return(aRuleType in this.rule.parts);
+      return (aRuleType in this.rule.parts);
     },
 
     expand_year_days: function expand_year_days(aYear) {
       var t = new ICAL.icaltime();
+      var expandValues = [
+        'BYDAY', 'BYWEEKNO', 'BYMONTHDAY', 'BYMONTH', 'BYYEARDAY'
+      ];
       this.days = [];
 
       // We need our own copy with a few keys set
       var parts = {};
-      for each(var p in ["BYDAY", "BYWEEKNO", "BYMONTHDAY", "BYMONTH", "BYYEARDAY"]) {
-        if(p in this.rule.parts) {
+
+      for each(var p in expandValues) {
+        if (p in this.rule.parts) {
           parts[p] = this.rule.parts[p];
         }
       }
 
-      if("BYMONTH" in parts && "BYWEEKNO" in parts) {
+      if ('BYMONTH' in parts && 'BYWEEKNO' in parts) {
         var valid = 1;
         var validWeeks = {};
+        var monthLen = this.by_data.BYMONTH.length;
+
         t.year = aYear;
         t.isDate = true;
 
-        for(var monthIdx = 0; monthIdx < this.by_data.BYMONTH.length; monthIdx++) {
+        for (var monthIdx = 0; monthIdx < monthLen; monthIdx++) {
           var month = this.by_data.BYMONTH[monthIdx];
           t.month = month;
           t.day = 1;
           var first_week = t.week_number(this.rule.wkst);
           t.day = ICAL.icaltime.days_in_month(month, aYear);
           var last_week = t.week_number(this.rule.wkst);
-          for(monthIdx = first_week; monthIdx < last_week; monthIdx++) {
+          for (monthIdx = first_week; monthIdx < last_week; monthIdx++) {
             validWeeks[monthIdx] = 1;
           }
         }
 
-        for(var weekIdx = 0; weekIdx < this.by_data.BYWEEKNO.length && valid; weekIdx++) {
+        var weekLen = this.by_data.BYWEEKNO.length;
+
+        for (var weekIdx = 0; weekIdx < weekLen && valid; weekIdx++) {
           var weekno = this.by_data.BYWEEKNO[weekIdx];
-          if(weekno < 52) {
+          if (weekno < 52) {
             valid &= validWeeks[weekIdx];
           } else {
             valid = 0;
           }
         }
 
-        if(valid) {
+        if (valid) {
           delete parts.BYMONTH;
         } else {
           delete parts.BYWEEKNO;
@@ -772,11 +872,11 @@ var ICAL = ICAL || {};
 
       var partCount = Object.keys(parts).length;
 
-      if(partCount == 0) {
+      if (partCount == 0) {
         var t = this.dtstart.clone();
         t.year = this.last.year;
         this.days.push(t.day_of_year());
-      } else if(partCount == 1 && "BYMONTH" in parts) {
+      } else if (partCount == 1 && 'BYMONTH' in parts) {
         for each(var month in this.by_data.BYMONTH) {
           var t2 = this.dtstart.clone();
           t2.year = aYear;
@@ -784,7 +884,7 @@ var ICAL = ICAL || {};
           t2.isDate = true;
           this.days.push(t2.day_of_year());
         }
-      } else if(partCount == 1 && "BYMONTHDAY" in parts) {
+      } else if (partCount == 1 && 'BYMONTHDAY' in parts) {
         for each(var month_day in this.by_data.BYMONTHDAY) {
           var t2 = this.dtstart.clone();
           t2.day = month_day;
@@ -792,7 +892,8 @@ var ICAL = ICAL || {};
           t2.isDate = true;
           this.days.push(t2.day_of_year());
         }
-      } else if(partCount == 2 && "BYMONTHDAY" in parts && "BYMONTH" in parts) {
+      } else if (partCount == 2 &&
+                 'BYMONTHDAY' in parts && 'BYMONTH' in parts) {
         for each(var month in this.by_data.BYMONTH) {
           for each(var monthDay in this.by_data.BYMONTHDAY) {
             t.day = monthDay;
@@ -803,13 +904,15 @@ var ICAL = ICAL || {};
             this.days.push(t.day_of_year());
           }
         }
-      } else if(partCount == 1 && "BYWEEKNO" in parts) {
+      } else if (partCount == 1 && 'BYWEEKNO' in parts) {
         // TODO unimplemented in libical
-      } else if(partCount == 2 && "BYWEEKNO" in parts && "BYMONTHDAY" in parts) {
+      } else if (partCount == 2 &&
+                 'BYWEEKNO' in parts && 'BYMONTHDAY' in parts) {
+
         // TODO unimplemented in libical
-      } else if(partCount == 1 && "BYDAY" in parts) {
+      } else if (partCount == 1 && 'BYDAY' in parts) {
         this.days = this.days.concat(this.expand_by_day(aYear));
-      } else if(partCount == 2 && "BYDAY" in parts && "BYMONTH" in parts) {
+      } else if (partCount == 2 && 'BYDAY' in parts && 'BYMONTH' in parts) {
         for each(var month in this.by_data.BYMONTH) {
           var days_in_month = ICAL.icaltime.days_in_month(month, aYear);
 
@@ -822,20 +925,21 @@ var ICAL = ICAL || {};
           var doy_offset = t.day_of_year() - 1;
 
           t.day = days_in_month;
-          var last_dow = t.day_of_week();
+          var lastDow = t.day_of_week();
 
-          if(this.has_by_data("BYSETPOS")) {
+          if (this.has_by_data('BYSETPOS')) {
             var set_pos_counter = 0;
             var by_month_day = [];
-            for(var day = 1; day <= days_in_month; day++) {
+            for (var day = 1; day <= days_in_month; day++) {
               t.day = day;
-              if(this.is_day_in_byday(t)) {
+              if (this.is_day_in_byday(t)) {
                 by_month_day.push(day);
               }
             }
 
-            for(var spIndex = 0; spIndex < by_month_day.length; spIndex++) {
-              if(this.check_set_position(spIndex + 1) || this.check_set_position(spIndex - by_month_day.length)) {
+            for (var spIndex = 0; spIndex < by_month_day.length; spIndex++) {
+              if (this.check_set_position(spIndex + 1) ||
+                  this.check_set_position(spIndex - by_month_day.length)) {
                 this.days.push(doy_offset + by_month_day[spIndex]);
               }
             }
@@ -844,61 +948,69 @@ var ICAL = ICAL || {};
               var [dow, pos] = this.rule_day_of_week(day_coded);
 
               var first_matching_day = ((dow + 7 - first_dow) % 7) + 1;
-              var last_matching_day = days_in_month - ((last_dow + 7 - dow) % 7);
+              var last_matching_day = days_in_month - ((lastDow + 7 - dow) % 7);
 
-              if(pos == 0) {
-                for(var day = first_matching_day; day <= days_in_month; day += 7) {
+              if (pos == 0) {
+                for (var day = first_matching_day;
+                     day <= days_in_month; day += 7) {
+
                   this.days.push(doy_offset + day);
                 }
-              } else if(pos > 0) {
+              } else if (pos > 0) {
                 month_day = first_matching_day + (pos - 1) * 7;
 
-                if(month_day <= days_in_month) {
+                if (month_day <= days_in_month) {
                   this.days.push(doy_offset + month_day);
                 }
               } else {
                 month_day = last_matching_day + (pos + 1) * 7;
 
-                if(month_day > 0) {
+                if (month_day > 0) {
                   this.days.push(doy_offset + month_day);
                 }
               }
             }
           }
         }
-      } else if(partCount == 2 && "BYDAY" in parts && "BYMONTHDAY" in parts) {
+      } else if (partCount == 2 && 'BYDAY' in parts && 'BYMONTHDAY' in parts) {
         var expandedDays = this.expand_by_day(aYear);
 
         for each(var day in expandedDays) {
           var tt = ICAL.icaltime.from_day_of_year(day, aYear);
-          if(this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
+          if (this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
             this.days.push(day);
           }
         }
-      } else if(partCount == 3 && "BYDAY" in parts && "BYMONTHDAY" in parts && "BYMONTH" in parts) {
+      } else if (partCount == 3 &&
+                 'BYDAY' in parts &&
+                 'BYMONTHDAY' in parts && 'BYMONTH' in parts) {
+
         var expandedDays = this.expand_by_day(aYear);
 
         for each(var day in expandedDays) {
           var tt = ICAL.icaltime.from_day_of_year(day, aYear);
 
-          if(this.by_data.BYMONTH.indexOf(tt.month) >= 0 && this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
+          if (this.by_data.BYMONTH.indexOf(tt.month) >= 0 &&
+              this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
             this.days.push(day);
           }
         }
-      } else if(partCount == 2 && "BYDAY" in parts && "BYWEEKNO" in parts) {
+      } else if (partCount == 2 && 'BYDAY' in parts && 'BYWEEKNO' in parts) {
         var expandedDays = this.expand_by_day(aYear);
 
         for each(var day in expandedDays) {
           var tt = ICAL.icaltime.from_day_of_year(day, aYear);
           var weekno = tt.week_number(this.rule.wkst);
 
-          if(this.by_data.BYWEEKNO.indexOf(weekno)) {
+          if (this.by_data.BYWEEKNO.indexOf(weekno)) {
             this.days.push(day);
           }
         }
-      } else if(partCount == 3 && "BYDAY" in parts && "BYWEEKNO" in parts && "BYMONTHDAY" in parts) {
+      } else if (partCount == 3 &&
+                 'BYDAY' in parts &&
+                 'BYWEEKNO' in parts && 'BYMONTHDAY' in parts) {
         // TODO unimplemted in libical
-      } else if(partCount == 1 && "BYYEARDAY" in parts) {
+      } else if (partCount == 1 && 'BYYEARDAY' in parts) {
         this.days = this.days.concat(this.by_data.BYYEARDAY);
       } else {
         this.days = [];
@@ -928,16 +1040,16 @@ var ICAL = ICAL || {};
       for each(var day in this.by_data.BYDAY) {
         var [pos, dow] = this.rule_day_of_week(day);
 
-        if(pos == 0) {
+        if (pos == 0) {
           var tmp_start_doy = ((dow + 7 - start_dow) % 7) + 1;
 
-          for(var doy = tmp_start_doy; doy <= end_year_day; doy += 7) {
+          for (var doy = tmp_start_doy; doy <= end_year_day; doy += 7) {
             days_list.push(doy);
           }
 
-        } else if(pos > 0) {
+        } else if (pos > 0) {
           var first;
-          if(dow >= start_dow) {
+          if (dow >= start_dow) {
             first = dow - start_dow + 1;
           } else {
             first = dow - start_dow + 8;
@@ -948,7 +1060,7 @@ var ICAL = ICAL || {};
           var last;
           pos = -pos;
 
-          if(dow <= end_dow) {
+          if (dow <= end_dow) {
             last = end_year_day - end_dow + dow;
           } else {
             last = end_year_day - end_dow + dow - 7;
@@ -965,7 +1077,9 @@ var ICAL = ICAL || {};
         var [pos, dow] = this.rule_day_of_week(day);
         var this_dow = tt.day_of_week();
 
-        if((pos == 0 && dow == this_dow) || (tt.nth_weekday(dow, pos) == tt.day)) {
+        if ((pos == 0 && dow == this_dow) ||
+            (tt.nth_weekday(dow, pos) == tt.day)) {
+
           return 1;
         }
       }
@@ -974,20 +1088,21 @@ var ICAL = ICAL || {};
     },
 
     check_set_position: function check_set_position(aPos) {
-      return("BYSETPOS" in this.by_data && this.by_data.BYSETPOS.indexOf(aPos));
+      return ('BYSETPOS' in this.by_data &&
+              this.by_data.BYSETPOS.indexOf(aPos));
     },
 
     sort_byday_rules: function icalrecur_sort_byday_rules(aRules, aWeekStart) {
-      for(var i = 0; i < aRules.length; i++) {
-        for(var j = 0; j < i; j++) {
+      for (var i = 0; i < aRules.length; i++) {
+        for (var j = 0; j < i; j++) {
           var [, one] = this.rule_day_of_week(aRules[j]);
           var [, two] = this.rule_day_of_week(aRules[i]);
           one -= aWeekStart;
           two -= aWeekStart;
-          if(one < 0) one += 7;
-          if(two < 0) two += 7;
+          if (one < 0) one += 7;
+          if (two < 0) two += 7;
 
-          if(one > two) {
+          if (one > two) {
             var tmp = aRules[i];
             aRules[i] = aRules[j];
             aRules[j] = tmp;
@@ -996,14 +1111,17 @@ var ICAL = ICAL || {};
       }
     },
 
-    check_contract_restriction: function check_contract_restriction(aRuleType, v) {
+    check_contract_restriction: function(aRuleType, v) {
+      var freq = icalrecur_iterator._expandMap[this.rule.freq];
       var indexMapValue = icalrecur_iterator._indexMap[aRuleType];
-      var ruleMapValue = icalrecur_iterator._expandMap[this.rule.freq][indexMapValue];
+      var ruleMapValue = freq[indexMapValue];
       var pass = false;
 
-      if(aRuleType in this.by_data && ruleMapValue == icalrecur_iterator.CONTRACT) {
+      if (aRuleType in this.by_data &&
+          ruleMapValue == icalrecur_iterator.CONTRACT) {
+
         for each(var bydata in this.by_data[aRuleType]) {
-          if(bydata == v) {
+          if (bydata == v) {
             pass = true;
             break;
           }
@@ -1016,51 +1134,59 @@ var ICAL = ICAL || {};
     },
 
     check_contracting_rules: function check_contracting_rules() {
-      var dow = this.last.day_of_week()
+      var dow = this.last.day_of_week();
       var weekNo = this.last.week_number(this.rule.wkst);
       var doy = this.last.day_of_year();
 
-      return(this.check_contract_restriction("BYSECOND", this.last.second) && this.check_contract_restriction("BYMINUTE", this.last.minute) && this.check_contract_restriction("BYHOUR", this.last.hour) && this.check_contract_restriction("BYDAY", dow) && this.check_contract_restriction("BYWEEKNO", weekNo) && this.check_contract_restriction("BYMONTHDAY", this.last.day) && this.check_contract_restriction("BYMONTH", this.last.month) && this.check_contract_restriction("BYYEARDAY", doy));
+      return (this.check_contract_restriction('BYSECOND', this.last.second) &&
+              this.check_contract_restriction('BYMINUTE', this.last.minute) &&
+              this.check_contract_restriction('BYHOUR', this.last.hour) &&
+              this.check_contract_restriction('BYDAY', dow) &&
+              this.check_contract_restriction('BYWEEKNO', weekNo) &&
+              this.check_contract_restriction('BYMONTHDAY', this.last.day) &&
+              this.check_contract_restriction('BYMONTH', this.last.month) &&
+              this.check_contract_restriction('BYYEARDAY', doy));
     },
 
     setup_defaults: function setup_defaults(aRuleType, req, deftime) {
+      var freq = icalrecur_iterator._expandMap[this.rule.freq];
       var indexMapValue = icalrecur_iterator._indexMap[aRuleType];
-      var ruleMapValue = icalrecur_iterator._expandMap[this.rule.freq][indexMapValue];
+      var ruleMapValue = freq[indexMapValue];
 
-      if(ruleMapValue != icalrecur_iterator.CONTRACT) {
-        if(!(aRuleType in this.by_data)) {
+      if (ruleMapValue != icalrecur_iterator.CONTRACT) {
+        if (!(aRuleType in this.by_data)) {
           this.by_data[aRuleType] = [deftime];
         }
-        if(this.rule.freq != req) {
+        if (this.rule.freq != req) {
           return this.by_data[aRuleType][0];
         }
       }
       return deftime;
-    },
+    }
   };
 
-  icalrecur_iterator._wkdayMap = ["", "SU", "MO", "TU", "WE", "TH", "FR", "SA"];
+  icalrecur_iterator._wkdayMap = ['', 'SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
   icalrecur_iterator._indexMap = {
-    "BYSECOND": 0,
-    "BYMINUTE": 1,
-    "BYHOUR": 2,
-    "BYDAY": 3,
-    "BYMONTHDAY": 4,
-    "BYYEARDAY": 5,
-    "BYWEEKNO": 6,
-    "BYMONTH": 7,
-    "BYSETPOS": 8
+    'BYSECOND': 0,
+    'BYMINUTE': 1,
+    'BYHOUR': 2,
+    'BYDAY': 3,
+    'BYMONTHDAY': 4,
+    'BYYEARDAY': 5,
+    'BYWEEKNO': 6,
+    'BYMONTH': 7,
+    'BYSETPOS': 8
   };
 
   icalrecur_iterator._expandMap = {
-    "SECONDLY": [1, 1, 1, 1, 1, 1, 1, 1],
-    "MINUTELY": [2, 1, 1, 1, 1, 1, 1, 1],
-    "HOURLY": [2, 2, 1, 1, 1, 1, 1, 1],
-    "DAILY": [2, 2, 2, 1, 1, 1, 1, 1],
-    "WEEKLY": [2, 2, 2, 2, 3, 3, 1, 1],
-    "MONTHLY": [2, 2, 2, 2, 2, 3, 3, 1],
-    "YEARLY": [2, 2, 2, 2, 2, 2, 2, 2]
+    'SECONDLY': [1, 1, 1, 1, 1, 1, 1, 1],
+    'MINUTELY': [2, 1, 1, 1, 1, 1, 1, 1],
+    'HOURLY': [2, 2, 1, 1, 1, 1, 1, 1],
+    'DAILY': [2, 2, 2, 1, 1, 1, 1, 1],
+    'WEEKLY': [2, 2, 2, 2, 3, 3, 1, 1],
+    'MONTHLY': [2, 2, 2, 2, 2, 3, 3, 1],
+    'YEARLY': [2, 2, 2, 2, 2, 2, 2, 2]
   };
   icalrecur_iterator.UNKNOWN = 0;
   icalrecur_iterator.CONTRACT = 1;

@@ -1,9 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */'use strict';
 
 var ICAL = ICAL || {};
-(function () {
+(function() {
   ICAL.icalcomponent = function icalcomponent(data, parent) {
     this.wrappedJSObject = this;
     this.parent = parent;
@@ -13,23 +13,23 @@ var ICAL = ICAL || {};
   ICAL.icalcomponent.prototype = {
 
     data: null,
-    name: "",
+    name: '',
     components: null,
     properties: null,
 
-    icalclass: "icalcomponent",
+    icalclass: 'icalcomponent',
 
     clone: function clone() {
       return new ICAL.icalcomponent(this.undecorate(), this.parent);
     },
 
     fromData: function fromData(data) {
-      if(!data) {
+      if (!data) {
         data = ICAL.helpers.initComponentData(null);
       }
       this.data = data;
       this.data.value = this.data.value || [];
-      this.data.type = this.data.type || "COMPONENT";
+      this.data.type = this.data.type || 'COMPONENT';
       this.components = {};
       this.properties = {};
 
@@ -40,9 +40,9 @@ var ICAL = ICAL || {};
 
       var value = this.data.value;
 
-      for(var key in value) {
+      for (var key in value) {
         var keyname = value[key].name;
-        if(value[key].type == "COMPONENT") {
+        if (value[key].type == 'COMPONENT') {
           value[key] = new ICAL.icalcomponent(value[key], this);
           ICAL.helpers.ensureKeyExists(this.components, keyname, []);
           this.components[keyname].push(value[key]);
@@ -61,20 +61,21 @@ var ICAL = ICAL || {};
       }
       return {
         name: this.name,
-        type: "COMPONENT",
+        type: 'COMPONENT',
         value: newdata
       };
     },
 
     getFirstSubcomponent: function getFirstSubcomponent(aType) {
       var comp = null;
-      if(aType) {
+      if (aType) {
         var ucType = aType.toUpperCase();
-        if(ucType in this.components && this.components[ucType] && this.components[ucType].length > 0) {
+        if (ucType in this.components &&
+            this.components[ucType] && this.components[ucType].length > 0) {
           comp = this.components[ucType][0];
         }
       } else {
-        for(var thiscomp in this.components) {
+        for (var thiscomp in this.components) {
           comp = this.components[thiscomp][0];
           break;
         }
@@ -84,16 +85,16 @@ var ICAL = ICAL || {};
 
     getAllSubcomponents: function getAllSubcomponents(aType) {
       var comps = [];
-      if(aType && aType != "ANY") {
+      if (aType && aType != 'ANY') {
         var ucType = aType.toUpperCase();
-        if(ucType in this.components) {
-          for(var compKey in this.components[ucType]) {
+        if (ucType in this.components) {
+          for (var compKey in this.components[ucType]) {
             comps.push(this.components[ucType][compKey]);
           }
         }
       } else {
-        for(var compName in this.components) {
-          for(var compKey in this.components[compName]) {
+        for (var compName in this.components) {
+          for (var compKey in this.components[compName]) {
             comps.push(this.components[compName][compKey]);
           }
         }
@@ -104,7 +105,7 @@ var ICAL = ICAL || {};
     addSubcomponent: function addSubcomponent(aComp, aCompName) {
       var ucName, comp;
       var comp;
-      if(aComp.icalclass == "icalcomponent") {
+      if (aComp.icalclass == 'icalcomponent') {
         ucName = aComp.name;
         comp = aComp.clone();
         comp.parent = this;
@@ -122,7 +123,7 @@ var ICAL = ICAL || {};
       var ucName = aName.toUpperCase();
       for each(var comp in this.components[ucName]) {
         var pos = this.data.value.indexOf(comp);
-        if(pos > -1) {
+        if (pos > -1) {
           this.data.value.splice(pos, 1);
         }
       }
@@ -132,14 +133,14 @@ var ICAL = ICAL || {};
 
     hasProperty: function hasProperty(aName) {
       var ucName = aName.toUpperCase();
-      return(ucName in this.properties);
+      return (ucName in this.properties);
     },
 
     getFirstProperty: function getFirstProperty(aName) {
       var prop = null;
-      if(aName) {
+      if (aName) {
         var ucName = aName.toUpperCase();
-        if(ucName in this.properties && this.properties[ucName]) {
+        if (ucName in this.properties && this.properties[ucName]) {
           prop = this.properties[ucName][0];
         }
       } else {
@@ -159,13 +160,13 @@ var ICAL = ICAL || {};
 
     getAllProperties: function getAllProperties(aName) {
       var props = [];
-      if(aName && aName != "ANY") {
+      if (aName && aName != 'ANY') {
         var ucType = aName.toUpperCase();
-        if(ucType in this.properties) {
+        if (ucType in this.properties) {
           props = this.properties[ucType].concat([]);
         }
       } else {
-        for(var propName in this.properties) {
+        for (var propName in this.properties) {
           props = props.concat(this.properties[propName]);
         }
       }
@@ -180,30 +181,30 @@ var ICAL = ICAL || {};
       });
 
       var prop = ICAL.icalproperty.fromData(lineData);
-      ICAL.helpers.dumpn("Adding property " + ucName + "=" + aValue);
+      ICAL.helpers.dumpn('Adding property ' + ucName + '=' + aValue);
       return this.addProperty(prop);
     },
 
     addProperty: function addProperty(aProp) {
-      ICAL.helpers.dumpn("Adding property " + aProp + "STK " + STACK());
+      ICAL.helpers.dumpn('Adding property ' + aProp + 'STK ' + STACK());
       var prop = aProp;
-      if(aProp.parent) {
+      if (aProp.parent) {
         prop = aProp.clone();
       }
       aProp.parent = this;
 
       ICAL.helpers.ensureKeyExists(this.properties, aProp.name, []);
       this.properties[aProp.name].push(aProp);
-      ICAL.helpers.dumpn("DATA IS: " + this.data.toSource());
+      ICAL.helpers.dumpn('DATA IS: ' + this.data.toSource());
       this.data.value.push(aProp);
-      ICAL.helpers.dumpn("Adding property " + aProp);
+      ICAL.helpers.dumpn('Adding property ' + aProp);
     },
 
     removeProperty: function removeProperty(aName) {
       var ucName = aName.toUpperCase();
       for each(var prop in this.properties[ucName]) {
         var pos = this.data.value.indexOf(prop);
-        if(pos > -1) {
+        if (pos > -1) {
           this.data.value.splice(pos, 1);
         }
       }
@@ -213,19 +214,19 @@ var ICAL = ICAL || {};
 
     clearAllProperties: function clearAllProperties() {
       this.properties = {};
-      for(var i = this.data.value.length - 1; i >= 0; i--) {
-        if(this.data.value[i].type != "COMPONENT") {
+      for (var i = this.data.value.length - 1; i >= 0; i--) {
+        if (this.data.value[i].type != 'COMPONENT') {
           delete this.data.value[i];
         }
       }
     },
 
     toString: function toString() {
-      var str = ICAL.helpers.foldline("BEGIN:" + this.name) + ICAL.newLineChar;
-      for(var key in this.data.value) {
+      var str = ICAL.helpers.foldline('BEGIN:' + this.name) + ICAL.newLineChar;
+      for (var key in this.data.value) {
         str += this.data.value[key].toString() + ICAL.newLineChar;
       }
-      str += ICAL.helpers.foldline("END:" + this.name);
+      str += ICAL.helpers.foldline('END:' + this.name);
       return str;
     }
   };

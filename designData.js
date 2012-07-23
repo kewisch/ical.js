@@ -11,192 +11,205 @@ ICAL.designData = {
     // CN just wants a param-value
     // "CN": { ... }
 
-    "CUTYPE": {
-      values: ["INDIVIDUAL", "GROUP", "RESOURCE", "ROOM", "UNKNOWN"],
+    'CUTYPE': {
+      values: ['INDIVIDUAL', 'GROUP', 'RESOURCE', 'ROOM', 'UNKNOWN'],
       allowXName: true,
       allowIanaToken: true
     },
 
-    "DELEGATED-FROM": {
-      valueType: "CAL-ADDRESS",
+    'DELEGATED-FROM': {
+      valueType: 'CAL-ADDRESS',
       multiValue: true
     },
-    "DELEGATED-TO": {
-      valueType: "CAL-ADDRESS",
+    'DELEGATED-TO': {
+      valueType: 'CAL-ADDRESS',
       multiValue: true
     },
     // "DIR": { ... }, // See ALTREP
-    "ENCODING": {
-      values: ["8BIT", "BASE64"]
+    'ENCODING': {
+      values: ['8BIT', 'BASE64']
     },
     // "FMTTYPE": { ... }, // See ALTREP
-    "FBTYPE": {
-      values: ["FREE", "BUSY", "BUSY-UNAVAILABLE", "BUSY-TENTATIVE"],
+    'FBTYPE': {
+      values: ['FREE', 'BUSY', 'BUSY-UNAVAILABLE', 'BUSY-TENTATIVE'],
       allowXName: true,
       allowIanaToken: true
     },
     // "LANGUAGE": { ... }, // See ALTREP
-    "MEMBER": {
-      valueType: "CAL-ADDRESS",
+    'MEMBER': {
+      valueType: 'CAL-ADDRESS',
       multiValue: true
     },
-    "PARTSTAT": {
+    'PARTSTAT': {
       // TODO These values are actually different per-component
-      values: ["NEEDS-ACTION", "ACCEPTED", "DECLINED", "TENTATIVE", "DELEGATED", "COMPLETED", "IN-PROCESS"],
+      values: [
+        'NEEDS-ACTION', 'ACCEPTED', 'DECLINED',
+        'TENTATIVE', 'DELEGATED', 'COMPLETED',
+        'IN-PROCESS'
+      ],
       allowXName: true,
       allowIanaToken: true
     },
-    "RANGE": {
-      values: ["THISANDFUTURE"]
+    'RANGE': {
+      values: ['THISANDFUTURE']
     },
-    "RELATED": {
-      values: ["START", "END"]
+    'RELATED': {
+      values: ['START', 'END']
     },
-    "RELTYPE": {
-      values: ["PARENT", "CHILD", "SIBLING"],
+    'RELTYPE': {
+      values: ['PARENT', 'CHILD', 'SIBLING'],
       allowXName: true,
       allowIanaToken: true
     },
-    "ROLE": {
-      values: ["REQ-PARTICIPANT", "CHAIR", "OPT-PARTICIPANT", "NON-PARTICIPANT"],
+    'ROLE': {
+      values: [
+        'REQ-PARTICIPANT', 'CHAIR', 'OPT-PARTICIPANT', 'NON-PARTICIPANT'
+      ],
       allowXName: true,
       allowIanaToken: true
     },
-    "RSVP": {
-      valueType: "BOOLEAN"
+    'RSVP': {
+      valueType: 'BOOLEAN'
     },
-    "SENT-BY": {
-      valueType: "CAL-ADDRESS"
+    'SENT-BY': {
+      valueType: 'CAL-ADDRESS'
     },
-    "TZID": {
+    'TZID': {
       matches: /^\//
     },
-    "VALUE": {
-      values: ["BINARY", "BOOLEAN", "CAL-ADDRESS", "DATE", "DATE-TIME", "DURATION", "FLOAT", "INTEGER", "PERIOD", "RECUR", "TEXT", "TIME", "URI", "UTC-OFFSET"],
+    'VALUE': {
+      values: [
+        'BINARY', 'BOOLEAN', 'CAL-ADDRESS', 'DATE',
+        'DATE-TIME', 'DURATION', 'FLOAT', 'INTEGER',
+        'PERIOD', 'RECUR', 'TEXT', 'TIME', 'URI', 'UTC-OFFSET'
+      ],
       allowXName: true,
       allowIanaToken: true
-    },
+    }
   },
 
   // When adding a value here, be sure to add it to the parameter types!
   value: {
 
-    "BINARY": {
-      matches: /^([A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/,
+    'BINARY': {
+      matches: new RegExp(
+        '^([A-Za-z0-9+\\/]{4})*' +
+        '([A-Za-z0-9+\\/]{2}==|[A-Za-z0-9+\\/]{3}=)?$'
+      ),
       requireParam: {
-        "ENCODING": "BASE64"
+        'ENCODING': 'BASE64'
       },
-      decorate: function (aString) {
+      decorate: function(aString) {
         return ICAL.icalbinary.fromString(aString);
       }
     },
-    "BOOLEAN": {
-      values: ["TRUE", "FALSE"],
-      decorate: function (aValue) {
-        return ICAL.icalvalue.fromString(aValue, "BOOLEAN");
+    'BOOLEAN': {
+      values: ['TRUE', 'FALSE'],
+      decorate: function(aValue) {
+        return ICAL.icalvalue.fromString(aValue, 'BOOLEAN');
       }
     },
-    "CAL-ADDRESS": {
+    'CAL-ADDRESS': {
       // needs to be an uri
     },
-    "DATE": {
-      validate: function (aValue) {
+    'DATE': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parseDate(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of DATE value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of DATE value');
         return data;
       },
-      decorate: function (aValue) {
+      decorate: function(aValue) {
         return ICAL.icaltime.fromString(aValue);
       }
     },
-    "DATE-TIME": {
-      validate: function (aValue) {
+    'DATE-TIME': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parseDateTime(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of DATE-TIME value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of DATE-TIME value');
         return data;
       },
 
-      decorate: function (aValue) {
+      decorate: function(aValue) {
         return ICAL.icaltime.fromString(aValue);
       }
     },
-    "DURATION": {
-      validate: function (aValue) {
+    'DURATION': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parseDuration(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of DURATION value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of DURATION value');
         return data;
       },
-      decorate: function (aValue) {
+      decorate: function(aValue) {
         return ICAL.icalduration.fromString(aValue);
       }
     },
-    "FLOAT": {
+    'FLOAT': {
       matches: /^[+-]?\d+\.\d+$/,
-      decorate: function (aValue) {
-        return ICAL.icalvalue.fromString(aValue, "FLOAT");
+      decorate: function(aValue) {
+        return ICAL.icalvalue.fromString(aValue, 'FLOAT');
       }
     },
-    "INTEGER": {
+    'INTEGER': {
       matches: /^[+-]?\d+$/,
-      decorate: function (aValue) {
-        return ICAL.icalvalue.fromString(aValue, "INTEGER");
+      decorate: function(aValue) {
+        return ICAL.icalvalue.fromString(aValue, 'INTEGER');
       }
     },
-    "PERIOD": {
-      validate: function (aValue) {
+    'PERIOD': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parsePeriod(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of PERIOD value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of PERIOD value');
         return data;
       },
 
-      decorate: function (aValue) {
+      decorate: function(aValue) {
         return ICAL.icalperiod.fromString(aValue);
       }
     },
-    "RECUR": {
-      validate: function (aValue) {
+    'RECUR': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parseRecur(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of RECUR value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of RECUR value');
         return data;
       },
 
       decorate: function decorate(aValue) {
         return ICAL.icalrecur.fromString(aValue);
-      },
+      }
     },
 
-    "TEXT": {
+    'TEXT': {
       matches: /.*/,
-      decorate: function (aValue) {
-        return ICAL.icalvalue.fromString(aValue, "TEXT");
+      decorate: function(aValue) {
+        return ICAL.icalvalue.fromString(aValue, 'TEXT');
       },
-      unescape: function (aValue, aName) {
-        return aValue.replace(/\\\\|\\;|\\,|\\[Nn]/g, function (str) {
-          switch(str) {
-          case "\\\\":
-            return "\\";
-          case "\\;":
-            return ";";
-          case "\\,":
-            return ",";
-          case "\\n":
-          case "\\N":
-            return "\n";
+      unescape: function(aValue, aName) {
+        return aValue.replace(/\\\\|\\;|\\,|\\[Nn]/g, function(str) {
+          switch (str) {
+          case '\\\\':
+            return '\\';
+          case '\\;':
+            return ';';
+          case '\\,':
+            return ',';
+          case '\\n':
+          case '\\N':
+            return '\n';
           default:
             return str;
           }
@@ -204,50 +217,50 @@ ICAL.designData = {
       },
 
       escape: function escape(aValue, aName) {
-        return aValue.replace(/\\|;|,|\n/g, function (str) {
-          switch(str) {
-          case "\\":
-            return "\\\\";
-          case ";":
-            return "\\;";
-          case ",":
-            return "\\,";
-          case "\n":
-            return "\\n";
+        return aValue.replace(/\\|;|,|\n/g, function(str) {
+          switch (str) {
+          case '\\':
+            return '\\\\';
+          case ';':
+            return '\\;';
+          case ',':
+            return '\\,';
+          case '\n':
+            return '\\n';
           default:
             return str;
           }
         });
-      },
+      }
     },
 
-    "TIME": {
-      validate: function (aValue) {
+    'TIME': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parseTime(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of TIME value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of TIME value');
         return data;
       }
     },
 
-    "URI": {
+    'URI': {
       // TODO
       /* ... */
     },
 
-    "UTC-OFFSET": {
-      validate: function (aValue) {
+    'UTC-OFFSET': {
+      validate: function(aValue) {
         var state = {
           buffer: aValue
         };
         var data = ICAL.icalparser.parseUtcOffset(state);
-        ICAL.icalparser.expectEnd(state, "Junk at end of UTC-OFFSET value");
+        ICAL.icalparser.expectEnd(state, 'Junk at end of UTC-OFFSET value');
         return data;
       },
 
-      decorate: function (aValue) {
+      decorate: function(aValue) {
         return ICAL.icalutcoffset.fromString(aValue);
       }
     }
@@ -257,114 +270,114 @@ ICAL.designData = {
     decorate: function decorate(aData, aParent) {
       return new ICAL.icalproperty(aData, aParent);
     },
-    "ATTACH": {
-      defaultType: "URI"
+    'ATTACH': {
+      defaultType: 'URI'
     },
-    "ATTENDEE": {
-      defaultType: "CAL-ADDRESS"
+    'ATTENDEE': {
+      defaultType: 'CAL-ADDRESS'
     },
-    "CATEGORIES": {
-      defaultType: "TEXT",
+    'CATEGORIES': {
+      defaultType: 'TEXT',
       multiValue: true
     },
-    "COMPLETED": {
-      defaultType: "DATE-TIME"
+    'COMPLETED': {
+      defaultType: 'DATE-TIME'
     },
-    "CREATED": {
-      defaultType: "DATE-TIME"
+    'CREATED': {
+      defaultType: 'DATE-TIME'
     },
-    "DTEND": {
-      defaultType: "DATE-TIME",
-      allowedTypes: ["DATE-TIME", "DATE"]
+    'DTEND': {
+      defaultType: 'DATE-TIME',
+      allowedTypes: ['DATE-TIME', 'DATE']
     },
-    "DTSTAMP": {
-      defaultType: "DATE-TIME"
+    'DTSTAMP': {
+      defaultType: 'DATE-TIME'
     },
-    "DTSTART": {
-      defaultType: "DATE-TIME",
-      allowedTypes: ["DATE-TIME", "DATE"]
+    'DTSTART': {
+      defaultType: 'DATE-TIME',
+      allowedTypes: ['DATE-TIME', 'DATE']
     },
-    "DUE": {
-      defaultType: "DATE-TIME",
-      allowedTypes: ["DATE-TIME", "DATE"]
+    'DUE': {
+      defaultType: 'DATE-TIME',
+      allowedTypes: ['DATE-TIME', 'DATE']
     },
-    "DURATION": {
-      defaultType: "DURATION"
+    'DURATION': {
+      defaultType: 'DURATION'
     },
-    "EXDATE": {
-      defaultType: "DATE-TIME",
-      allowedTypes: ["DATE-TIME", "DATE"]
+    'EXDATE': {
+      defaultType: 'DATE-TIME',
+      allowedTypes: ['DATE-TIME', 'DATE']
     },
-    "EXRULE": {
-      defaultType: "RECUR"
+    'EXRULE': {
+      defaultType: 'RECUR'
     },
-    "FREEBUSY": {
-      defaultType: "PERIOD",
+    'FREEBUSY': {
+      defaultType: 'PERIOD',
       multiValue: true
     },
-    "GEO": {
-      defaultType: "FLOAT",
+    'GEO': {
+      defaultType: 'FLOAT',
       structuredValue: true
     },
-    /* TODO exactly 2 values */"LAST-MODIFIED": {
-      defaultType: "DATE-TIME"
+    /* TODO exactly 2 values */'LAST-MODIFIED': {
+      defaultType: 'DATE-TIME'
     },
-    "ORGANIZER": {
-      defaultType: "CAL-ADDRESS"
+    'ORGANIZER': {
+      defaultType: 'CAL-ADDRESS'
     },
-    "PERCENT-COMPLETE": {
-      defaultType: "INTEGER"
+    'PERCENT-COMPLETE': {
+      defaultType: 'INTEGER'
     },
-    "REPEAT": {
-      defaultType: "INTEGER"
+    'REPEAT': {
+      defaultType: 'INTEGER'
     },
-    "RDATE": {
-      defaultType: "DATE-TIME",
-      allowedTypes: ["DATE-TIME", "DATE", "PERIOD"]
+    'RDATE': {
+      defaultType: 'DATE-TIME',
+      allowedTypes: ['DATE-TIME', 'DATE', 'PERIOD']
     },
-    "RECURRENCE-ID": {
-      defaultType: "DATE-TIME",
-      allowedTypes: ["DATE-TIME", "DATE"]
+    'RECURRENCE-ID': {
+      defaultType: 'DATE-TIME',
+      allowedTypes: ['DATE-TIME', 'DATE']
     },
-    "RESOURCES": {
-      defaultType: "TEXT",
+    'RESOURCES': {
+      defaultType: 'TEXT',
       multiValue: true
     },
-    "REQUEST-STATUS": {
-      defaultType: "TEXT",
+    'REQUEST-STATUS': {
+      defaultType: 'TEXT',
       structuredValue: true
     },
-    "PRIORITY": {
-      defaultType: "INTEGER"
+    'PRIORITY': {
+      defaultType: 'INTEGER'
     },
-    "RRULE": {
-      defaultType: "RECUR"
+    'RRULE': {
+      defaultType: 'RECUR'
     },
-    "SEQUENCE": {
-      defaultType: "INTEGER"
+    'SEQUENCE': {
+      defaultType: 'INTEGER'
     },
-    "TRIGGER": {
-      defaultType: "DURATION",
-      allowedTypes: ["DURATION", "DATE-TIME"]
+    'TRIGGER': {
+      defaultType: 'DURATION',
+      allowedTypes: ['DURATION', 'DATE-TIME']
     },
-    "TZOFFSETFROM": {
-      defaultType: "UTC-OFFSET"
+    'TZOFFSETFROM': {
+      defaultType: 'UTC-OFFSET'
     },
-    "TZOFFSETTO": {
-      defaultType: "UTC-OFFSET"
+    'TZOFFSETTO': {
+      defaultType: 'UTC-OFFSET'
     },
-    "TZURL": {
-      defaultType: "URI"
+    'TZURL': {
+      defaultType: 'URI'
     },
-    "URL": {
-      defaultType: "URI"
-    },
+    'URL': {
+      defaultType: 'URI'
+    }
   },
 
   component: {
     decorate: function decorate(aData, aParent) {
       return new ICAL.icalcomponent(aData, aParent);
     },
-    "VEVENT": {}
-  },
+    'VEVENT': {}
+  }
 };
