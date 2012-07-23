@@ -99,20 +99,6 @@ ICAL.designData = {
                 return data;
             },
 
-            toXML: function toXML(x) {
-                return <date-time xmlns={IC}>{this.formatXMLValue(x)}</date-time>;
-            },
-
-            formatXMLValue: function formatXMLValue(j) {
-                var m = helpers.pad2(j.month);
-                var d = helpers.pad2(j.day);
-                var h = helpers.pad2(j.hour);
-                var mi = helpers.pad2(j.minute);
-                var s = helpers.pad2(j.second);
-                return j.year + "-"  + m + "-" + d + "T" +
-                       h + ":" + mi + ":" + s + (j.timezone || "");
-            },
-
             decorate: function(aValue) {
                 return ICAL.icaltime.fromString(aValue);
             }
@@ -148,18 +134,6 @@ ICAL.designData = {
                 return data;
             },
 
-            toXML: function toXML(j) {
-                var xml = <period xmlns={IC}/>
-                if ("start" in j) {
-                    xml.start = <start xmlns={IC}>{designData.value["DATE-TIME"].formatXMLValue(j.start)}</start>;
-                }
-
-                if ("duration" in j) {
-                    xml.duration = <duration xmlns={IC}>{j.duration.toSource()}</duration>;
-                }
-                return xml;
-            },
-
             decorate: function(aValue) {
                 return ICAL.icalperiod.fromString(aValue);
             }
@@ -172,16 +146,6 @@ ICAL.designData = {
                 return data;
             },
 
-            toXML: function toXML(aJSON) {
-                var xml = <recur xmlns={IC}/>;
-                delete aJSON.value; // TODO temporary
-                delete aJSON.type; // TODO temporary
-                for (var name in aJSON) {
-                    var lcname = name.toLowerCase();
-                    xml[lcname] = aJSON[name];
-                }
-                return xml;
-            },
             decorate: function decorate(aValue) {
                 return ICAL.icalrecur.fromString(aValue);
             },
@@ -238,13 +202,6 @@ ICAL.designData = {
                 var data = ICAL.icalparser.parseUtcOffset(state);
                 ICAL.icalparser.expectEnd(state, "Junk at end of UTC-OFFSET value");
                 return data;
-            },
-
-            toXML: function (j) {
-                var h = helpers.pad2(j.hours);
-                var m = helpers.pad2(j.minutes);
-                var f = ("" + j.factor).substr(0, 1);
-                return <utc-offset xmlns={IC}>{f}{h}:{m}</utc-offset>
             },
 
             decorate: function(aValue) {
