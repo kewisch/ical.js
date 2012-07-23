@@ -87,15 +87,15 @@ var ICAL = ICAL || {};
             for (;;) {
                 var change = eval(this.changes[change_num].toSource()); // TODO clone
                 if (change.utc_offset < change.prev_utc_offset) {
-                    dumpn("Adjusting " + change.utc_offset);
+                    ICAL.helpers.dumpn("Adjusting " + change.utc_offset);
                     ICAL.icaltimezone.adjust_change(change, 0, 0, 0, change.utc_offset);
                 } else {
-                    dumpn("Adjusting prev " + change.prev_utc_offset);
+                    ICAL.helpers.dumpn("Adjusting prev " + change.prev_utc_offset);
                     ICAL.icaltimezone.adjust_change(change, 0, 0, 0, change.prev_utc_offset);
                 }
 
                 var cmp = ICAL.icaltimezone._compare_change_fn(tt_change, change);
-                dumpn("Compare" + cmp + " / " + change.toSource());
+                ICAL.helpers.dumpn("Compare" + cmp + " / " + change.toSource());
 
                 if (cmp >= 0) {
                     change_num_to_use = change_num;

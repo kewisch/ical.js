@@ -24,7 +24,7 @@ var ICAL = ICAL || {};
 
         fromData: function fromData(aData) {
             if (!aData.name) {
-                dumpn("Missing name: " + aData.toSource() + "stk " + STACK());
+                ICAL.helpers.dumpn("Missing name: " + aData.toSource() + "stk " + STACK());
             }
             this.name = aData.name;
             this.data = aData;
@@ -62,7 +62,7 @@ var ICAL = ICAL || {};
         },
 
         getStringValue: function getStringValue() {
-            dumpn("GV: " + ICAL.icalparser.stringifyValue(this.data));
+            ICAL.helpers.dumpn("GV: " + ICAL.icalparser.stringifyValue(this.data));
             return ICAL.icalparser.stringifyValue(this.data);
         },
 
