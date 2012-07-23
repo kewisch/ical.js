@@ -9,7 +9,6 @@
 // TODO structure data in components
 // TODO enforce uppercase when parsing
 // TODO serializer
-// TODO sort out period splitup w.r.t. xml
 // TODO properties as array
 // TODO don't break on empty lines at end
 
@@ -73,10 +72,6 @@ var ICAL = ICAL || {};
         return serializer.serializeToIcal(aJSON);
     };
 
-    ICAL.toXMLString = function toXMLString(aJSON) {
-        return serializer.serializeToXML(aJSON);
-    };
-
     function ParserError(aState, aMessage) {
         this.mState = aState;
         this.name = "ParserError";
@@ -104,8 +99,6 @@ var ICAL = ICAL || {};
 
     ParserError.prototype = new Error();
     ParserError.prototype.constructor = ParserError;
-
-    var IC = new Namespace("IC", "urn:ietf:params:xml:ns:icalendar-2.0");
 
     var parser = {};
     ICAL.icalparser = parser;
@@ -811,75 +804,6 @@ var ICAL = ICAL || {};
             }
             return str;
         },
-
-        serializeToXML: function(obj) {
-            var xml = <icalendar xmlns={IC}/>;
-            this._serializeComponentArray(obj.components, xml);
-            return xml;
-        },
-
-        _serializeComponentArray: function(compArray, xml) {
-            var IC = new Namespace("IC", "urn:ietf:params:xml:ns:icalendar-2.0");
-            for (var compName in compArray) {
-                for each (var comp in compArray[compName]) {
-                    xml.appendChild(this._serializeComponent(comp, compName));
-                }
-            }
-        },
-
-        _serializeProperty: function(obj, name) {
-            // TODO escape value, add params, types
-            var IC = new Namespace("IC", "urn:ietf:params:xml:ns:icalendar-2.0");
-            var propertyXML = <{name.toLowerCase()} xmlns={IC}/>;
-            if ("parameters" in obj) {
-                propertyXML.appendChild(this._serializeParameters(obj.parameters));
-            }
-            var lctype = obj.type.toLowerCase();
-
-            var valueXML;
-            if ((obj.type in ICAL.designData.value) &&
-                ("toXML" in ICAL.designData.value[obj.type])) {
-                valueXML = ICAL.designData.value[obj.type].toXML(obj);
-            } else {
-                 valueXML = <{lctype} xmlns={IC}>{obj.value}</{lctype}>
-            }
-
-            propertyXML.appendChild(valueXML);
-            return propertyXML;
-        },
-
-        _serializeParameters: function(parameters) {
-            var IC = new Namespace("IC", "urn:ietf:params:xml:ns:icalendar-2.0");
-            var paramXML = <parameters xmlns={IC}/>;
-            for (var name in parameters) {
-                var value = parameters[name];
-                var lcname = name.toLowerCase();
-                var lctype = value.type.toLowerCase();
-                paramXML.appendChild(<{lcname} xmlns={IC}>
-                                       <{lctype}>{value.value}</{lctype}>
-                                     </{lcname}>);
-            }
-            return paramXML;
-        },
-
-        _serializeComponent: function (obj, name) {
-            var IC = new Namespace("IC", "urn:ietf:params:xml:ns:icalendar-2.0");
-            var component = <{name.toLowerCase()} xmlns={IC}/>
-            if ("properties" in obj) {
-                var propXML = <properties xmlns={IC}/>;
-                for (var propName in obj.properties) {
-                    propXML.appendChild(this._serializeProperty(obj.properties[propName], propName));
-                }
-                component.properties += propXML;
-            }
-
-            if ("components" in obj) {
-                var compXML = <components xmlns={IC}/>;
-                this._serializeComponentArray(obj.components, compXML);
-                component.components += compXML;
-            }
-            return component;
-        }
     };
 
     /* Possible shortening:
