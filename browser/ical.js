@@ -23,6 +23,10 @@ ICAL.helpers = {
   },
 
   dumpn: function () {
+    if (!ICAL.debug) {
+      return;
+    }
+
     if(typeof (console) !== 'undefined' && 'log' in console) {
       ICAL.helpers.dumpn = function consoleDumpn(input) {
         return console.log(input);

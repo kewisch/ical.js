@@ -27,6 +27,8 @@
       }
 
       function validate() {
+        var duration = document.getElementById("duration");
+
         var data = document.getElementById("data");
         var decorate = document.getElementById("decorate").checked;
 
@@ -41,8 +43,12 @@
 
         var sourceResult, jsonResult, icalResult, undecResult;
 
+        duration.textContent = '';
         error.textContent = serialize_error.textContent = undecorate_error.textContent = "";
         results.textContent = reserialized.textContent = undecorated.textContent =  "";
+
+        var beginTime = Date.now();
+
         try {
             // First load the source representation
             sourceResult = ICAL.toJSON(data.value, decorate)
@@ -57,7 +63,7 @@
 
         try {
             // Try to reserialize it
-            icalResult = ICAL.toIcalString(sourceResult);
+            icalResult = ICAL.toIcalString(JSON.parse(jsonResult));
             reserialized.textContent = icalResult;
         } catch (e) {
             serialize_error.textContent = stringError(e);
@@ -77,6 +83,9 @@
             }
         }
 
+        var totalRuntime = Date.now() - beginTime;
+        duration.textContent = 'Total Runtime: ' + totalRuntime;
+
         return false;
       }
 
@@ -87,6 +96,7 @@
       <textarea id="data" rows="20" cols="80"></textarea><br/>
       <input type="checkbox" id="decorate">Decorate</input>
       <input type="submit" value="Validate"/><br/>
+      <p id="duration"></p>
       <hr>
       <pre id="error"></pre>
       <pre id="results"></pre>
