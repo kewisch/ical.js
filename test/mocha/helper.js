@@ -17,6 +17,7 @@
   testSupport.requireICAL = function() {
     var files = [
       'helpers',
+      'serializer',
       'parser',
       'design',
       'component',
@@ -26,7 +27,8 @@
       'duration',
       'timezone',
       'recur',
-      'time'
+      'time',
+      'ical'
     ];
 
     files.forEach(function(file) {

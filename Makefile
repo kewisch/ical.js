@@ -27,6 +27,7 @@ package: node-deps
 	rm -f $(VENDOR_FILE);
 	touch $(VENDOR_FILE);
 	cat $(LIB)/helpers.js >> $(VENDOR_FILE);
+	cat $(LIB)/serializer.js >> $(VENDOR_FILE);
 	cat $(LIB)/parser.js >> $(VENDOR_FILE);
 	cat $(LIB)/design.js >> $(VENDOR_FILE);
 	cat $(LIB)/component.js >> $(VENDOR_FILE);
@@ -37,6 +38,7 @@ package: node-deps
 	cat $(LIB)/timezone.js >> $(VENDOR_FILE);
 	cat $(LIB)/recur.js >> $(VENDOR_FILE);
 	cat $(LIB)/time.js >> $(VENDOR_FILE);
+	cat $(LIB)/ical.js >> $(VENDOR_FILE);
 
 
 TEST_AGENT_CONFIG=./test-agent/config.json
@@ -46,7 +48,7 @@ test-agent-config:
 	@touch $(TEST_AGENT_CONFIG)
 	@rm -f /tmp/test-agent-config;
 	# Build json array of all test files
-	for d in test/; \
+	for d in test; \
 	do \
 		find $$d -name '*_test.js' | sed "s:$$d/:/$$d/:g"  >> /tmp/test-agent-config; \
 	done;

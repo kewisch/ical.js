@@ -41,7 +41,7 @@
         var undecorate_error = document.getElementById("undecorate_error");
         var undecorated = document.getElementById("undecorated");
 
-        var sourceResult, jsonResult, icalResult, undecResult;
+        var sourceResult, jsonResult, icalResult, undecResult, component;
 
         duration.textContent = '';
         error.textContent = serialize_error.textContent = undecorate_error.textContent = "";
@@ -51,7 +51,7 @@
 
         try {
             // First load the source representation
-            sourceResult = ICAL.toJSON(data.value, decorate)
+            sourceResult = ICAL.parse(data.value)
             results.textContent = sourceResult.toSource();
 
             // Try to jsonify it
@@ -70,9 +70,12 @@
         }
 
         if (decorate) {
+
+            component = new ICAL.icalcomponent(sourceResult);
+
             try {
                 // Try to undecorate it
-                undecResult = sourceResult.undecorate();
+                undecResult = component.undecorate();
                 undecorated.textContent = undecResult.toSource();
 
                 // Try to jsonify it
