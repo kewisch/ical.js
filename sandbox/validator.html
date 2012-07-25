@@ -8,23 +8,6 @@
                ("lineNumber" in e ? "\nLine: " + e.lineNumber : "") +
                ("stack" in e ? "\nStack: " + e.stack : "");
       }
-      function jsonReplacer(key, value) {
-          // Remove properties that could cause cyclic references
-          if (key == "wrappedJSObject" || key == "parent") {
-              return undefined;
-          }
-
-          // Avoid double information for decorated objects
-          if (key == "properties" || key == "components") {
-              return "...";
-          }
-
-          if (value && value.icaltype) {
-              return value.toString();
-          }
-
-          return value;
-      }
 
       function validate() {
         var duration = document.getElementById("duration");
@@ -55,7 +38,7 @@
             results.textContent = sourceResult.toSource();
 
             // Try to jsonify it
-            jsonResult = JSON.stringify(sourceResult, jsonReplacer, " ");
+            jsonResult = JSON.stringify(sourceResult, null, " ");
             results.textContent = jsonResult;
         } catch (e) {
             error.textContent = stringError(e);
@@ -79,7 +62,7 @@
                 undecorated.textContent = undecResult.toSource();
 
                 // Try to jsonify it
-                jsonResult = JSON.stringify(undecResult, jsonReplacer, " ");
+                jsonResult = JSON.stringify(undecResult, null, " ");
                 undecorated.textContent = jsonResult;
             } catch (e) {
                 undecorate_error.textContent = stringError(e);
