@@ -110,6 +110,30 @@ ICAL.helpers = {
     return(number < 0 ? Math.ceil(number) : Math.floor(number));
   }
 };
+var ICAL = ICAL || {};
+
+(function () {
+  ICAL.serializer = {
+    serializeToIcal: function (obj, name, isParam) {
+      if(obj && obj.icalclass) {
+        return obj.toString();
+      }
+
+      var str = "";
+
+      if(obj.type == "COMPONENT") {
+        str = "BEGIN:" + obj.name + ICAL.newLineChar;
+        for each(var sub in obj.value) {
+          str += this.serializeToIcal(sub) + ICAL.newLineChar;
+        }
+        str += "END:" + obj.name;
+      } else {
+        str += ICAL.icalparser.stringifyProperty(obj);
+      }
+      return str;
+    }
+  };
+}());
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -119,9 +143,6 @@ ICAL.helpers = {
 // TODO SAX type parser
 // TODO structure data in components
 // TODO enforce uppercase when parsing
-// TODO serializer
-// TODO properties as array
-// TODO don't break on empty lines at end
 // TODO optionally preserve value types that are default but explicitly set
 // TODO floating timezone
 var ICAL = ICAL || {};
@@ -149,10 +170,8 @@ var ICAL = ICAL || {};
      */
 
   // Exports
-  ICAL.foldLength = 75;
-  ICAL.newLineChar = "\n";
 
-  ICAL._sanitizeJSON = function(key, value) {
+  ICAL.JSONStringifyRules = function(key, value) {
     // Remove properties that could cause cyclic references
     if (key == "wrappedJSObject" || key == "parent") {
         return undefined;
@@ -173,11 +192,12 @@ var ICAL = ICAL || {};
   ICAL.toJSONString = function toJSONString() {
     var json = this.toJSON.apply(this, arguments);
 
-    return JSON.stringify(json, ICAL._sanitizeJSON);
+    return JSON.stringify(json, ICAL.JSONStringifyRules);
   };
 
   ICAL.toJSON = function toJSON(aBuffer, aDecorated) {
     var state = ICAL.helpers.initState(aBuffer, 0);
+
     while(state.buffer.length) {
       var line = ICAL.helpers.unfoldline(state);
       var lexState = ICAL.helpers.initState(line, state.lineNr);
@@ -202,7 +222,7 @@ var ICAL = ICAL || {};
   };
 
   ICAL.toIcalString = function toIcalString(aJSON) {
-    return serializer.serializeToIcal(aJSON);
+    return ICAL.serializer.serializeToIcal(aJSON);
   };
 
   function ParserError(aState, aMessage) {
@@ -974,27 +994,6 @@ var ICAL = ICAL || {};
     }
   }
 
-  var serializer = {
-    serializeToIcal: function (obj, name, isParam) {
-      if(obj && obj.icalclass) {
-        return obj.toString();
-      }
-
-      var str = "";
-
-      if(obj.type == "COMPONENT") {
-        str = "BEGIN:" + obj.name + ICAL.newLineChar;
-        for each(var sub in obj.value) {
-          str += this.serializeToIcal(sub) + ICAL.newLineChar;
-        }
-        str += "END:" + obj.name;
-      } else {
-        str += parser.stringifyProperty(obj);
-      }
-      return str;
-    },
-  };
-
   /* Possible shortening:
       - pro: retains order
       - con: datatypes not obvious
@@ -1538,7 +1537,7 @@ var ICAL = ICAL || {};
       this.components[ucName].push(comp);
     },
 
-    removeSubcomponent: function removeSubcomponent(aName) {
+    removeSubcomponent: function removeSubComponent(aName) {
       var ucName = aName.toUpperCase();
       for each(var comp in this.components[ucName]) {
         var pos = this.data.value.indexOf(comp);
@@ -1574,7 +1573,7 @@ var ICAL = ICAL || {};
     getFirstPropertyValue: function getFirstPropertyValue(aName) {
       // TODO string value?
       var prop = this.getFirstProperty(aName);
-      retur(prop ? prop.getFirstValue() : null);
+      return (prop ? prop.getFirstValue() : null);
     },
 
     getAllProperties: function getAllProperties(aName) {
@@ -1605,7 +1604,6 @@ var ICAL = ICAL || {};
     },
 
     addProperty: function addProperty(aProp) {
-      ICAL.helpers.dumpn("Adding property " + aProp + "STK " + STACK());
       var prop = aProp;
       if(aProp.parent) {
         prop = aProp.clone();
@@ -1627,7 +1625,6 @@ var ICAL = ICAL || {};
           this.data.value.splice(pos, 1);
         }
       }
-
       delete this.properties[ucName];
     },
 
@@ -4347,3 +4344,47 @@ var ICAL = ICAL || {};
   ICAL.icaltime.FRIDAY = 6;
   ICAL.icaltime.SATURDAY = 7;
 })();
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
+
+var ICAL = ICAL || {};
+
+(function () {
+  ICAL.foldLength = 75;
+  ICAL.newLineChar = "\n";
+
+  /**
+   * Return a parsed ICAL object to the ICAL format.
+   *
+   * @param {Object} object parsed ical string.
+   * @return {String} ICAL string.
+   */
+  ICAL.stringify = function ICALStringify(object) {
+    return ICAL.serializer.serializeToIcal(object);
+  };
+
+  /**
+   * Parse an ICAL object or string.
+   *
+   * @param {String|Object} ical ical string or pre-parsed object.
+   * @param {Boolean} decorate when true decorates object data types.
+   *
+   * @return {Object|ICAL.icalcomponent}
+   */
+  ICAL.parse = function ICALParse(ical) {
+    var state = ICAL.helpers.initState(ical, 0);
+
+    while(state.buffer.length) {
+      var line = ICAL.helpers.unfoldline(state);
+      var lexState = ICAL.helpers.initState(line, state.lineNr);
+      var lineData = ICAL.icalparser.lexContentLine(lexState);
+      ICAL.icalparser.parseContentLine(state, lineData);
+      state.lineNr++;
+    }
+
+    return state.currentData;
+  };
+}());

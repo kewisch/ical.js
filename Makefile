@@ -1,5 +1,18 @@
 VENDOR_FILE=build/ical.js
 LIB=lib/ical
+VENDOR_FILE_LIST= $(LIB)/helpers.js \
+	$(LIB)/serializer.js \
+	$(LIB)/parser.js \
+	$(LIB)/design.js \
+	$(LIB)/component.js \
+	$(LIB)/property.js \
+	$(LIB)/value.js \
+	$(LIB)/period.js \
+	$(LIB)/duration.js \
+	$(LIB)/timezone.js \
+	$(LIB)/recur.js \
+	$(LIB)/time.js \
+	$(LIB)/ical.js
 
 .PHONY: node-deps
 node-deps:
@@ -23,23 +36,9 @@ node-deps:
 
 .PHONY: package
 package: node-deps
-
 	rm -f $(VENDOR_FILE);
 	touch $(VENDOR_FILE);
-	cat $(LIB)/helpers.js >> $(VENDOR_FILE);
-	cat $(LIB)/serializer.js >> $(VENDOR_FILE);
-	cat $(LIB)/parser.js >> $(VENDOR_FILE);
-	cat $(LIB)/design.js >> $(VENDOR_FILE);
-	cat $(LIB)/component.js >> $(VENDOR_FILE);
-	cat $(LIB)/property.js >> $(VENDOR_FILE);
-	cat $(LIB)/value.js >> $(VENDOR_FILE);
-	cat $(LIB)/period.js >> $(VENDOR_FILE);
-	cat $(LIB)/duration.js >> $(VENDOR_FILE);
-	cat $(LIB)/timezone.js >> $(VENDOR_FILE);
-	cat $(LIB)/recur.js >> $(VENDOR_FILE);
-	cat $(LIB)/time.js >> $(VENDOR_FILE);
-	cat $(LIB)/ical.js >> $(VENDOR_FILE);
-
+	cat $(VENDOR_FILE_LIST) >> $(VENDOR_FILE);
 
 TEST_AGENT_CONFIG=./test-agent/config.json
 .PHONY: test-agent-config
