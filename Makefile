@@ -14,8 +14,12 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/time.js \
 	$(LIB)/ical.js
 
+.PHONY: dev
+dev: package test-agent-config node-deps
+
 .PHONY: node-deps
 node-deps:
+	npm install .
 	# mocha
 	rm -f test-agent/mocha.js
 	cp node_modules/mocha/mocha.js test-agent/
@@ -35,7 +39,7 @@ node-deps:
 	cp node_modules/test-agent/test-agent.css test-agent/
 
 .PHONY: package
-package: node-deps
+package:
 	rm -f $(VENDOR_FILE);
 	touch $(VENDOR_FILE);
 	cat $(VENDOR_FILE_LIST) >> $(VENDOR_FILE);

@@ -3,3 +3,4 @@ test-agent.js
 mocha.js
 mocha.css
 chai.js
+config.json

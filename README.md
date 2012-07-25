@@ -6,23 +6,23 @@ The inital goal was to use this as a replacement for libical in the [Mozilla Cal
 
 Check out sandbox/validation.html for how to use this library from a web page.
 
-## Tests
+## Developing
+
+The browser build is always found under build/ical.js build/ical.min.js
+coming soon.
+
+Run `make package`
+
+### Tests
 
 Currently tests only run in a gecko browser environment.
 The goal is to have complete support for most modern browsers
-nodejs and power the ical parser of Lightning (xpcom tests).
+nodejs and xpcom.
 
-1. Run `make package`
+You need nodejs/nodejs to install the testing tools.
 
-2. (without node js
+1.  Run `make dev`
 
-    Tests are written in mocha and chai for assertions.
-    Run `make test-agent-config`
-    (You need a webserver)
-    Go to http://your_server/ical.js/test-agent/index.html
-
-2. (with nodejs)
-
-    Run `make test-server`
+2.  Run `make test-server`
     Go to http://localhost:8789/test-agent/index.html
     Run all tests with `make test`
