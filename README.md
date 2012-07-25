@@ -1,7 +1,4 @@
-
-
-jsical - Javascript parser for rfc5545
-======================================
+# jsical - Javascript parser for rfc5545
 
 This is a library to parse the ICAL format defined in [rfc5545](http://tools.ietf.org/html/rfc5545). While it may be usable for basic tasks, it is still very much in development. There are a lot of TODOs in this library. If you would like to help out and would like to discuss any API changes, please [contact me](mailto:mozilla@kewis.ch).
 
@@ -15,18 +12,17 @@ Currently tests only run in a gecko browser environment.
 The goal is to have complete support for most modern browsers
 nodejs and power the ical parser of Lightning (xpcom tests).
 
-Tests are written in mocha and chai for assertions.
+1. Run `make package`
 
-(without nodejs)
+2. (without node js
 
-Run `make test-agent-config`
-(You need a webserver)
+    Tests are written in mocha and chai for assertions.
+    Run `make test-agent-config`
+    (You need a webserver)
+    Go to http://your_server/ical.js/test-agent/index.html
 
-Go to http://your_server/ical.js/test-agent/index.html
+2. (with nodejs)
 
-(with nodejs)
-
-Run make test-server
-
-Go to http://localhost:8789/test-agent/index.html
-Run all test with `make test`
+    Run `make test-server`
+    Go to http://localhost:8789/test-agent/index.html
+    Run all tests with `make test`
