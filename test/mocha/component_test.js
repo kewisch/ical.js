@@ -103,6 +103,14 @@ suite('ical/component', function() {
     assert.deepEqual(addedProp.data.value, ['value']);
   });
 
+  test('#toJSON', function() {
+    var string = JSON.stringify(subject);
+    var json = JSON.parse(string);
+    var newCom = new ICAL.icalcomponent(json);
+
+    assert.equal(newCom.toString(), subject.toString());
+  });
+
   test('#addSubcomponent', function() {
     var vevent = factory.veventComp();
     var veventOut = vevent.toString();

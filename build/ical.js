@@ -1637,6 +1637,50 @@ var ICAL = ICAL || {};
       }
     },
 
+    _valueToJSON: function(value) {
+      if (value && value.icaltype) {
+        return value.toString();
+      }
+
+      if (typeof(value) === 'object') {
+        return this._undecorateJSON(value);
+      }
+
+      return value;
+    },
+
+    _undecorateJSON: function(object) {
+      if (object instanceof Array) {
+        var result = [];
+        var len = object.length;
+
+        for (var i = 0; i < len; i++) {
+          result.push(this._valueToJSON(object[i]));
+        }
+
+      } else {
+        var result = {};
+        var key;
+
+        for (key in object) {
+          if (object.hasOwnProperty(key)) {
+            result[key] = this._valueToJSON(object[key]);
+          }
+        }
+      }
+
+      return result;
+    },
+
+    /**
+     * Exports the components values to a json friendly
+     * object. You can use JSON.stringify directly on
+     * components as a result.
+     */
+    toJSON: function toJSON() {
+      return this._undecorateJSON(this.undecorate());
+    },
+
     toString: function toString() {
       var str = ICAL.helpers.foldline("BEGIN:" + this.name) + ICAL.newLineChar;
       for(var key in this.data.value) {
@@ -1681,7 +1725,7 @@ var ICAL = ICAL || {};
 
     fromData: function fromData(aData) {
       if(!aData.name) {
-        ICAL.helpers.dumpn("Missing name: " + aData.toSource() + "stk " + STACK());
+        ICAL.helpers.dumpn("Missing name: " + aData.toSource());
       }
       this.name = aData.name;
       this.data = aData;
