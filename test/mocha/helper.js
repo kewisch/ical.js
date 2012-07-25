@@ -1,4 +1,5 @@
 (function() {
+  window.navigator;
 
   // lazy defined navigator causes global leak warnings...
 
@@ -94,6 +95,7 @@
       });
     } else {
       var xhr = new XMLHttpRequest();
+      console.log(file);
       xhr.open('GET', '/samples/' + file, true);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {

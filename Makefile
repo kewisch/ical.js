@@ -59,6 +59,10 @@ test-agent-config:
 	@echo "Built test ui config file: $(TEST_AGENT_CONFIG)"
 	@rm -f /tmp/test-agent-config
 
+.PHONY: test
+test:
+	./node_modules/test-agent/bin/js-test-agent test
+
 .PHONY: test-server
 test-server:
 	./node_modules/test-agent/bin/js-test-agent server --growl

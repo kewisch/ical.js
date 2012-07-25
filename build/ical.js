@@ -23,6 +23,10 @@ ICAL.helpers = {
   },
 
   dumpn: function () {
+    if (!ICAL.debug) {
+      return;
+    }
+
     if(typeof (console) !== 'undefined' && 'log' in console) {
       ICAL.helpers.dumpn = function consoleDumpn(input) {
         return console.log(input);
@@ -146,7 +150,31 @@ var ICAL = ICAL || {};
 
   // Exports
   ICAL.foldLength = 75;
-  ICAL.newLineChar = "\r\n";
+  ICAL.newLineChar = "\n";
+
+  ICAL._sanitizeJSON = function(key, value) {
+    // Remove properties that could cause cyclic references
+    if (key == "wrappedJSObject" || key == "parent") {
+        return undefined;
+    }
+
+    // Avoid double information for decorated objects
+    if (key == "components") {
+      return undefined;
+    }
+
+    if (value && value.icaltype) {
+        return value.toString();
+    }
+
+    return value;
+  }
+
+  ICAL.toJSONString = function toJSONString() {
+    var json = this.toJSON.apply(this, arguments);
+
+    return JSON.stringify(json, ICAL._sanitizeJSON);
+  };
 
   ICAL.toJSON = function toJSON(aBuffer, aDecorated) {
     var state = ICAL.helpers.initState(aBuffer, 0);
@@ -198,9 +226,18 @@ var ICAL = ICAL || {};
     } else {
       this.message = aMessage;
     }
+
+    // create stack
+    try {
+      throw new Error();
+    } catch(e) {
+      var split = e.stack.split('\n');
+      split.shift();
+      this.stack = split.join('\n');
+    }
   }
 
-  ParserError.prototype = new Error();
+  ParserError.prototype = Object.create(Error.prototype);
   ParserError.prototype.constructor = ParserError;
 
   var parser = {};
@@ -228,6 +265,9 @@ var ICAL = ICAL || {};
     // Read the value
     parser.expectRE(aState, /^:/, "Expected ':'");
     lineData.value = parser.lexValue(aState);
+    //FIXME:? There may be some cases where this is needed
+    //but its perfectly possible that this line is blank.
+
     parser.expectEnd(aState, "Junk at End of Line");
     return lineData;
   };
@@ -261,11 +301,16 @@ var ICAL = ICAL || {};
     // VALUE-CHAR = WSP / %x21-7E / NON-US-ASCII
     // ; Any textual character
 
+    if (aState.buffer.length === 0) {
+      return aState.buffer;
+    }
+
     // TODO the unicode range might be wrong!
     var match = parser.expectRE(aState,
                                 /*  WSP|%x21-7E|NON-US-ASCII  */
                                 /^([ \t\x21-\x7E\u00C2-\uF400]+)/,
                                 "Invalid Character in value");
+
     return match[1];
   };
 
@@ -1373,7 +1418,9 @@ ICAL.design = {
 };
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -1491,7 +1538,7 @@ var ICAL = ICAL || {};
       this.components[ucName].push(comp);
     },
 
-    removeAllSubcomponents: function removeSubComponent(aName) {
+    removeSubcomponent: function removeSubcomponent(aName) {
       var ucName = aName.toUpperCase();
       for each(var comp in this.components[ucName]) {
         var pos = this.data.value.indexOf(comp);
@@ -1613,7 +1660,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -1794,7 +1843,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2004,7 +2055,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2052,7 +2105,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2178,7 +2233,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2526,7 +2583,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -3595,7 +3654,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
