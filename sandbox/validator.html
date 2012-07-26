@@ -24,7 +24,7 @@
         var undecorate_error = document.getElementById("undecorate_error");
         var undecorated = document.getElementById("undecorated");
 
-        var sourceResult, jsonResult, icalResult, undecResult, component;
+        var sourceResult, jsonResult, icalResult, component;
 
         duration.textContent = '';
         error.textContent = serialize_error.textContent = undecorate_error.textContent = "";
@@ -46,7 +46,7 @@
 
         try {
             // Try to reserialize it
-            icalResult = ICAL.toIcalString(JSON.parse(jsonResult));
+            icalResult = ICAL.stringify(JSON.parse(jsonResult));
             reserialized.textContent = icalResult;
         } catch (e) {
             serialize_error.textContent = stringError(e);
@@ -58,11 +58,10 @@
 
             try {
                 // Try to undecorate it
-                undecResult = component.undecorate();
-                undecorated.textContent = undecResult.toSource();
+                undecorated.textContent = component.undecorate().toSource();
 
                 // Try to jsonify it
-                jsonResult = JSON.stringify(undecResult, null, " ");
+                jsonResult = JSON.stringify(component, null, " ");
                 undecorated.textContent = jsonResult;
             } catch (e) {
                 undecorate_error.textContent = stringError(e);

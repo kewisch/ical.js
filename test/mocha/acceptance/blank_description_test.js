@@ -10,7 +10,7 @@ suite('ics - blank description', function() {
   });
 
   test('summary', function() {
-    // just verify it does not crash
-    stringified = ICAL.toJSONString(icsData);
+    // just verify it can parse blank lines
+    var result = ICAL.parse(icsData);
   });
 });

@@ -171,60 +171,6 @@ var ICAL = ICAL || {};
 
   // Exports
 
-  ICAL.JSONStringifyRules = function(key, value) {
-    // Remove properties that could cause cyclic references
-    if (key == "wrappedJSObject" || key == "parent") {
-        return undefined;
-    }
-
-    // Avoid double information for decorated objects
-    if (key == "components") {
-      return undefined;
-    }
-
-    if (value && value.icaltype) {
-        return value.toString();
-    }
-
-    return value;
-  }
-
-  ICAL.toJSONString = function toJSONString() {
-    var json = this.toJSON.apply(this, arguments);
-
-    return JSON.stringify(json, ICAL.JSONStringifyRules);
-  };
-
-  ICAL.toJSON = function toJSON(aBuffer, aDecorated) {
-    var state = ICAL.helpers.initState(aBuffer, 0);
-
-    while(state.buffer.length) {
-      var line = ICAL.helpers.unfoldline(state);
-      var lexState = ICAL.helpers.initState(line, state.lineNr);
-      var lineData = parser.lexContentLine(lexState);
-      parser.parseContentLine(state, lineData);
-      state.lineNr++;
-    }
-
-    if(aDecorated) {
-      try {
-        return new ICAL.icalcomponent(state.currentData);
-      } catch(e) {
-        ICAL.helpers.dumpn(e);
-        ICAL.helpers.dumpn(e.stack);
-        ICAL.helpers.dumpn(e.lineNumber);
-        ICAL.helpers.dumpn(e.filename);
-        return null;
-      }
-    } else {
-      return state.currentData;
-    }
-  };
-
-  ICAL.toIcalString = function toIcalString(aJSON) {
-    return ICAL.serializer.serializeToIcal(aJSON);
-  };
-
   function ParserError(aState, aMessage) {
     this.mState = aState;
     this.name = "ParserError";

@@ -13,7 +13,7 @@ suite('ical/component', function() {
   });
 
   setup(function() {
-    subject = ICAL.toJSON(icsData, true);
+    subject = new ICAL.icalcomponent(ICAL.parse(icsData));
     factory = testSupport.factory;
   });
 
