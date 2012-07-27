@@ -16,4 +16,5 @@ def IcalShouldReportError(error):
   global OriginalShouldReportError
   return error not in (
     errors.UNNECESSARY_DOUBLE_QUOTED_STRING,
+    errors.LINE_TOO_LONG,
   ) and OriginalShouldReportError(error)
