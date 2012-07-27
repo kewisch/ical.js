@@ -203,8 +203,10 @@ var ICAL = ICAL || {};
     }
   }
 
-  ParserError.prototype = Object.create(Error.prototype);
-  ParserError.prototype.constructor = ParserError;
+  ParserError.prototype = {
+    __proto__: Error.prototype,
+    constructor: ParserError
+  }
 
   var parser = {};
   ICAL.icalparser = parser;
