@@ -10,7 +10,8 @@ function test_fold() {
                      { buffer: "TEST:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
                        folded: "TEST:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqr\r\n stuvwxyz"}];
 
-    for each (var tcase in testcases) {
+    for (var tcasekey in testcases) {
+        var tcase = testcases[tcasekey];
         if ("unfolded" in tcase) {
             var state = helpers.initState(tcase.buffer, 0);
             do_check_eq(helpers.unfoldline(state), tcase.unfolded);
@@ -90,7 +91,8 @@ function test_contentLine() {
         }
     ];
 
-    for each (var tcase in testcases) {
+    for(var tcasekey in testcases) {
+        var tcase = testcases[tcasekey];
         var state = helpers.initState(tcase.buffer, 0);
         if ('fail' in tcase && tcase.fail) {
             try {
@@ -281,7 +283,8 @@ function test_parseCheckValue() {
         }
     ];
 
-    for each (var tcase in testcases) {
+    for(var tcasekey in testcases) {
+        var tcase = testcases[tcasekey];
         try {
             parser.parseCheckValue(tcase.data);
             if ('fail' in tcase && tcase.fail) {
@@ -341,7 +344,8 @@ function test_parseContentLine() {
         },
     ];
 
-    for each (var tcase in testcases) {
+    for(var tcasekey in testcases) {
+        var tcase = testcases[tcasekey];
         // toJSON calls parseContentLine
         var json = ICAL.toJSON(tcase.buffer);
         if ("expected" in tcase) {
