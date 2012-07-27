@@ -123,8 +123,8 @@ var ICAL = ICAL || {};
 
       if(obj.type == "COMPONENT") {
         str = "BEGIN:" + obj.name + ICAL.newLineChar;
-        for each(var sub in obj.value) {
-          str += this.serializeToIcal(sub) + ICAL.newLineChar;
+        for (var subkey in obj.value) {
+          str += this.serializeToIcal(obj.value[sub]) + ICAL.newLineChar;
         }
         str += "END:" + obj.name;
       } else {
@@ -858,8 +858,8 @@ var ICAL = ICAL || {};
     // One or more rule parts
     var value = parser.parseList(aState, parseRulePart, ";");
     var data = {};
-    for each(var mbr in value) {
-      ICAL.helpers.mixin(data, mbr);
+    for(var key in value) {
+      ICAL.helpers.mixin(data, value[key]);
     }
 
     // Make sure there's no junk at the end
@@ -1423,8 +1423,8 @@ var ICAL = ICAL || {};
 
     undecorate: function undecorate() {
       var newdata = [];
-      for each(var data in this.data.value) {
-        newdata.push(data.undecorate());
+      for(var key in this.data.value) {
+        newdata.push(this.data.value[key].undecorate());
       }
       return {
         name: this.name,
@@ -1487,8 +1487,8 @@ var ICAL = ICAL || {};
 
     removeSubcomponent: function removeSubComponent(aName) {
       var ucName = aName.toUpperCase();
-      for each(var comp in this.components[ucName]) {
-        var pos = this.data.value.indexOf(comp);
+      for(var key in this.components[ucName]) {
+        var pos = this.data.value.indexOf(this.components[ucName][key]);
         if(pos > -1) {
           this.data.value.splice(pos, 1);
         }
@@ -1510,8 +1510,8 @@ var ICAL = ICAL || {};
           prop = this.properties[ucName][0];
         }
       } else {
-        for each(var p in this.properties) {
-          prop = p;
+        for(var p in this.properties) {
+          prop = this.properties[p];
           break;
         }
       }
@@ -1567,8 +1567,8 @@ var ICAL = ICAL || {};
 
     removeProperty: function removeProperty(aName) {
       var ucName = aName.toUpperCase();
-      for each(var prop in this.properties[ucName]) {
-        var pos = this.data.value.indexOf(prop);
+      for(var key in this.properties[ucName]) {
+        var pos = this.data.value.indexOf(this.properties[ucName][key]);
         if(pos > -1) {
           this.data.value.splice(pos, 1);
         }
@@ -1683,7 +1683,8 @@ var ICAL = ICAL || {};
 
     undecorate: function () {
       var values = []
-      for each(var val in this.data.value) {
+      for(var key in this.data.value) {
+        var val = this.data.value[key];
         if("undecorate" in val) {
           values.push(val.undecorate());
         } else {
@@ -1735,7 +1736,8 @@ var ICAL = ICAL || {};
     setValues: function setValues(aValues, aType) {
       var newValues = [];
       var newType = null;
-      for each(var value in aValues) {
+      for(var key in aValues) {
+        var value = aValues[key];
         if(value.icalclass && value.icaltype) {
           if(newType && newType != value.icaltype) {
             throw new Error("All values must be of the same type!");
@@ -2153,11 +2155,12 @@ var ICAL = ICAL || {};
 
     fromData: function fromData(aData) {
       const propsToCopy = ["weeks", "days", "hours", "minutes", "seconds", "isNegative"];
-      for each(var key in propsToCopy) {
-        if(aData && key in aData) {
-          this[key] = aData[key];
+      for (var key in propsToCopy) {
+        var prop = propsToCopy[key];
+        if(aData && prop in aData) {
+          this[prop] = aData[prop];
         } else {
-          this[key] = 0;
+          this[prop] = 0;
         }
       }
 
@@ -2252,11 +2255,12 @@ var ICAL = ICAL || {};
 
     fromData: function fromData(aData) {
       const propsToCopy = ["tzid", "location", "tznames", "latitude", "longitude"];
-      for each(var key in propsToCopy) {
-        if(aData && key in aData) {
-          this[key] = aData[key];
+      for(var key in propsToCopy) {
+        var prop = propsToCopy[key];
+        if(aData && prop in aData) {
+          this[prop] = aData[prop];
         } else {
-          this[key] = 0;
+          this[prop] = 0;
         }
       }
 
@@ -2409,8 +2413,9 @@ var ICAL = ICAL || {};
       if(this.component) {
         // HACK checking for component only needed for floating tz, which
         // is not in core libical.
-        for each(var comp in this.component.getAllSubcomponents()) {
-          this.expand_vtimezone(comp, aYear, changes);
+        var subcomps = this.component.getAllSubcomponents();
+        for(var compkey in subcomps) {
+          this.expand_vtimezone(subcomps[compkey], aYear, changes);
         }
 
         this.changes = changes.concat(this.changes || []);
@@ -2451,7 +2456,9 @@ var ICAL = ICAL || {};
         ICAL.icaltimezone.adjust_change(change, 0, 0, 0, - change.prev_utc_offset);
         changes.push(change);
       } else {
-        for each(var rdate in aComponent.getAllProperties("RDATE")) {
+        var props = aComponent.getAllProperties("RDATE");
+        for(var rdatekey in props) {
+          var rdate = props[rdatekey];
           var change = init_changes();
           change.year = rdate.time.year;
           change.month = rdate.time.month;
@@ -2652,12 +2659,13 @@ var ICAL = ICAL || {};
 
     fromData: function fromData(aData) {
       const propsToCopy = ["freq", "count", "wkst", "interval"];
-      for each(var key in propsToCopy) {
-        if(aData && key.toUpperCase() in aData) {
-          this[key] = aData[key.toUpperCase()];
+      for(var key in propsToCopy) {
+        var prop = propsToCopy[key];
+        if(aData && prop.toUpperCase() in aData) {
+          this[prop] = aData[prop.toUpperCase()];
           // TODO casing sucks, fix the parser!
-        } else if(aData && key in aData) {
-          this[key] = aData[key];
+        } else if(aData && prop in aData) {
+          this[prop] = aData[prop];
           // TODO casing sucks, fix the parser!
         }
       }
@@ -2666,20 +2674,24 @@ var ICAL = ICAL || {};
         this.until = aData.until.clone();
       }
 
-      const partsToCopy = ["BYSECOND", "BYMINUTE", "BYHOUR", "BYDAY", "BYMONTHDAY", "BYYEARDAY", "BYWEEKNO", "BYMONTH", "BYSETPOS"]
+      const partsToCopy = ["BYSECOND", "BYMINUTE", "BYHOUR", "BYDAY",
+                           "BYMONTHDAY", "BYYEARDAY", "BYWEEKNO",
+                           "BYMONTH", "BYSETPOS"];
       this.parts = {};
       if(aData) {
-        for each(var key in partsToCopy) {
-          if(key in aData) {
-            this.parts[key] = aData[key];
+        for(var key in partsToCopy) {
+          var prop = partsToCopy[key];
+          if(prop in aData) {
+            this.parts[prop] = aData[prop];
             // TODO casing sucks, fix the parser!
           }
         }
         // TODO oh god, make it go away!
         if(aData.parts) {
-          for each(var key in partsToCopy) {
-            if(key in aData.parts) {
-              this.parts[key] = aData.parts[key];
+          for(var key in partsToCopy) {
+            var prop = partsToCopy[key];
+            if(prop in aData.parts) {
+              this.parts[prop] = aData.parts[prop];
               // TODO casing sucks, fix the parser!
             }
           }
@@ -2697,8 +2709,9 @@ var ICAL = ICAL || {};
       if(this.interval != 1) {
         str += ";INTERVAL=" + this.interval;
       }
-      str += [";" + k + "=" + this.parts[k]
-      for(k in this.parts)].join("");
+      for (var k in this.parts) {
+        str += ";" + k + "=" + this.parts[k];
+      }
       return str;
     },
 
@@ -3304,9 +3317,11 @@ var ICAL = ICAL || {};
 
       // We need our own copy with a few keys set
       var parts = {};
-      for each(var p in ["BYDAY", "BYWEEKNO", "BYMONTHDAY", "BYMONTH", "BYYEARDAY"]) {
-        if(p in this.rule.parts) {
-          parts[p] = this.rule.parts[p];
+      const rules = ["BYDAY", "BYWEEKNO", "BYMONTHDAY", "BYMONTH", "BYYEARDAY"];
+      for(var p in rules) {
+        var part = rules[p];
+        if(part in this.rule.parts) {
+          parts[part] = this.rule.parts[part];
         }
       }
 
@@ -3351,26 +3366,26 @@ var ICAL = ICAL || {};
         t.year = this.last.year;
         this.days.push(t.day_of_year());
       } else if(partCount == 1 && "BYMONTH" in parts) {
-        for each(var month in this.by_data.BYMONTH) {
+        for(var monthkey in this.by_data.BYMONTH) {
           var t2 = this.dtstart.clone();
           t2.year = aYear;
-          t2.month = month;
+          t2.month = this.by_data.BYMONTH[monthkey];
           t2.isDate = true;
           this.days.push(t2.day_of_year());
         }
       } else if(partCount == 1 && "BYMONTHDAY" in parts) {
-        for each(var month_day in this.by_data.BYMONTHDAY) {
+        for(var monthdaykey in this.by_data.BYMONTHDAY) {
           var t2 = this.dtstart.clone();
-          t2.day = month_day;
+          t2.day = this.by_data.BYMONTHDAY[monthdaykey];
           t2.year = aYear;
           t2.isDate = true;
           this.days.push(t2.day_of_year());
         }
       } else if(partCount == 2 && "BYMONTHDAY" in parts && "BYMONTH" in parts) {
-        for each(var month in this.by_data.BYMONTH) {
-          for each(var monthDay in this.by_data.BYMONTHDAY) {
-            t.day = monthDay;
-            t.month = month;
+        for(var monthkey in this.by_data.BYMONTH) {
+          for(var monthdaykey in this.by_data.BYMONTHDAY) {
+            t.day = this.by_data.BYMONTHDAY[monthdaykey];
+            t.month = this.by_data.BYMONTH[monthkey];
             t.year = aYear;
             t.isDate = true;
 
@@ -3384,11 +3399,11 @@ var ICAL = ICAL || {};
       } else if(partCount == 1 && "BYDAY" in parts) {
         this.days = this.days.concat(this.expand_by_day(aYear));
       } else if(partCount == 2 && "BYDAY" in parts && "BYMONTH" in parts) {
-        for each(var month in this.by_data.BYMONTH) {
+        for(var monthkey in this.by_data.BYMONTH) {
           var days_in_month = ICAL.icaltime.days_in_month(month, aYear);
 
           t.year = aYear;
-          t.month = month;
+          t.month = this.by_data.BYMONTH[monthkey];
           t.day = 1;
           t.isDate = true;
 
@@ -3414,8 +3429,8 @@ var ICAL = ICAL || {};
               }
             }
           } else {
-            for each(var day_coded in this.by_data.BYDAY) {
-              var [dow, pos] = this.rule_day_of_week(day_coded);
+            for (var daycodedkey in this.by_data.BYDAY) {
+              var [dow, pos] = this.rule_day_of_week(this.by_data.BYDAY[daycodedkey]);
 
               var first_matching_day = ((dow + 7 - first_dow) % 7) + 1;
               var last_matching_day = days_in_month - ((last_dow + 7 - dow) % 7);
@@ -3443,7 +3458,8 @@ var ICAL = ICAL || {};
       } else if(partCount == 2 && "BYDAY" in parts && "BYMONTHDAY" in parts) {
         var expandedDays = this.expand_by_day(aYear);
 
-        for each(var day in expandedDays) {
+        for(var daykey in expandedDays) {
+          var day = expandedDays[daykey];
           var tt = ICAL.icaltime.from_day_of_year(day, aYear);
           if(this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
             this.days.push(day);
@@ -3452,7 +3468,8 @@ var ICAL = ICAL || {};
       } else if(partCount == 3 && "BYDAY" in parts && "BYMONTHDAY" in parts && "BYMONTH" in parts) {
         var expandedDays = this.expand_by_day(aYear);
 
-        for each(var day in expandedDays) {
+        for(var daykey in expandedDays) {
+          var day = expandedDays[daykey];
           var tt = ICAL.icaltime.from_day_of_year(day, aYear);
 
           if(this.by_data.BYMONTH.indexOf(tt.month) >= 0 && this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
@@ -3462,7 +3479,8 @@ var ICAL = ICAL || {};
       } else if(partCount == 2 && "BYDAY" in parts && "BYWEEKNO" in parts) {
         var expandedDays = this.expand_by_day(aYear);
 
-        for each(var day in expandedDays) {
+        for(var daykey in expandedDays) {
+          var day = expandedDays[daykey];
           var tt = ICAL.icaltime.from_day_of_year(day, aYear);
           var weekno = tt.week_number(this.rule.wkst);
 
@@ -3499,7 +3517,8 @@ var ICAL = ICAL || {};
       var end_dow = tmp.day_of_week();
       var end_year_day = tmp.day_of_year();
 
-      for each(var day in this.by_data.BYDAY) {
+      for(var daykey in this.by_data.BYDAY) {
+        var day = this.by_data.BYDAY[daykey];
         var [pos, dow] = this.rule_day_of_week(day);
 
         if(pos == 0) {
@@ -3535,7 +3554,8 @@ var ICAL = ICAL || {};
     },
 
     is_day_in_byday: function is_day_in_byday(tt) {
-      for each(var day in this.by_data.BYDAY) {
+      for(var daykey in this.by_data.BYDAY) {
+        var day = this.by_data.BYDAY[daykey];
         var [pos, dow] = this.rule_day_of_week(day);
         var this_dow = tt.day_of_week();
 
@@ -3576,8 +3596,8 @@ var ICAL = ICAL || {};
       var pass = false;
 
       if(aRuleType in this.by_data && ruleMapValue == icalrecur_iterator.CONTRACT) {
-        for each(var bydata in this.by_data[aRuleType]) {
-          if(bydata == v) {
+        for(var bydatakey in this.by_data[aRuleType]) {
+          if(this.by_data[aRuleType][bydatakey] == v) {
             pass = true;
             break;
           }

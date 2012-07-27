@@ -41,7 +41,8 @@ function test_calculations() {
         expect_1w: "20120108T000000"
     }];
 
-    for each (var data in test_data) {
+    for (var datakey in test_data) {
+        var data = test_data[datakey];
         var dt = ICAL.icaltime.fromString(data.str);
         var cp = dt.clone();
 
@@ -121,7 +122,8 @@ function test_normalize() {
         expect: "20101231T235959"
     }];
 
-    for each (var data in test_data) {
+    for(var datakey in test_data) {
+        var data = test_data[datakey];
         var dt = ICAL.icaltime.fromString(data.str);
         var cur_seconds = dt.second;
         var add_seconds = data.add_seconds || 0;
@@ -180,7 +182,8 @@ function test_date_properties() {
         week_number: 53,
     }]
 
-    for each (var data in test_data) {
+    for(var datakey in test_data) {
+        var data = test_data[datakey];
         var dt = ICAL.icaltime.fromString(data.str);
         do_check_eq(data.isDate, dt.isDate);
         do_check_eq(data.year, dt.year);
