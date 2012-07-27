@@ -23,6 +23,10 @@ ICAL.helpers = {
   },
 
   dumpn: function () {
+    if (!ICAL.debug) {
+      return;
+    }
+
     if(typeof (console) !== 'undefined' && 'log' in console) {
       ICAL.helpers.dumpn = function consoleDumpn(input) {
         return console.log(input);
@@ -106,6 +110,30 @@ ICAL.helpers = {
     return(number < 0 ? Math.ceil(number) : Math.floor(number));
   }
 };
+var ICAL = ICAL || {};
+
+(function () {
+  ICAL.serializer = {
+    serializeToIcal: function (obj, name, isParam) {
+      if(obj && obj.icalclass) {
+        return obj.toString();
+      }
+
+      var str = "";
+
+      if(obj.type == "COMPONENT") {
+        str = "BEGIN:" + obj.name + ICAL.newLineChar;
+        for each(var sub in obj.value) {
+          str += this.serializeToIcal(sub) + ICAL.newLineChar;
+        }
+        str += "END:" + obj.name;
+      } else {
+        str += ICAL.icalparser.stringifyProperty(obj);
+      }
+      return str;
+    }
+  };
+}());
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -115,9 +143,6 @@ ICAL.helpers = {
 // TODO SAX type parser
 // TODO structure data in components
 // TODO enforce uppercase when parsing
-// TODO serializer
-// TODO properties as array
-// TODO don't break on empty lines at end
 // TODO optionally preserve value types that are default but explicitly set
 // TODO floating timezone
 var ICAL = ICAL || {};
@@ -145,37 +170,6 @@ var ICAL = ICAL || {};
      */
 
   // Exports
-  ICAL.foldLength = 75;
-  ICAL.newLineChar = "\r\n";
-
-  ICAL.toJSON = function toJSON(aBuffer, aDecorated) {
-    var state = ICAL.helpers.initState(aBuffer, 0);
-    while(state.buffer.length) {
-      var line = ICAL.helpers.unfoldline(state);
-      var lexState = ICAL.helpers.initState(line, state.lineNr);
-      var lineData = parser.lexContentLine(lexState);
-      parser.parseContentLine(state, lineData);
-      state.lineNr++;
-    }
-
-    if(aDecorated) {
-      try {
-        return new ICAL.icalcomponent(state.currentData);
-      } catch(e) {
-        ICAL.helpers.dumpn(e);
-        ICAL.helpers.dumpn(e.stack);
-        ICAL.helpers.dumpn(e.lineNumber);
-        ICAL.helpers.dumpn(e.filename);
-        return null;
-      }
-    } else {
-      return state.currentData;
-    }
-  };
-
-  ICAL.toIcalString = function toIcalString(aJSON) {
-    return serializer.serializeToIcal(aJSON);
-  };
 
   function ParserError(aState, aMessage) {
     this.mState = aState;
@@ -198,9 +192,18 @@ var ICAL = ICAL || {};
     } else {
       this.message = aMessage;
     }
+
+    // create stack
+    try {
+      throw new Error();
+    } catch(e) {
+      var split = e.stack.split('\n');
+      split.shift();
+      this.stack = split.join('\n');
+    }
   }
 
-  ParserError.prototype = new Error();
+  ParserError.prototype = Object.create(Error.prototype);
   ParserError.prototype.constructor = ParserError;
 
   var parser = {};
@@ -228,6 +231,9 @@ var ICAL = ICAL || {};
     // Read the value
     parser.expectRE(aState, /^:/, "Expected ':'");
     lineData.value = parser.lexValue(aState);
+    //FIXME:? There may be some cases where this is needed
+    //but its perfectly possible that this line is blank.
+
     parser.expectEnd(aState, "Junk at End of Line");
     return lineData;
   };
@@ -261,11 +267,16 @@ var ICAL = ICAL || {};
     // VALUE-CHAR = WSP / %x21-7E / NON-US-ASCII
     // ; Any textual character
 
+    if (aState.buffer.length === 0) {
+      return aState.buffer;
+    }
+
     // TODO the unicode range might be wrong!
     var match = parser.expectRE(aState,
                                 /*  WSP|%x21-7E|NON-US-ASCII  */
                                 /^([ \t\x21-\x7E\u00C2-\uF400]+)/,
                                 "Invalid Character in value");
+
     return match[1];
   };
 
@@ -342,8 +353,8 @@ var ICAL = ICAL || {};
     for(var name in aLineData.parameters) {
       var paramType = "TEXT";
 
-      if(name in ICAL.designData.param && "valueType" in ICAL.designData.param[name]) {
-        paramType = ICAL.designData.param[name].valueType;
+      if(name in ICAL.design.param && "valueType" in ICAL.design.param[name]) {
+        paramType = ICAL.design.param[name].valueType;
       }
       var paramData = {
         value: aLineData.parameters[name],
@@ -357,8 +368,8 @@ var ICAL = ICAL || {};
   parser.detectValueType = function detectValueType(aLineData) {
     var valueType = "TEXT";
     var defaultType = null;
-    if(aLineData.name in ICAL.designData.property && "defaultType" in ICAL.designData.property[aLineData.name]) {
-      valueType = ICAL.designData.property[aLineData.name].defaultType;
+    if(aLineData.name in ICAL.design.property && "defaultType" in ICAL.design.property[aLineData.name]) {
+      valueType = ICAL.design.property[aLineData.name].defaultType;
     }
 
     if("parameters" in aLineData && "VALUE" in aLineData.parameters) {
@@ -366,7 +377,7 @@ var ICAL = ICAL || {};
       valueType = aLineData.parameters.VALUE.value.toUpperCase();
     }
 
-    if(!(valueType in ICAL.designData.value)) {
+    if(!(valueType in ICAL.design.value)) {
       throw new ParserError(aLineData, "Invalid VALUE Type '" + valueType);
     }
 
@@ -385,10 +396,10 @@ var ICAL = ICAL || {};
       return values;
     }
 
-    if(aLineData.name in ICAL.designData.property) {
-      if(ICAL.designData.property[aLineData.name].multiValue) {
+    if(aLineData.name in ICAL.design.property) {
+      if(ICAL.design.property[aLineData.name].multiValue) {
         aLineData.value = unwrapMultiValue(aLineData.value, ",");
-      } else if(ICAL.designData.property[aLineData.name].structuredValue) {
+      } else if(ICAL.design.property[aLineData.name].structuredValue) {
         aLineData.value = unwrapMultiValue(aLineData.value, ";");
       } else {
         aLineData.value = [aLineData.value];
@@ -397,8 +408,8 @@ var ICAL = ICAL || {};
       aLineData.value = [aLineData.value];
     }
 
-    if("unescape" in ICAL.designData.value[valueType]) {
-      var unescaper = ICAL.designData.value[valueType].unescape;
+    if("unescape" in ICAL.design.value[valueType]) {
+      var unescaper = ICAL.design.value[valueType].unescape;
       for(var idx in aLineData.value) {
         aLineData.value[idx] = unescaper(aLineData.value[idx], aLineData.name);
       }
@@ -408,8 +419,8 @@ var ICAL = ICAL || {};
   }
 
   parser.validateValue = function validateValue(aLineData, aValueType, aValue, aCheckParams) {
-    var propertyData = ICAL.designData.property[aLineData.name];
-    var valueData = ICAL.designData.value[aValueType];
+    var propertyData = ICAL.design.property[aLineData.name];
+    var valueData = ICAL.design.value[aValueType];
 
     // TODO either make validators just consume the value, then check for end here (possibly requires returning remainder or renaming buffer<->value in the states)
     // validators don't really need the whole linedata
@@ -455,10 +466,10 @@ var ICAL = ICAL || {};
   };
 
   parser.decorateValue = function decorateValue(aType, aValue) {
-    if(aType in ICAL.designData.value && "decorate" in ICAL.designData.value[aType]) {
-      return ICAL.designData.value[aType].decorate(aValue);
+    if(aType in ICAL.design.value && "decorate" in ICAL.design.value[aType]) {
+      return ICAL.design.value[aType].decorate(aValue);
     } else {
-      return ICAL.designData.value.TEXT.decorate(aValue);
+      return ICAL.design.value.TEXT.decorate(aValue);
     }
   };
 
@@ -487,13 +498,13 @@ var ICAL = ICAL || {};
 
     if(aLineData) {
       var values = aLineData.value;
-      if(aLineData.type in ICAL.designData.value && "escape" in ICAL.designData.value[aLineData.type]) {
-        var escaper = ICAL.designData.value[aLineData.type].escape;
+      if(aLineData.type in ICAL.design.value && "escape" in ICAL.design.value[aLineData.type]) {
+        var escaper = ICAL.design.value[aLineData.type].escape;
         values = arrayStringMap(values, escaper);
       }
 
       var separator = ",";
-      if(aLineData.name in ICAL.designData.property && ICAL.designData.property[aLineData.name].structuredValue) {
+      if(aLineData.name in ICAL.design.property && ICAL.design.property[aLineData.name].structuredValue) {
         separator = ";";
       }
 
@@ -929,27 +940,6 @@ var ICAL = ICAL || {};
     }
   }
 
-  var serializer = {
-    serializeToIcal: function (obj, name, isParam) {
-      if(obj && obj.icalclass) {
-        return obj.toString();
-      }
-
-      var str = "";
-
-      if(obj.type == "COMPONENT") {
-        str = "BEGIN:" + obj.name + ICAL.newLineChar;
-        for each(var sub in obj.value) {
-          str += this.serializeToIcal(sub) + ICAL.newLineChar;
-        }
-        str += "END:" + obj.name;
-      } else {
-        str += parser.stringifyProperty(obj);
-      }
-      return str;
-    },
-  };
-
   /* Possible shortening:
       - pro: retains order
       - con: datatypes not obvious
@@ -1005,7 +995,7 @@ var ICAL = ICAL || {};
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 var ICAL = ICAL || {};
-ICAL.designData = {
+ICAL.design = {
   param: {
     // Although the syntax is DQUOTE uri DQUOTE, I don't think we should
     // enfoce anything aside from it being a valid content line.
@@ -1373,7 +1363,9 @@ ICAL.designData = {
 };
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -1491,7 +1483,7 @@ var ICAL = ICAL || {};
       this.components[ucName].push(comp);
     },
 
-    removeAllSubcomponents: function removeSubComponent(aName) {
+    removeSubcomponent: function removeSubComponent(aName) {
       var ucName = aName.toUpperCase();
       for each(var comp in this.components[ucName]) {
         var pos = this.data.value.indexOf(comp);
@@ -1527,7 +1519,7 @@ var ICAL = ICAL || {};
     getFirstPropertyValue: function getFirstPropertyValue(aName) {
       // TODO string value?
       var prop = this.getFirstProperty(aName);
-      retur(prop ? prop.getFirstValue() : null);
+      return (prop ? prop.getFirstValue() : null);
     },
 
     getAllProperties: function getAllProperties(aName) {
@@ -1558,7 +1550,6 @@ var ICAL = ICAL || {};
     },
 
     addProperty: function addProperty(aProp) {
-      ICAL.helpers.dumpn("Adding property " + aProp + "STK " + STACK());
       var prop = aProp;
       if(aProp.parent) {
         prop = aProp.clone();
@@ -1580,7 +1571,6 @@ var ICAL = ICAL || {};
           this.data.value.splice(pos, 1);
         }
       }
-
       delete this.properties[ucName];
     },
 
@@ -1591,6 +1581,50 @@ var ICAL = ICAL || {};
           delete this.data.value[i];
         }
       }
+    },
+
+    _valueToJSON: function(value) {
+      if (value && value.icaltype) {
+        return value.toString();
+      }
+
+      if (typeof(value) === 'object') {
+        return this._undecorateJSON(value);
+      }
+
+      return value;
+    },
+
+    _undecorateJSON: function(object) {
+      if (object instanceof Array) {
+        var result = [];
+        var len = object.length;
+
+        for (var i = 0; i < len; i++) {
+          result.push(this._valueToJSON(object[i]));
+        }
+
+      } else {
+        var result = {};
+        var key;
+
+        for (key in object) {
+          if (object.hasOwnProperty(key)) {
+            result[key] = this._valueToJSON(object[key]);
+          }
+        }
+      }
+
+      return result;
+    },
+
+    /**
+     * Exports the components values to a json friendly
+     * object. You can use JSON.stringify directly on
+     * components as a result.
+     */
+    toJSON: function toJSON() {
+      return this._undecorateJSON(this.undecorate());
     },
 
     toString: function toString() {
@@ -1613,7 +1647,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -1635,7 +1671,7 @@ var ICAL = ICAL || {};
 
     fromData: function fromData(aData) {
       if(!aData.name) {
-        ICAL.helpers.dumpn("Missing name: " + aData.toSource() + "stk " + STACK());
+        ICAL.helpers.dumpn("Missing name: " + aData.toSource());
       }
       this.name = aData.name;
       this.data = aData;
@@ -1794,7 +1830,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2004,7 +2042,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2052,7 +2092,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2178,7 +2220,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -2526,7 +2570,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -3595,7 +3641,9 @@ var ICAL = ICAL || {};
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */"use strict";
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
 
 var ICAL = ICAL || {};
 (function () {
@@ -4286,3 +4334,47 @@ var ICAL = ICAL || {};
   ICAL.icaltime.FRIDAY = 6;
   ICAL.icaltime.SATURDAY = 7;
 })();
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+"use strict";
+
+var ICAL = ICAL || {};
+
+(function () {
+  ICAL.foldLength = 75;
+  ICAL.newLineChar = "\n";
+
+  /**
+   * Return a parsed ICAL object to the ICAL format.
+   *
+   * @param {Object} object parsed ical string.
+   * @return {String} ICAL string.
+   */
+  ICAL.stringify = function ICALStringify(object) {
+    return ICAL.serializer.serializeToIcal(object);
+  };
+
+  /**
+   * Parse an ICAL object or string.
+   *
+   * @param {String|Object} ical ical string or pre-parsed object.
+   * @param {Boolean} decorate when true decorates object data types.
+   *
+   * @return {Object|ICAL.icalcomponent}
+   */
+  ICAL.parse = function ICALParse(ical) {
+    var state = ICAL.helpers.initState(ical, 0);
+
+    while(state.buffer.length) {
+      var line = ICAL.helpers.unfoldline(state);
+      var lexState = ICAL.helpers.initState(line, state.lineNr);
+      var lineData = ICAL.icalparser.lexContentLine(lexState);
+      ICAL.icalparser.parseContentLine(state, lineData);
+      state.lineNr++;
+    }
+
+    return state.currentData;
+  };
+}());

@@ -38,7 +38,7 @@ function run_test() {
     do_check_eq(allDtProps.length, 1);
     do_check_eq(allDtProps[0].toString(), dtStartStr);
 
-    event.removeAllSubcomponents("VALARM");
+    event.removeSubcomponent("VALARM");
     do_check_eq(event.getFirstSubcomponent("VALARM"), null);
     do_check_neq(event.toString(), event2.toString());
     dump("BB\n");
