@@ -2774,7 +2774,11 @@ var ICAL = ICAL || {};
         this.zone = ICAL.icaltimezone.local_timezone;
       }
 
-      this.auto_normalize = old_auto_normalize;
+      if (aData && "auto_normalize" in aData) {
+        this.auto_normalize = aData.auto_normalize;
+      } else {
+        this.auto_normalize = old_auto_normalize;
+      }
       if (this.auto_normalize) {
         this.normalize();
       }
