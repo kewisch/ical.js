@@ -1,3 +1,4 @@
+REPORTER=Spec
 VENDOR_FILE=build/ical.js
 LIB=lib/ical
 VENDOR_FILE_LIST= $(LIB)/helpers.js \
@@ -65,8 +66,18 @@ test-agent-config:
 	@rm -f /tmp/test-agent-config
 
 .PHONY: test
-test:
-	./node_modules/test-agent/bin/js-test-agent test
+test: test-browser test-node
+
+.PHONY: test-node
+test-node:
+	./node_modules/mocha/bin/mocha --ui tdd --reporter $(REPORTER) \
+		test/mocha/helper.js \
+		test/mocha/*_test.js \
+		test/mocha/acceptance/*_test.js
+
+.PHONY: test-browser
+test-browser:
+	./node_modules/test-agent/bin/js-test-agent test --reporter $(REPORTER)
 
 .PHONY: test-server
 test-server:
