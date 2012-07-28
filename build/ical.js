@@ -2900,7 +2900,9 @@ var ICAL = ICAL || {};
 
       if (this.rule.freq == "WEEKLY") {
         if ("BYDAY" in parts) {
-          var [pos, rule_dow] = this.rule_day_of_week(parts.BYDAY[0]);
+          var parts = this.this.rule_day_of_week(parts.BYDAY[0]);
+          var pos = parts[0];
+          var rule_dow = parts[1];
           var dow = rule_dow - this.last.day_of_week();
           if ((this.last.day_of_week() < rule_dow && dow >= 0) || dow < 0) {
             // Initial time is after first day of BYDAY data
@@ -2930,7 +2932,9 @@ var ICAL = ICAL || {};
 
       if (this.rule.freq == "MONTHLY" && this.has_by_data("BYDAY")) {
         var coded_day = this.by_data.BYDAY[this.by_indices.BYDAY];
-        var [pos, dow] = this.rule_day_of_week(coded_day);
+        var parts = this.rule_day_of_week(coded_day);
+        var pos = parts[0];
+        var dow = parts[1];
 
         var days_in_month = ICAL.icaltime.days_in_month(this.last.month, this.last.year);
         var poscount = 0;
@@ -3124,7 +3128,9 @@ var ICAL = ICAL || {};
         for (day = last.day + 1; notFound && day <= days_in_month; day++) {
           for (var dayIdx = 0; dayIdx < this.by_data.BYDAY.length; dayIdx++) {
             for (var mdIdx = 0; mdIdx < this.by_data.BYMONTHDAY.length; mdIdx++) {
-              var [pos, dow] = this.rule_day_of_week(this.by_data.BYDAY[dayIdx]);
+              var parts = this.rule_day_of_week(this.by_data.BYDAY[dayIdx]);
+              var pos = parts[0];
+              var dow = parts[1];
               var mday = this.by_data.BYMONTHDAY[mdIdx];
 
               this.last.day = day;
@@ -3242,7 +3248,9 @@ var ICAL = ICAL || {};
         }
 
         var coded_day = this.by_data.BYDAY[this.by_indices.BYDAY];
-        var [, dow] = this.rule_day_of_week(coded_day);
+        var parts = this.rule_day_of_week(coded_day);
+        var dow = parts[1];
+
         dow -= this.rule.wkst;
         if (dow < 0) {
           dow += 7;
@@ -3528,7 +3536,9 @@ var ICAL = ICAL || {};
           } else {
             for (var daycodedkey in this.by_data.BYDAY) {
               var coded_day = this.by_data.BYDAY[daycodedkey];
-              var [dow, pos] = this.rule_day_of_week(coded_day);
+              var parts = this.rule_day_of_week(coded_day);
+              var dow = parts[0];
+              var pos = parts[1];
 
               var first_matching_day = ((dow + 7 - first_dow) % 7) + 1;
               var last_matching_day = days_in_month - ((last_dow + 7 - dow) % 7);
@@ -3624,7 +3634,9 @@ var ICAL = ICAL || {};
 
       for (var daykey in this.by_data.BYDAY) {
         var day = this.by_data.BYDAY[daykey];
-        var [pos, dow] = this.rule_day_of_week(day);
+        var parts = this.rule_day_of_week(day);
+        var pos = parts[0];
+        var dow = parts[1];
 
         if (pos == 0) {
           var tmp_start_doy = ((dow + 7 - start_dow) % 7) + 1;
@@ -3661,7 +3673,9 @@ var ICAL = ICAL || {};
     is_day_in_byday: function is_day_in_byday(tt) {
       for (var daykey in this.by_data.BYDAY) {
         var day = this.by_data.BYDAY[daykey];
-        var [pos, dow] = this.rule_day_of_week(day);
+        var parts = this.rule_day_of_week(day);
+        var pos = parts[0];
+        var dow = parts[1];
         var this_dow = tt.day_of_week();
 
         if ((pos == 0 && dow == this_dow) ||
@@ -3681,8 +3695,8 @@ var ICAL = ICAL || {};
     sort_byday_rules: function icalrecur_sort_byday_rules(aRules, aWeekStart) {
       for (var i = 0; i < aRules.length; i++) {
         for (var j = 0; j < i; j++) {
-          var [, one] = this.rule_day_of_week(aRules[j]);
-          var [, two] = this.rule_day_of_week(aRules[i]);
+          var one = this.rule_day_of_week(aRules[j])[1];
+          var two = this.rule_day_of_week(aRules[i])[1];
           one -= aWeekStart;
           two -= aWeekStart;
           if (one < 0) one += 7;
