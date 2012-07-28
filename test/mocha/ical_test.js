@@ -3,6 +3,7 @@ testSupport.requireICAL();
 suite('ical/parser', function() {
 
   var icsData;
+  var blankLineEndICS, blankLineMidICS;
 
   function strip(text) {
     var val = text.replace(/\\r/g, '');
@@ -34,4 +35,28 @@ suite('ical/parser', function() {
     assert.equal(strip(icsData), strip(icsOut));
   });
 
+  testSupport.defineSample('blank_line_end.ics', function(data) {
+    blankLineEndICS = data;
+  });
+  testSupport.defineSample('blank_line_mid.ics', function(data) {
+    blankLineMidICS = data;
+  });
+
+  test('Blank line at end', function() {
+    // This sample contains a blank line at the end, it should still parse
+    var result = ICAL.parse(blankLineEndICS);
+  });
+
+  test('Blank line within', function() {
+    // This sample contains a blank line at the end, it should throw an error
+    var error, result;
+    try {
+      result = ICAL.parse(blankLineMidICS);
+    } catch (e) {
+        error = e;
+    }
+    if (!error) {
+        throw "Expected Error but passed" + result.toSource();
+    }
+  });
 });

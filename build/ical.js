@@ -240,9 +240,6 @@ var ICAL = ICAL || {};
     // Read the value
     parser.expectRE(aState, /^:/, "Expected ':'");
     lineData.value = parser.lexValue(aState);
-    //FIXME:? There may be some cases where this is needed
-    //but its perfectly possible that this line is blank.
-
     parser.expectEnd(aState, "Junk at End of Line");
     return lineData;
   };
@@ -4531,6 +4528,10 @@ var ICAL = ICAL || {};
     while (state.buffer.length) {
       var line = ICAL.helpers.unfoldline(state);
       var lexState = ICAL.helpers.initState(line, state.lineNr);
+      if (line.match(/^\s*$/) && state.buffer.match(/^\s*$/)) {
+        break;
+      }
+
       var lineData = ICAL.icalparser.lexContentLine(lexState);
       ICAL.icalparser.parseContentLine(state, lineData);
       state.lineNr++;
