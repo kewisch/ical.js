@@ -49,14 +49,8 @@ suite('ical/parser', function() {
 
   test('Blank line within', function() {
     // This sample contains a blank line at the end, it should throw an error
-    var error, result;
-    try {
-      result = ICAL.parse(blankLineMidICS);
-    } catch (e) {
-        error = e;
-    }
-    if (!error) {
-        throw "Expected Error but passed" + result.toSource();
-    }
+    assert.throw(function() {
+      var result = ICAL.parse(blankLineMidICS);
+    }, ICAL.ParserError, "Parser falsly accepted blank line inbetween");
   });
 });
