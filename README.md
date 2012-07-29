@@ -1,5 +1,7 @@
 # jsical - Javascript parser for rfc5545
 
+[![Build Status](https://secure.travis-ci.org/kewisch/ical.js.png?branch=master)](http://travis-ci.org/kewisch/ical.js)
+
 This is a library to parse the ICAL format defined in [rfc5545](http://tools.ietf.org/html/rfc5545). While it may be usable for basic tasks, it is still very much in development. There are a lot of TODOs in this library. If you would like to help out and would like to discuss any API changes, please [contact me](mailto:mozilla@kewis.ch).
 
 The inital goal was to use this as a replacement for libical in the [Mozilla Calendar Project](http://www.mozilla.org/projects/calendar/), but the library has been written with the web in mind. This library should one day be called ical.js and allow all sorts of cool experiments with calendar data and the web. I am also aiming for a caldav.js when this is done. Most algorithms here were taken from [libical](http://sourceforge.net/projects/freeassociation/). If you are bugfixing this library, please check if the fix can be upstreamed to libical.
