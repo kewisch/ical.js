@@ -70,7 +70,7 @@ test: test-browser test-node
 
 .PHONY: test-node
 test-node:
-	./node_modules/mocha/bin/mocha --ui tdd --reporter $(REPORTER) \
+	./node_modules/mocha/bin/mocha --ui tdd \
 		test/mocha/helper.js \
 		test/mocha/*_test.js \
 		test/mocha/acceptance/*_test.js
