@@ -11,8 +11,8 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/period.js \
 	$(LIB)/duration.js \
 	$(LIB)/timezone.js \
-	$(LIB)/recur.js \
 	$(LIB)/time.js \
+	$(LIB)/recur.js \
 	$(LIB)/ical.js
 
 .PHONY: dev
