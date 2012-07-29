@@ -31,8 +31,8 @@
       'period',
       'duration',
       'timezone',
-      'recur',
       'time',
+      'recur',
       'ical'
     ];
 
