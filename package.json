@@ -17,5 +17,9 @@
   "license": "MIT",
   "engine": {
     "node": ">=0.4"
+  },
+
+  "scripts": {
+    "test": "make test-node"
   }
 }
