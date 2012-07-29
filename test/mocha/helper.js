@@ -1,5 +1,10 @@
 (function() {
-  window.navigator;
+
+  var isNode = typeof(window) === 'undefined';
+
+  if (!isNode) {
+    window.navigator;
+  }
 
   // lazy defined navigator causes global leak warnings...
 
@@ -46,7 +51,7 @@
     }
 
     if (typeof(window) === 'undefined') {
-      var lib = require(__dirname + '/../' + file);
+      var lib = require(__dirname + '/../../' + file);
       if (typeof(callback) !== 'undefined') {
         callback(lib);
       }
@@ -58,7 +63,7 @@
   //chai has no backtraces in ff
   //this patch will change the error
   //class used to provide real .stack.
-  function setupChai() {
+  function setupChai(chai) {
     function chaiAssert(expr, msg, negateMsg, expected, actual) {
       actual = actual || this.obj;
       var msg = (this.negate ? negateMsg : msg),
@@ -91,7 +96,7 @@
 
   testSupport.loadSample = function(file, cb) {
     if (testSupport.isNode) {
-      var root = __dirname + '/../samples/';
+      var root = __dirname + '/../../samples/';
       require('fs').readFile(root + file, 'utf8', function(err, contents) {
         cb(err, contents);
       });
