@@ -28,7 +28,7 @@ ICAL.helpers = {
 
   dumpn: function() {
     if (!ICAL.debug) {
-      return;
+      return null;
     }
 
     if (typeof (console) !== 'undefined' && 'log' in console) {
@@ -257,7 +257,7 @@ ICAL.helpers = {
       var match = parser.expectRE(aState, /^X-/, error);
 
       // Vendor ID
-      if (match = parser.expectOptionalRE(aState, /^([A-Za-z0-9]+-)/, error)) {
+      if ((match = parser.expectOptionalRE(aState, /^([A-Za-z0-9]+-)/, error))) {
         value += match[1];
       }
 
@@ -2493,7 +2493,7 @@ ICAL.design = {
       if (!aComponent.hasProperty("DTSTART") ||
           !aComponent.hasProperty("TZOFFSETTO") ||
           !aComponent.hasProperty("TZOFFSETFROM")) {
-        return;
+        return null;
       }
 
       var dtstart = aComponent.getFirstProperty("DTSTART").getFirstValue();
@@ -2627,6 +2627,8 @@ ICAL.design = {
 
     utc_offset = to_zone.utc_offset(tt);
     tt.adjust(0, 0, 0, utc_offset);
+
+    return null;
   };
 
   ICAL.icaltimezone.fromData = function icaltimezone_fromData(aData) {
@@ -3519,6 +3521,7 @@ ICAL.design = {
       } catch (e) {
         ICAL.helpers.dumpn("EICALPROP: " + this.toString() + "//" + e);
         ICAL.helpers.dumpn(e.stack);
+        return null;
       }
     },
     fromIcalProperty: function fromIcalProperty(aProp) {
