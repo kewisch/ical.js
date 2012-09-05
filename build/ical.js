@@ -936,10 +936,6 @@ ICAL.helpers = {
   };
 
   parser.parseUtcOffset = function parseUtcOffset(aState) {
-    if (aState.buffer == "-0000" || aState.buffer == "-000000") {
-      throw new ParserError(aState,
-                            "Invalid value for utc offset: " + aState.buffer);
-    }
     var utcRE = /^(([+-])([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9])?)$/;
     var match = parser.expectRE(aState, utcRE, "Expected valid utc offset");
     return {
@@ -3660,7 +3656,7 @@ ICAL.design = {
 
       if (this.rule.freq == "WEEKLY") {
         if ("BYDAY" in parts) {
-          var parts = this.this.rule_day_of_week(parts.BYDAY[0]);
+          var parts = this.rule_day_of_week(parts.BYDAY[0]);
           var pos = parts[0];
           var rule_dow = parts[1];
           var dow = rule_dow - this.last.day_of_week();
