@@ -43,7 +43,8 @@ node-deps:
 package:
 	rm -f $(VENDOR_FILE);
 	touch $(VENDOR_FILE);
-	cat $(VENDOR_FILE_LIST) >> $(VENDOR_FILE);
+	# remove use strict for now in browser build...
+	cat $(VENDOR_FILE_LIST) | sed 's:"use strict";::' >> $(VENDOR_FILE);
 
 TEST_AGENT_CONFIG=./test-agent/config.json
 .PHONY: test-agent-config

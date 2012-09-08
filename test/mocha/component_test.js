@@ -21,6 +21,75 @@ suite('ical/component', function() {
     return haystack.indexOf(needle) !== -1;
   }
 
+  // taken from xpc-shell test
+  test('sanity', function() {
+    var dtStartStr   =  'DTSTART:20110101T121314';
+    var alarmCompStr = ['BEGIN:VALARM',
+                        'END:VALARM'].join('\n');
+    var eventStr     = ['BEGIN:VEVENT',
+                        dtStartStr,
+                        alarmCompStr,
+                        'END:VEVENT'].join('\n');
+
+    var event = ICAL.icalcomponent.fromString(eventStr);
+
+    var event2 = event.clone();
+    var rawEvent = ICAL.parse(eventStr);
+
+    assert.equal(event.toString(), event2.toString());
+
+    assert.equal(event.toString(), eventStr);
+
+    var alarmComp = event.getFirstSubcomponent('VALARM');
+    assert.equal(alarmComp.toString(), alarmCompStr);
+
+    var alarmComp2 = event.getAllSubcomponents('VALARM');
+    assert.equal(alarmComp2.length, 1);
+    assert.equal(alarmComp2[0].toString(), alarmCompStr);
+
+    assert.isTrue(event.hasProperty('DTSTART'));
+    var dtstart = event.getFirstProperty('DTSTART');
+    assert.equal(event.getFirstProperty('DTEND'), null);
+
+    var allDtProps = event.getAllProperties('DTSTART');
+    assert.equal(allDtProps.length, 1);
+    assert.equal(allDtProps[0].toString(), dtStartStr);
+
+    event.removeSubcomponent('VALARM');
+    assert.equal(event.getFirstSubcomponent('VALARM'), null);
+    assert.notEqual(event.toString(), event2.toString());
+
+    assert.isFalse(event.hasProperty('X-FOO'));
+    event.addPropertyWithValue('X-FOO', 'BAR');
+    assert.isTrue(event.hasProperty('X-FOO'));
+
+    var xprop = event.getFirstProperty('X-FOO');
+    assert.equal(xprop.getStringValue(), 'BAR');
+
+    event.removeProperty('X-FOO');
+    assert.isFalse(event.hasProperty('X-FOO'));
+    var xprop2 = ICAL.icalproperty.fromData({
+        name: 'X-BAR',
+        value: 'BAZ'
+    });
+    event.addProperty(xprop2);
+    assert.isTrue(event.hasProperty('X-BAR'));
+    assert.equal(event.getFirstProperty('X-BAR'), xprop2);
+    assert.equal(xprop2.parent, event);
+
+    assert.notEqual(event.toString(), event2.toString());
+
+    event.clearAllProperties();
+    assert.equal(event.getFirstProperty(), null);
+    assert.equal(event.getAllProperties().length, 0);
+    assert.isFalse(event.hasProperty('X-BAR'));
+
+    // TODO getFirstPropertyValue ?
+
+    assert.notEqual(event.toString(), event2.toString());
+  });
+
+
   suite('#initialize', function() {
     test('#fromData', function() {
       var prop = factory.propUUID();
