@@ -219,7 +219,6 @@ suite('recur', function() {
 
       while (limit > cur++) {
         var next = iterator.next();
-        console.log(next);
         var date = next.toJSDate();
 
         assert.equal(
