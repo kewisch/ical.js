@@ -1,7 +1,10 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
-(typeof(ICAL) === 'undefined')? ICAL = {} : '';
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+
+if (typeof(ICAL) === 'undefined')
+  (typeof(window) !== 'undefined') ? this.ICAL = {} : ICAL = {};
 
 /**
  * Helper functions used in various places within ical.js
@@ -28,7 +31,7 @@ ICAL.helpers = {
 
   dumpn: function() {
     if (!ICAL.debug) {
-      return;
+      return null;
     }
 
     if (typeof (console) !== 'undefined' && 'log' in console) {
@@ -172,8 +175,10 @@ ICAL.helpers = {
   };
 }());
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+
 // TODO validate known parameters
 // TODO make sure all known types don't contain junk
 // TODO tests for parsers
@@ -290,7 +295,7 @@ ICAL.helpers = {
       var match = parser.expectRE(aState, /^X-/, error);
 
       // Vendor ID
-      if (match = parser.expectOptionalRE(aState, /^([A-Za-z0-9]+-)/, error)) {
+      if ((match = parser.expectOptionalRE(aState, /^([A-Za-z0-9]+-)/, error))) {
         value += match[1];
       }
 
@@ -936,10 +941,6 @@ ICAL.helpers = {
   };
 
   parser.parseUtcOffset = function parseUtcOffset(aState) {
-    if (aState.buffer == "-0000" || aState.buffer == "-000000") {
-      throw new ParserError(aState,
-                            "Invalid value for utc offset: " + aState.buffer);
-    }
     var utcRE = /^(([+-])([01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9])?)$/;
     var match = parser.expectRE(aState, utcRE, "Expected valid utc offset");
     return {
@@ -1065,8 +1066,10 @@ ICAL.helpers = {
     */
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 
 /**
@@ -1443,10 +1446,11 @@ ICAL.design = {
   }
 };
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -1729,10 +1733,11 @@ ICAL.design = {
   };
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -1916,10 +1921,11 @@ ICAL.design = {
   };
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -2132,10 +2138,11 @@ ICAL.design = {
   ICAL.icalvalue._createFromString(ICAL.icalutcoffset);
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -2182,10 +2189,11 @@ ICAL.design = {
   };
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -2313,10 +2321,11 @@ ICAL.design = {
   };
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -2520,7 +2529,7 @@ ICAL.design = {
       if (!aComponent.hasProperty("DTSTART") ||
           !aComponent.hasProperty("TZOFFSETTO") ||
           !aComponent.hasProperty("TZOFFSETFROM")) {
-        return;
+        return null;
       }
 
       var dtstart = aComponent.getFirstProperty("DTSTART").getFirstValue();
@@ -2654,6 +2663,8 @@ ICAL.design = {
 
     utc_offset = to_zone.utc_offset(tt);
     tt.adjust(0, 0, 0, utc_offset);
+
+    return null;
   };
 
   ICAL.icaltimezone.fromData = function icaltimezone_fromData(aData) {
@@ -2677,10 +2688,11 @@ ICAL.design = {
   ICAL.icaltimezone.EXTRA_COVERAGE = 5;
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -3397,10 +3409,11 @@ ICAL.design = {
   ICAL.icaltime.SATURDAY = 7;
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
@@ -3546,8 +3559,12 @@ ICAL.design = {
       } catch (e) {
         ICAL.helpers.dumpn("EICALPROP: " + this.toString() + "//" + e);
         ICAL.helpers.dumpn(e.stack);
+        return null;
       }
+
+      return null;
     },
+
     fromIcalProperty: function fromIcalProperty(aProp) {
       var propval = aProp.getFirstValue();
       this.fromData(propval);
@@ -3657,7 +3674,7 @@ ICAL.design = {
 
       if (this.rule.freq == "WEEKLY") {
         if ("BYDAY" in parts) {
-          var parts = this.this.rule_day_of_week(parts.BYDAY[0]);
+          var parts = this.rule_day_of_week(parts.BYDAY[0]);
           var pos = parts[0];
           var rule_dow = parts[1];
           var dow = rule_dow - this.last.day_of_week();
@@ -4546,10 +4563,11 @@ ICAL.design = {
   icalrecur_iterator.ILLEGAL = 3;
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
-"use strict";
+
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 
