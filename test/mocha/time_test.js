@@ -2,6 +2,11 @@ suite('icaltime', function() {
   var Time = ICAL.icaltime;
   var Timezone = ICAL.icaltimezone;
 
+  function createTime(year, month, day) {
+    var date = new Date(year, month, day);
+    return Time.fromJSDate(date);
+  }
+
   test('round trip', function() {
     var f = new Time({
       second: 1,
@@ -131,7 +136,6 @@ suite('icaltime', function() {
 
   });
 
-  //XXX: Common pattern refactor ?
   suite('#dayOfYear', function() {
     var inc;
 
@@ -187,6 +191,192 @@ suite('icaltime', function() {
     });
   });
 
+  suite('#startOfWeek', function() {
+    var start = new Date(2012, 1, 1);
+    var subject;
+    var expected;
+
+    suiteSetup(function() {
+      var time = Time.fromJSDate(new Date(
+        2012, 0, 29
+      ));
+
+      expected = {
+        year: time.year,
+        month: time.month,
+        day: time.day,
+        minute: time.minute,
+        second: time.second
+      };
+
+    });
+
+    var day = 0;
+    var max = 4;
+
+    for (; day < max; day++) {
+      // scope hack
+      (function(day) {
+        var date = new Date(
+          start.getFullYear(),
+          start.getMonth(),
+          start.getDate() + day
+        );
+
+        var msg = 'convert: "' + date.toString() + '" to first day of week';
+
+        test(msg, function() {
+          subject = Time.fromJSDate(date);
+          assert.hasProperties(
+            subject.startOfWeek(),
+            expected
+          );
+        });
+      }(day));
+    }
+
+  });
+
+  suite('#nthWeekDay', function() {
+    suite('negative', function() {
+      test('last saturday in Sept 2012 (target before current day)', function() {
+        var time = createTime(2012, 8, 1);
+
+        var day = time.nthWeekDay(Time.SATURDAY, -1);
+        var date = new Date(2012, 8, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 8, 29)
+        );
+      });
+
+      test('last Monday in Jan 2012 (target after current day)', function() {
+        var time = createTime(2012, 0, 1);
+
+        var day = time.nthWeekDay(Time.MONDAY, -1);
+        var date = new Date(2012, 0, day);
+
+        assert.deepEqual(
+          new Date(2012, 0, 30),
+          date
+        );
+      });
+
+      test('2nd to last friday after May 15th 2012 (multiple weeks)', function() {
+        var time = createTime(2012, 4, 15);
+
+        var day = time.nthWeekDay(Time.FRIDAY, -2);
+        var date = new Date(2012, 4, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 4, 18)
+        );
+      });
+
+      test('third to last Tuesday in April 2012 (tuesday)', function() {
+        var time = createTime(2012, 3, 5);
+
+        var day = time.nthWeekDay(Time.TUESDAY, -3);
+        var date = new Date(2012, 3, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 3, 10)
+        );
+      });
+
+    });
+
+    suite('positive', function() {
+      test('20th monday of year (multiple months)', function() {
+        var time = createTime(2012, 0, 1);
+
+        var day = time.nthWeekDay(Time.MONDAY, 20);
+        var date = new Date(2012, 0, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 4, 14)
+        );
+      });
+
+      test('5th friday after May 15th, 2012 (multiple middle of month)', function() {
+        var time = createTime(2012, 4, 15);
+
+        var day = time.nthWeekDay(Time.FRIDAY, 5);
+        var date = new Date(2012, 4, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 5, 15)
+        );
+      });
+
+      test('3rd monday (multiple)', function() {
+        var time = createTime(2012, 0, 1);
+
+        var day = time.nthWeekDay(Time.MONDAY, 3);
+        var date = new Date(2012, 0, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 0, 16)
+        );
+      });
+
+      test('next tuesday after May 20th (in middle of month pos 1)', function() {
+        var time = createTime(2012, 4, 20);
+
+        var day = time.nthWeekDay(Time.TUESDAY, 1);
+        var date = new Date(2012, 4, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 4, 22)
+        );
+      });
+
+      test('monday after may 19th 2012 (middle of month pos 0)', function() {
+        var time = createTime(2012, 4, 19);
+
+        var day = time.nthWeekDay(Time.MONDAY, 0);
+        var date = new Date(2012, 4, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 4, 21)
+        );
+      });
+    });
+
+  });
+
+  suite('#adjust', function() {
+    var date = new Date(2012, 0, 25);
+
+    test('overflow days - negative', function() {
+      var time = Time.fromJSDate(date);
+      time.adjust(-35, 0, 0, 0);
+
+      assert.deepEqual(
+        time.toJSDate(),
+        new Date(2011, 11, 21)
+      );
+    });
+
+    test('overflow days - positive', function() {
+      var time = Time.fromJSDate(date);
+
+      time.adjust(20, 0, 0, 0);
+
+      assert.deepEqual(
+        time.toJSDate(),
+        new Date(2012, 1, 14)
+      );
+    });
+  });
 
   test('calculations', function() {
 
@@ -260,7 +450,7 @@ suite('icaltime', function() {
     }
   });
 
-  test('normalize', function() {
+  test('#normalize', function() {
     var f = new Time({
         second: 59,
         minute: 59,
@@ -310,7 +500,7 @@ suite('icaltime', function() {
       leap_year: true,
       dayOfWeek: Time.SUNDAY,
       dayOfYear: 1,
-      start_of_week: '20120101T000000',
+      startOfWeek: '20120101T000000',
       end_of_week: '20120107T000000',
       start_of_month: '20120101',
       end_of_month: '20120131',
@@ -330,7 +520,7 @@ suite('icaltime', function() {
       leap_year: false,
       dayOfWeek: Time.THURSDAY,
       dayOfYear: 1,
-      start_of_week: '20081228T000000',
+      startOfWeek: '20081228T000000',
       end_of_week: '20090103T000000',
       start_of_month: '20090101',
       end_of_month: '20090131',
@@ -353,7 +543,7 @@ suite('icaltime', function() {
       assert.equal(data.leap_year, Time.is_leap_year(dt.year));
       assert.equal(data.dayOfWeek, dt.dayOfWeek());
       assert.equal(data.dayOfYear, dt.dayOfYear());
-      assert.equal(data.start_of_week, dt.start_of_week());
+      assert.equal(data.startOfWeek, dt.startOfWeek());
       assert.equal(data.end_of_week, dt.end_of_week());
       assert.equal(data.start_of_month, dt.start_of_month());
       assert.equal(data.end_of_month, dt.end_of_month().toString());
@@ -361,7 +551,7 @@ suite('icaltime', function() {
       assert.equal(data.end_of_year, dt.end_of_year());
       assert.equal(data.start_doy_week, dt.start_doy_week(Time.SUNDAY));
       assert.equal(data.week_number, dt.week_number(Time.SUNDAY));
-      // TODO nth_weekday
+      // TODO nthWeekDay
 
       dt = new Time();
       dt.resetTo(data.year, data.month, data.day, data.hour, data.minute,
