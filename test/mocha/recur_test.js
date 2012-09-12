@@ -4,6 +4,14 @@ suite('recur', function() {
   var Time = ICAL.icaltime;
   var Recur = ICAL.icalrecur;
 
+  function addDates(expected, year, month, dates) {
+    dates.forEach(function(date) {
+      expected.push(new Date(
+        year, month, date, 9
+      ));
+    });
+  }
+
   function createDay(date) {
     return new Date(
       date.getFullYear(),
@@ -56,6 +64,14 @@ suite('recur', function() {
     return list;
   }
 
+  function createIterator(ruleString, timeString) {
+    setup(function() {
+      var start = ICAL.icaltime.fromString(timeString);
+      recur = ICAL.icalrecur.fromString(ruleString);
+      iterator = recur.iterator(start);
+    });
+  }
+
   function getDaysIn(month) {
     var start = new Date(
       month.getFullYear(),
@@ -90,6 +106,47 @@ suite('recur', function() {
         });
       }(map));
     }
+  });
+
+  suite('#normalizeByMonthDayRules', function() {
+    createIterator(
+      'FREQ=MONTHLY;COUNT=2',
+      '20120201T090000'
+
+    );
+    test('positive rules', function() {
+      var result = iterator.normalizeByMonthDayRules(
+        2012, 2, [21, 15]
+      );
+
+      assert.deepEqual(result, [15, 21]);
+    });
+
+    test('extra days', function() {
+      var result = iterator.normalizeByMonthDayRules(
+        2012, 2, [1, 31]
+      );
+
+      assert.deepEqual(result, [1]);
+    });
+
+    test('negative and positive days', function() {
+      var result = iterator.normalizeByMonthDayRules(
+        2012, 2, [1, -1]
+      );
+
+      assert.deepEqual(result, [1, 29]);
+    });
+
+    test('duplicates', function() {
+      var result = iterator.normalizeByMonthDayRules(
+        // -29 === 1st day
+        2012, 2, [2, 2, 1, -29]
+      );
+
+      assert.deepEqual(result, [1, 2]);
+    });
+
   });
 
   suite('#iterator', function() {
@@ -320,14 +377,6 @@ suite('recur', function() {
 
   });
 
-  function createIterator(ruleString, timeString) {
-    setup(function() {
-      var start = ICAL.icaltime.fromString(timeString);
-      recur = ICAL.icalrecur.fromString(ruleString);
-      iterator = recur.iterator(start);
-    });
-  }
-
   suite('daily for 10 occurances', function() {
     createIterator(
       'FREQ=DAILY;COUNT=10',
@@ -505,6 +554,70 @@ suite('recur', function() {
     });
   });
 
+  suite('Weekly until December 24, 2012', function() {
+    createIterator(
+      'FREQ=WEEKLY;UNTIL=20121224T000000Z',
+      '20121115T000000'
+    );
+
+    var expected = [
+      new Date(2012, 10, 15),
+      new Date(2012, 10, 22),
+      new Date(2012, 10, 29),
+      new Date(2012, 11, 6),
+      new Date(2012, 11, 13),
+      new Date(2012, 11, 20)
+    ];
+
+    test('until end', function() {
+      var next;
+      var dates = [];
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      while ((next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+    });
+  });
+
+  suite('every other week forever', function() {
+    createIterator(
+      'FREQ=WEEKLY;INTERVAL=2;WKST=SU',
+      '20120115T090000'
+    );
+
+    var expected = [
+      new Date(2012, 0, 15, 9),
+      new Date(2012, 0, 29, 9),
+      new Date(2012, 1, 12, 9),
+    ];
+
+    test(expected.length + ' occurances', function() {
+      var next;
+      var cur = 0;
+      var max = expected.length;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      while(cur < max && (next = iterator.next())) {
+        dates.push(next.toJSDate())
+        cur++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+    });
+  });
+
   suite('weekly on tuesday and thursday for five weeks', function() {
     createIterator(
       'FREQ=WEEKLY;COUNT=4;WKST=SU;BYDAY=TU,TH',
@@ -539,21 +652,91 @@ suite('recur', function() {
     });
   });
 
+  suite('every other week on mo,we,fi until dec 24th 1997', function() {
+    createIterator(
+      'FREQ=WEEKLY;INTERVAL=2;UNTIL=19971224T090000Z;WKST=SU;BYDAY=MO,WE,FR',
+      '19970901T090000'
+    );
+
+    var expected = [];
+
+    // taken directly from rfc
+    addDates(expected, 1997, 8, [1, 3, 5, 15, 17, 19, 29]);
+    addDates(expected, 1997, 9, [1, 3, 13, 15, 17, 27, 29, 31]);
+    addDates(expected, 1997, 10, [10, 12, 14, 24, 26, 28]);
+    addDates(expected, 1997, 11, [8, 10, 12, 22, 24]);
+
+    test('until end', function() {
+      var dates = [];
+      var next;
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      while ((next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+    });
+
+  });
+
+  suite('monthly on first friday for 10 occurances', function() {
+    createIterator(
+      'FREQ=MONTHLY;COUNT=10;BYDAY=1FR',
+      '20120107T000000'
+    );
+
+    var expected = [
+      // note we skipped the first friday of jan
+      // because the start date is _after_ that day.
+      new Date(2012, 1, 3),
+      new Date(2012, 2, 2),
+      new Date(2012, 3, 6),
+      new Date(2012, 4, 4),
+      new Date(2012, 5, 1),
+      new Date(2012, 6, 6),
+      new Date(2012, 7, 3),
+      new Date(2012, 8, 7),
+      new Date(2012, 9, 5),
+      new Date(2012, 10, 2)
+    ];
+
+    test('until end', function() {
+      var next;
+      var dates = [];
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      while ((next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+    });
+  });
+
   suite('every thursday 31th forever', function() {
     createIterator(
       'FREQ=MONTHLY;BYDAY=TH;BYMONTHDAY=31',
       '20120131T090000'
     );
 
+    var expected = [
+      new Date(2012, 4, 31, 9),
+      new Date(2013, 0, 31, 9),
+      new Date(2013, 9, 31, 9)
+    ];
+
     test('for 3 occurances', function() {
       var next;
       var dates = [];
-      var expected = [
-        new Date(2012, 4, 31, 9),
-        new Date(2013, 0, 31, 9),
-        new Date(2013, 9, 31, 9)
-      ];
-
       var inc = 0;
       var max = 3;
 
@@ -564,9 +747,168 @@ suite('recur', function() {
       }
 
       assert.deepEqual(
-        dates.sort(),
-        expected.sort()
+        dates,
+        expected
       );
+    });
+  });
+
+  suite('every other month; first and last sunday for 4 occurances', function() {
+    createIterator(
+      'FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=1SU,-1SU',
+      '20121101T090000'
+    );
+
+    var expected = [
+      // nov 2012
+      new Date(2012, 10, 4, 9),
+      new Date(2012, 10, 25, 9),
+      // jan 2013
+      new Date(2013, 0, 6, 9),
+      new Date(2013, 0, 27, 9)
+    ];
+
+    test('until end', function() {
+      var next;
+      var dates = [];
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      while ((next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates, expected);
+    });
+  });
+
+  suite('monthly third to last day of month forever', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYMONTHDAY=-3',
+      '20120101T090000'
+    );
+
+    var expected = [
+      new Date(2012, 0, 29, 9),
+      new Date(2012, 1, 27, 9),
+      new Date(2012, 2, 29, 9)
+    ];
+
+    test('three occurances', function() {
+      var next;
+      var max = 3;
+      var cur = 0;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      while (cur++ < max && (next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates, expected);
+    });
+  });
+
+  suite('weekly WKST changes output', function() {
+
+    suite('MO', function() {
+      createIterator(
+        'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO',
+        '19970805T090000'
+      );
+
+      var expected = [];
+
+      addDates(expected, 1997, 7, [5, 10, 19, 24]);
+
+      test('until end', function() {
+        var dates = [];
+        var next;
+
+        while ((next = iterator.next())) {
+          dates.push(next.toJSDate());
+        }
+
+        assert.deepEqual(dates, expected);
+      });
+    });
+
+    suite('SU', function() {
+      createIterator(
+        'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=SU',
+        '19970805T090000'
+      );
+
+      var expected = [];
+
+      addDates(expected, 1997, 7, [5, 17, 19, 31]);
+
+      test('until end', function() {
+        var dates = [];
+        var next;
+
+        while ((next = iterator.next())) {
+          dates.push(next.toJSDate());
+        }
+
+        assert.deepEqual(dates, expected);
+      });
+
+    });
+  });
+
+  suite('monthly, the third instance of tu,we,th', function() {
+    createIterator(
+      'FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3',
+      '19970904T090000'
+    );
+
+    // taken directly from rfc
+    var expected = [
+      new Date(1997, 8, 4, 9),
+      new Date(1997, 9, 7, 9),
+      new Date(1997, 10, 6, 9)
+    ];
+
+    test('until end', function() {
+      var next;
+      var dates = [];
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      while ((next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates, expected);
+    });
+  });
+
+  suite('monthly, each month last day that is monday', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYMONTHDAY=-1;BYDAY=MO',
+      '20120101T090000'
+    );
+
+    var expected = [
+      new Date(2012, 3, 30, 9),
+      new Date(2012, 11, 31, 9)
+    ];
+
+    test(expected.length + ' occurances', function() {
+      var next;
+      var dates = [];
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = expected.length;
+      var inc = 0;
+
+      while ((inc++ < max) && (next = iterator.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates, expected);
     });
   });
 
@@ -598,8 +940,8 @@ suite('recur', function() {
       }
 
       assert.deepEqual(
-        dates.sort(),
-        expected.sort()
+        dates,
+        expected
       );
 
     });
