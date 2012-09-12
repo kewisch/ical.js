@@ -306,6 +306,30 @@ suite('icaltime', function() {
     });
 
     suite('positive', function() {
+
+      test('1st wed in Feb 2012 (start is day)', function() {
+        var time = createTime(2012, 1, 1);
+        var day = time.nthWeekDay(Time.WEDNESDAY, 0);
+
+        var date = new Date(2012, 1, day);
+        assert.deepEqual(
+          date,
+          new Date(2012, 1, 1)
+        );
+      });
+
+      test('1st monday in Feb 2012 (start is after day)', function() {
+        var time = createTime(2012, 1, 1);
+        var day = time.nthWeekDay(Time.MONDAY, 0);
+
+        var date = new Date(2012, 1, day);
+
+        assert.deepEqual(
+          date,
+          new Date(2012, 1, 6)
+        );
+      });
+
       test('20th monday of year (multiple months)', function() {
         var time = createTime(2012, 0, 1);
 
@@ -318,18 +342,6 @@ suite('icaltime', function() {
         );
       });
 
-      test('5th friday after May 15th, 2012 (multiple middle of month)', function() {
-        var time = createTime(2012, 4, 15);
-
-        var day = time.nthWeekDay(Time.FRIDAY, 5);
-        var date = new Date(2012, 4, day);
-
-        assert.deepEqual(
-          date,
-          new Date(2012, 5, 15)
-        );
-      });
-
       test('3rd monday (multiple)', function() {
         var time = createTime(2012, 0, 1);
 
@@ -339,30 +351,6 @@ suite('icaltime', function() {
         assert.deepEqual(
           date,
           new Date(2012, 0, 16)
-        );
-      });
-
-      test('next tuesday after May 20th (in middle of month pos 1)', function() {
-        var time = createTime(2012, 4, 20);
-
-        var day = time.nthWeekDay(Time.TUESDAY, 1);
-        var date = new Date(2012, 4, day);
-
-        assert.deepEqual(
-          date,
-          new Date(2012, 4, 22)
-        );
-      });
-
-      test('monday after may 19th 2012 (middle of month pos 0)', function() {
-        var time = createTime(2012, 4, 19);
-
-        var day = time.nthWeekDay(Time.MONDAY, 0);
-        var date = new Date(2012, 4, day);
-
-        assert.deepEqual(
-          date,
-          new Date(2012, 4, 21)
         );
       });
     });
