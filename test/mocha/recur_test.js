@@ -377,7 +377,7 @@ suite('recur', function() {
 
   });
 
-  suite('daily for 10 occurances', function() {
+  suite('daily for 10 occurrences', function() {
     createIterator(
       'FREQ=DAILY;COUNT=10',
       '20120901T090000'
@@ -519,7 +519,7 @@ suite('recur', function() {
     });
   });
 
-  suite('weekly for 10 occurances', function() {
+  suite('weekly for 10 occurrences', function() {
     createIterator(
       'FREQ=WEEKLY;COUNT=10',
       '20120105T090000'
@@ -598,7 +598,7 @@ suite('recur', function() {
       new Date(2012, 1, 12, 9),
     ];
 
-    test(expected.length + ' occurances', function() {
+    test(expected.length + ' occurrences', function() {
       var next;
       var cur = 0;
       var max = expected.length;
@@ -684,7 +684,7 @@ suite('recur', function() {
 
   });
 
-  suite('monthly on first friday for 10 occurances', function() {
+  suite('monthly on first friday for 10 occurrences', function() {
     createIterator(
       'FREQ=MONTHLY;COUNT=10;BYDAY=1FR',
       '20120107T000000'
@@ -734,7 +734,7 @@ suite('recur', function() {
       new Date(2013, 9, 31, 9)
     ];
 
-    test('for 3 occurances', function() {
+    test('for 3 occurrences', function() {
       var next;
       var dates = [];
       var inc = 0;
@@ -753,7 +753,7 @@ suite('recur', function() {
     });
   });
 
-  suite('every other month; first and last sunday for 4 occurances', function() {
+  suite('every other month; first and last sunday for 4 occurrences', function() {
     createIterator(
       'FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=1SU,-1SU',
       '20121101T090000'
@@ -794,7 +794,7 @@ suite('recur', function() {
       new Date(2012, 2, 29, 9)
     ];
 
-    test('three occurances', function() {
+    test('three occurrences', function() {
       var next;
       var max = 3;
       var cur = 0;
@@ -896,7 +896,7 @@ suite('recur', function() {
       new Date(2012, 11, 31, 9)
     ];
 
-    test(expected.length + ' occurances', function() {
+    test(expected.length + ' occurrences', function() {
       var next;
       var dates = [];
       assert.isFalse(recur.isFinite(), 'finite');
@@ -918,7 +918,7 @@ suite('recur', function() {
       '20120401T090000'
     );
 
-    test('for 3 occurances', function() {
+    test('for 3 occurrences', function() {
       var next;
       var dates = [];
 
