@@ -122,6 +122,14 @@ suite('recur', function() {
       assert.deepEqual(result, [15, 21]);
     });
 
+    test('when given zero', function() {
+      var result = iterator.normalizeByMonthDayRules(
+        2012, 2, [21, 0]
+      );
+
+      assert.deepEqual(result, [21]);
+    });
+
     test('extra days', function() {
       var result = iterator.normalizeByMonthDayRules(
         2012, 2, [1, 31]
