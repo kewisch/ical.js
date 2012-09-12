@@ -26,6 +26,22 @@ suite('icaltime', function() {
     assert.equal(g, Time.epoch_time.toString());
   });
 
+  suite('setters', function() {
+
+    suite('.day', function() {
+      test('beyond month', function() {
+        var subject = createTime(2012, 0, 31);
+        var result = subject.day += 1;
+
+        assert.equal(result, 32, 'should return real day math');
+
+        assert.equal(subject.month, 2, 'normalizes month');
+        assert.equal(subject.day, 1, 'normalizes day');
+      });
+    });
+
+  });
+
   suite('#fromJSDate', function() {
 
     test('utc', function() {
@@ -350,6 +366,29 @@ suite('icaltime', function() {
         );
       });
     });
+  });
+
+  suite('#isNthWeekDay', function() {
+
+    test('each day of the week', function() {
+      // Remember 1 === SUNDAY not MONDAY
+      var start = new Date(2012, 3, 8);
+      var time;
+
+      for (var dow = 1; dow <= 7; dow++) {
+        time = Time.fromJSDate(new Date(
+          start.getFullYear(),
+          start.getMonth(),
+          7 + dow //8, 9, etc..
+        ));
+
+        assert.isTrue(
+          time.isNthWeekDay(dow, 2, 31),
+          time.toJSDate().toString() +
+          ' should be 2nd occurance of ' + dow + ' weekday'
+        );
+      }
+    });
 
   });
 
@@ -376,6 +415,16 @@ suite('icaltime', function() {
         new Date(2012, 1, 14)
       );
     });
+  });
+
+  suite('#start_doy_week', function() {
+
+    test('forward (using defaults)', function() {
+      var subject = createTime(2012, 0, 20);
+      var result = subject.start_doy_week();
+      assert.equal(result, 15, 'should start on sunday of that week');
+    });
+
   });
 
   test('calculations', function() {
