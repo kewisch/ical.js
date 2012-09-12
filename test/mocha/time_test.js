@@ -2,11 +2,6 @@ suite('icaltime', function() {
   var Time = ICAL.icaltime;
   var Timezone = ICAL.icaltimezone;
 
-  function createTime(year, month, day) {
-    var date = new Date(year, month, day);
-    return Time.fromJSDate(date);
-  }
-
   test('round trip', function() {
     var f = new Time({
       second: 1,
@@ -30,7 +25,7 @@ suite('icaltime', function() {
 
     suite('.day', function() {
       test('beyond month', function() {
-        var subject = createTime(2012, 0, 31);
+        var subject = Time.fromData({ year: 2012, month: 1, day: 31 });
         var result = subject.day += 1;
 
         assert.equal(result, 32, 'should return real day math');
@@ -256,7 +251,7 @@ suite('icaltime', function() {
   suite('#nthWeekDay', function() {
     suite('negative', function() {
       test('last saturday in Sept 2012 (target before current day)', function() {
-        var time = createTime(2012, 8, 1);
+        var time = Time.fromData({ year: 2012, month: 9, day: 1 });
 
         var day = time.nthWeekDay(Time.SATURDAY, -1);
         var date = new Date(2012, 8, day);
@@ -268,7 +263,7 @@ suite('icaltime', function() {
       });
 
       test('last Monday in Jan 2012 (target after current day)', function() {
-        var time = createTime(2012, 0, 1);
+        var time = Time.fromData({ year: 2012, month: 1, day: 1 });
 
         var day = time.nthWeekDay(Time.MONDAY, -1);
         var date = new Date(2012, 0, day);
@@ -280,7 +275,7 @@ suite('icaltime', function() {
       });
 
       test('2nd to last friday after May 15th 2012 (multiple weeks)', function() {
-        var time = createTime(2012, 4, 15);
+        var time = Time.fromData({ year: 2012, month: 5, day: 15 });
 
         var day = time.nthWeekDay(Time.FRIDAY, -2);
         var date = new Date(2012, 4, day);
@@ -292,7 +287,7 @@ suite('icaltime', function() {
       });
 
       test('third to last Tuesday in April 2012 (tuesday)', function() {
-        var time = createTime(2012, 3, 5);
+        var time = Time.fromData({ year: 2012, month: 4, day: 5 });
 
         var day = time.nthWeekDay(Time.TUESDAY, -3);
         var date = new Date(2012, 3, day);
@@ -308,7 +303,7 @@ suite('icaltime', function() {
     suite('positive', function() {
 
       test('1st wed in Feb 2012 (start is day)', function() {
-        var time = createTime(2012, 1, 1);
+        var time = Time.fromData({ year: 2012, month: 2, day: 1 });
         var day = time.nthWeekDay(Time.WEDNESDAY, 0);
 
         var date = new Date(2012, 1, day);
@@ -319,7 +314,7 @@ suite('icaltime', function() {
       });
 
       test('1st monday in Feb 2012 (start is after day)', function() {
-        var time = createTime(2012, 1, 1);
+        var time = Time.fromData({ year: 2012, month: 2, day: 1 });
         var day = time.nthWeekDay(Time.MONDAY, 0);
 
         var date = new Date(2012, 1, day);
@@ -331,7 +326,7 @@ suite('icaltime', function() {
       });
 
       test('20th monday of year (multiple months)', function() {
-        var time = createTime(2012, 0, 1);
+        var time = Time.fromData({ year: 2012, month: 1, day: 1 });
 
         var day = time.nthWeekDay(Time.MONDAY, 20);
         var date = new Date(2012, 0, day);
@@ -343,7 +338,7 @@ suite('icaltime', function() {
       });
 
       test('3rd monday (multiple)', function() {
-        var time = createTime(2012, 0, 1);
+        var time = Time.fromData({ year: 2012, month: 1, day: 1 });
 
         var day = time.nthWeekDay(Time.MONDAY, 3);
         var date = new Date(2012, 0, day);
@@ -408,7 +403,7 @@ suite('icaltime', function() {
   suite('#start_doy_week', function() {
 
     test('forward (using defaults)', function() {
-      var subject = createTime(2012, 0, 20);
+      var subject = Time.fromData({ year: 2012, month: 1, day: 20 });
       var result = subject.start_doy_week();
       assert.equal(result, 15, 'should start on sunday of that week');
     });
