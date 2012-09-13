@@ -23,6 +23,7 @@
     var files = [
       'helpers',
       'serializer',
+      'recur_expansion',
       'parser',
       'design',
       'component',
@@ -129,7 +130,6 @@
       });
     } else {
       var xhr = new XMLHttpRequest();
-      console.log(file);
       xhr.open('GET', '/samples/' + file, true);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
