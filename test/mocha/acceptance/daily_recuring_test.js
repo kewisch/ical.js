@@ -28,11 +28,11 @@ suite('ics - blank description', function() {
     var key;
 
     var iter = recur.iterator(start);
-    var limit = 100;
+    var limit = 10;
     while (limit) {
+      iter.next();
       limit--;
     }
-
   });
 });
 

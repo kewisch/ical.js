@@ -78,7 +78,34 @@
     }
     chai.Assertion.prototype.assert = chaiAssert;
     chai.Assertion.includeStack = true;
+
+
     assert = chai.assert;
+
+    // XXX: this is a lame way to do this
+    // in reality we need to fix the above upstream
+    // and leverage new chai 1x methods
+
+    assert.hasProperties = function chai_hasProperties(given, props, msg) {
+      msg = (typeof(msg) === 'undefined') ? '' : msg + ': ';
+
+      if (props instanceof Array) {
+        props.forEach(function(prop) {
+          assert.ok(
+            (prop in given),
+            msg + 'given should have "' + prop + '" property'
+          );
+        });
+      } else {
+        for (var key in props) {
+          assert.deepEqual(
+            given[key],
+            props[key],
+            msg + ' property equality for (' + key  + ') '
+          );
+        }
+      }
+    }
   }
 
   function requireChai(file, callback) {
@@ -137,4 +164,6 @@
     testSupport.require('/test/mocha/support/' + lib);
   }
 
+  // Load it here so its pre-loaded in all suite blocks...
+  testSupport.requireICAL();
 }());

@@ -27,6 +27,8 @@ suite('ical/parser', function() {
   });
 
   test('ICAL.stringify', function() {
+    var obj = { a: [], b: false };
+
     // round trip the data
     var icsOut = ICAL.stringify(ICAL.parse(icsData));
 
