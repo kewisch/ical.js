@@ -24,6 +24,8 @@
       'helpers',
       'serializer',
       'recur_expansion',
+      'event',
+      'component_parser',
       'parser',
       'design',
       'component',
