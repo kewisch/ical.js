@@ -3621,7 +3621,7 @@ ICAL.design = {
     },
 
     fromData: function fromData(aData) {
-      var propsToCopy = ["freq", "count", 'until', "wkst", "interval"];
+      var propsToCopy = ["freq", "count", "until", "wkst", "interval"];
       for (var key in propsToCopy) {
         var prop = propsToCopy[key];
         if (aData && prop.toUpperCase() in aData) {
@@ -4880,8 +4880,6 @@ ICAL.RecurExpansion = (function() {
 
   function RecurExpansion(component, startDate) {
     this.component = component;
-
-    //XXX: A bit weird to store this?
     this.currentTime = startDate.clone();
     this._ensureRules();
   }
