@@ -4373,8 +4373,8 @@ ICAL.design = {
       var matches = dow.match(/([+-]?[0-9])?(MO|TU|WE|TH|FR|SA|SU)/);
       if (matches) {
         var pos = parseInt(matches[1] || 0, 10);
-        var dow = ICAL.icalrecur.icalDayToNumericDay(matches[2]);
-        return [pos, dow]
+        dow = ICAL.icalrecur.icalDayToNumericDay(matches[2]);
+        return [pos, dow];
       } else {
         return [0, 0];
       }
@@ -4763,6 +4763,7 @@ ICAL.design = {
         // negative numbers are not false-y
         return idx !== -1;
       }
+      return false;
     },
 
     sort_byday_rules: function icalrecur_sort_byday_rules(aRules, aWeekStart) {
@@ -5215,6 +5216,8 @@ ICAL.Event = (function() {
       if (prop && prop.data && prop.data.value) {
         return prop.data.value[0];
       }
+
+      return null;
     },
 
     get uid() {
