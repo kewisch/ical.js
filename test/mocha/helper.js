@@ -36,6 +36,7 @@
       'timezone',
       'time',
       'recur',
+      'recur_iterator',
       'ical'
     ];
 

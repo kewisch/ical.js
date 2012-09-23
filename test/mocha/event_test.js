@@ -276,16 +276,15 @@ suite('ICAL.Event', function() {
       });
 
       var iterator = subject.iterator(time);
-      assert.deepEqual(iterator.currentTime.toString(), time.toString());
-      assert.equal(iterator.component, subject.component);
+      assert.deepEqual(iterator.last.toString(), time.toString());
+      assert.instanceOf(iterator, ICAL.RecurExpansion);
     });
-
 
     test('without a start time', function() {
       var iterator = subject.iterator();
 
       assert.equal(
-        iterator.currentTime.toString(),
+        iterator.last.toString(),
         subject.startDate.toString()
       );
     });
