@@ -119,6 +119,38 @@ suite('ICAL.Event', function() {
     });
   });
 
+  suite('#recurrenceTypes', function() {
+
+    suite('multiple rrules', function() {
+      var icsData;
+
+      testSupport.defineSample('multiple_rrules.ics', function(data) {
+        icsData = data;
+      });
+
+      test('result', function() {
+        var subject = new ICAL.icalcomponent(ICAL.parse(icsData));
+        subject = new ICAL.Event(subject.getFirstSubcomponent('VEVENT'));
+
+        var expected = {
+          'MONTHLY': true,
+          'WEEKLY': true
+        };
+
+        assert.deepEqual(subject.getRecurrenceTypes(), expected);
+      });
+    });
+
+    test('no rrule', function() {
+      subject.component.removeProperty('RRULE');
+
+      assert.deepEqual(
+        subject.getRecurrenceTypes(),
+        {}
+      );
+    });
+  });
+
   suite('#relateException', function() {
 
     test('trying to relate an exception to an exception', function() {
