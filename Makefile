@@ -13,6 +13,7 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/timezone.js \
 	$(LIB)/time.js \
 	$(LIB)/recur.js \
+	$(LIB)/recur_iterator.js \
 	$(LIB)/recur_expansion.js \
 	$(LIB)/event.js \
 	$(LIB)/component_parser.js \
