@@ -368,7 +368,7 @@ suite('icaltime', function() {
         assert.isTrue(
           time.isNthWeekDay(dow, 2, 31),
           time.toJSDate().toString() +
-          ' should be 2nd occurance of ' + dow + ' weekday'
+          ' should be 2nd occurrence of ' + dow + ' weekday'
         );
       }
     });
