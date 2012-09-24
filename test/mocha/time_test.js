@@ -107,6 +107,18 @@ suite('icaltime', function() {
         zone: Timezone.utc_timezone
       });
     });
+
+    test('floating timezone', function() {
+      var subject = Time.fromData({
+        year: 2012,
+        timezone: 'floating'
+      });
+
+      assert.hasProperties(subject, {
+        year: 2012,
+        zone: Timezone.local_timezone
+      });
+    });
   });
 
   suite('#dayOfWeek', function() {
@@ -408,6 +420,60 @@ suite('icaltime', function() {
       assert.equal(result, 15, 'should start on sunday of that week');
     });
 
+  });
+
+  suite('#toJSON', function() {
+    test('with utc time', function() {
+      var time = new Time({
+        year: 2012,
+        day: 1,
+        month: 1,
+        hour: 3,
+        zone: Timezone.utc_timezone
+      });
+
+      var after = new Time(time.toJSON());
+      assert.equal(after.zone, Timezone.utc_timezone);
+
+      assert.deepEqual(
+        after.toJSDate(),
+        time.toJSDate()
+      );
+    });
+
+    test('with floating time', function() {
+      var time = new Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 2,
+        minute: 15,
+        second: 1,
+        isDate: false,
+        zone: Timezone.local_timezone
+      });
+
+      var expected = {
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 2,
+        minute: 15,
+        second: 1,
+        isDate: false,
+        timezone: 'floating'
+      };
+
+      assert.deepEqual(time.toJSON(), expected);
+
+      var after = new Time(time.toJSON());
+      assert.equal(after.zone, Timezone.local_timezone);
+
+      assert.deepEqual(
+        time.toJSDate(),
+        after.toJSDate()
+      );
+    });
   });
 
   test('calculations', function() {

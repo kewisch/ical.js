@@ -2,13 +2,13 @@ suite('recur_expansion', function() {
   var component;
   var subject;
   var icsData;
+  var primary;
 
   testSupport.defineSample('recur_instances.ics', function(data) {
     icsData = data;
   });
 
   setup(function(done) {
-    var primary;
     var exceptions = [];
 
     var parse = new ICAL.ComponentParser();
@@ -23,7 +23,11 @@ suite('recur_expansion', function() {
 
     parse.oncomplete = function() {
       exceptions.forEach(primary.relateException, primary);
-      subject = new ICAL.RecurExpansion(primary.component, primary.startDate);
+      subject = new ICAL.RecurExpansion({
+        component: primary.component,
+        dtstart: primary.startDate
+      });
+
       done();
     }
 
@@ -31,39 +35,37 @@ suite('recur_expansion', function() {
   });
 
   test('initialization', function() {
-    assert.ok(subject._rules);
-
     assert.deepEqual(
       new Date(2012, 9, 2, 10),
-      subject.currentTime.toJSDate()
+      subject.last.toJSDate()
     );
 
-    assert.deepEqual(subject._ruleIterators, []);
-    assert.ok(subject._exDates);
+    assert.instanceOf(subject.ruleIterators, Array);
+    assert.ok(subject.exDates);
   });
 
   suite('#_ensureRules', function() {
-    test('#_ruleDates', function() {
+    test('.ruleDates', function() {
       var expected = [
         new Date(2012, 10, 5, 10),
         new Date(2012, 10, 10, 10)
       ];
 
-      var dates = subject._ruleDates.map(function(time) {
+      var dates = subject.ruleDates.map(function(time) {
         return time.toJSDate();
       });
 
       assert.deepEqual(expected, dates);
     });
 
-    test('#_exDates', function() {
+    test('.exDates', function() {
       var expected = [
         new Date(2012, 11, 4, 10),
         new Date(2013, 1, 5, 10),
         new Date(2013, 3, 2, 10)
       ];
 
-      var dates = subject._exDates.map(function(time) {
+      var dates = subject.exDates.map(function(time) {
         return time.toJSDate();
       });
 
@@ -74,21 +76,24 @@ suite('recur_expansion', function() {
   suite('#_nextRecurrenceIter', function() {
 
     test('multiple rules', function() {
-      var weekly = new ICAL.icalrecur.fromString(
-        'FREQ=WEEKLY;BYDAY=TH'
-      );
+      var component = primary.component.toJSON();
+      component = new ICAL.icalcomponent(component);
 
-      var monthlyOn13th = new ICAL.icalrecur.fromString(
-        'FREQ=MONTHLY;BYMONTHDAY=13'
-      );
-
-      subject._rules = [weekly, monthlyOn13th];
-
+      // Simulate a more complicated event by using
+      // the original as a base and adding more complex RRULE's
+      component.removeProperty('RRULE');
+      component.addPropertyWithValue('RRULE', 'FREQ=MONTHLY;BYMONTHDAY=13');
+      component.addPropertyWithValue('RRULE', 'FREQ=WEEKLY;BYDAY=TH');
 
       var start = ICAL.icaltime.fromData({
         year: 2012,
         month: 2,
         day: 2
+      });
+
+      var subject = new ICAL.RecurExpansion({
+        component: component,
+        dtstart: start
       });
 
       var expected = [
@@ -101,11 +106,11 @@ suite('recur_expansion', function() {
 
       var inc = 0;
       var max = expected.length;
-      var next = start;
+      var next;
       var dates = [];
 
       while (inc++ < max) {
-        next = subject._nextRecurrenceIter(next);
+        next = subject._nextRecurrenceIter();
         dates.push(next.last.toJSDate());
         next.next();
       }
@@ -140,6 +145,40 @@ suite('recur_expansion', function() {
         dates,
         expected
       );
+    });
+
+  });
+
+  suite('#toJSON', function() {
+    test('from start', function() {
+      var json = subject.toJSON();
+      var newIter = new ICAL.RecurExpansion(json);
+      var cur = 0;
+
+      while (cur++ < 10) {
+        assert.deepEqual(
+          subject.next().toJSDate(),
+          newIter.next().toJSDate(),
+          'failed compare at #' + cur
+        );
+      }
+    });
+
+    test('from two iterations', function() {
+      subject.next();
+      subject.next();
+
+      var json = subject.toJSON();
+      var newIter = new ICAL.RecurExpansion(json);
+      var cur = 0;
+
+      while (cur++ < 10) {
+        assert.deepEqual(
+          subject.next().toJSDate(),
+          newIter.next().toJSDate(),
+          'failed compare at #' + cur
+        );
+      }
     });
 
   });
