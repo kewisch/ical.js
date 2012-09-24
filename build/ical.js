@@ -3898,13 +3898,15 @@ ICAL.icalrecur_iterator = (function() {
     fromData: function(options) {
       this.rule = ICAL.helpers.formatClassType(options.rule, ICAL.icalrecur);
 
-      if (!this.rule)
+      if (!this.rule) {
         throw new Error('iterator requires a (ICAL.icalrecur) rule');
+      }
 
       this.dtstart = ICAL.helpers.formatClassType(options.dtstart, ICAL.icaltime);
 
-      if (!this.dtstart)
+      if (!this.dtstart) {
         throw new Error('iterator requires a (ICAL.icaltime) dtstart');
+      }
 
       if (options.by_data) {
         this.by_data = options.by_data;
@@ -5140,39 +5142,45 @@ ICAL.RecurExpansion = (function() {
      * Array of RRULE iterators.
      *
      * @type Array[ICAL.icalrecur_iterator]
+     * @private
      */
-    _ruleIterators: null,
+    ruleIterators: null,
 
     /**
      * Array of RDATE instances.
      *
      * @type Array[ICAL.icaltime]
+     * @private
      */
-    _ruleDates: null,
+    ruleDates: null,
 
     /**
      * Array of EXDATE instances.
      *
      * @type Array[ICAL.icaltime]
+     * @private
      */
-    _exDates: null,
+    exDates: null,
 
     /**
-     * Current position in _ruleDates array.
+     * Current position in ruleDates array.
      * @type Numeric
+     * @private
      */
-    _ruleDateInc: 0,
+    ruleDateInc: 0,
 
     /**
-     * Current position in _exDates array
+     * Current position in exDates array
      * @type Numeric
+     * @private
      */
-    _exDateInc: 0,
+    exDateInc: 0,
 
     /**
      * Current negative date.
      *
      * @type ICAL.icaltime
+     * @private
      */
     exDate: null,
 
@@ -5180,6 +5188,7 @@ ICAL.RecurExpansion = (function() {
      * Current additional date.
      *
      * @type ICAL.icaltime
+     * @private
      */
     ruleDate: null,
 
@@ -5211,101 +5220,18 @@ ICAL.RecurExpansion = (function() {
       } else {
         this.last = formatTime(options.last);
 
-        this._ruleIterators = options._ruleIterators.map(function(item) {
+        this.ruleIterators = options.ruleIterators.map(function(item) {
           return ICAL.helpers.formatClassType(item, ICAL.icalrecur_iterator);
         });
 
-        this._ruleDates = options._ruleDates.map(formatTime);
-        this._exDates = options._exDates.map(formatTime);
-        this._ruleDateInc = options._ruleDateInc;
-        this._exDateInc = options._exDateInc;
+        this.ruleDates = options.ruleDates.map(formatTime);
+        this.exDates = options.exDates.map(formatTime);
+        this.ruleDateInc = options.ruleDateInc;
+        this.exDateInc = options.exDateInc;
 
-        this.exDate = this._exDates[this._exDateInc];
-        this.ruleDate = this._ruleDates[this._ruleDateInc];
+        this.exDate = this.exDates[this.exDateInc];
+        this.ruleDate = this.ruleDates[this.ruleDateInc];
       }
-    },
-
-    _extractDates: function(component, property) {
-      var result = [];
-      var props = component.getAllProperties(property);
-      var len = props.length;
-      var i = 0;
-      var prop;
-
-      var idx;
-
-      for (; i < len; i++) {
-        prop = propertyValue(props[i]);
-
-        idx = ICAL.helpers.binsearchInsert(
-          result,
-          prop,
-          compareTime
-        );
-
-        // ordered insert
-        result.splice(idx, 0, prop);
-      }
-
-      return result;
-    },
-
-    _init: function(component) {
-      this._ruleIterators = [];
-
-      this.last = this.dtstart.clone();
-
-      if (component.hasProperty('RRULE')) {
-        var rules = component.getAllProperties('RRULE');
-        var i = 0;
-        var len = rules.length;
-
-        var rule;
-        var iter;
-
-        for (; i < len; i++) {
-          rule = propertyValue(rules[i]);
-          rule = new ICAL.icalrecur(rule);
-          iter = rule.iterator(this.last);
-          this._ruleIterators.push(iter);
-
-          // increment to the next occurrence so future
-          // calls to next return times beyond the initial iteration.
-          // XXX: I find this suspicious might be a bug?
-          iter.next();
-        }
-      }
-
-      if (component.hasProperty('RDATE')) {
-        this._ruleDates = this._extractDates(component, 'RDATE');
-        this._ruleDateInc = ICAL.helpers.binsearchInsert(
-          this._ruleDates,
-          this.last,
-          compareTime
-        );
-
-        this.ruleDate = this._ruleDates[this._ruleDateInc];
-      }
-
-      if (component.hasProperty('EXDATE')) {
-        this._exDates = this._extractDates(component, 'EXDATE');
-        // if we have a .last day we increment the index to beyond it.
-        this._exDateInc = ICAL.helpers.binsearchInsert(
-          this._exDates,
-          this.last,
-          compareTime
-        );
-
-        this.exDate = this._exDates[this._exDateInc];
-      }
-    },
-
-    _nextExDay: function() {
-      this.exDate = this._exDates[++this._exDateInc];
-    },
-
-    _nextRuleDay: function() {
-      this.ruleDate = this._ruleDates[++this._ruleDateInc];
     },
 
     next: function() {
@@ -5376,16 +5302,121 @@ ICAL.RecurExpansion = (function() {
     },
 
     /**
+     * Converts object into a serialize-able format.
+     */
+    toJSON: function() {
+      function toJSON(item) {
+        return item.toJSON();
+      }
+
+      var result = Object.create(null);
+      result.ruleIterators = this.ruleIterators.map(toJSON);
+      result.ruleDates = this.ruleDates.map(toJSON);
+      result.exDates = this.exDates.map(toJSON);
+      result.ruleDateInc = this.ruleDateInc;
+      result.exDateInc = this.exDateInc;
+      result.last = this.last.toJSON();
+      result.dtstart = this.dtstart.toJSON();
+
+      return result;
+    },
+
+
+    _extractDates: function(component, property) {
+      var result = [];
+      var props = component.getAllProperties(property);
+      var len = props.length;
+      var i = 0;
+      var prop;
+
+      var idx;
+
+      for (; i < len; i++) {
+        prop = propertyValue(props[i]);
+
+        idx = ICAL.helpers.binsearchInsert(
+          result,
+          prop,
+          compareTime
+        );
+
+        // ordered insert
+        result.splice(idx, 0, prop);
+      }
+
+      return result;
+    },
+
+    _init: function(component) {
+      this.ruleIterators = [];
+
+      this.last = this.dtstart.clone();
+
+      if (component.hasProperty('RRULE')) {
+        var rules = component.getAllProperties('RRULE');
+        var i = 0;
+        var len = rules.length;
+
+        var rule;
+        var iter;
+
+        for (; i < len; i++) {
+          rule = propertyValue(rules[i]);
+          rule = new ICAL.icalrecur(rule);
+          iter = rule.iterator(this.last);
+          this.ruleIterators.push(iter);
+
+          // increment to the next occurrence so future
+          // calls to next return times beyond the initial iteration.
+          // XXX: I find this suspicious might be a bug?
+          iter.next();
+        }
+      }
+
+      if (component.hasProperty('RDATE')) {
+        this.ruleDates = this._extractDates(component, 'RDATE');
+        this.ruleDateInc = ICAL.helpers.binsearchInsert(
+          this.ruleDates,
+          this.last,
+          compareTime
+        );
+
+        this.ruleDate = this.ruleDates[this.ruleDateInc];
+      }
+
+      if (component.hasProperty('EXDATE')) {
+        this.exDates = this._extractDates(component, 'EXDATE');
+        // if we have a .last day we increment the index to beyond it.
+        this.exDateInc = ICAL.helpers.binsearchInsert(
+          this.exDates,
+          this.last,
+          compareTime
+        );
+
+        this.exDate = this.exDates[this.exDateInc];
+      }
+    },
+
+    _nextExDay: function() {
+      this.exDate = this.exDates[++this.exDateInc];
+    },
+
+    _nextRuleDay: function() {
+      this.ruleDate = this.ruleDates[++this.ruleDateInc];
+    },
+
+    /**
      * Find and return the recurrence rule with the most
      * recent event and return it.
      *
      * @return {Object} iterator.
      */
     _nextRecurrenceIter: function() {
-      var iters = this._ruleIterators;
+      var iters = this.ruleIterators;
 
-      if (iters.length === 0)
+      if (iters.length === 0) {
         return null;
+      }
 
       var len = iters.length;
       var iter;
@@ -5408,27 +5439,8 @@ ICAL.RecurExpansion = (function() {
       // the chosen iterator is returned but not mutated
       // this iterator contains the most recent event.
       return chosenIter;
-    },
-
-    /**
-     * Converts object into a serialize-able format.
-     */
-    toJSON: function() {
-      function toJSON(item) {
-        return item.toJSON();
-      }
-
-      var result = Object.create(null);
-      result._ruleIterators = this._ruleIterators.map(toJSON);
-      result._ruleDates = this._ruleDates.map(toJSON);
-      result._exDates = this._exDates.map(toJSON);
-      result._ruleDateInc = this._ruleDateInc;
-      result._exDateInc = this._exDateInc;
-      result.last = this.last.toJSON();
-      result.dtstart = this.dtstart.toJSON();
-
-      return result;
     }
+
   };
 
   return RecurExpansion;
