@@ -5238,7 +5238,7 @@ ICAL.Event = (function() {
       // later if we modify the underlying start/endDate.
       //
       // When do add that functionality it should expire this cache...
-      if (!this._duration) {
+      if (typeof(this._duration) === 'undefined') {
         this._duration = this.endDate.subtractDate(this.startDate);
       }
       return this._duration;
