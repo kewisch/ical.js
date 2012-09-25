@@ -185,6 +185,40 @@ suite('recur_iterator', function() {
 
   });
 
+  suite('weekly until', function() {
+    createIterator(
+      'FREQ=WEEKLY;UNTIL=20120424T065959Z;BYDAY=TU',
+      '20120410T090000'
+    );
+
+    test('for 3 occurrences', function() {
+      var next;
+      var dates = [];
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      var max = 3;
+      var inc = 0;
+
+      var expected = [
+        new Date(2012, 3, 10, 9),
+        new Date(2012, 3, 17, 9)
+      ];
+
+      while (inc++ < max && (next = iterator.next())) {
+        var value = next.toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        expected,
+        dates
+      );
+    });
+
+  });
+
   suite('yearly & by month', function() {
 
     test('infinite', function() {
