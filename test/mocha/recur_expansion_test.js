@@ -1,38 +1,43 @@
 suite('recur_expansion', function() {
   var component;
   var subject;
-  var icsData;
+  var icsData = {};
   var primary;
 
-  testSupport.defineSample('recur_instances.ics', function(data) {
-    icsData = data;
-  });
+  function createSubject(file) {
 
-  setup(function(done) {
-    var exceptions = [];
+    testSupport.defineSample(file, function(data) {
+      icsData[file] = data;
+    });
 
-    var parse = new ICAL.ComponentParser();
+    setup(function(done) {
+      var exceptions = [];
 
-    parse.onevent = function(event) {
-      if (event.isRecurrenceException()) {
-        exceptions.push(event);
-      } else {
-        primary = event;
+      var parse = new ICAL.ComponentParser();
+
+      parse.onevent = function(event) {
+        if (event.isRecurrenceException()) {
+          exceptions.push(event);
+        } else {
+          primary = event;
+        }
+      };
+
+      parse.oncomplete = function() {
+        exceptions.forEach(primary.relateException, primary);
+        subject = new ICAL.RecurExpansion({
+          component: primary.component,
+          dtstart: primary.startDate
+        });
+
+        done();
       }
-    };
 
-    parse.oncomplete = function() {
-      exceptions.forEach(primary.relateException, primary);
-      subject = new ICAL.RecurExpansion({
-        component: primary.component,
-        dtstart: primary.startDate
-      });
+      parse.process(icsData[file]);
+    });
+  }
 
-      done();
-    }
-
-    parse.process(icsData);
-  });
+  createSubject('recur_instances.ics');
 
   test('initialization', function() {
     assert.deepEqual(
@@ -74,14 +79,52 @@ suite('recur_expansion', function() {
   });
 
   suite('#_nextRecurrenceIter', function() {
+    var component;
 
-    test('multiple rules', function() {
-      var component = primary.component.toJSON();
+    setup(function() {
+      // setup a clean component with no rules
+      component = primary.component.toJSON();
       component = new ICAL.icalcomponent(component);
 
       // Simulate a more complicated event by using
       // the original as a base and adding more complex RRULE's
       component.removeProperty('RRULE');
+    });
+
+    test('when rule ends', function() {
+      var start = {
+        year: 2012,
+        month: 1,
+        day: 1
+      };
+
+      component.removeProperty('RDATE');
+      component.addPropertyWithValue('RRULE', 'FREQ=WEEKLY;COUNT=3;BYDAY=SU');
+
+      var subject = new ICAL.RecurExpansion({
+        component: component,
+        dtstart: start
+      });
+
+      var expected = [
+        new Date(2012, 0, 1),
+        new Date(2012, 0, 8),
+        new Date(2012, 0, 15)
+      ];
+
+      var max = 10;
+      var i = 0;
+      var next;
+      var dates = [];
+
+      while (i++ <= max && (next = subject.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates, expected);
+    });
+
+    test('multiple rules', function() {
       component.addPropertyWithValue('RRULE', 'FREQ=MONTHLY;BYMONTHDAY=13');
       component.addPropertyWithValue('RRULE', 'FREQ=WEEKLY;BYDAY=TH');
 
@@ -146,8 +189,8 @@ suite('recur_expansion', function() {
         expected
       );
     });
-
   });
+
 
   suite('#toJSON', function() {
     test('from start', function() {
