@@ -191,6 +191,39 @@ suite('recur_expansion', function() {
     });
   });
 
+  suite('#next - finite', function() {
+    createSubject('recur_instances_finite.ics');
+
+    test('until complete', function() {
+      var max = 100;
+      var inc = 0;
+      var next;
+
+      var dates = [];
+      var expected = [
+        new Date(2012, 9, 2, 10),
+        new Date(2012, 10, 5, 10),
+        new Date(2012, 10, 6, 10),
+        new Date(2012, 10, 10, 10),
+        new Date(2012, 11, 4, 10)
+      ];
+
+      while (inc++ < max && (next = subject.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      // round trip
+      subject = new ICAL.RecurExpansion(subject.toJSON());
+
+      while (inc++ < max && (next = subject.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates, expected);
+      assert.isTrue(subject.complete, 'complete');
+    });
+  });
+
 
   suite('#toJSON', function() {
     test('from start', function() {
