@@ -3884,6 +3884,12 @@ ICAL.icalrecur_iterator = (function() {
   }
 
   icalrecur_iterator.prototype = {
+
+    /**
+     * True when iteration is finished.
+     */
+    completed: false,
+
     rule: null,
     dtstart: null,
     last: null,
@@ -4079,6 +4085,11 @@ ICAL.icalrecur_iterator = (function() {
 
       if ((this.rule.count && this.occurrence_number >= this.rule.count) ||
           (this.rule.until && this.last.compare(this.rule.until) > 0)) {
+
+        //XXX: right now this is just a flag and has no impact
+        //     we can simplify the above case to check for completed later.
+        this.completed = true;
+
         return null;
       }
 
@@ -4128,6 +4139,7 @@ ICAL.icalrecur_iterator = (function() {
       }
 
       if (this.rule.until && this.last.compare(this.rule.until) > 0) {
+        this.completed = true;
         return null;
       } else {
         this.occurrence_number++;
@@ -5138,6 +5150,12 @@ ICAL.RecurExpansion = (function() {
   }
 
   RecurExpansion.prototype = {
+
+    /**
+     * True when iteration is fully completed.
+     */
+    complete: false,
+
     /**
      * Array of RRULE iterators.
      *
@@ -5224,13 +5242,22 @@ ICAL.RecurExpansion = (function() {
           return ICAL.helpers.formatClassType(item, ICAL.icalrecur_iterator);
         });
 
-        this.ruleDates = options.ruleDates.map(formatTime);
-        this.exDates = options.exDates.map(formatTime);
         this.ruleDateInc = options.ruleDateInc;
         this.exDateInc = options.exDateInc;
 
-        this.exDate = this.exDates[this.exDateInc];
-        this.ruleDate = this.ruleDates[this.ruleDateInc];
+        if (options.ruleDates) {
+          this.ruleDates = options.ruleDates.map(formatTime);
+          this.ruleDate = this.ruleDates[this.ruleDateInc];
+        }
+
+        if (options.exDates) {
+          this.exDates = options.exDates.map(formatTime);
+          this.exDate = this.exDates[this.exDateInc];
+        }
+
+        if (typeof(options.complete) !== 'undefined') {
+          this.complete = options.complete;
+        }
       }
     },
 
@@ -5259,11 +5286,13 @@ ICAL.RecurExpansion = (function() {
         // the only spot where we need to worry about the
         // end of events.
         if (!next && !iter) {
+          // there are no more iterators or rdates
+          this.complete = true;
           break;
         }
 
         // no next rule day or recurrence rule is first.
-        if (!next || next.compare(iter.last) > 0) {
+        if (!next || (iter && next.compare(iter.last) > 0)) {
           // must be cloned, recur will reuse the time element.
           next = iter.last.clone();
           // move to next so we can continue
@@ -5311,12 +5340,20 @@ ICAL.RecurExpansion = (function() {
 
       var result = Object.create(null);
       result.ruleIterators = this.ruleIterators.map(toJSON);
-      result.ruleDates = this.ruleDates.map(toJSON);
-      result.exDates = this.exDates.map(toJSON);
+
+      if (this.ruleDates) {
+        result.ruleDates = this.ruleDates.map(toJSON);
+      }
+
+      if (this.exDates) {
+        result.exDates = this.exDates.map(toJSON);
+      }
+
       result.ruleDateInc = this.ruleDateInc;
       result.exDateInc = this.exDateInc;
       result.last = this.last.toJSON();
       result.dtstart = this.dtstart.toJSON();
+      result.complete = this.complete;
 
       return result;
     },
@@ -5363,7 +5400,7 @@ ICAL.RecurExpansion = (function() {
         for (; i < len; i++) {
           rule = propertyValue(rules[i]);
           rule = new ICAL.icalrecur(rule);
-          iter = rule.iterator(this.last);
+          iter = rule.iterator(this.dtstart);
           this.ruleIterators.push(iter);
 
           // increment to the next occurrence so future
@@ -5428,6 +5465,18 @@ ICAL.RecurExpansion = (function() {
       for (; iterIdx < len; iterIdx++) {
         iter = iters[iterIdx];
         iterTime = iter.last;
+
+        // if iteration is complete
+        // then we must exclude it from
+        // the search and remove it.
+        if (iter.completed) {
+          len--;
+          if (iterIdx !== 0) {
+            iterIdx--;
+          }
+          iters.splice(iterIdx, 1);
+          continue;
+        }
 
         // find the most recent possible choice
         if (!chosenIter || chosenIter.last.compare(iterTime) > 0) {
