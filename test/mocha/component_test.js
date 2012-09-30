@@ -89,7 +89,6 @@ suite('ical/component', function() {
     assert.notEqual(event.toString(), event2.toString());
   });
 
-
   suite('#initialize', function() {
     test('#fromData', function() {
       var prop = factory.propUUID();
@@ -157,6 +156,19 @@ suite('ical/component', function() {
     props.forEach(function(key) {
       assert.ok(!contains(props), 'should remove ' + key + ' from output');
     });
+  });
+
+  test('#updatePropertyWithValue', function() {
+    // add a property
+    subject.addPropertyWithValue('X-FOO', '1');
+    subject.updatePropertyWithValue('X-FOO', '2');
+
+    var props = subject.getAllProperties('X-FOO');
+    assert.length(props, 1);
+
+    var value = props[0].getFirstValue().data.value[0];
+
+    assert.equal(value, '2');
   });
 
   test('#addPropertyWithValue', function() {
