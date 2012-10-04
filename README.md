@@ -6,7 +6,12 @@ This is a library to parse the ICAL format defined in [rfc5545](http://tools.iet
 
 The inital goal was to use this as a replacement for libical in the [Mozilla Calendar Project](http://www.mozilla.org/projects/calendar/), but the library has been written with the web in mind. This library should one day be called ical.js and allow all sorts of cool experiments with calendar data and the web. I am also aiming for a caldav.js when this is done. Most algorithms here were taken from [libical](http://sourceforge.net/projects/freeassociation/). If you are bugfixing this library, please check if the fix can be upstreamed to libical.
 
-Check out sandbox/validation.html for how to use this library from a web page.
+
+## Validator 
+
+There is a validator that demonstrates how to use the library in a webpage in the [sandbox/](https://github.com/kewisch/ical.js/tree/master/sandbox) subdirectory.
+
+[Try the validator online](http://kewisch.github.com/ical.js/validator.html), it always uses the latest copy of ical.js.
 
 ## Developing
 
