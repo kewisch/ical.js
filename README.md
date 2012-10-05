@@ -22,14 +22,16 @@ Run `make package`
 
 ### Tests
 
-Currently tests only run in a gecko browser environment.
-The goal is to have complete support for most modern browsers
-nodejs and xpcom.
-
 You need nodejs/nodejs to install the testing tools.
+
+#### in node js
+
+1. `make test-node`
+
+#### in the browser
 
 1.  Run `make dev`
 
 2.  Run `make test-server`
     Go to http://localhost:8789/test-agent/index.html
-    Run all tests with `make test`
+    Run all tests with `make test-browser`
