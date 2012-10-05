@@ -91,6 +91,19 @@ suite('recur_iterator', function() {
       '20120201T090000'
     );
 
+    test('completed', function() {
+      var next;
+      while (iterator.next()) {}
+
+      assert.isTrue(iterator.completed, 'is completed');
+
+      var json = iterator.toJSON();
+      var newIter = new ICAL.icalrecur_iterator(json);
+
+      assert.equal(newIter.next(), null, 'new iter next');
+      assert.isTrue(newIter.completed, true, 'new iter completed');
+    });
+
     test('INTERVAL: mid iteration (two iterations)', function() {
       iterator.next();
       iterator.next();
@@ -181,6 +194,40 @@ suite('recur_iterator', function() {
       );
 
       assert.deepEqual(result, [1, 2]);
+    });
+
+  });
+
+  suite('weekly until', function() {
+    createIterator(
+      'FREQ=WEEKLY;UNTIL=20120424T065959Z;BYDAY=TU',
+      '20120410T090000'
+    );
+
+    test('for 3 occurrences', function() {
+      var next;
+      var dates = [];
+
+      assert.isTrue(recur.isFinite(), 'finite');
+
+      var max = 3;
+      var inc = 0;
+
+      var expected = [
+        new Date(2012, 3, 10, 9),
+        new Date(2012, 3, 17, 9)
+      ];
+
+      while (inc++ < max && (next = iterator.next())) {
+        var value = next.toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        expected,
+        dates
+      );
     });
 
   });
@@ -748,6 +795,43 @@ suite('recur_iterator', function() {
       }
 
       assert.deepEqual(dates, expected);
+    });
+  });
+
+  suite('weekly on tuesday', function() {
+    createIterator(
+      'FREQ=WEEKLY;BYDAY=TU',
+      '20120911T090000'
+    );
+
+    test('for 5 occurrences', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var expected = [
+        new Date(2012, 8, 11, 9),
+        new Date(2012, 8, 18, 9),
+        new Date(2012, 8, 25, 9),
+        new Date(2012, 9, 2, 9),
+        new Date(2012, 9, 9, 9)
+      ];
+
+      var inc = 0;
+      var max = 5;
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
     });
   });
 
