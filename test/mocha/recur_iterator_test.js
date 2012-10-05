@@ -204,7 +204,7 @@ suite('recur_iterator', function() {
       '20120410T090000'
     );
 
-    test('for 3 occurrences', function() {
+    test('until complete', function() {
       var next;
       var dates = [];
 
@@ -221,6 +221,43 @@ suite('recur_iterator', function() {
       while (inc++ < max && (next = iterator.next())) {
         var value = next.toJSDate();
         dates.push(value);
+      }
+
+      assert.deepEqual(dates, expected);
+    });
+  });
+
+  suite('daily on weekdays', function() {
+    createIterator(
+      'FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR',
+      '20120102T090000'
+    );
+
+    test('9 occurrences', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 9;
+      var inc = 0;
+
+      var expected = [
+        new Date(2012, 0, 2, 9),
+        new Date(2012, 0, 3, 9),
+        new Date(2012, 0, 4, 9),
+        new Date(2012, 0, 5, 9),
+        new Date(2012, 0, 6, 9),
+        new Date(2012, 0, 9, 9),
+        new Date(2012, 0, 10, 9),
+        new Date(2012, 0, 11, 9),
+        new Date(2012, 0, 12, 9),
+        new Date(2012, 0, 13, 9)
+      ];
+
+      while (inc <= max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
         inc++;
       }
 
@@ -229,7 +266,6 @@ suite('recur_iterator', function() {
         dates
       );
     });
-
   });
 
   suite('yearly & by month', function() {
@@ -871,4 +907,3 @@ suite('recur_iterator', function() {
   });
 
 });
-
