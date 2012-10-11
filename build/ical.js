@@ -5135,7 +5135,7 @@ ICAL.RecurExpansion = (function() {
    *       with ICAL.Event which handles recurrence exceptions.
    *
    * Options:
-   *  - startDate: (ICAL.icaltime) start time of event (required)
+   *  - dtstart: (ICAL.icaltime) start time of event (required)
    *  - component: (ICAL.icalcomponent) component (required unless resuming)
    *
    * Examples:
@@ -5418,6 +5418,15 @@ ICAL.RecurExpansion = (function() {
       this.ruleIterators = [];
 
       this.last = this.dtstart.clone();
+
+      // to provide api consistency non-recurring
+      // events can also use the iterator though it will
+      // only return a single time.
+      if (!isRecurringComponent(component)) {
+        this.ruleDate = this.last.clone();
+        this.complete = true;
+        return;
+      }
 
       if (component.hasProperty('RRULE')) {
         var rules = component.getAllProperties('RRULE');

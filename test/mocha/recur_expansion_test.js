@@ -259,4 +259,32 @@ suite('recur_expansion', function() {
 
   });
 
+  suite('event without recurrences', function() {
+    createSubject('minimal.ics');
+
+    test('iterate', function() {
+      var dates = [];
+      var next;
+
+      var expected = primary.startDate.toJSDate();
+
+      while ((next = subject.next())) {
+        dates.push(next.toJSDate());
+      }
+
+      assert.deepEqual(dates[0], expected);
+      assert.length(dates, 1);
+      assert.isTrue(subject.complete);
+
+      // json check
+      subject = new ICAL.RecurExpansion(
+        subject.toJSON()
+      );
+
+      assert.isTrue(subject.complete, 'complete after json');
+      assert.ok(!subject.next(), 'next value');
+    });
+
+  });
+
 });
