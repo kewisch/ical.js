@@ -4980,8 +4980,11 @@ ICAL.icalrecur_iterator = (function() {
 
       if (aRuleType in this.by_data &&
           ruleMapValue == icalrecur_iterator.CONTRACT) {
-        for (var bydatakey in this.by_data[aRuleType]) {
-          if (this.by_data[aRuleType][bydatakey] == v) {
+
+        var ruleType = this.by_data[aRuleType];
+
+        for (var bydatakey in ruleType) {
+          if (ruleType[bydatakey] == v) {
             pass = true;
             break;
           }
@@ -5001,7 +5004,7 @@ ICAL.icalrecur_iterator = (function() {
       return (this.check_contract_restriction("BYSECOND", this.last.second) &&
               this.check_contract_restriction("BYMINUTE", this.last.minute) &&
               this.check_contract_restriction("BYHOUR", this.last.hour) &&
-              this.check_contract_restriction("BYDAY", dow) &&
+              this.check_contract_restriction("BYDAY", icalrecur_iterator._wkdayMap[dow]) &&
               this.check_contract_restriction("BYWEEKNO", weekNo) &&
               this.check_contract_restriction("BYMONTHDAY", this.last.day) &&
               this.check_contract_restriction("BYMONTH", this.last.month) &&
@@ -5146,6 +5149,8 @@ ICAL.RecurExpansion = (function() {
    * @param {Object} options see options block.
    */
   function RecurExpansion(options) {
+    this.ruleDates = [];
+    this.exDates = [];
     this.fromData(options);
   }
 
