@@ -48,6 +48,66 @@ suite('ICAL.Event', function() {
     });
   });
 
+  suite('creating a event', function() {
+    setup(function() {
+      subject = new ICAL.Event();
+    });
+
+    test('initial state', function() {
+      assert.instanceOf(subject.component, ICAL.icalcomponent);
+      assert.equal(subject.component.name, 'VEVENT');
+    });
+
+    suite('roundtrip', function() {
+      var props;
+
+      suiteSetup(function() {
+        var props = {
+          uid: 'zfoo',
+          summary: 'sum',
+          description: 'desc',
+          startDate: new ICAL.icaltime({
+            year: 2012,
+            month: 1,
+            day: 1,
+            hour: 5
+          }),
+          endDate: new ICAL.icaltime({
+            year: 2012,
+            month: 1,
+            day: 1,
+            hour: 10
+          }),
+          location: 'place',
+          organizer: 'SJL',
+          recurrenceId: new ICAL.icaltime({
+            year: 2012,
+            month: 1,
+            day: 1
+          })
+        };
+      });
+
+      test('setters', function() {
+        for (key in props) {
+          subject[key] = props[key];
+          assert.equal(subject[key], props[key], key);
+        }
+      });
+
+      test('to string roundtrip', function() {
+        var key;
+
+        var ical = subject.toString();
+        var comp = new ICAL.icalcomponent(ICAL.parse(ical));
+        var event = new ICAL.Event(comp);
+
+        assert.equal(comp.toString(), ical);
+      });
+    });
+
+  });
+
   suite('#getOccurrenceDetails', function() {
     setup(function() {
       exceptions.forEach(subject.relateException, subject);
@@ -235,6 +295,13 @@ suite('ICAL.Event', function() {
       subject.duration.toString(),
       duration.toString()
     );
+  });
+
+  test('#sequence', function() {
+    var expected = primaryItem.getFirstPropertyValue('SEQUENCE');
+    expected = expected.data.value[0];
+
+    assert.deepEqual(subject.sequence, expected);
   });
 
   test('#location', function() {
