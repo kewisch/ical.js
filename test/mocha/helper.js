@@ -45,6 +45,16 @@
     });
   };
 
+  /**
+   * Requires a benchmark build.
+   *
+   * @param {String} number or version of the build (see build/benchmark/.
+   */
+  testSupport.requireBenchmarkBuild = function(number) {
+    var path = '/build/benchmark/ical_' + number + '.js';
+    testSupport.require(path);
+  };
+
   testSupport.require = function cross_require(file, callback) {
     if (file in specialRequires) {
       return specialRequires[file](file, callback);
