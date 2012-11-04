@@ -11,70 +11,46 @@ suite('parserv2', function() {
   });
 
   test('#parser', function() {
-    // name, props, components
-    var tree = ['icalendar', [], []];
-    var stack = [];
-    var component = tree;
-
-    subject(icsData, {
-      onbegincomponent: function(name) {
-        var newComponent = [
-          name,
-          [],
-          []
-        ];
-
-        component[2].push(newComponent);
-
-        stack.push(newComponent);
-        component = newComponent;
-      },
-
-      onendcomponent: function(name) {
-        component = stack.pop();
-      },
-
-      onproperty: function(prop) {
-        component[1].push(prop);
-      }
-    });
-
+    var tree = subject(icsData);
     console.log(JSON.stringify(tree));
   });
 
   suite('#handleContentLine', function() {
-    test('component begin', function(done) {
-      var input = 'BEGIN:VCALENDAR';
+    var state;
 
-      subject.handleContentLine(input, {
-        onbegincomponent: function(name) {
-          assert.equal(name, 'vcalendar');
-          done();
-        },
+    setup(function() {
+      state = {};
+      state.stack = [];
+      state.component = [
+        'icalendar'
+      ];
+      state.tree = state.component;
 
-        onendcomponent: function() {
-          done(new Error('should not call end'));
-        }
-      });
+      subject.handleContentLine('BEGIN:VCALENDAR', state);
     });
 
-    test('component end', function(done) {
-      var input = 'END:VCALENDAR';
+    function firstProperty() {
+      return state.tree[1][1][0];
+    }
 
-      subject.handleContentLine(input, {
-        onbegincomponent: function(name) {
-          done(new Error('should not call begin'));
-          done();
-        },
+    test('component begin/end', function() {
+      subject.handleContentLine('BEGIN:VEVENT', state);
+      assert.deepEqual(state.stack[1], ['vevent', [], []]);
 
-        onendcomponent: function(name) {
-          assert.equal(name, 'vcalendar');
-          done();
-        }
-      });
+      assert.deepEqual(
+        state.tree,
+        ['icalendar',
+          ['vcalendar', [], [
+            ['vevent', [], []]
+          ]]
+        ]
+      );
+
+      subject.handleContentLine('END:VEVENT', state);
+      assert.length(state.stack, 1);
     });
 
-    test('property with value', function(done) {
+    test('property with value', function() {
       var input = 'DESCRIPTION;X-FOO=foobar:value';
       var expected = [
         'description',
@@ -83,15 +59,11 @@ suite('parserv2', function() {
         'value'
       ];
 
-      subject.handleContentLine(input, {
-        onproperty: function(data) {
-          assert.deepEqual(data, expected);
-          done();
-        }
-      });
+      subject.handleContentLine(input, state);
+      assert.deepEqual(firstProperty(), expected);
     });
 
-    test('property with parameters and no value', function(done) {
+    test('property with parameters and no value', function() {
       var input = 'ATTENDEE;ROLE="REQ-PARTICIPANT;foo";' +
                   'PARTSTAT=ACCEPTED;RSVP=TRUE';
 
@@ -103,40 +75,25 @@ suite('parserv2', function() {
 
       var expected = ['attendee', params, 'cal-address'];
 
-      subject.handleContentLine(input, {
-        onproperty: function(data) {
-          assert.deepEqual(data, expected);
-          done();
-        }
-      });
+      subject.handleContentLine(input, state);
+      assert.deepEqual(firstProperty(), expected);
     });
 
-    test('property with semicollon in value', function(done) {
+    test('property with semicollon in value', function() {
       var input = 'RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3';
       var expected = ['rrule', {}, 'recur', 'FREQ=YEARLY;BYDAY=2SU;BYMONTH=3'];
 
-      subject.handleContentLine(input, {
-        onproperty: function(data) {
-          assert.deepEqual(data, expected);
-          done();
-        }
-      });
+      subject.handleContentLine(input, state);
+      assert.deepEqual(firstProperty(), expected);
     });
 
-    test('property without attribute', function(done) {
-      this.timeout(500);
-
+    test('property without attribute', function() {
       var input = 'DESCRIPTION:foobar';
+      var expected = ['description', {}, 'text', 'foobar'];
 
-      subject.handleContentLine(input, {
-        onproperty: function(data) {
-          assert.deepEqual(
-            data,
-            ['description', {}, 'text', 'foobar']
-          );
-          done();
-        }
-      });
+
+      subject.handleContentLine(input, state);
+      assert.deepEqual(firstProperty(), expected);
     });
   });
 

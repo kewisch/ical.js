@@ -16,6 +16,7 @@ suite('bench', function() {
 
   suiteSetup(function() {
     bench = new Benchmark.Suite();
+    var seen = false;
 
     bench.add('#parse v2', function() {
       var data = ICAL.parsev2(icsData);
@@ -48,7 +49,7 @@ suite('bench', function() {
     this.timeout((bench.maxTime * 2) * 1000);
 
     bench.on('cycle', function(event) {
-      console.log(String(event.target), '<---?');
+      console.log(String(event.target));
     });
 
     bench.on('complete', function(event) {
