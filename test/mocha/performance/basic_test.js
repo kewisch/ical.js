@@ -16,7 +16,9 @@ suite('bench', function() {
 
   suiteSetup(function() {
     bench = new Benchmark.Suite();
-    var seen = false;
+  });
+
+  suiteSetup(function() {
 
     bench.add('#parse v2', function() {
       var data = ICAL.parsev2(icsData);

@@ -137,21 +137,26 @@
 
   testSupport.require('chai');
 
-  testSupport.loadSample = function(file, cb) {
+
+  /**
+   * @param {String} path relative to root (/) of project.
+   * @param {Function} callback [err, contents].
+   */
+  testSupport.load = function(path, callback) {
     if (testSupport.isNode) {
-      var root = __dirname + '/../../samples/';
-      require('fs').readFile(root + file, 'utf8', function(err, contents) {
-        cb(err, contents);
+      var root = __dirname + '/../../';
+      require('fs').readFile(root + path, 'utf8', function(err, contents) {
+        callback(err, contents);
       });
     } else {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/samples/' + file, true);
+      xhr.open('GET', '/' + path, true);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status !== 200) {
-            cb(new Error('file not found or other error', xhr));
+            callback(new Error('file not found or other error', xhr));
           } else {
-            cb(null, xhr.responseText);
+            callback(null, xhr.responseText);
           }
         }
       }
@@ -161,7 +166,7 @@
 
   testSupport.defineSample = function(file, cb) {
     suiteSetup(function(done) {
-      testSupport.loadSample(file, function(err, data) {
+      testSupport.load('samples/' + file, function(err, data) {
         if (err) {
           done(err);
         }

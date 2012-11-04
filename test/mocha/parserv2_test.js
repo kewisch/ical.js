@@ -10,9 +10,74 @@ suite('parserv2', function() {
     subject = ICAL.parsev2;
   });
 
+  /**
+   * Full parser tests fetch two resources
+   * (one to parse, one is expected
+   *
+   */
+  suite('full parser tests', function() {
+    var root = 'test/mocha/parser/';
+    var list = [
+      'single_empty_vcalendar',
+      'newline_junk',
+      'unfold_properties',
+      'quoted_params',
+      'base64'
+    ];
+
+    list.forEach(function(path) {
+      suite(path.replace('_', ' '), function() {
+        var input;
+        var expected;
+
+        // fetch ical
+        setup(function(done) {
+          testSupport.load(root + path + '.ics', function(err, data) {
+            if (err) {
+              return done(err);
+            }
+            input = data;
+            done();
+          });
+        });
+
+        // fetch json
+        setup(function(done) {
+          testSupport.load(root + path + '.json', function(err, data) {
+            if (err) {
+              return done(err);
+            }
+            try {
+              expected = JSON.parse(data.trim());
+            } catch (e) {
+              return done(
+                new Error('expect json is invalid: \n\n' + data)
+              );
+            }
+            done();
+          });
+        });
+
+        test('compare', function() {
+          var actual = subject(input);
+
+          assert.deepEqual(
+            actual,
+            expected,
+            'hint use: ' +
+            'http://tlrobinson.net/projects/javascript-fun/jsondiff/\n\n' +
+            '\nexpected:\n\n' +
+              JSON.stringify(actual, null, 2) +
+            '\n\n to equal:\n\n ' +
+              JSON.stringify(expected, null, 2) + '\n\n'
+          );
+        });
+      });
+    });
+  });
+
   test('#parser', function() {
     var tree = subject(icsData);
-    console.log(JSON.stringify(tree));
   });
 
   suite('#handleContentLine', function() {
@@ -87,10 +152,17 @@ suite('parserv2', function() {
       assert.deepEqual(firstProperty(), expected);
     });
 
+    test('property with escaped values', function() {
+      var input = 'DESCRIPTION:WTF\;x=z\:true';
+      var expected = ['description', {}, 'text', 'WTF;x=z:true'];
+
+      subject.handleContentLine(input, state);
+      assert.deepEqual(firstProperty(), expected);
+    });
+
     test('property without attribute', function() {
       var input = 'DESCRIPTION:foobar';
       var expected = ['description', {}, 'text', 'foobar'];
-
 
       subject.handleContentLine(input, state);
       assert.deepEqual(firstProperty(), expected);
@@ -224,7 +296,5 @@ suite('parserv2', function() {
 
       assert.deepEqual(unfold(input), expected);
     });
-
   });
-
 });

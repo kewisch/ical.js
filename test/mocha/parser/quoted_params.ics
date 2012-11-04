@@ -1,0 +1,4 @@
+BEGIN:VCALENDAR
+X-FOO;BAR=";hidden=value";FOO=baz:realvalue
+  yep
+END:VCALENDAR
