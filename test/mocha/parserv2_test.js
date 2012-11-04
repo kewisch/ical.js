@@ -18,11 +18,13 @@ suite('parserv2', function() {
     var root = 'test/mocha/parser/';
     var list = [
       'single_empty_vcalendar',
+      'property_params_no_value',
       'newline_junk',
       'unfold_properties',
       'quoted_params',
       'base64',
-      'dates'
+      'dates',
+      'component'
     ];
 
     list.forEach(function(path) {
@@ -80,87 +82,6 @@ suite('parserv2', function() {
     var tree = subject(icsData);
   });
 
-  suite('#handleContentLine', function() {
-    var state;
-
-    setup(function() {
-      state = {};
-      state.stack = [];
-      state.component = [
-        'icalendar'
-      ];
-      state.tree = state.component;
-
-      subject.handleContentLine('BEGIN:VCALENDAR', state);
-    });
-
-    function firstProperty() {
-      return state.tree[1][1][0];
-    }
-
-    test('component begin/end', function() {
-      subject.handleContentLine('BEGIN:VEVENT', state);
-      assert.deepEqual(state.stack[1], ['vevent', [], []]);
-
-      assert.deepEqual(
-        state.tree,
-        ['icalendar',
-          ['vcalendar', [], [
-            ['vevent', [], []]
-          ]]
-        ]
-      );
-
-      subject.handleContentLine('END:VEVENT', state);
-      assert.length(state.stack, 1);
-    });
-
-    test('property with value', function() {
-      var input = 'DESCRIPTION;X-FOO=foobar:value';
-      var expected = [
-        'description',
-        { 'x-foo': 'foobar' },
-        'text',
-        'value'
-      ];
-
-      subject.handleContentLine(input, state);
-      assert.deepEqual(firstProperty(), expected);
-    });
-
-    test('property with parameters and no value', function() {
-      var input = 'ATTENDEE;ROLE="REQ-PARTICIPANT;foo";' +
-                  'PARTSTAT=ACCEPTED;RSVP=TRUE';
-
-      var params = {
-        'role': 'REQ-PARTICIPANT;foo',
-        'partstat': 'ACCEPTED',
-        'rsvp': 'TRUE'
-      };
-
-      var expected = ['attendee', params, 'cal-address'];
-
-      subject.handleContentLine(input, state);
-      assert.deepEqual(firstProperty(), expected);
-    });
-
-    test('property with semicollon in value', function() {
-      var input = 'RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3';
-      var expected = ['rrule', {}, 'recur', 'FREQ=YEARLY;BYDAY=2SU;BYMONTH=3'];
-
-      subject.handleContentLine(input, state);
-      assert.deepEqual(firstProperty(), expected);
-    });
-
-    test('property without attribute', function() {
-      var input = 'DESCRIPTION:foobar';
-      var expected = ['description', {}, 'text', 'foobar'];
-
-      subject.handleContentLine(input, state);
-      assert.deepEqual(firstProperty(), expected);
-    });
-  });
-
   suite('#_parseParameters', function() {
     test('with processed text', function() {
       var input = ';FOO=x\\na';
@@ -199,14 +120,14 @@ suite('parserv2', function() {
       return result;
     }
 
-    test('unfold single with \r\n', function() {
+    test('unfold single with \\r\\n', function() {
       var input = 'foo\r\n bar';
       var expected = ['foobar'];
 
       assert.deepEqual(unfold(input), expected);
     });
 
-    test('with \n', function() {
+    test('with \\n', function() {
       var input = 'foo\nbar\n  baz';
       var expected = [
         'foo',
