@@ -13,7 +13,6 @@ suite('parserv2', function() {
   /**
    * Full parser tests fetch two resources
    * (one to parse, one is expected
-   *
    */
   suite('full parser tests', function() {
     var root = 'test/mocha/parser/';
@@ -22,7 +21,8 @@ suite('parserv2', function() {
       'newline_junk',
       'unfold_properties',
       'quoted_params',
-      'base64'
+      'base64',
+      'dates'
     ];
 
     list.forEach(function(path) {
@@ -152,14 +152,6 @@ suite('parserv2', function() {
       assert.deepEqual(firstProperty(), expected);
     });
 
-    test('property with escaped values', function() {
-      var input = 'DESCRIPTION:WTF\;x=z\:true';
-      var expected = ['description', {}, 'text', 'WTF;x=z:true'];
-
-      subject.handleContentLine(input, state);
-      assert.deepEqual(firstProperty(), expected);
-    });
-
     test('property without attribute', function() {
       var input = 'DESCRIPTION:foobar';
       var expected = ['description', {}, 'text', 'foobar'];
@@ -170,19 +162,6 @@ suite('parserv2', function() {
   });
 
   suite('#_parseParameters', function() {
-    test('without quotes', function() {
-      var input = ';FOO=bar;BAR=foo';
-      var expected = {
-        'foo': 'bar',
-        'bar': 'foo'
-      };
-
-      assert.deepEqual(
-        subject._parseParameters(input, 0),
-        expected
-      );
-    });
-
     test('with processed text', function() {
       var input = ';FOO=x\\na';
       var expected = {
@@ -194,52 +173,9 @@ suite('parserv2', function() {
         expected
       );
     });
-
-    test('with quotes', function() {
-      var input = ';ZOO=";woot;;wow";BAR=foo';
-      var expected = {
-        'zoo': ';woot;;wow',
-        'bar': 'foo'
-      };
-
-      assert.deepEqual(
-        subject._parseParameters(input, 0),
-        expected
-      );
-    });
   });
 
   suite('#_parseValue', function() {
-    test('datetime - without Z', function() {
-      var value = '20120911T103000';
-      var expected = '2012-09-11T10:30:00';
-
-      assert.equal(
-        subject._parseValue(value, 'date-time'),
-        expected
-      );
-    });
-
-    test('datetime - with Z', function() {
-      var value = '20120911T103000Z';
-      var expected = '2012-09-11T10:30:00Z';
-
-      assert.equal(
-        subject._parseValue(value, 'date-time'),
-        expected
-      );
-    });
-
-    test('date', function() {
-      var value = '20120911';
-      var expected = '2012-09-11';
-
-      assert.equal(
-        subject._parseValue(value, 'date'),
-        expected
-      );
-    });
-
     test('text', function() {
       var value = 'start \\n next';
       var expected = 'start \n next';
@@ -266,23 +202,6 @@ suite('parserv2', function() {
     test('unfold single with \r\n', function() {
       var input = 'foo\r\n bar';
       var expected = ['foobar'];
-
-      assert.deepEqual(unfold(input), expected);
-    });
-
-    test('unfold multiple with \r\n', function() {
-      var input = [
-        'BEGIN:VCALENDAR',
-        'X-DESC: i have a real',
-        ' ly long desc',
-        'END:VCALENDAR\n'
-      ].join('\r\n');
-
-      var expected = [
-        'BEGIN:VCALENDAR',
-        'X-DESC: i have a really long desc',
-        'END:VCALENDAR'
-      ];
 
       assert.deepEqual(unfold(input), expected);
     });
