@@ -26,8 +26,10 @@
       'recur_expansion',
       'event',
       'component_parser',
-      'parser',
       'design',
+      'designv2',
+      'parser',
+      'parserv2',
       'component',
       'property',
       'value',
@@ -176,6 +178,8 @@
   testSupport.helper = function(lib) {
     testSupport.require('/test/mocha/support/' + lib);
   }
+
+  testSupport.require('/test/mocha/support/benchmark.js');
 
   // Load it here so its pre-loaded in all suite blocks...
   testSupport.requireICAL();

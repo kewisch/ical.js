@@ -1,54 +1,61 @@
-var Benchmark = require('benchmark');
+if (testSupport.isNode) {
+  var Benchmark = require('benchmark');
+}
+
+testSupport.requireBenchmarkBuild('pre1');
 testSupport.requireICAL();
 
 suite('bench', function() {
 
   var icsData;
+  var bench;
 
   testSupport.defineSample('daily_recur.ics', function(data) {
     icsData = data;
   });
 
-  function runBenchmark(bench, name) {
-    test(name, function(done) {
-      this.timeout((bench.maxTime * 2) * 1000);
+  suiteSetup(function() {
+    bench = new Benchmark.Suite();
 
-      bench.on('cycle', function(event) {
-        console.log(String(event.target), '<---?');
-      });
-
-      bench.on('complete', function(event) {
-        done();
-      });
-
-      bench.run({ name: name });
+    bench.add('#parse v2', function() {
+      var data = ICAL.parsev2(icsData);
     });
-  }
 
-  var bench = new Benchmark.Suite();
+    ['pre1', 'latest'].forEach(function(version) {
+      // current version of ical
+      var globalLib;
+      // prefix name for test
+      var prefix = version;
 
-  var versions = ['pre1', 'latest'].forEach(function(version) {
-    // current version of ical
-    var globalLib;
+      if (version === 'latest') {
+        globalLib = ICAL;
+      } else {
+        globalLib = this['ICAL_' + version];
+      }
 
-    // prefix name for test
-    var prefix = version;
+      if (!globalLib) {
+        throw new Error('could not find ICAL_' + version);
+      }
 
-    if (version === 'latest') {
-      globalLib = ICAL;
-    } else {
-      testSupport.requireBenchmarkBuild(version);
-      globalLib = this['ICAL_' + version];
-    }
-
-    if (!globalLib) {
-      throw new Error('could not find ICAL_' + version);
-    }
-
-    bench.add(version + ': #parse (daily recurring event)', function() {
-      var data = globalLib.parse(icsData);
+      bench.add(version + ': #parse (daily recurring event)', function() {
+        var data = globalLib.parse(icsData);
+      });
     });
+
   });
 
-  runBenchmark(bench, 'ICAL.parse');
+  test('benchmark', function(done) {
+    this.timeout((bench.maxTime * 2) * 1000);
+
+    bench.on('cycle', function(event) {
+      console.log(String(event.target), '<---?');
+    });
+
+    bench.on('complete', function(event) {
+      done();
+    });
+
+    bench.run();
+  });
+
 });
