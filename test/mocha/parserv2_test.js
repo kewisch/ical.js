@@ -24,6 +24,10 @@ suite('parserv2', function() {
       'quoted_params',
       'base64',
       'dates',
+      'time',
+      'boolean',
+      'float',
+      'integer',
       'component'
     ];
 
@@ -80,6 +84,7 @@ suite('parserv2', function() {
 
   test('#parser', function() {
     var tree = subject(icsData);
+    console.log(JSON.stringify(tree));
   });
 
   suite('#_parseParameters', function() {
