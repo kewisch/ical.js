@@ -11,7 +11,8 @@ suite('parserv2', function() {
   });
 
   test('#parser', function() {
-    var tree = [];
+    // name, props, components
+    var tree = ['icalendar', [], []];
     var stack = [];
     var component = tree;
 
@@ -19,14 +20,12 @@ suite('parserv2', function() {
       onbegincomponent: function(name) {
         var newComponent = [
           name,
+          [],
           []
         ];
 
-        if (!component.length) {
-          component.push(newComponent);
-        } else {
-          component[1].push(newComponent);
-        }
+        component[2].push(newComponent);
+
         stack.push(newComponent);
         component = newComponent;
       },
@@ -155,6 +154,18 @@ suite('parserv2', function() {
       );
     });
 
+    test('with processed text', function() {
+      var input = ';FOO=x\\na';
+      var expected = {
+        'foo': 'x\na'
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0),
+        expected
+      );
+    });
+
     test('with quotes', function() {
       var input = ';ZOO=";woot;;wow";BAR=foo';
       var expected = {
@@ -164,6 +175,48 @@ suite('parserv2', function() {
 
       assert.deepEqual(
         subject._parseParameters(input, 0),
+        expected
+      );
+    });
+  });
+
+  suite('#_parseValue', function() {
+    test('datetime - without Z', function() {
+      var value = '20120911T103000';
+      var expected = '2012-09-11T10:30:00';
+
+      assert.equal(
+        subject._parseValue(value, 'date-time'),
+        expected
+      );
+    });
+
+    test('datetime - with Z', function() {
+      var value = '20120911T103000Z';
+      var expected = '2012-09-11T10:30:00Z';
+
+      assert.equal(
+        subject._parseValue(value, 'date-time'),
+        expected
+      );
+    });
+
+    test('date', function() {
+      var value = '20120911';
+      var expected = '2012-09-11';
+
+      assert.equal(
+        subject._parseValue(value, 'date'),
+        expected
+      );
+    });
+
+    test('text', function() {
+      var value = 'start \\n next';
+      var expected = 'start \n next';
+
+      assert.equal(
+        subject._parseValue(value, 'text'),
         expected
       );
     });

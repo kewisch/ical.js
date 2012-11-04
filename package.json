@@ -13,7 +13,8 @@
     "mocha": "~1.1",
     "chai": "0.5.2",
     "test-agent": "~0.7",
-    "benchmark": "~1.0"
+    "benchmark": "~1.0",
+    "JSV": "4.0.2"
   },
   "license": "MIT",
   "engine": {
