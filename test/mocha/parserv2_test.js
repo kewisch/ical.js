@@ -22,6 +22,7 @@ suite('parserv2', function() {
       'newline_junk',
       'unfold_properties',
       'quoted_params',
+      'multivalue',
       'base64',
       'dates',
       'time',
@@ -40,7 +41,7 @@ suite('parserv2', function() {
         setup(function(done) {
           testSupport.load(root + path + '.ics', function(err, data) {
             if (err) {
-              return done(err);
+              return done(new Error('failed to load ics'));
             }
             input = data;
             done();
@@ -51,7 +52,7 @@ suite('parserv2', function() {
         setup(function(done) {
           testSupport.load(root + path + '.json', function(err, data) {
             if (err) {
-              return done(err);
+              return done(new Error('failed to load .json'));
             }
             try {
               expected = JSON.parse(data.trim());
@@ -84,7 +85,6 @@ suite('parserv2', function() {
 
   test('#parser', function() {
     var tree = subject(icsData);
-    console.log(JSON.stringify(tree));
   });
 
   suite('#_parseParameters', function() {
@@ -101,6 +101,15 @@ suite('parserv2', function() {
     });
   });
 
+  test('#_parseMultiValue', function() {
+    var values = 'woot\\, category,foo,bar,baz';
+    var result = [];
+    assert.deepEqual(
+      subject._parseMultiValue(values, ',', 'text', result),
+      ['woot, category', 'foo', 'bar', 'baz']
+    );
+  });
+
   suite('#_parseValue', function() {
     test('text', function() {
       var value = 'start \\n next';
@@ -113,12 +122,12 @@ suite('parserv2', function() {
     });
   });
 
-  suite('#eachLine', function() {
+  suite('#_eachLine', function() {
 
     function unfold(input) {
       var result = [];
 
-      subject.eachLine(input, function(err, line) {
+      subject._eachLine(input, function(err, line) {
         result.push(line);
       });
 
