@@ -95,6 +95,36 @@ suite('parserv2', function() {
     });
   });
 
+  suite('invalid ical', function() {
+
+    test('invalid property', function() {
+      var ical = 'BEGIN:VCALENDAR\n';
+      // no param or value token
+      ical += 'DTSTART\n';
+      ical += 'DESCRIPTION:1\n';
+      ical += 'END:VCALENDAR';
+
+      assert.throws(function() {
+        subject(ical);
+      }, /invalid line/);
+    });
+
+    test('missing component end', function() {
+      var ical = 'BEGIN:VCALENDAR\n';
+      ical += 'BEGIN:VEVENT\n';
+      ical += 'BEGIN:VALARM\n';
+      ical += 'DESCRIPTION: foo\n';
+      ical += 'END:VALARM';
+      // ended calendar before event
+      ical += 'END:VCALENDAR';
+
+      assert.throws(function() {
+        subject(ical);
+      }, /mismatched components/);
+    });
+
+  });
+
   suite('#_parseParameters', function() {
     test('with processed text', function() {
       var input = ';FOO=x\\na';
