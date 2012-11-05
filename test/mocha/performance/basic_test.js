@@ -10,7 +10,7 @@ suite('bench', function() {
   var icsData;
   var bench;
 
-  testSupport.defineSample('daily_recur.ics', function(data) {
+  testSupport.defineSample('parserv2.ics', function(data) {
     icsData = data;
   });
 
