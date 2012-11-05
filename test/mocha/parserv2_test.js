@@ -1,10 +1,5 @@
 suite('parserv2', function() {
 
-  var icsData;
-  testSupport.defineSample('parserv2.ics', function(data) {
-    icsData = data;
-  });
-
   var subject;
   setup(function() {
     subject = ICAL.parsev2;
@@ -65,9 +60,7 @@ suite('parserv2', function() {
           });
         });
 
-        test('compare', function() {
-          var actual = subject(input);
-
+        function jsonEqual(actual, expected) {
           assert.deepEqual(
             actual,
             expected,
@@ -78,13 +71,28 @@ suite('parserv2', function() {
             '\n\n to equal:\n\n ' +
               JSON.stringify(expected, null, 2) + '\n\n'
           );
+        }
+
+        test('round-trip', function() {
+          var parsed = subject(input);
+          var ical = ICAL.Serializerv2.serializeToIcal(parsed);
+
+          // NOTE: this is not an absolute test that serialization
+          //       works as our parser should be error tolerant and
+          //       its remotely possible that we consistently produce
+          //       ICAL that only we can parse.
+          jsonEqual(
+            subject(ical),
+            expected
+          );
+        });
+
+        test('compare', function() {
+          var actual = subject(input);
+          jsonEqual(actual, expected);
         });
       });
     });
-  });
-
-  test('#parser', function() {
-    var tree = subject(icsData);
   });
 
   suite('#_parseParameters', function() {

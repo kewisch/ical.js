@@ -20,8 +20,14 @@ suite('bench', function() {
 
   suiteSetup(function() {
 
+    var parsed = ICAL.parsev2(icsData);
+
     bench.add('#parse v2', function() {
       var data = ICAL.parsev2(icsData);
+    });
+
+    bench.add('#stringify v2', function() {
+      ICAL.Serializerv2.serializeToIcal(parsed);
     });
 
     ['pre1', 'latest'].forEach(function(version) {
@@ -40,8 +46,14 @@ suite('bench', function() {
         throw new Error('could not find ICAL_' + version);
       }
 
-      bench.add(version + ': #parse (daily recurring event)', function() {
+      var parsed = globalLib.parse(icsData);
+
+      bench.add(version + ': #parse', function() {
         var data = globalLib.parse(icsData);
+      });
+
+      bench.add(version + ': #stringify', function() {
+        globalLib.stringify(parsed);
       });
     });
 
