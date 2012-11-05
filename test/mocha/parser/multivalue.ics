@@ -1,0 +1,5 @@
+BEGIN:VCALENDAR
+CATEGORIES:foo,blue\, fish,woot
+GEO:10.10;10.05
+REQUEST-STATUS:4.1;Event conflict. Date-time is busy.
+END:VCALENDAR

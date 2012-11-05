@@ -1,0 +1,32 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "categories",
+        {},
+        "text",
+        "foo",
+        "blue, fish",
+        "woot"
+      ],
+      [
+        "geo",
+        {},
+        "float",
+        10.10,
+        10.05
+      ],
+      [
+        "request-status",
+        {},
+        "text",
+        "4.1",
+        "Event conflict. Date-time is busy."
+      ]
+    ],
+    []
+  ]
+]
+
+
+
