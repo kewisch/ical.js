@@ -26,6 +26,24 @@ suite('bench js', function() {
       }
     }
 
+    var values = [1, 2, 3, 4];
+
+    bench.add('inline array', function() {
+      var arr = [];
+      arr[0] = values[0];
+      arr[1] = values[1];
+      arr[2] = values[2];
+      arr[3] = values[3];
+    });
+
+    bench.add('sparseArray:', function() {
+      var arr = [];
+      arr[2] = values[2];
+      arr[0] = values[0];
+      arr[1] = values[1];
+      arr[3] = values[3];
+    });
+
     bench.add('indexOf: find escaped value', function() {
       findNext(value, '"', 1);
     }, { maxTime: 1 });
@@ -33,36 +51,6 @@ suite('bench js', function() {
     bench.add('regex: find escaped value', function() {
       value.match(regex);
     });
-
-    return;
-
-    var newLineString = 'my fooo bar \r\n xxx';
-    var regexp = /\r?\n/;
-
-    var i = 0;
-    var maxDepth = 5;
-    var indexOf = newLineString.indexOf('\n');
-
-    for (; i < maxDepth; i++) {
-      (function(depth) {
-        var str = '';
-        var startIndex = indexOf * depth;
-
-        for (var i = 0; i <= depth; i++) {
-          str += newLineString;
-        }
-
-        var seen = false;
-
-        bench.add('find at depth #' + depth, function() {
-          var value = str.indexOf('\n', startIndex + 1);
-          if (!seen) {
-            console.log(value);
-            seen = true;
-          }
-        }, { maxTime: 1 });
-      }(i));
-    }
   });
 
   test('benchmark', function(done) {
