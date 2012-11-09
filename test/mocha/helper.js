@@ -26,10 +26,15 @@
       'recur_expansion',
       'event',
       'component_parser',
-      'parser',
       'design',
+      'designv2',
+      'parser',
+      'parserv2',
+      'serializerv2',
       'component',
+      'componentv2',
       'property',
+      'propertyv2',
       'value',
       'period',
       'duration',
@@ -43,6 +48,16 @@
     files.forEach(function(file) {
       testSupport.require('/lib/ical/' + file + '.js');
     });
+  };
+
+  /**
+   * Requires a benchmark build.
+   *
+   * @param {String} number or version of the build (see build/benchmark/.
+   */
+  testSupport.requireBenchmarkBuild = function(number) {
+    var path = '/build/benchmark/ical_' + number + '.js';
+    testSupport.require(path);
   };
 
   testSupport.require = function cross_require(file, callback) {
@@ -125,21 +140,26 @@
 
   testSupport.require('chai');
 
-  testSupport.loadSample = function(file, cb) {
+
+  /**
+   * @param {String} path relative to root (/) of project.
+   * @param {Function} callback [err, contents].
+   */
+  testSupport.load = function(path, callback) {
     if (testSupport.isNode) {
-      var root = __dirname + '/../../samples/';
-      require('fs').readFile(root + file, 'utf8', function(err, contents) {
-        cb(err, contents);
+      var root = __dirname + '/../../';
+      require('fs').readFile(root + path, 'utf8', function(err, contents) {
+        callback(err, contents);
       });
     } else {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/samples/' + file, true);
+      xhr.open('GET', '/' + path, true);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status !== 200) {
-            cb(new Error('file not found or other error', xhr));
+            callback(new Error('file not found or other error', xhr));
           } else {
-            cb(null, xhr.responseText);
+            callback(null, xhr.responseText);
           }
         }
       }
@@ -149,7 +169,7 @@
 
   testSupport.defineSample = function(file, cb) {
     suiteSetup(function(done) {
-      testSupport.loadSample(file, function(err, data) {
+      testSupport.load('samples/' + file, function(err, data) {
         if (err) {
           done(err);
         }
@@ -166,6 +186,8 @@
   testSupport.helper = function(lib) {
     testSupport.require('/test/mocha/support/' + lib);
   }
+
+  testSupport.require('/test/mocha/support/benchmark.js');
 
   // Load it here so its pre-loaded in all suite blocks...
   testSupport.requireICAL();

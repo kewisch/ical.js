@@ -1,0 +1,17 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "x-foo",
+        {
+          "bar": ";hidden=value",
+          "foo": "baz"
+        },
+        "text",
+        "realvalue yep"
+      ]
+    ],
+    []
+  ]
+]
+

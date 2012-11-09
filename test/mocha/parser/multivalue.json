@@ -1,0 +1,48 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "categories",
+        {},
+        "text",
+        "foo",
+        "blue, fish",
+        "woot"
+      ],
+      [
+        "geo",
+        {},
+        "float",
+        10.10,
+        10.05
+      ],
+      [
+        "request-status",
+        {},
+        "text",
+        "3.1",
+        "Invalid property value",
+        "DTSTART:96-Apr-01"
+      ],
+      [
+        "rdate",
+        {},
+        "date",
+        "2012-10-01",
+        "2012-10-02",
+        "2012-10-03"
+      ],
+      [
+        "exdate",
+        {},
+        "date-time",
+        "2012-09-01T13:00:00",
+        "2012-09-05T13:00:00"
+      ]
+    ],
+    []
+  ]
+]
+
+
+

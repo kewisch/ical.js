@@ -734,7 +734,7 @@ ICAL.helpers = {
 
     function parseDurWeek(aState) {
       return {
-        weeks: parser.expectRE(aState, /^((\d+)W)/, "Expected Weeks")[2]
+        weeks: parseInt(parser.expectRE(aState, /^((\d+)W)/, "Expected Weeks")[2], 10)
       };
     }
 
@@ -758,7 +758,7 @@ ICAL.helpers = {
       }
 
       if (data) {
-        data.days = days[2];
+        data.days = parseInt(days[2], 10);
       } else {
         data = {
           days: parseInt(days[2], 10)
