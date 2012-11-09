@@ -13,7 +13,7 @@ suite('parserv2', function() {
     var root = 'test/mocha/parser/';
     var list = [
       'single_empty_vcalendar',
-      'property_params_no_value',
+      'property_params',
       'newline_junk',
       'unfold_properties',
       'quoted_params',

@@ -20,8 +20,9 @@
         "request-status",
         {},
         "text",
-        "4.1",
-        "Event conflict. Date-time is busy."
+        "3.1",
+        "Invalid property value",
+        "DTSTART:96-Apr-01"
       ],
       [
         "rdate",
