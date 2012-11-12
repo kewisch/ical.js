@@ -98,7 +98,7 @@ suite('recur_expansion', function() {
         day: 1
       };
 
-      component.removeProperty('RDATE');
+      component.removeProperty('rdate');
       component.addPropertyWithValue('RRULE', 'FREQ=WEEKLY;COUNT=3;BYDAY=SU');
 
       var subject = new ICAL.RecurExpansion({

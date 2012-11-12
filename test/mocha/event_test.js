@@ -13,11 +13,14 @@ suite('ICAL.Event', function() {
   setup(function() {
     exceptions.length = 0;
 
-    var root = new ICAL.icalcomponent(ICAL.parse(icsData));
-    var events = root.components.VEVENT;
+    var root = new ICAL.Componentv2(
+      ICAL.parsev2(icsData)[1]
+    );
+
+    var events = root.getAllSubcomponents('vevent');
 
     events.forEach(function(event) {
-      if (!event.hasProperty('RECURRENCE-ID')) {
+      if (!event.hasProperty('recurrence-id')) {
         primaryItem = event;
       } else {
         exceptions.push(event);
@@ -38,7 +41,7 @@ suite('ICAL.Event', function() {
       });
 
       exceptions.forEach(function(item) {
-        var id = item.getFirstPropertyValue('RECURRENCE-ID').toString();
+        var id = item.getFirstPropertyValue('recurrence-id').toString();
         assert.ok(subject.exceptions[id], 'has: ' + id + ' exception');
         assert.deepEqual(
           subject.exceptions[id].component.toJSON(),
@@ -54,8 +57,8 @@ suite('ICAL.Event', function() {
     });
 
     test('initial state', function() {
-      assert.instanceOf(subject.component, ICAL.icalcomponent);
-      assert.equal(subject.component.name, 'VEVENT');
+      assert.instanceOf(subject.component, ICAL.Componentv2);
+      assert.equal(subject.component.name, 'vevent');
     });
 
     suite('roundtrip', function() {
@@ -99,7 +102,7 @@ suite('ICAL.Event', function() {
         var key;
 
         var ical = subject.toString();
-        var comp = new ICAL.icalcomponent(ICAL.parse(ical));
+        var comp = new ICAL.Componentv2(ICAL.parse(icsData));
         var event = new ICAL.Event(comp);
 
         assert.equal(comp.toString(), ical);
@@ -114,10 +117,10 @@ suite('ICAL.Event', function() {
     });
 
     test('exception', function() {
-      var time = exceptions[0].getFirstPropertyValue('RECURRENCE-ID');
+      var time = exceptions[0].getFirstPropertyValue('recurrence-id');
 
-      var start = exceptions[0].getFirstPropertyValue('DTSTART');
-      var end = exceptions[0].getFirstPropertyValue('DTEND');
+      var start = exceptions[0].getFirstPropertyValue('dtstart');
+      var end = exceptions[0].getFirstPropertyValue('dtend');
 
       var result = subject.getOccurrenceDetails(time);
 
@@ -189,8 +192,8 @@ suite('ICAL.Event', function() {
       });
 
       test('result', function() {
-        var subject = new ICAL.icalcomponent(ICAL.parse(icsData));
-        subject = new ICAL.Event(subject.getFirstSubcomponent('VEVENT'));
+        var subject = new ICAL.Componentv2(ICAL.parsev2(icsData)[1]);
+        subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
 
         var expected = {
           'MONTHLY': true,
@@ -202,7 +205,7 @@ suite('ICAL.Event', function() {
     });
 
     test('no rrule', function() {
-      subject.component.removeProperty('RRULE');
+      subject.component.removeProperty('rrule');
 
       assert.deepEqual(
         subject.getRecurrenceTypes(),
@@ -223,8 +226,8 @@ suite('ICAL.Event', function() {
 
     test('trying to relate unrelated component', function() {
       var exception = exceptions[0];
-      var prop = exception.getFirstProperty('UID');
-      prop.setValue('foo', 'TEXT');
+      var prop = exception.getFirstProperty('uid');
+      prop.setValue('foo');
 
       assert.throws(function() {
         subject.relateException(exception);
@@ -236,7 +239,7 @@ suite('ICAL.Event', function() {
       subject.relateException(exception);
 
       var expected = Object.create(null);
-      expected[exception.getFirstPropertyValue('RECURRENCE-ID').toString()] =
+      expected[exception.getFirstPropertyValue('recurrence-id').toString()] =
         new ICAL.Event(exception);
 
       assert.deepEqual(subject.exceptions, expected);
@@ -266,23 +269,23 @@ suite('ICAL.Event', function() {
   });
 
   test('#uid', function() {
-    var expected = primaryItem.getFirstPropertyValue('UID');
-    expected = expected.data.value[0];
+    var expected = primaryItem.getFirstPropertyValue('uid');
+    expected = expected;
     assert.equal(expected, subject.uid);
   });
 
   test('#organizer', function() {
-    var expected = primaryItem.getFirstPropertyValue('ORGANIZER');
+    var expected = primaryItem.getFirstPropertyValue('organizer');
     assert.deepEqual(expected, subject.organizer);
   });
 
   test('#startDate', function() {
-    var expected = primaryItem.getFirstPropertyValue('DTSTART');
+    var expected = primaryItem.getFirstPropertyValue('dtstart');
     assert.deepEqual(expected, subject.startDate);
   });
 
   test('#endDate', function() {
-    var expected = primaryItem.getFirstPropertyValue('DTEND');
+    var expected = primaryItem.getFirstPropertyValue('dtend');
     assert.deepEqual(expected, subject.endDate);
   });
 
@@ -298,38 +301,38 @@ suite('ICAL.Event', function() {
   });
 
   test('#sequence', function() {
-    var expected = primaryItem.getFirstPropertyValue('SEQUENCE');
-    expected = expected.data.value[0];
+    var expected = primaryItem.getFirstPropertyValue('sequence');
+    expected = expected;
 
     assert.deepEqual(subject.sequence, expected);
   });
 
   test('#location', function() {
-    var expected = primaryItem.getFirstPropertyValue('LOCATION');
-    expected = expected.data.value[0];
+    var expected = primaryItem.getFirstPropertyValue('location');
+    expected = expected;
     assert.deepEqual(expected, subject.location);
   });
 
   test('#attendees', function() {
-    var props = primaryItem.getAllProperties('ATTENDEE');
+    var props = primaryItem.getAllProperties('attendee');
     assert.deepEqual(subject.attendees, props);
   });
 
   test('#summary', function() {
-    var expected = primaryItem.getFirstPropertyValue('SUMMARY');
-    expected = expected.data.value[0];
+    var expected = primaryItem.getFirstPropertyValue('summary');
+    expected = expected;
     assert.deepEqual(subject.summary, expected);
   });
 
   test('#description', function() {
-    var expected = primaryItem.getFirstPropertyValue('DESCRIPTION');
-    expected = expected.data.value[0];
+    var expected = primaryItem.getFirstPropertyValue('description');
+    expected = expected;
     assert.deepEqual(subject.description, expected);
   });
 
   test('#recurrenceId', function() {
     var subject = new ICAL.Event(exceptions[0]);
-    var expected = exceptions[0].getFirstPropertyValue('RECURRENCE-ID');
+    var expected = exceptions[0].getFirstPropertyValue('recurrence-id');
     assert.deepEqual(subject.recurrenceId, expected);
   });
 
