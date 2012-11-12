@@ -35,3 +35,4 @@ You need nodejs/nodejs to install the testing tools.
 2.  Run `make test-server`
     Go to http://localhost:8789/test-agent/index.html
     Run all tests with `make test-browser`
+

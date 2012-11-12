@@ -68,6 +68,13 @@ suite('propertyv2', function() {
       assert.isFalse(subject.isDecorated);
     });
 
+    test('multi value', function() {
+      subject = new ICAL.Propertyv2('categories');
+      assert.isTrue(
+        subject.isMultiValue, 'is multiValue'
+      );
+    });
+
     test('decorated', function() {
       subject = new ICAL.Propertyv2(
         fixtures.withParams,
@@ -75,6 +82,28 @@ suite('propertyv2', function() {
       );
 
       assert.isTrue(subject.isDecorated);
+    });
+
+    test('new property by name with type', function() {
+      subject = new ICAL.Propertyv2('dtstart');
+      assert.equal(subject.type, 'date-time');
+      assert.equal(subject.jCal[2], 'date-time');
+    });
+
+    test('new property by name (typeless)', function() {
+      subject = new ICAL.Propertyv2(
+        'description'
+      );
+
+      assert.equal(
+        subject.name,
+        'description'
+      );
+
+      assert.equal(subject.type, 'text');
+      assert.equal(subject.jCal[2], 'text');
+
+      assert.ok(!subject.getFirstValue());
     });
   });
 
@@ -85,6 +114,15 @@ suite('propertyv2', function() {
 
     assert.equal(subject.getParameter('rsvp'), 'TRUE');
     assert.equal(subject.getParameter('wtf'), undefined);
+  });
+
+  test('#removeParameter', function() {
+    subject = new ICAL.Propertyv2(
+      fixtures.withParams
+    );
+
+    subject.removeParameter('rsvp');
+    assert.ok(!subject.getParameter('rsvp'));
   });
 
   test('#setParameter', function() {
@@ -151,8 +189,36 @@ suite('propertyv2', function() {
     });
   });
 
-  suite('#getValues', function() {
+  test('#resetType', function() {
+    var subject = new ICAL.Propertyv2('dtstart');
+    subject.setValue(new ICAL.icaltime({ year: 2012 }));
 
+    assert.equal(subject.type, 'date-time');
+
+    subject.resetType('date');
+    assert.equal(subject.type, 'date');
+
+    assert.ok(!subject.getFirstValue());
+    subject.setValue(new ICAL.icaltime({ year: 2012 }));
+
+    var ical = subject.toICAL();
+  });
+
+  suite('#getFirstValue', function() {
+    test('with value', function() {
+      var subject = new ICAL.Propertyv2('description');
+      subject.setValue('foo');
+
+      assert.equal(subject.getFirstValue(), 'foo');
+    });
+
+    test('without value', function() {
+      var subject = new ICAL.Propertyv2('dtstart');
+      assert.ok(!subject.getFirstValue());
+    });
+  });
+
+  suite('#getValues', function() {
     test('decorated', function() {
       subject = new ICAL.Propertyv2(
         fixtures.decoratedMutliValue
@@ -211,7 +277,89 @@ suite('propertyv2', function() {
       subject = new ICAL.Propertyv2(fixtures.noValue);
       assert.ok(!subject.getValues());
     });
+  });
 
+  suite('#setValues', function() {
+    test('decorated value', function() {
+      var subject = new ICAL.Propertyv2('rdate');
+      var undecorate = ICAL.designv2.value['date-time'].undecorate;
+
+      var values = [
+        new ICAL.icaltime({ year: 2012, month: 1 }),
+        new ICAL.icaltime({ year: 2012, month: 1 })
+      ];
+
+      subject.setValues(values);
+
+      assert.deepEqual(
+        subject.jCal.slice(3),
+        [undecorate(values[0]), undecorate(values[1])]
+      );
+
+      assert.equal(
+        subject.getFirstValue(),
+        values[0]
+      );
+    });
+
+    test('text', function() {
+      var subject = new ICAL.Propertyv2('categories');
+
+      subject.setValues(['a', 'b', 'c']);
+
+      assert.deepEqual(
+        subject.getValues(),
+        ['a', 'b', 'c']
+      );
+
+      subject.setValues(['a']);
+      assert.deepEqual(subject.getValues(), ['a']);
+    });
+  });
+
+  suite('#setValue', function() {
+    test('decorated value', function() {
+      var subject = new ICAL.Propertyv2(
+        'dtstart'
+      );
+
+      var time = new ICAL.icaltime({
+        year: 2012,
+        month: 1,
+        day: 5
+      });
+
+      subject.setValue(time);
+
+      assert.equal(
+        subject.jCal[3],
+        ICAL.designv2.value['date-time'].undecorate(time)
+      );
+
+      assert.equal(
+        subject.getFirstValue(),
+        time
+      );
+    });
+
+    test('text', function() {
+      var subject = new ICAL.Propertyv2('description');
+      assert.ok(!subject.getFirstValue());
+      subject.setValue('xxx');
+      assert.equal(subject.getFirstValue(), 'xxx');
+    });
+  });
+
+  test('#toJSON', function() {
+    var subject = new ICAL.Propertyv2(['description', {}, 'text', 'foo']);
+
+    assert.deepEqual(subject.toJSON(), subject.jCal);
+
+    var fromJSON = new ICAL.Propertyv2(
+      JSON.parse(JSON.stringify(subject))
+    );
+
+    assert.deepEqual(fromJSON.jCal, subject.jCal);
   });
 
 });

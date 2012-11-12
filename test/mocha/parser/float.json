@@ -11,7 +11,7 @@
         "x-invalid-float",
         {},
         "float",
-        "my foo!"
+        0.0
       ]
     ],
     []

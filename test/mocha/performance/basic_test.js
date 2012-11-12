@@ -30,7 +30,7 @@ suite('bench', function() {
       ICAL.Serializerv2.serializeToIcal(parsed);
     });
 
-    ['pre1', 'latest'].forEach(function(version) {
+    ['pre1'].forEach(function(version) {
       // current version of ical
       var globalLib;
       // prefix name for test
