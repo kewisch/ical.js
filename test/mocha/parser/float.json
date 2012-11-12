@@ -1,0 +1,19 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "x-float",
+        {},
+        "float",
+        10.35
+      ],
+      [
+        "x-invalid-float",
+        {},
+        "float",
+        "my foo!"
+      ]
+    ],
+    []
+  ]
+]

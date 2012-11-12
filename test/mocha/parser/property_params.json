@@ -1,0 +1,17 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "attendee",
+        {
+          "role": "REQ-PARTICIPANT;foo",
+          "partstat": "ACCEPTED",
+          "rsvp": "TRUE"
+        },
+        "cal-address",
+        "mailto:foo@bar.com"
+      ]
+    ],
+    []
+  ]
+]

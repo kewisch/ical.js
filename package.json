@@ -12,7 +12,8 @@
   "devDependencies": {
     "mocha": "~1.1",
     "chai": "0.5.2",
-    "test-agent": "~0.7"
+    "test-agent": "~0.7",
+    "benchmark": "~1.0"
   },
   "license": "MIT",
   "engine": {

@@ -1,0 +1,22 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "x-integer",
+        {},
+        "integer",
+        105
+      ],
+      [
+        "x-invalid",
+        {},
+        "integer",
+        "foobar"
+      ]
+    ],
+    []
+  ]
+]
+
+
+
