@@ -28,6 +28,24 @@ suite('bench js', function() {
 
     var values = [1, 2, 3, 4];
 
+    var decimal = /(\d{2,2})-(\d{2,2})/;
+    function isReallyNaN(number) {
+      return typeof(number) === 'number' && isNaN(number);
+    }
+
+    bench.add('numeric: regex', function() {
+      var start = '20-10';
+      var match = start.match(decimal);
+      parseInt(match[1]);
+      parseInt(match[2]);
+    });
+
+    bench.add('numeric: string', function() {
+      var start = '20-10';
+      parseInt(start.substr(0, 2));
+      parseInt(start.substr(3, 2));
+    });
+
     bench.add('inline array', function() {
       var arr = [];
       arr[0] = values[0];
