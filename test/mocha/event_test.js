@@ -14,7 +14,7 @@ suite('ICAL.Event', function() {
     exceptions.length = 0;
 
     var root = new ICAL.Componentv2(
-      ICAL.parsev2(icsData)[1]
+      ICAL.parse(icsData)[1]
     );
 
     var events = root.getAllSubcomponents('vevent');
@@ -192,7 +192,7 @@ suite('ICAL.Event', function() {
       });
 
       test('result', function() {
-        var subject = new ICAL.Componentv2(ICAL.parsev2(icsData)[1]);
+        var subject = new ICAL.Componentv2(ICAL.parse(icsData)[1]);
         subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
 
         var expected = {

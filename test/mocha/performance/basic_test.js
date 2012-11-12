@@ -20,14 +20,14 @@ suite('bench', function() {
 
   suiteSetup(function() {
 
-    var parsed = ICAL.parsev2(icsData);
+    var parsed = ICAL.parse(icsData);
 
     bench.add('#parse v2', function() {
-      var data = ICAL.parsev2(icsData);
+      var data = ICAL.parse(icsData);
     });
 
     bench.add('#stringify v2', function() {
-      ICAL.Serializerv2.serializeToIcal(parsed);
+      ICAL.stringify(parsed);
     });
 
     ['pre1'].forEach(function(version) {

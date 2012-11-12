@@ -2,7 +2,7 @@ suite('parserv2', function() {
 
   var subject;
   setup(function() {
-    subject = ICAL.parsev2;
+    subject = ICAL.parse;
   });
 
   /**

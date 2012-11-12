@@ -390,7 +390,7 @@ suite('componentv2', function() {
 
   test('#toICAL', function() {
     var ical = subject.toICAL();
-    var parsed = ICAL.parsev2(ical);
+    var parsed = ICAL.parse(ical);
     var fromICAL = new ICAL.Componentv2(
       parsed[1]
     );

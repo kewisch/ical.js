@@ -30,7 +30,7 @@
       'designv2',
       'parser',
       'parserv2',
-      'serializerv2',
+      'stringify',
       'component',
       'componentv2',
       'property',

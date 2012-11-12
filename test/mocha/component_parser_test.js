@@ -61,7 +61,7 @@ suite('component_parser', function() {
       setupProcess();
 
       test('parse result', function() {
-        var component = new ICAL.Componentv2(ICAL.parsev2(icsData)[1]);
+        var component = new ICAL.Componentv2(ICAL.parse(icsData)[1]);
         var list = component.getAllSubcomponents('vevent');
 
         var expectedEvents = [];
