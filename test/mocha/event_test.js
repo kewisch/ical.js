@@ -13,7 +13,7 @@ suite('ICAL.Event', function() {
   setup(function() {
     exceptions.length = 0;
 
-    var root = new ICAL.Componentv2(
+    var root = new ICAL.Component(
       ICAL.parse(icsData)[1]
     );
 
@@ -57,7 +57,7 @@ suite('ICAL.Event', function() {
     });
 
     test('initial state', function() {
-      assert.instanceOf(subject.component, ICAL.Componentv2);
+      assert.instanceOf(subject.component, ICAL.Component);
       assert.equal(subject.component.name, 'vevent');
     });
 
@@ -102,7 +102,7 @@ suite('ICAL.Event', function() {
         var key;
 
         var ical = subject.toString();
-        var comp = new ICAL.Componentv2(ICAL.parse(icsData));
+        var comp = new ICAL.Component(ICAL.parse(icsData));
         var event = new ICAL.Event(comp);
 
         assert.equal(comp.toString(), ical);
@@ -192,7 +192,7 @@ suite('ICAL.Event', function() {
       });
 
       test('result', function() {
-        var subject = new ICAL.Componentv2(ICAL.parse(icsData)[1]);
+        var subject = new ICAL.Component(ICAL.parse(icsData)[1]);
         subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
 
         var expected = {

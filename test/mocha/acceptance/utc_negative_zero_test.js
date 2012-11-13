@@ -10,23 +10,18 @@ suite('ics - negative zero', function() {
   });
 
   test('summary', function() {
-    var result = ICAL.parse(icsData);
-    var component = new ICAL.icalcomponent(result);
+    var result = ICAL.parse(icsData)[1];
+    var component = new ICAL.Component(result);
     var vtimezone = component.getFirstSubcomponent(
-      'VTIMEZONE'
+      'vtimezone'
     );
 
     var standard = vtimezone.getFirstSubcomponent(
-      'STANDARD'
+      'standard'
     );
 
     var props = standard.getAllProperties();
-    var offset = props[1].data;
-
-    assert.equal(
-      offset.type,
-      'UTC-OFFSET'
-    );
+    var offset = props[1].getFirstValue();
 
     assert.equal(
       offset.factor,

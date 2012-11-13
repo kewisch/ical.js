@@ -1,4 +1,4 @@
-suite('componentv2', function() {
+suite('Component', function() {
   var subject;
   var fixtures;
 
@@ -19,19 +19,19 @@ suite('componentv2', function() {
       ]
     };
 
-    subject = new ICAL.Componentv2(fixtures.components);
+    subject = new ICAL.Component(fixtures.components);
   });
 
   test('initialize component', function() {
     var raw = ['description', {}, 'text', 'value'];
-    subject = new ICAL.Componentv2(raw);
+    subject = new ICAL.Component(raw);
 
     assert.equal(subject.jCal, raw, 'has jCal');
     assert.equal(subject.name, 'description');
   });
 
   test('new component without jCal', function() {
-    var newComp = new ICAL.Componentv2('vevent');
+    var newComp = new ICAL.Component('vevent');
 
     assert.equal(newComp.jCal[0], 'vevent');
 
@@ -43,7 +43,7 @@ suite('componentv2', function() {
     var jCal;
     setup(function() {
       jCal = fixtures.components;
-      subject = new ICAL.Componentv2(jCal);
+      subject = new ICAL.Component(jCal);
     });
 
     test('without name', function() {
@@ -95,7 +95,7 @@ suite('componentv2', function() {
       // 2 is the component array
       var comps = fixtures.components[2];
 
-      subject = new ICAL.Componentv2(
+      subject = new ICAL.Component(
         fixtures.components
       );
 
@@ -103,13 +103,13 @@ suite('componentv2', function() {
       assert.length(result, comps.length);
 
       for (var i = 0; i < comps.length; i++) {
-        assert.instanceOf(result[i], ICAL.Componentv2);
+        assert.instanceOf(result[i], ICAL.Component);
         assert.equal(result[i].jCal, comps[i]);
       }
     });
 
     test('with name', function() {
-      subject = new ICAL.Componentv2(fixtures.components);
+      subject = new ICAL.Component(fixtures.components);
 
       var result = subject.getAllSubcomponents('valarm');
       assert.length(result, 2);
@@ -120,14 +120,14 @@ suite('componentv2', function() {
     });
 
     test('without components', function() {
-      subject = new ICAL.Componentv2(['foo', [], []]);
+      subject = new ICAL.Component(['foo', [], []]);
       assert.equal(subject.name, 'foo');
       assert.ok(!subject.getAllSubcomponents());
     });
   });
 
   test('#addComponent', function() {
-    var newComp = new ICAL.Componentv2('xnew');
+    var newComp = new ICAL.Component('xnew');
 
     subject.addComponent(newComp);
     var all = subject.getAllSubcomponents();
@@ -183,7 +183,7 @@ suite('componentv2', function() {
   });
 
   test('#hasProperty', function() {
-    subject = new ICAL.Componentv2(
+    subject = new ICAL.Component(
       fixtures.components
     );
 
@@ -193,7 +193,7 @@ suite('componentv2', function() {
 
   suite('#getFirstProperty', function() {
     setup(function() {
-      subject = new ICAL.Componentv2(fixtures.components);
+      subject = new ICAL.Component(fixtures.components);
     });
 
     test('name missing', function() {
@@ -219,13 +219,13 @@ suite('componentv2', function() {
     });
 
     test('without name empty', function() {
-      subject = new ICAL.Componentv2(['foo', [], []]);
+      subject = new ICAL.Component(['foo', [], []]);
       assert.ok(!subject.getFirstProperty());
     });
   });
 
   test('#getFirstPropertyValue', function() {
-    subject = new ICAL.Componentv2(fixtures.components);
+    subject = new ICAL.Component(fixtures.components);
     assert.equal(
       subject.getFirstPropertyValue(),
       'xfoo'
@@ -234,7 +234,7 @@ suite('componentv2', function() {
 
   suite('#getAllProperties', function() {
     setup(function() {
-      subject = new ICAL.Componentv2(fixtures.components);
+      subject = new ICAL.Component(fixtures.components);
     });
 
     test('with name', function() {
@@ -263,7 +263,7 @@ suite('componentv2', function() {
   });
 
   test('#addProperty', function() {
-    var prop = new ICAL.Propertyv2('description');
+    var prop = new ICAL.Property('description');
 
     subject.addProperty(prop);
     assert.equal(subject.jCal[1][3], prop.jCal);
@@ -276,7 +276,7 @@ suite('componentv2', function() {
   });
 
   test('#addPropertyWithValue', function() {
-    var subject = new ICAL.Componentv2('vevent');
+    var subject = new ICAL.Component('vevent');
 
     subject.addPropertyWithValue('description', 'value');
 
@@ -287,7 +287,7 @@ suite('componentv2', function() {
   });
 
   test('#updatePropertyWithValue', function() {
-    var subject = new ICAL.Componentv2('vevent');
+    var subject = new ICAL.Component('vevent');
     subject.addPropertyWithValue('description', 'foo');
     assert.length(subject.getAllProperties(), 1);
 
@@ -302,7 +302,7 @@ suite('componentv2', function() {
 
   suite('#removeProperty', function() {
     setup(function() {
-      subject = new ICAL.Componentv2(
+      subject = new ICAL.Component(
         fixtures.components
       );
     });
@@ -345,7 +345,7 @@ suite('componentv2', function() {
 
   suite('#removeAllProperties', function() {
     test('no name when empty', function() {
-      subject = new ICAL.Componentv2(
+      subject = new ICAL.Component(
         fixtures.components
       );
 
@@ -358,13 +358,13 @@ suite('componentv2', function() {
     });
 
     test('no name when not empty', function() {
-      subject = new ICAL.Componentv2(['vevent', [], []]);
+      subject = new ICAL.Component(['vevent', [], []]);
       subject.removeAllProperties();
       subject.removeAllProperties('xfoo');
     });
 
     test('with name', function() {
-      subject = new ICAL.Componentv2(
+      subject = new ICAL.Component(
         fixtures.components
       );
 
@@ -380,7 +380,7 @@ suite('componentv2', function() {
 
   test('#toJSON', function() {
     var json = JSON.stringify(subject);
-    var fromJSON = new ICAL.Componentv2(JSON.parse(json));
+    var fromJSON = new ICAL.Component(JSON.parse(json));
 
     assert.deepEqual(
       fromJSON.jCal,
@@ -391,7 +391,7 @@ suite('componentv2', function() {
   test('#toICAL', function() {
     var ical = subject.toICAL();
     var parsed = ICAL.parse(ical);
-    var fromICAL = new ICAL.Componentv2(
+    var fromICAL = new ICAL.Component(
       parsed[1]
     );
 
