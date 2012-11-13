@@ -11,13 +11,13 @@ suite('ics test', function() {
 
   test('force type', function() {
     // just verify it can parse forced types
-    var result = ICAL.parse(icsData);
-    var component = new ICAL.icalcomponent(result);
+    var result = ICAL.parse(icsData)[1];
+    var component = new ICAL.Component(result);
     var vevent = component.getFirstSubcomponent(
-      'VEVENT'
+      'vevent'
     );
 
-    var start = vevent.getFirstPropertyValue('DTSTART');
+    var start = vevent.getFirstPropertyValue('dtstart');
 
     assert.isTrue(start.isDate, 'is date type');
   });

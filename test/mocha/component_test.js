@@ -1,248 +1,413 @@
-testSupport.requireICAL();
-testSupport.helper('factory.js');
-
-suite('ical/component', function() {
-
-  var data;
-  var icsData;
+suite('Component', function() {
   var subject;
-  var factory;
-
-  testSupport.defineSample('blank_description.ics', function(data) {
-    icsData = data;
-  });
+  var fixtures;
 
   setup(function() {
-    subject = new ICAL.icalcomponent(ICAL.parse(icsData));
-    factory = testSupport.factory;
+    fixtures = {
+      components: [
+        'vevent',
+        [
+          ['description', {}, 'text', 'xfoo'],
+          ['description', {}, 'text', 'xfoo2'],
+          ['xfoo', {}, 'text', 'xfoo3']
+        ],
+        [
+          ['valarm', [], []],
+          ['vtodo', [], []],
+          ['valarm', [['description', {}, 'text', 'foo']], []]
+        ]
+      ]
+    };
+
+    subject = new ICAL.Component(fixtures.components);
   });
 
-  function contains(haystack, needle) {
-    return haystack.indexOf(needle) !== -1;
-  }
+  test('initialize component', function() {
+    var raw = ['description', {}, 'text', 'value'];
+    subject = new ICAL.Component(raw);
 
-  // taken from xpc-shell test
-  test('sanity', function() {
-    var dtStartStr   =  'DTSTART:20110101T121314';
-    var alarmCompStr = ['BEGIN:VALARM',
-                        'END:VALARM'].join('\n');
-    var eventStr     = ['BEGIN:VEVENT',
-                        dtStartStr,
-                        alarmCompStr,
-                        'END:VEVENT'].join('\n');
-
-    var event = ICAL.icalcomponent.fromString(eventStr);
-
-    var event2 = event.clone();
-    var rawEvent = ICAL.parse(eventStr);
-
-    assert.equal(event.toString(), event2.toString());
-
-    assert.equal(event.toString(), eventStr);
-
-    var alarmComp = event.getFirstSubcomponent('VALARM');
-    assert.equal(alarmComp.toString(), alarmCompStr);
-
-    var alarmComp2 = event.getAllSubcomponents('VALARM');
-    assert.equal(alarmComp2.length, 1);
-    assert.equal(alarmComp2[0].toString(), alarmCompStr);
-
-    assert.isTrue(event.hasProperty('DTSTART'));
-    var dtstart = event.getFirstProperty('DTSTART');
-    assert.equal(event.getFirstProperty('DTEND'), null);
-
-    var allDtProps = event.getAllProperties('DTSTART');
-    assert.equal(allDtProps.length, 1);
-    assert.equal(allDtProps[0].toString(), dtStartStr);
-
-    event.removeSubcomponent('VALARM');
-    assert.equal(event.getFirstSubcomponent('VALARM'), null);
-    assert.notEqual(event.toString(), event2.toString());
-
-    assert.isFalse(event.hasProperty('X-FOO'));
-    event.addPropertyWithValue('X-FOO', 'BAR');
-    assert.isTrue(event.hasProperty('X-FOO'));
-
-    var xprop = event.getFirstProperty('X-FOO');
-    assert.equal(xprop.getStringValue(), 'BAR');
-
-    event.removeProperty('X-FOO');
-    assert.isFalse(event.hasProperty('X-FOO'));
-    var xprop2 = ICAL.icalproperty.fromData({
-        name: 'X-BAR',
-        value: 'BAZ'
-    });
-    event.addProperty(xprop2);
-    assert.isTrue(event.hasProperty('X-BAR'));
-    assert.equal(event.getFirstProperty('X-BAR'), xprop2);
-    assert.equal(xprop2.parent, event);
-
-    assert.notEqual(event.toString(), event2.toString());
-
-    event.clearAllProperties();
-    assert.equal(event.getFirstProperty(), null);
-    assert.equal(event.getAllProperties().length, 0);
-    assert.isFalse(event.hasProperty('X-BAR'));
-
-    // TODO getFirstPropertyValue ?
-
-    assert.notEqual(event.toString(), event2.toString());
+    assert.equal(subject.jCal, raw, 'has jCal');
+    assert.equal(subject.name, 'description');
   });
 
-  suite('#initialize', function() {
-    test('#fromData', function() {
-      var prop = factory.propUUID();
-      var comp = factory.vevent(prop);
+  test('new component without jCal', function() {
+    var newComp = new ICAL.Component('vevent');
 
-      var compObj = new ICAL.icalcomponent(comp, null);
+    assert.equal(newComp.jCal[0], 'vevent');
 
-      // check to string
-      var obj = compObj.toString();
-      assert.ok(obj, 'stringify component');
-      assert.include(obj, prop.value[0]);
-      assert.include(obj, 'BEGIN:VEVENT');
-      assert.include(obj, 'END:VEVENT');
-    });
+    assert.ok(!newComp.getAllSubcomponents());
+    assert.ok(!newComp.getAllProperties());
   });
 
   suite('#getFirstSubcomponent', function() {
-    test('with given type', function() {
-      var vevent = subject.getFirstSubcomponent('VEVENT');
-      assert.equal(vevent.name, 'VEVENT');
+    var jCal;
+    setup(function() {
+      jCal = fixtures.components;
+      subject = new ICAL.Component(jCal);
+    });
+
+    test('without name', function() {
+      var component = subject.getFirstSubcomponent();
+      assert.equal(component.parent, subject);
+      assert.equal(component.name, 'valarm');
+
+      // first sub component
+      var expected = jCal[2][0];
+
+      assert.equal(component.jCal, expected);
+    });
+
+    test('with name (when not first)', function() {
+      var component = subject.getFirstSubcomponent(
+        'vtodo'
+      );
+
+      assert.equal(component.parent, subject);
+
+      assert.equal(component.name, 'vtodo');
+      assert.equal(
+        component.jCal,
+        jCal[2][1]
+      );
+    });
+
+    test('with name (when there are two)', function() {
+      var component = subject.getFirstSubcomponent(
+        'valarm'
+      );
+      assert.equal(component.name, 'valarm');
+      assert.equal(
+        component.jCal,
+        jCal[2][0]
+      );
+    });
+
+    test('equality between calls', function() {
+      assert.equal(
+        subject.getFirstSubcomponent(),
+        subject.getFirstSubcomponent()
+      );
+    });
+  });
+
+  suite('#getAllSubcomponents', function() {
+    test('with components', function() {
+      // 2 is the component array
+      var comps = fixtures.components[2];
+
+      subject = new ICAL.Component(
+        fixtures.components
+      );
+
+      var result = subject.getAllSubcomponents();
+      assert.length(result, comps.length);
+
+      for (var i = 0; i < comps.length; i++) {
+        assert.instanceOf(result[i], ICAL.Component);
+        assert.equal(result[i].jCal, comps[i]);
+      }
+    });
+
+    test('with name', function() {
+      subject = new ICAL.Component(fixtures.components);
+
+      var result = subject.getAllSubcomponents('valarm');
+      assert.length(result, 2);
+
+      result.forEach(function(item) {
+        assert.equal(item.name, 'valarm');
+      });
+    });
+
+    test('without components', function() {
+      subject = new ICAL.Component(['foo', [], []]);
+      assert.equal(subject.name, 'foo');
+      assert.ok(!subject.getAllSubcomponents());
+    });
+  });
+
+  test('#addSubcomponent', function() {
+    var newComp = new ICAL.Component('xnew');
+
+    subject.addSubcomponent(newComp);
+    var all = subject.getAllSubcomponents();
+
+    assert.equal(
+      all[all.length - 1],
+      newComp,
+      'can reference component'
+    );
+
+    assert.equal(
+      all.length,
+      subject.jCal[2].length,
+      'has same number of items'
+    );
+
+    assert.equal(
+      subject.jCal[2][all.length - 1],
+      newComp.jCal,
+      'adds jCal'
+    );
+  });
+
+  suite('#removeSubcomponent', function() {
+    test('by name', function() {
+      subject.removeSubcomponent('vtodo');
+
+      var all = subject.getAllSubcomponents();
+
+      all.forEach(function(item) {
+        assert.equal(item.name, 'valarm');
+      });
+    });
+
+    test('by component', function() {
+      var first = subject.getFirstSubcomponent();
+
+      subject.removeSubcomponent(first);
+
+      assert.notEqual(
+        subject.getFirstSubcomponent(),
+        first
+      );
+
+      assert.equal(
+        subject.getFirstSubcomponent().name,
+        'vtodo'
+      );
+    });
+  });
+
+  suite('#removeAllSubcomponents', function() {
+    test('with name', function() {
+      subject.removeAllSubcomponents('valarm');
+      assert.length(subject.jCal[2], 1);
+      assert.equal(subject.jCal[2][0][0], 'vtodo');
+      assert.length(subject.getAllSubcomponents(), 1);
+    });
+
+    test('all', function() {
+      subject.removeAllSubcomponents();
+      assert.length(subject.jCal[2], 0);
+      assert.ok(!subject.getAllSubcomponents());
     });
   });
 
   test('#hasProperty', function() {
-    assert.isTrue(subject.hasProperty('PRODID'));
-    assert.isFalse(subject.hasProperty('NOT_HERE'));
-  });
-
-  test('#getFirstProperty', function() {
-    var prop = subject.getFirstProperty('PRODID');
-    assert.equal(prop.name, 'PRODID');
-  });
-
-  test('#getFirstPropertyValue', function() {
-    var prop = subject.getFirstPropertyValue('PRODID');
-    var value = prop.data.value;
-
-    assert.ok(value);
-    assert.ok(value[0]);
-    assert.include(value[0], 'Google');
-  });
-
-  test('#removeProperty', function() {
-    var out = subject.toString();
-    assert.include(out, 'PRODID');
-
-    subject.removeProperty('PRODID');
-    assert.ok(!subject.properties['PRODID']);
-
-    // verify its actually removed in output
-    var out = subject.toString();
-
-    assert.ok(
-      out.indexOf('PRODID') === -1
-    );
-  });
-
-  test('#clearAllProperties', function() {
-    var props = Object.keys(
-      subject.properties
+    subject = new ICAL.Component(
+      fixtures.components
     );
 
-    var out = subject.toString();
+    assert.ok(subject.hasProperty('description'));
+    assert.ok(!subject.hasProperty('iknowitsnothere'));
+  });
 
-    props.forEach(function(key) {
-      assert.ok(!contains(props), 'should remove ' + key + ' from output');
+  suite('#getFirstProperty', function() {
+    setup(function() {
+      subject = new ICAL.Component(fixtures.components);
+    });
+
+    test('name missing', function() {
+      assert.ok(!subject.getFirstProperty('x-foo'));
+    });
+
+    test('name has multiple', function() {
+      var first = subject.getFirstProperty('description');
+      assert.equal(first, subject.getFirstProperty());
+
+      assert.equal(
+        first.getFirstValue(),
+        'xfoo'
+      );
+    });
+
+    test('without name', function() {
+      var first = subject.getFirstProperty();
+      assert.equal(
+        first.jCal,
+        fixtures.components[1][0]
+      );
+    });
+
+    test('without name empty', function() {
+      subject = new ICAL.Component(['foo', [], []]);
+      assert.ok(!subject.getFirstProperty());
     });
   });
 
-  test('#updatePropertyWithValue', function() {
-    // add a property
-    subject.addPropertyWithValue('X-FOO', '1');
-    subject.updatePropertyWithValue('X-FOO', '2');
+  test('#getFirstPropertyValue', function() {
+    subject = new ICAL.Component(fixtures.components);
+    assert.equal(
+      subject.getFirstPropertyValue(),
+      'xfoo'
+    );
+  });
 
-    var props = subject.getAllProperties('X-FOO');
-    assert.length(props, 1);
+  suite('#getAllProperties', function() {
+    setup(function() {
+      subject = new ICAL.Component(fixtures.components);
+    });
 
-    var value = props[0].getFirstValue().data.value[0];
+    test('with name', function() {
+      var results = subject.getAllProperties('description');
+      assert.length(results, 2);
 
-    assert.equal(value, '2');
+      results.forEach(function(item, i) {
+        assert.equal(
+          item.jCal,
+          subject.jCal[1][i]
+        );
+      });
+    });
+
+    test('with name empty', function() {
+      var results = subject.getAllProperties('wtfmissing');
+      assert.deepEqual(results, []);
+    });
+
+    test('without name', function() {
+      var results = subject.getAllProperties();
+      results.forEach(function(item, i) {
+        assert.equal(item.jCal, subject.jCal[1][i]);
+      });
+    });
+  });
+
+  test('#addProperty', function() {
+    var prop = new ICAL.Property('description');
+
+    subject.addProperty(prop);
+    assert.equal(subject.jCal[1][3], prop.jCal);
+
+    var all = subject.getAllProperties();
+    var lastProp = all[all.length - 1];
+
+    assert.equal(lastProp, prop);
+    assert.equal(lastProp.component, subject);
   });
 
   test('#addPropertyWithValue', function() {
-    subject.addPropertyWithValue('X-FOONAME', 'value');
+    var subject = new ICAL.Component('vevent');
 
-    var value = subject.getFirstPropertyValue('X-FOONAME');
-    var out = subject.toString();
+    subject.addPropertyWithValue('description', 'value');
 
-    assert.ok(contains(out, 'X-FOONAME'));
+    var all = subject.getAllProperties();
 
-    var addedProp = subject.getFirstPropertyValue('X-FOONAME');
-    assert.isTrue(subject.hasProperty('X-FOONAME'));
-    assert.deepEqual(addedProp.data.value, ['value']);
+    assert.equal(all[0].name, 'description');
+    assert.equal(all[0].getFirstValue(), 'value');
+  });
+
+  test('#updatePropertyWithValue', function() {
+    var subject = new ICAL.Component('vevent');
+    subject.addPropertyWithValue('description', 'foo');
+    assert.length(subject.getAllProperties(), 1);
+
+    subject.updatePropertyWithValue('description', 'xxx');
+
+    assert.equal(subject.getFirstPropertyValue('description'), 'xxx');
+    subject.updatePropertyWithValue('x-foo', 'bar');
+
+    var list = subject.getAllProperties();
+    assert.equal(subject.getFirstPropertyValue('x-foo'), 'bar');
+  });
+
+  suite('#removeProperty', function() {
+    setup(function() {
+      subject = new ICAL.Component(
+        fixtures.components
+      );
+    });
+
+    test('try to remove non-existent', function() {
+      var result = subject.removeProperty('wtfbbq');
+      assert.isFalse(result);
+    });
+
+    test('remove by property', function() {
+      var first = subject.getFirstProperty('description');
+
+      var result = subject.removeProperty(first);
+      assert.isTrue(result, 'removes property');
+
+      assert.notEqual(
+        subject.getFirstProperty('description'),
+        first
+      );
+
+      assert.length(subject.jCal[1], 2);
+    });
+
+    test('remove by name', function() {
+      // there are two descriptions
+      var list = subject.getAllProperties();
+      var first = subject.getFirstProperty('description');
+
+      var result = subject.removeProperty('description');
+      assert.isTrue(result);
+
+      assert.notEqual(
+        subject.getFirstProperty('description'),
+        first
+      );
+
+      assert.length(list, 2);
+    });
+  });
+
+  suite('#removeAllProperties', function() {
+    test('no name when empty', function() {
+      subject = new ICAL.Component(
+        fixtures.components
+      );
+
+      assert.length(subject.jCal[1], 3);
+
+      subject.removeAllProperties();
+
+      assert.length(subject.jCal[1], 0);
+      assert.ok(!subject.getFirstProperty());
+    });
+
+    test('no name when not empty', function() {
+      subject = new ICAL.Component(['vevent', [], []]);
+      subject.removeAllProperties();
+      subject.removeAllProperties('xfoo');
+    });
+
+    test('with name', function() {
+      subject = new ICAL.Component(
+        fixtures.components
+      );
+
+      subject.removeAllProperties('description');
+      assert.length(subject.jCal[1], 1);
+
+      var first = subject.getFirstProperty();
+
+      assert.equal(first.name, 'xfoo');
+      assert.equal(subject.jCal[1][0][0], 'xfoo');
+    });
   });
 
   test('#toJSON', function() {
-    var string = JSON.stringify(subject);
-    var json = JSON.parse(string);
-    var newCom = new ICAL.icalcomponent(json);
-
-    assert.equal(newCom.toString(), subject.toString());
-  });
-
-  test('#addSubcomponent', function() {
-    var vevent = factory.veventComp();
-    var veventOut = vevent.toString();
-
-    // add to main
-    var vcal = factory.vcalComp();
-
-    vcal.addSubcomponent(vevent);
-
-    var vcalOut = vcal.toString();
-
-    assert.ok(vcalOut);
-
-    assert.include(vcalOut, 'BEGIN:VCALENDAR');
-    assert.include(vcalOut, veventOut);
-    assert.include(vcalOut, 'END:VCALENDAR');
-  });
-
-  test('#removeSubcomponent', function() {
-    var vevent = factory.veventComp();
-    var vcal = factory.vcalComp();
-
-    vcal.addSubcomponent(vevent);
-    vcal.removeSubcomponent('VEVENT');
-
-    var out = vcal.toString();
-
-    assert.ok(
-      !contains(vevent.toString()),
-      'should have removed subcomponents from ical out'
-    );
-  });
-
-  test('#undecorate', function() {
-    var vevent = factory.veventComp();
-    var vcal = factory.vcalComp();
-
-    vcal.addSubcomponent(vevent);
-    var out = vcal.undecorate();
-
-    assert.equal(out.name, 'VCALENDAR');
-    assert.equal(out.type, 'COMPONENT');
-
-    var event = out.value[0];
-    assert.equal(event.name, 'VEVENT');
-    assert.equal(event.type, 'COMPONENT');
+    var json = JSON.stringify(subject);
+    var fromJSON = new ICAL.Component(JSON.parse(json));
 
     assert.deepEqual(
-      event,
-      factory.vevent(factory.propUUID())
+      fromJSON.jCal,
+      subject.jCal
     );
+  });
+
+  test('#toString', function() {
+    var ical = subject.toString();
+    var parsed = ICAL.parse(ical);
+    var fromICAL = new ICAL.Component(
+      parsed[1]
+    );
+
+    assert.deepEqual(subject.jCal, fromICAL.jCal);
   });
 
 });

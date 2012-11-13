@@ -4,14 +4,14 @@ if (typeof(testSupport) === 'undefined') {
 
 testSupport.factory = {
   vcalComp: function() {
-    return new ICAL.icalcomponent({
+    return new ICAL.Component({
       type: 'COMPONENT',
       name: 'VCALENDAR'
     }, null);
   },
 
   veventComp: function() {
-    return new ICAL.icalcomponent(this.vevent(
+    return new ICAL.Component(this.vevent(
       this.propUUID()
     ));
   },

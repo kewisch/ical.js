@@ -54,11 +54,11 @@
 
         if (decorate) {
 
-            component = new ICAL.icalcomponent(sourceResult);
+            component = new ICAL.Component(sourceResult[1]);
 
             try {
                 // Try to undecorate it
-                undecorated.textContent = component.undecorate().toSource();
+                undecorated.textContent = component.jCal.toSource();
 
                 // Try to jsonify it
                 jsonResult = JSON.stringify(component, null, " ");

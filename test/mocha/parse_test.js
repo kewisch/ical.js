@@ -2,7 +2,7 @@ suite('parserv2', function() {
 
   var subject;
   setup(function() {
-    subject = ICAL.parsev2;
+    subject = ICAL.parse;
   });
 
   /**
@@ -75,7 +75,7 @@ suite('parserv2', function() {
 
         test('round-trip', function() {
           var parsed = subject(input);
-          var ical = ICAL.Serializerv2.serializeToIcal(parsed);
+          var ical = ICAL.stringify(parsed);
 
           // NOTE: this is not an absolute test that serialization
           //       works as our parser should be error tolerant and
