@@ -2,9 +2,10 @@ REPORTER=Spec
 VENDOR_FILE=build/ical.js
 LIB=lib/ical
 VENDOR_FILE_LIST= $(LIB)/helpers.js \
-	$(LIB)/serializer.js \
-	$(LIB)/parser.js \
 	$(LIB)/design.js \
+	$(LIB)/stringify.js \
+	$(LIB)/parse.js \
+	$(LIB)/decoration_parser.js \
 	$(LIB)/component.js \
 	$(LIB)/property.js \
 	$(LIB)/value.js \
@@ -16,8 +17,7 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/recur_iterator.js \
 	$(LIB)/recur_expansion.js \
 	$(LIB)/event.js \
-	$(LIB)/component_parser.js \
-	$(LIB)/ical.js
+	$(LIB)/component_parser.js
 
 .PHONY: dev
 dev: package test-agent-config node-deps

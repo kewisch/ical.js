@@ -282,7 +282,7 @@ suite('Property', function() {
   suite('#setValues', function() {
     test('decorated value', function() {
       var subject = new ICAL.Property('rdate');
-      var undecorate = ICAL.designv2.value['date-time'].undecorate;
+      var undecorate = ICAL.design.value['date-time'].undecorate;
 
       var values = [
         new ICAL.icaltime({ year: 2012, month: 1 }),
@@ -352,7 +352,7 @@ suite('Property', function() {
 
       assert.equal(
         subject.jCal[3],
-        ICAL.designv2.value['date-time'].undecorate(time)
+        ICAL.design.value['date-time'].undecorate(time)
       );
 
       assert.equal(
