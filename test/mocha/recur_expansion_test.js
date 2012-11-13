@@ -84,11 +84,11 @@ suite('recur_expansion', function() {
     setup(function() {
       // setup a clean component with no rules
       component = primary.component.toJSON();
-      component = new ICAL.icalcomponent(component);
+      component = new ICAL.Component(component);
 
       // Simulate a more complicated event by using
-      // the original as a base and adding more complex RRULE's
-      component.removeProperty('RRULE');
+      // the original as a base and adding more complex rrule's
+      component.removeProperty('rrule');
     });
 
     test('when rule ends', function() {
@@ -98,8 +98,9 @@ suite('recur_expansion', function() {
         day: 1
       };
 
-      component.removeProperty('RDATE');
-      component.addPropertyWithValue('RRULE', 'FREQ=WEEKLY;COUNT=3;BYDAY=SU');
+      component.removeAllProperties('rdate');
+      component.removeAllProperties('exdate');
+      component.addPropertyWithValue('rrule', 'FREQ=WEEKLY;COUNT=3;BYDAY=SU');
 
       var subject = new ICAL.RecurExpansion({
         component: component,
@@ -125,8 +126,8 @@ suite('recur_expansion', function() {
     });
 
     test('multiple rules', function() {
-      component.addPropertyWithValue('RRULE', 'FREQ=MONTHLY;BYMONTHDAY=13');
-      component.addPropertyWithValue('RRULE', 'FREQ=WEEKLY;BYDAY=TH');
+      component.addPropertyWithValue('rrule', 'FREQ=MONTHLY;BYMONTHDAY=13');
+      component.addPropertyWithValue('rrule', 'FREQ=WEEKLY;BYDAY=TH');
 
       var start = ICAL.icaltime.fromData({
         year: 2012,

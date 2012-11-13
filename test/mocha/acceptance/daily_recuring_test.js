@@ -11,18 +11,18 @@ suite('ics - blank description', function() {
 
   test('summary', function() {
     // just verify it can parse blank lines
-    var result = ICAL.parse(icsData);
-    var component = new ICAL.icalcomponent(result);
+    var result = ICAL.parse(icsData)[1];
+    var component = new ICAL.Component(result);
     var vevent = component.getFirstSubcomponent(
-      'VEVENT'
+      'vevent'
     );
 
     var recur = vevent.getFirstPropertyValue(
-      'RRULE'
+      'rrule'
     );
 
     var start = vevent.getFirstPropertyValue(
-      'DTSTART'
+      'dtstart'
     );
 
     var key;

@@ -219,22 +219,34 @@ suite('recur', function() {
 
   test('#toString - round trip', function() {
     var until = ICAL.icaltime.epoch_time.clone();
-    var a = new ICAL.icalrecur({
+    var data = {
       interval: 2,
       wkst: 3,
       until: until,
       count: 5,
-      freq: 'YEARLY'
-    });
+      freq: 'YEARLY',
+      parts: {
+        'BYDAY': 'TU',
+        'BYMONTH': '1'
+      }
+    };
 
-    var iprop = a.toIcalProperty();
-    assert.equal(a.toString(), iprop.getStringValue());
-    var b = ICAL.icalrecur.fromIcalProperty(iprop);
-    assert.equal(a.toString(), b.toString());
+    var a = new ICAL.icalrecur(data);
+    var output = a.toString();
+    var b = ICAL.icalrecur.fromString(output);
 
-    var str = a.toString();
-    b = ICAL.icalrecur.fromString(str);
-    assert.equal(str, b.toString());
+    assert.ok(a.toString(), 'outputs');
+
+    assert.include(output, ';UNTIL=' + until.toString());
+    // wkst 3 == TU see DOW_MAP
+    assert.include(output, 'WKST=TU');
+    assert.include(output, 'COUNT=5');
+    assert.include(output, 'INTERVAL=2');
+    assert.include(output, 'FREQ=YEARLY');
+    assert.include(output, 'BYMONTH=1');
+    assert.include(output, 'BYDAY=TU');
+
+    assert.equal(a.toString(), b.toString(), 'roundtrip equality');
   });
 
   suite('ICAL.icalrecur#icalDayToNumericDay', function() {

@@ -1,4 +1,4 @@
-suite('Serializerv2', function() {
+suite('ICAL.stringify', function() {
 
   suite('round trip tests', function() {
     var root = 'samples/';
@@ -41,15 +41,15 @@ suite('Serializerv2', function() {
         }
 
         test('round-trip', function() {
-          var parsed = ICAL.parsev2(input);
-          var ical = ICAL.Serializerv2.serializeToIcal(parsed);
+          var parsed = ICAL.parse(input);
+          var ical = ICAL.stringify(parsed);
 
           // NOTE: this is not an absolute test that serialization
           //       works as our parser should be error tolerant and
           //       its remotely possible that we consistently produce
           //       ICAL that only we can parse.
           jsonEqual(
-            ICAL.parsev2(ical),
+            ICAL.parse(ical),
             parsed
           );
         });

@@ -1,7 +1,7 @@
-suite('designv2', function() {
+suite('design', function() {
   var subject;
   setup(function() {
-    subject = ICAL.designv2;
+    subject = ICAL.design;
   });
 
   suite('types', function() {

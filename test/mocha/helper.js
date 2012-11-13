@@ -22,27 +22,22 @@
   testSupport.requireICAL = function() {
     var files = [
       'helpers',
-      'serializer',
       'recur_expansion',
       'event',
       'component_parser',
       'design',
-      'designv2',
-      'parser',
-      'parserv2',
-      'serializerv2',
+      'decoration_parser',
+      'parse',
+      'stringify',
       'component',
-      'componentv2',
       'property',
-      'propertyv2',
       'value',
       'period',
       'duration',
       'timezone',
       'time',
       'recur',
-      'recur_iterator',
-      'ical'
+      'recur_iterator'
     ];
 
     files.forEach(function(file) {

@@ -12,7 +12,7 @@ function run_test() {
                         alarmCompStr,
                         'END:VEVENT'].join("\r\n");
     dump("AA " + eventStr + "\n");
-    var event = ICAL.icalcomponent.fromString(eventStr);
+    var event = ICAL.Component.fromString(eventStr);
     dump("AA\n");
     var event2 = event.clone();
     var rawEvent = ICAL.toJSON(eventStr, false);
@@ -54,7 +54,7 @@ function run_test() {
 
     event.removeProperty("X-FOO");
     do_check_false(event.hasProperty("X-FOO"));
-    var xprop2 = ICAL.icalproperty.fromData({
+    var xprop2 = ICAL.Property.fromData({
         name: "X-BAR",
         value: "BAZ"
     });
