@@ -2289,13 +2289,13 @@ ICAL.Component = (function() {
      *
      * @param {ICAL.Component} component to add.
      */
-    addComponent: function(component) {
+    addSubcomponent: function(component) {
       if (!this._components) {
         this._components = [];
       }
 
-      var idx = this.jCal[COMPONENT_INDEX].push(component);
-      this._components[idx] = component;
+      var idx = this.jCal[COMPONENT_INDEX].push(component.jCal);
+      this._components[idx - 1] = component;
     },
 
     /**
@@ -2305,7 +2305,7 @@ ICAL.Component = (function() {
      * @param {ICAL.Component|String} nameOrComp comp type.
      * @return {Boolean} true when comp is removed.
      */
-    removeComponent: function(nameOrComp) {
+    removeSubcomponent: function(nameOrComp) {
       return this._removeObject(COMPONENT_INDEX, '_components', nameOrComp);
     },
 
@@ -2315,7 +2315,7 @@ ICAL.Component = (function() {
      *
      * @param {String} [name] (lowercase) component name.
      */
-    removeAllComponents: function(name) {
+    removeAllSubcomponents: function(name) {
       return this._removeAllObjects(COMPONENT_INDEX, '_components', name);
     },
 
@@ -2398,7 +2398,7 @@ ICAL.Component = (function() {
       return this.jCal;
     },
 
-    toICAL: function() {
+    toString: function() {
       return ICAL.stringify.component(
         this.jCal
       );

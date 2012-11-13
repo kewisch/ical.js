@@ -126,10 +126,10 @@ suite('Component', function() {
     });
   });
 
-  test('#addComponent', function() {
+  test('#addSubcomponent', function() {
     var newComp = new ICAL.Component('xnew');
 
-    subject.addComponent(newComp);
+    subject.addSubcomponent(newComp);
     var all = subject.getAllSubcomponents();
 
     assert.equal(
@@ -137,11 +137,23 @@ suite('Component', function() {
       newComp,
       'can reference component'
     );
+
+    assert.equal(
+      all.length,
+      subject.jCal[2].length,
+      'has same number of items'
+    );
+
+    assert.equal(
+      subject.jCal[2][all.length - 1],
+      newComp.jCal,
+      'adds jCal'
+    );
   });
 
-  suite('#removeComponent', function() {
+  suite('#removeSubcomponent', function() {
     test('by name', function() {
-      subject.removeComponent('vtodo');
+      subject.removeSubcomponent('vtodo');
 
       var all = subject.getAllSubcomponents();
 
@@ -153,7 +165,7 @@ suite('Component', function() {
     test('by component', function() {
       var first = subject.getFirstSubcomponent();
 
-      subject.removeComponent(first);
+      subject.removeSubcomponent(first);
 
       assert.notEqual(
         subject.getFirstSubcomponent(),
@@ -167,16 +179,16 @@ suite('Component', function() {
     });
   });
 
-  suite('#removeAllComponents', function() {
+  suite('#removeAllSubcomponents', function() {
     test('with name', function() {
-      subject.removeAllComponents('valarm');
+      subject.removeAllSubcomponents('valarm');
       assert.length(subject.jCal[2], 1);
       assert.equal(subject.jCal[2][0][0], 'vtodo');
       assert.length(subject.getAllSubcomponents(), 1);
     });
 
     test('all', function() {
-      subject.removeAllComponents();
+      subject.removeAllSubcomponents();
       assert.length(subject.jCal[2], 0);
       assert.ok(!subject.getAllSubcomponents());
     });
@@ -388,8 +400,8 @@ suite('Component', function() {
     );
   });
 
-  test('#toICAL', function() {
-    var ical = subject.toICAL();
+  test('#toString', function() {
+    var ical = subject.toString();
     var parsed = ICAL.parse(ical);
     var fromICAL = new ICAL.Component(
       parsed[1]

@@ -99,13 +99,15 @@ suite('ICAL.Event', function() {
       });
 
       test('to string roundtrip', function() {
-        var key;
+        var aComp = new ICAL.Component(ICAL.parse(icsData)[1]);
+        var aEvent = new ICAL.Event(aComp);
 
-        var ical = subject.toString();
-        var comp = new ICAL.Component(ICAL.parse(icsData));
-        var event = new ICAL.Event(comp);
+        var bComp = new ICAL.Component(
+          ICAL.parse(aComp.toString())[1]
+        );
 
-        assert.equal(comp.toString(), ical);
+        var bEvent = new ICAL.Event(bComp);
+        assert.equal(aEvent.toString(), bEvent.toString());
       });
     });
 
