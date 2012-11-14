@@ -285,8 +285,7 @@ suite('design', function() {
       });
 
       test('#(un)decorate', function() {
-        return;
-        var undecorated = '-0500';
+        var undecorated = '-05:00';
         var decorated = subject.decorate(undecorated);
 
         assert.equal(decorated.hours, 5, 'hours');

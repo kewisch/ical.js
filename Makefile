@@ -8,6 +8,7 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/decoration_parser.js \
 	$(LIB)/component.js \
 	$(LIB)/property.js \
+	$(LIB)/utc_offset.js \
 	$(LIB)/value.js \
 	$(LIB)/period.js \
 	$(LIB)/duration.js \

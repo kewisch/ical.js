@@ -31,6 +31,7 @@
       'stringify',
       'component',
       'property',
+      'utc_offset',
       'value',
       'period',
       'duration',
