@@ -6,7 +6,7 @@ suite('ical/duration', function() {
     function verify(string, data) {
       var key;
       test('parse: "' + string + '"', function() {
-        var subject = ICAL.icalperiod.fromString(string);
+        var subject = ICAL.Period.fromString(string);
 
         if ('start' in data) {
           assert.hasProperties(

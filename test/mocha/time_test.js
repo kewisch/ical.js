@@ -1,6 +1,6 @@
 suite('icaltime', function() {
-  var Time = ICAL.icaltime;
-  var Timezone = ICAL.icaltimezone;
+  var Time = ICAL.Time;
+  var Timezone = ICAL.Timezone;
 
   test('round trip', function() {
     var f = new Time({
@@ -146,7 +146,7 @@ suite('icaltime', function() {
       var msg = human + ' should be #' + dayOfWeek + ' day';
 
       test(msg, function() {
-        var subject = new ICAL.icaltime.fromJSDate(
+        var subject = new ICAL.Time.fromJSDate(
           date
         );
 

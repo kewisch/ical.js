@@ -101,7 +101,7 @@ suite('design', function() {
             minute: 05,
             second: 11,
             isDate: false,
-            zone: ICAL.icaltimezone.utc_timezone
+            zone: ICAL.Timezone.utc_timezone
           }
         );
 
@@ -220,7 +220,7 @@ suite('design', function() {
         var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR';
         var decorated = subject.decorate(undecorated);
 
-        assert.instanceOf(decorated, ICAL.icalrecur);
+        assert.instanceOf(decorated, ICAL.Recur);
 
         assert.hasProperties(
           decorated,

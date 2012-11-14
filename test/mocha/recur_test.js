@@ -1,17 +1,17 @@
 suite('recur', function() {
-  var Time = ICAL.icaltime;
-  var Recur = ICAL.icalrecur;
+  var Time = ICAL.Time;
+  var Recur = ICAL.Recur;
 
   suite('#iterator', function() {
     function checkDate(data, last, dtstart) {
       var name = JSON.stringify(data);
       // XXX: better names
       test('RULE: ' + name, function() {
-        var recur = new ICAL.icalrecur(data);
+        var recur = new ICAL.Recur(data);
         if (dtstart) {
-          dtstart = ICAL.icaltime.fromString(dtstart);
+          dtstart = ICAL.Time.fromString(dtstart);
         } else {
-          dtstart = ICAL.icaltime.epoch_time.clone();
+          dtstart = ICAL.Time.epoch_time.clone();
         }
         var iter = recur.iterator(dtstart);
         assert.equal(iter.next().toString(), last);
@@ -20,11 +20,11 @@ suite('recur', function() {
 
     function checkThrow(data, expectedMessage, dtstart, stack) {
       test(expectedMessage, function() {
-        var recur = new ICAL.icalrecur(data);
+        var recur = new ICAL.Recur(data);
         if (dtstart) {
-          dtstart = ICAL.icaltime.fromString(dtstart);
+          dtstart = ICAL.Time.fromString(dtstart);
         } else {
-          dtstart = ICAL.icaltime.epoch_time.clone();
+          dtstart = ICAL.Time.epoch_time.clone();
         }
         assert.throws(function() {
           var iter = recur.iterator(dtstart);
@@ -125,8 +125,8 @@ suite('recur', function() {
   });
 
   test('#clone', function() {
-    var until = ICAL.icaltime.epoch_time.clone();
-    var a = new ICAL.icalrecur({
+    var until = ICAL.Time.epoch_time.clone();
+    var a = new ICAL.Recur({
         interval: 2,
         wkst: 3,
         until: until,
@@ -151,10 +151,10 @@ suite('recur', function() {
     assert.notEqual(a.freq, b.freq);
   });
 
-  suite('ICAL.icalrecur#toJSON', function() {
+  suite('ICAL.Recur#toJSON', function() {
 
     test('round-trip', function() {
-      var recur = ICAL.icalrecur.fromString(
+      var recur = ICAL.Recur.fromString(
         'FREQ=MONTHLY;BYDAY=1SU,2MO;BYSETPOS=1;COUNT=10;UNTIL=20121001T090000'
       );
 
@@ -163,7 +163,7 @@ suite('recur', function() {
           BYDAY: ['1SU', '2MO'],
           BYSETPOS: [1]
         },
-        wkst: ICAL.icaltime.MONDAY,
+        wkst: ICAL.Time.MONDAY,
         until: recur.until.toJSON(),
         freq: 'MONTHLY',
         count: 10,
@@ -173,9 +173,9 @@ suite('recur', function() {
       var result = recur.toJSON();
       assert.deepEqual(result, props);
 
-      var fromJSON = new ICAL.icalrecur(result);
+      var fromJSON = new ICAL.Recur(result);
 
-      assert.instanceOf(fromJSON.until, ICAL.icaltime);
+      assert.instanceOf(fromJSON.until, ICAL.Time);
 
       assert.hasProperties(fromJSON, {
         parts: props.parts,
@@ -188,8 +188,8 @@ suite('recur', function() {
   });
 
   test('components', function() {
-    var until = ICAL.icaltime.epoch_time.clone();
-    var a = new ICAL.icalrecur({
+    var until = ICAL.Time.epoch_time.clone();
+    var a = new ICAL.Recur({
         interval: 2,
         wkst: 3,
         until: until,
@@ -218,7 +218,7 @@ suite('recur', function() {
 
 
   test('#toString - round trip', function() {
-    var until = ICAL.icaltime.epoch_time.clone();
+    var until = ICAL.Time.epoch_time.clone();
     var data = {
       interval: 2,
       wkst: 3,
@@ -231,9 +231,9 @@ suite('recur', function() {
       }
     };
 
-    var a = new ICAL.icalrecur(data);
+    var a = new ICAL.Recur(data);
     var output = a.toString();
-    var b = ICAL.icalrecur.fromString(output);
+    var b = ICAL.Recur.fromString(output);
 
     assert.ok(a.toString(), 'outputs');
 
@@ -249,7 +249,7 @@ suite('recur', function() {
     assert.equal(a.toString(), b.toString(), 'roundtrip equality');
   });
 
-  suite('ICAL.icalrecur#icalDayToNumericDay', function() {
+  suite('ICAL.Recur#icalDayToNumericDay', function() {
     var expected = {
       'SU': Time.SUNDAY,
       'MO': Time.MONDAY,
@@ -264,7 +264,7 @@ suite('recur', function() {
       (function(map) {
         test(map + ' to constant', function() {
           assert.equal(
-            ICAL.icalrecur.icalDayToNumericDay(map),
+            ICAL.Recur.icalDayToNumericDay(map),
             expected[map]
           );
         });

@@ -163,7 +163,7 @@ suite('Property', function() {
 
       var value = subject.getFirstValue();
 
-      assert.instanceOf(value, ICAL.icaltime);
+      assert.instanceOf(value, ICAL.Time);
       //2012-10-01
       assert.hasProperties(
         value,
@@ -191,7 +191,7 @@ suite('Property', function() {
 
   test('#resetType', function() {
     var subject = new ICAL.Property('dtstart');
-    subject.setValue(new ICAL.icaltime({ year: 2012 }));
+    subject.setValue(new ICAL.Time({ year: 2012 }));
 
     assert.equal(subject.type, 'date-time');
 
@@ -199,7 +199,7 @@ suite('Property', function() {
     assert.equal(subject.type, 'date');
 
     assert.ok(!subject.getFirstValue());
-    subject.setValue(new ICAL.icaltime({ year: 2012 }));
+    subject.setValue(new ICAL.Time({ year: 2012 }));
 
     var ical = subject.toICAL();
   });
@@ -285,8 +285,8 @@ suite('Property', function() {
       var undecorate = ICAL.design.value['date-time'].undecorate;
 
       var values = [
-        new ICAL.icaltime({ year: 2012, month: 1 }),
-        new ICAL.icaltime({ year: 2012, month: 1 })
+        new ICAL.Time({ year: 2012, month: 1 }),
+        new ICAL.Time({ year: 2012, month: 1 })
       ];
 
       subject.setValues(values);
@@ -327,7 +327,7 @@ suite('Property', function() {
       subject.setValue('2012-09-01T13:00:00');
       var value = subject.getFirstValue();
 
-      assert.instanceOf(value, ICAL.icaltime);
+      assert.instanceOf(value, ICAL.Time);
 
       assert.hasProperties(value, {
         year: 2012,
@@ -342,7 +342,7 @@ suite('Property', function() {
         'dtstart'
       );
 
-      var time = new ICAL.icaltime({
+      var time = new ICAL.Time({
         year: 2012,
         month: 1,
         day: 5

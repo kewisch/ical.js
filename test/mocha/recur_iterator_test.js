@@ -1,8 +1,8 @@
 suite('recur_iterator', function() {
   var recur;
   var iterator;
-  var Time = ICAL.icaltime;
-  var Recur = ICAL.icalrecur;
+  var Time = ICAL.Time;
+  var Recur = ICAL.Recur;
 
   function addDates(expected, year, month, dates) {
     dates.forEach(function(date) {
@@ -66,8 +66,8 @@ suite('recur_iterator', function() {
 
   function createIterator(ruleString, timeString) {
     setup(function() {
-      var start = ICAL.icaltime.fromString(timeString);
-      recur = ICAL.icalrecur.fromString(ruleString);
+      var start = ICAL.Time.fromString(timeString);
+      recur = ICAL.Recur.fromString(ruleString);
       iterator = recur.iterator(start);
     });
   }
@@ -98,7 +98,7 @@ suite('recur_iterator', function() {
       assert.isTrue(iterator.completed, 'is completed');
 
       var json = iterator.toJSON();
-      var newIter = new ICAL.icalrecur_iterator(json);
+      var newIter = new ICAL.RecurIterator(json);
 
       assert.equal(newIter.next(), null, 'new iter next');
       assert.isTrue(newIter.completed, true, 'new iter completed');
@@ -109,7 +109,7 @@ suite('recur_iterator', function() {
       iterator.next();
 
       var json = iterator.toJSON();
-      var newIter = new ICAL.icalrecur_iterator(json);
+      var newIter = new ICAL.RecurIterator(json);
       var inc = 0;
 
       while (inc++ < 8) {
@@ -136,7 +136,7 @@ suite('recur_iterator', function() {
       var json = iterator.toJSON();
       assert.deepEqual(json, expected);
 
-      var newIter = new ICAL.icalrecur_iterator(json);
+      var newIter = new ICAL.RecurIterator(json);
       var inc = 0;
 
       while (inc++ < 10) {
@@ -273,8 +273,8 @@ suite('recur_iterator', function() {
     test('infinite', function() {
       var raw = 'FREQ=YEARLY;BYMONTH=3;BYDAY=TU';
       var start = '19700308T020000';
-      var recur = ICAL.icalrecur.fromString(raw);
-      var start = ICAL.icaltime.fromString(start);
+      var recur = ICAL.Recur.fromString(raw);
+      var start = ICAL.Time.fromString(start);
 
       var iterator = recur.iterator(start);
       var limit = 1;
@@ -410,7 +410,7 @@ suite('recur_iterator', function() {
       });
 
       var dates = [];
-      var endDate = ICAL.icaltime.fromString('20150131T090000Z');
+      var endDate = ICAL.Time.fromString('20150131T090000Z');
       var max = expected.length;
       var calls = 0;
       var next;
