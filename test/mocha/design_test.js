@@ -244,7 +244,30 @@ suite('design', function() {
         subject = subject.value['utc-offset'];
       });
 
+      test('#(to|from)ICAL without seconds', function() {
+        var original = '-0500';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '-05:00');
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
+      test('#(to|from)ICAL with seconds', function() {
+        var original = '+054515';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '+05:45:15');
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
       test('#(un)decorate', function() {
+        return;
         var undecorated = '-0500';
         var decorated = subject.decorate(undecorated);
 

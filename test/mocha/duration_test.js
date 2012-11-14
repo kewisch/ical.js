@@ -26,7 +26,7 @@ suite('ical/duration', function() {
       }
 
       test('parse: "' + string + '"', function() {
-        var subject = ICAL.icalduration.fromString(string);
+        var subject = ICAL.Duration.fromString(string);
         assert.hasProperties(subject, expected);
       });
     }

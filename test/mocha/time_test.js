@@ -521,29 +521,29 @@ suite('icaltime', function() {
       assert.equal(diff.toSeconds(), 3);
 
       cp = dt.clone();
-      cp.addDuration(ICAL.icalduration.fromString('PT1S'));
+      cp.addDuration(ICAL.Duration.fromString('PT1S'));
       assert.equal(cp, data.expect_1s);
-      cp.addDuration(ICAL.icalduration.fromString('-PT1S'));
+      cp.addDuration(ICAL.Duration.fromString('-PT1S'));
       assert.equal(cp.toString(), dt.toString());
 
-      cp.addDuration(ICAL.icalduration.fromString('PT1M'));
+      cp.addDuration(ICAL.Duration.fromString('PT1M'));
       assert.equal(cp, data.expect_1m);
-      cp.addDuration(ICAL.icalduration.fromString('-PT1M'));
+      cp.addDuration(ICAL.Duration.fromString('-PT1M'));
       assert.equal(cp.toString(), dt.toString());
 
-      cp.addDuration(ICAL.icalduration.fromString('PT1H'));
+      cp.addDuration(ICAL.Duration.fromString('PT1H'));
       assert.equal(cp, data.expect_1h);
-      cp.addDuration(ICAL.icalduration.fromString('-PT1H'));
+      cp.addDuration(ICAL.Duration.fromString('-PT1H'));
       assert.equal(cp.toString(), dt.toString());
 
-      cp.addDuration(ICAL.icalduration.fromString('P1D'));
+      cp.addDuration(ICAL.Duration.fromString('P1D'));
       assert.equal(cp, data.expect_1d);
-      cp.addDuration(ICAL.icalduration.fromString('-P1D'));
+      cp.addDuration(ICAL.Duration.fromString('-P1D'));
       assert.equal(cp.toString(), dt.toString());
 
-      cp.addDuration(ICAL.icalduration.fromString('P1W'));
+      cp.addDuration(ICAL.Duration.fromString('P1W'));
       assert.equal(cp, data.expect_1w);
-      cp.addDuration(ICAL.icalduration.fromString('-P1W'));
+      cp.addDuration(ICAL.Duration.fromString('-P1W'));
       assert.equal(cp.toString(), dt.toString());
     }
   });
