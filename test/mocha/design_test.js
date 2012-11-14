@@ -234,8 +234,23 @@ suite('design', function() {
         subject = subject.value.recur;
       });
 
+      test('#(to|from)ICAL', function() {
+        var original = 'FREQ=MONTHLY;UNTIL=20121112T131415;COUNT=1';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(
+          fromICAL,
+          'FREQ=MONTHLY;UNTIL=2012-11-12T13:14:15;COUNT=1'
+        );
+
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
       test('#(un)decorate', function() {
-        var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR';
+        var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=2012-10-12';
         var decorated = subject.decorate(undecorated);
 
         assert.instanceOf(decorated, ICAL.Recur);
@@ -247,6 +262,15 @@ suite('design', function() {
             parts: {
               BYDAY: ['MO', 'TU', 'WE', 'TH', 'FR']
             }
+          }
+        );
+
+        assert.hasProperties(
+          decorated.until,
+          {
+            year: 2012,
+            month: 10,
+            day: 12
           }
         );
 

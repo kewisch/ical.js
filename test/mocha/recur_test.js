@@ -33,37 +33,50 @@ suite('recur', function() {
     }
 
     checkThrow({
+      parts: {
         BYYEARDAY: [3, 4, 5],
         BYMONTH: [2]
+      }
     }, 'Invalid BYYEARDAY rule');
 
     checkThrow({
+      parts: {
         BYWEEKNO: [3],
         BYMONTHDAY: [2]
-    }, 'BYWEEKNO does not fit to BYMONTHDAY');
+      }
+   }, 'BYWEEKNO does not fit to BYMONTHDAY');
 
     checkThrow({
-        freq: 'MONTHLY',
+      freq: 'MONTHLY',
+      parts: {
         BYWEEKNO: [30]
+      }
     }, 'For MONTHLY recurrences neither BYYEARDAY nor BYWEEKNO may appear');
 
     checkThrow({
-        freq: 'WEEKLY',
+      freq: 'WEEKLY',
+      parts: {
         BYMONTHDAY: [20]
+      }
     }, 'For WEEKLYLY recurrences neither BYMONTHDAY nor BYYEARDAY may appear');
 
     checkThrow({
-        freq: 'DAILY',
+      freq: 'DAILY',
+      parts: {
         BYYEARDAY: [200]
+      }
     }, 'BYYEARDAY may only appear in YEARLY rules');
 
     checkThrow({
-        freq: 'MONTHLY',
+      freq: 'MONTHLY',
+      parts: {
         BYDAY: ['-5TH']
-    }, 'Malformed values in BYDAY part', '19700201T000000Z');
+      }
+    }, 'Malformed values in BYDAY part', '1970-02-01T00:00:00Z');
 
     checkDate({
-        freq: 'SECONDLY',
+      freq: 'SECONDLY',
+      parts: {
         BYSECOND: ['2'],
         BYMINUTE: ['2'],
         BYHOUR: ['2'],
@@ -71,54 +84,71 @@ suite('recur', function() {
         BYMONTHDAY: ['2'],
         BYMONTH: ['2'],
         BYSETPOS: ['2']
-    }, '19700101T000000Z');
+      }
+    }, '1970-01-01T00:00:00Z');
 
     checkDate({
-        freq: 'MINUTELY',
+      freq: 'MINUTELY',
+      parts: {
         BYSECOND: [2, 4, 6],
         BYMINUTE: [1, 3, 5]
-    }, '19700101T000002Z');
+      }
+    }, '1970-01-01T00:00:02Z');
 
     checkDate({
-        freq: 'YEARLY',
+      freq: 'YEARLY',
+      parts: {
         BYSECOND: [1],
         BYMINUTE: [2],
         BYHOUR: [3],
         BYMONTHDAY: [4],
         BYMONTH: [5]
-    }, '19700504T030201Z');
+      }
+    }, '1970-05-04T03:02:01Z');
 
     checkDate({
-        freq: 'WEEKLY',
+      freq: 'WEEKLY',
+      parts: {
         BYDAY: ['MO', 'TH', 'FR']
-    }, '19700101T000000Z');
+      }
+    }, '1970-01-01T00:00:00Z');
 
     checkDate({
-        freq: 'WEEKLY',
+      freq: 'WEEKLY',
+      parts: {
         BYDAY: ['MO', 'WE']
-    }, '19700105T000000Z');
+      }
+    }, '1970-01-05T00:00:00Z');
 
     checkDate({
-        freq: 'YEARLY',
+      freq: 'YEARLY',
+      parts: {
         BYMONTH: [3]
-    }, '19700305T000000Z', '19700105T000000Z');
+      }
+    }, '1970-03-05T00:00:00Z', '1970-01-05T00:00:00Z');
 
     checkDate({
-        freq: 'YEARLY',
+      freq: 'YEARLY',
+      parts: {
         BYDAY: ['FR'],
         BYMONTH: [12],
         BYMONTHDAY: [1]
-    }, '19721201T000000Z');
+      }
+    }, '1972-12-01T00:00:00Z');
 
     checkDate({
-        freq: 'MONTHLY',
+      freq: 'MONTHLY',
+      parts: {
         BYDAY: ['2MO']
-    }, '19700112T000000Z');
+      }
+    }, '1970-01-12T00:00:00Z');
 
     checkDate({
-        freq: 'MONTHLY',
+      freq: 'MONTHLY',
+      parts: {
         BYDAY: ['-3MO']
-    }, '19700112T000000Z');
+      }
+    }, '1970-01-12T00:00:00Z');
 
     // TODO bymonthday else part
     // TODO check weekly without byday instances + 1 same wkday
@@ -155,7 +185,7 @@ suite('recur', function() {
 
     test('round-trip', function() {
       var recur = ICAL.Recur.fromString(
-        'FREQ=MONTHLY;BYDAY=1SU,2MO;BYSETPOS=1;COUNT=10;UNTIL=20121001T090000'
+        'FREQ=MONTHLY;BYDAY=1SU,2MO;BYSETPOS=1;COUNT=10;UNTIL=2012-10-01T09:00:00'
       );
 
       var props = {
@@ -190,12 +220,14 @@ suite('recur', function() {
   test('components', function() {
     var until = ICAL.Time.epoch_time.clone();
     var a = new ICAL.Recur({
-        interval: 2,
-        wkst: 3,
-        until: until,
-        count: 5,
-        freq: 'YEARLY',
+      interval: 2,
+      wkst: 3,
+      until: until,
+      count: 5,
+      freq: 'YEARLY',
+      parts: {
         BYDAY: ['-1SU']
+      }
     });
 
     assert.deepEqual(a.getComponent('BYDAY'), ['-1SU']);
@@ -216,6 +248,89 @@ suite('recur', function() {
     assert.equal(count.value, 2);
   });
 
+  suite('#fromString', function() {
+
+    function verify(string, options) {
+      test('parse: "' + string + '"', function() {
+        var result = ICAL.Recur.fromString(string);
+        // HACK for until validation
+        if (options.until) {
+          var until = options.until;
+          delete options.until;
+          assert.hasProperties(result.until, until);
+        }
+        assert.hasProperties(result, options);
+      });
+    }
+
+    function verifyFail(string, errorParam) {
+      test('invalid input "' + string + '"', function() {
+        assert.throws(function() {
+          var result = ICAL.Recur.fromString(string);
+        }, errorParam);
+      });
+    }
+
+    verifyFail('FREQ=FOOBAR', /invalid frequency/);
+    verify('FREQ=YEARLY;BYYEARDAY=300,301,-1', {
+      freq: 'YEARLY',
+      parts: { BYYEARDAY: [300, 301, -1] }
+    });
+
+    verifyFail('BYYEARDAY=367', /BYYEARDAY/);
+    verifyFail('BYYEARDAY=-367', /BYYEARDAY/);
+
+    verify('FREQ=MONTHLY;BYMONTHDAY=+3', {
+      freq: 'MONTHLY',
+      parts: { BYMONTHDAY: [3] }
+    });
+
+    verify('FREQ=MONTHLY;BYMONTHDAY=-3', {
+      freq: 'MONTHLY',
+      parts: { BYMONTHDAY: [-3] }
+    });
+
+    verify('BYSECOND=10;BYMINUTE=11;BYHOUR=12;BYWEEKNO=53;BYSETPOS=30', {
+      parts: {
+        BYSECOND: [10],
+        BYMINUTE: [11],
+        BYHOUR: [12],
+        BYWEEKNO: [53],
+        BYSETPOS: [30]
+      }
+    });
+
+    verify('FREQ=DAILY;INTERVAL=3;COUNT=10;', {
+      freq: 'DAILY',
+      count: 10,
+      interval: 3
+    });
+
+    verify('BYDAY=1SU,MO,TU,-53MO,13FR', {
+      parts: {
+        BYDAY: ['1SU', 'MO', 'TU', '-53MO', '13FR']
+      }
+    });
+
+    verifyFail('BYDAY=ZA,FO1', /invalid BYDAY/);
+
+    verify('UNTIL=2012-10-12T10:15:07', {
+      until: {
+        year: 2012,
+        month: 10,
+        day: 12,
+        hour: 10,
+        minute: 15,
+        second: 07
+      }
+    });
+
+    verify('WKST=SU', {
+      wkst: 1
+    });
+
+    verifyFail('WKST=ofo', /invalid WKST/);
+  });
 
   test('#toString - round trip', function() {
     var until = ICAL.Time.epoch_time.clone();

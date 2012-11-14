@@ -33,6 +33,20 @@ suite('bench js', function() {
       return typeof(number) === 'number' && isNaN(number);
     }
 
+    var ruleRE = /^(SECONDLY|MINUTELY|HOURLY|DAILY|WEEKLY|MONTHLY|YEARLY)$/;
+    var ruleArr = ['SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
+
+    bench.add('regex', function() {
+      ruleRE.test('HOURLY');
+    });
+
+    bench.add('list', function() {
+      ruleArr.indexOf('HOURLY') !== -1;
+    });
+
+
+    return;
+
     bench.add('numeric: regex', function() {
       var start = '20-10';
       var match = start.match(decimal);

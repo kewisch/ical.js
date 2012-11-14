@@ -1,0 +1,31 @@
+["icalendar",
+  ["vcalendar",
+    [
+      [
+        "rrule",
+        {},
+        "recur",
+        "FREQ=MONTHLY;BYMONTH=1"
+      ],
+      [
+        "rrule",
+        {},
+        "recur",
+        "FREQ=DAILY;UNTIL=2012-10-11"
+      ],
+      [
+        "rrule",
+        {},
+        "recur",
+        "FREQ=DAILY;UNTIL=2012-10-11T12:13:14"
+      ],
+      [
+        "rrule",
+        {},
+        "recur",
+        "FREQ=DAILY;UNTIL=2012-10-11T12:13:14Z"
+      ]
+    ],
+    []
+  ]
+]

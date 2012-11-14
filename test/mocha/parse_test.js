@@ -19,6 +19,7 @@ suite('parserv2', function() {
       'unfold_properties',
       'quoted_params',
       'multivalue',
+      'recur',
       'base64',
       'dates',
       'time',
