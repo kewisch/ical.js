@@ -180,8 +180,26 @@ suite('design', function() {
         subject = subject.value.period;
       });
 
+      test('#(to|from)ICAL date/duration', function() {
+      });
+
+      test('#(to|from)ICAL date/date', function() {
+        var original = '19970101T180000Z/19970102T070000Z';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(
+          fromICAL,
+          '1997-01-01T18:00:00Z/1997-01-02T07:00:00Z'
+        );
+
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
       test('#(un)decorate', function() {
-        var undecorated = '19970101T180000Z/PT5H30M';
+        var undecorated = '1997-01-01T18:00:00Z/PT5H30M';
         var decorated = subject.decorate(
           undecorated
         );

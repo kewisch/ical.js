@@ -1,4 +1,4 @@
-suite('ical/duration', function() {
+suite('ical/period', function() {
 
   suite('#fromString', function() {
     var assertions = {};
@@ -9,6 +9,7 @@ suite('ical/duration', function() {
         var subject = ICAL.Period.fromString(string);
 
         if ('start' in data) {
+          assert.instanceOf(subject.start, ICAL.Time);
           assert.hasProperties(
             subject.start,
             data.start,
@@ -17,6 +18,7 @@ suite('ical/duration', function() {
         }
 
         if ('end' in data) {
+          assert.instanceOf(subject.end, ICAL.Time);
           assert.hasProperties(
             subject.end,
             data.end,
@@ -24,7 +26,8 @@ suite('ical/duration', function() {
           );
         }
 
-        if ('duration' in data) {
+        if (('duration' in data) && data['duration']) {
+          assert.instanceOf(subject.duration, ICAL.Duration);
           assert.hasProperties(
             subject.duration,
             data.duration,
@@ -34,7 +37,7 @@ suite('ical/duration', function() {
       });
     }
 
-    verify('19970101T180000Z/19970102T070000Z', {
+    verify('1997-01-01T18:00:00Z/1997-01-02T07:00:00Z', {
       duration: null,
 
       start: {
@@ -54,7 +57,7 @@ suite('ical/duration', function() {
       }
     });
 
-    verify('19970101T180000Z/PT5H30M', {
+    verify('1997-01-01T18:00:00Z/PT5H30M', {
       start: {
         year: 1997,
         month: 1,

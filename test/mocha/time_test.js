@@ -479,13 +479,13 @@ suite('icaltime', function() {
   test('calculations', function() {
 
     var test_data = [{
-      str: '20120101T000000',
+      str: '2012-01-01T00:00:00',
       expect_unixtime: 1325376000,
-      expect_1s: '20120101T000001',
-      expect_1m: '20120101T000100',
-      expect_1h: '20120101T010000',
-      expect_1d: '20120102T000000',
-      expect_1w: '20120108T000000'
+      expect_1s: '2012-01-01T00:00:01',
+      expect_1m: '2012-01-01T00:01:00',
+      expect_1h: '2012-01-01T01:00:00',
+      expect_1d: '2012-01-02T00:00:00',
+      expect_1w: '2012-01-08T00:00:00'
     }];
 
     for (var datakey in test_data) {
@@ -559,13 +559,13 @@ suite('icaltime', function() {
     });
 
     var test_data = [{
-        str: '20121231T235959',
+        str: '2012-12-31T23:59:59',
         add_seconds: 1,
-        expect: '20130101T000000'
+        expect: '2013-01-01T00:00:00'
     }, {
-        str: '20110101T000000',
+        str: '2011-01-01T00:00:00',
         add_seconds: -1,
-        expect: '20101231T235959'
+        expect: '2010-12-31T23:59:59'
     }];
 
     for (var datakey in test_data) {
@@ -587,7 +587,7 @@ suite('icaltime', function() {
 
   test('date properties', function() {
     var test_data = [{ /* A date where the year starts on sunday */
-      str: '20120101T000000',
+      str: '2012-01-01T00:00:00',
       isDate: false,
       year: 2012,
       month: 1,
@@ -598,16 +598,16 @@ suite('icaltime', function() {
       leap_year: true,
       dayOfWeek: Time.SUNDAY,
       dayOfYear: 1,
-      startOfWeek: '20120101T000000',
-      end_of_week: '20120107T000000',
-      start_of_month: '20120101',
-      end_of_month: '20120131',
-      start_of_year: '20120101',
-      end_of_year: '20121231',
+      startOfWeek: '2012-01-01T00:00:00',
+      end_of_week: '2012-01-07T00:00:00',
+      start_of_month: '2012-01-01',
+      end_of_month: '2012-01-31',
+      start_of_year: '2012-01-01',
+      end_of_year: '2012-12-31',
       start_doy_week: 1,
         week_number: 1,
     }, { /* A date in week number 53 */
-      str: '20090101T000000',
+      str: '2009-01-01T00:00:00',
       isDate: false,
       year: 2009,
       month: 1,
@@ -618,12 +618,12 @@ suite('icaltime', function() {
       leap_year: false,
       dayOfWeek: Time.THURSDAY,
       dayOfYear: 1,
-      startOfWeek: '20081228T000000',
-      end_of_week: '20090103T000000',
-      start_of_month: '20090101',
-      end_of_month: '20090131',
-      start_of_year: '20090101',
-      end_of_year: '20091231',
+      startOfWeek: '2008-12-28T00:00:00',
+      end_of_week: '2009-01-03T00:00:00',
+      start_of_month: '2009-01-01',
+      end_of_month: '2009-01-31',
+      start_of_year: '2009-01-01',
+      end_of_year: '2009-12-31',
       start_doy_week: -3,
       week_number: 53
     }];
