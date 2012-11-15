@@ -12,18 +12,22 @@ suite('parserv2', function() {
   suite('full parser tests', function() {
     var root = 'test/mocha/parser/';
     var list = [
+      "rfc",
       'single_empty_vcalendar',
       'property_params',
       'newline_junk',
       'unfold_properties',
       'quoted_params',
       'multivalue',
+      'recur',
       'base64',
       'dates',
       'time',
       'boolean',
       'float',
       'integer',
+      'period',
+      'utc_offset',
       'component'
     ];
 

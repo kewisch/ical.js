@@ -69,13 +69,13 @@ suite('ICAL.Event', function() {
           uid: 'zfoo',
           summary: 'sum',
           description: 'desc',
-          startDate: new ICAL.icaltime({
+          startDate: new ICAL.Time({
             year: 2012,
             month: 1,
             day: 1,
             hour: 5
           }),
-          endDate: new ICAL.icaltime({
+          endDate: new ICAL.Time({
             year: 2012,
             month: 1,
             day: 1,
@@ -83,7 +83,7 @@ suite('ICAL.Event', function() {
           }),
           location: 'place',
           organizer: 'SJL',
-          recurrenceId: new ICAL.icaltime({
+          recurrenceId: new ICAL.Time({
             year: 2012,
             month: 1,
             day: 1
@@ -153,7 +153,7 @@ suite('ICAL.Event', function() {
 
     test('non-exception', function() {
 
-      var time = new ICAL.icaltime({
+      var time = new ICAL.Time({
         year: 2012,
         month: 7,
         day: 12
@@ -341,7 +341,7 @@ suite('ICAL.Event', function() {
   suite('#iterator', function() {
     test('with start time', function() {
       var start = subject.startDate;
-      var time = new ICAL.icaltime({
+      var time = new ICAL.Time({
         day: start.da + 1,
         month: start.month,
         year: start.year

@@ -12,7 +12,7 @@ function run_test() {
 
 function test_roundtrip() {
 
-    var f = new ICAL.icaltime({
+    var f = new ICAL.Time({
         second: 1,
         minute: 2,
         hour: 3,
@@ -27,7 +27,7 @@ function test_roundtrip() {
     // TODO also check UTC dates
 
     g.reset();
-    do_check_eq(g, ICAL.icaltime.epoch_time.toString());
+    do_check_eq(g, ICAL.Time.epoch_time.toString());
 }
 
 function test_calculations() {
@@ -44,29 +44,29 @@ function test_calculations() {
 
     for (var datakey in test_data) {
         var data = test_data[datakey];
-        var dt = ICAL.icaltime.fromString(data.str);
+        var dt = ICAL.Time.fromString(data.str);
         var cp = dt.clone();
 
         do_check_eq(dt.toUnixTime(), data.expect_unixtime);
-        var dur = dt.subtractDate(ICAL.icaltime.epoch_time);
+        var dur = dt.subtractDate(ICAL.Time.epoch_time);
         do_check_eq(dur.toSeconds(), data.expect_unixtime);
 
         cp = dt.clone();
         cp.year += 1;
         var diff = cp.subtractDate(dt);
-        var yearseconds = (365 + ICAL.icaltime.is_leap_year(dt.year)) * 86400;
+        var yearseconds = (365 + ICAL.Time.is_leap_year(dt.year)) * 86400;
         do_check_eq(diff.toSeconds(), yearseconds);
 
         cp = dt.clone();
         cp.year += 2;
         var diff = cp.subtractDate(dt);
-        var yearseconds = (365 + ICAL.icaltime.is_leap_year(dt.year) + 365 + ICAL.icaltime.is_leap_year(dt.year + 1)) * 86400;
+        var yearseconds = (365 + ICAL.Time.is_leap_year(dt.year) + 365 + ICAL.Time.is_leap_year(dt.year + 1)) * 86400;
         do_check_eq(diff.toSeconds(), yearseconds);
 
         cp = dt.clone();
         cp.year -= 1;
         var diff = cp.subtractDate(dt);
-        var yearseconds = (365 + ICAL.icaltime.is_leap_year(cp.year)) * 86400;
+        var yearseconds = (365 + ICAL.Time.is_leap_year(cp.year)) * 86400;
         do_check_eq(diff.toSeconds(), -yearseconds);
 
         cp = dt.clone();
@@ -104,7 +104,7 @@ function test_calculations() {
 
 function test_normalize() {
 
-    var f = new ICAL.icaltime({
+    var f = new ICAL.Time({
         second: 59,
         minute: 59,
         hour: 23,
@@ -125,7 +125,7 @@ function test_normalize() {
 
     for(var datakey in test_data) {
         var data = test_data[datakey];
-        var dt = ICAL.icaltime.fromString(data.str);
+        var dt = ICAL.Time.fromString(data.str);
         var cur_seconds = dt.second;
         var add_seconds = data.add_seconds || 0;
 
@@ -151,7 +151,7 @@ function test_date_properties() {
         minute: 0,
         second: 0,
         leap_year: true,
-        day_of_week: ICAL.icaltime.SUNDAY,
+        day_of_week: ICAL.Time.SUNDAY,
         day_of_year: 1,
         start_of_week: "20120101T000000",
         end_of_week: "20120107T000000",
@@ -171,7 +171,7 @@ function test_date_properties() {
         minute: 0,
         second: 0,
         leap_year: false,
-        day_of_week: ICAL.icaltime.THURSDAY,
+        day_of_week: ICAL.Time.THURSDAY,
         day_of_year: 1,
         start_of_week: "20081228T000000",
         end_of_week: "20090103T000000",
@@ -185,7 +185,7 @@ function test_date_properties() {
 
     for(var datakey in test_data) {
         var data = test_data[datakey];
-        var dt = ICAL.icaltime.fromString(data.str);
+        var dt = ICAL.Time.fromString(data.str);
         do_check_eq(data.isDate, dt.isDate);
         do_check_eq(data.year, dt.year);
         do_check_eq(data.month, dt.month);
@@ -193,7 +193,7 @@ function test_date_properties() {
         do_check_eq(data.hour, dt.hour);
         do_check_eq(data.minute, dt.minute);
         do_check_eq(data.second, dt.second);
-        do_check_eq(data.leap_year, ICAL.icaltime.is_leap_year(dt.year));
+        do_check_eq(data.leap_year, ICAL.Time.is_leap_year(dt.year));
         do_check_eq(data.day_of_week, dt.day_of_week());
         do_check_eq(data.day_of_year, dt.day_of_year());
         do_check_eq(data.start_of_week, dt.start_of_week());
@@ -202,13 +202,13 @@ function test_date_properties() {
         do_check_eq(data.end_of_month, dt.end_of_month().toString());
         do_check_eq(data.start_of_year, dt.start_of_year());
         do_check_eq(data.end_of_year, dt.end_of_year());
-        do_check_eq(data.start_doy_week, dt.start_doy_week(ICAL.icaltime.SUNDAY));
-        do_check_eq(data.week_number, dt.week_number(ICAL.icaltime.SUNDAY));
+        do_check_eq(data.start_doy_week, dt.start_doy_week(ICAL.Time.SUNDAY));
+        do_check_eq(data.week_number, dt.week_number(ICAL.Time.SUNDAY));
         // TODO nth_weekday
 
-        dt = new ICAL.icaltime();
+        dt = new ICAL.Time();
         dt.resetTo(data.year, data.month, data.day, data.hour, data.minute,
-                   data.second, ICAL.icaltimezone.utc_timezone);
+                   data.second, ICAL.Timezone.utc_timezone);
         do_check_eq(data.year, dt.year);
         do_check_eq(data.month, dt.month);
         do_check_eq(data.day, dt.day);
