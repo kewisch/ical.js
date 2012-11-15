@@ -5,11 +5,10 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/design.js \
 	$(LIB)/stringify.js \
 	$(LIB)/parse.js \
-	$(LIB)/decoration_parser.js \
 	$(LIB)/component.js \
 	$(LIB)/property.js \
 	$(LIB)/utc_offset.js \
-	$(LIB)/value.js \
+	$(LIB)/binary.js \
 	$(LIB)/period.js \
 	$(LIB)/duration.js \
 	$(LIB)/timezone.js \

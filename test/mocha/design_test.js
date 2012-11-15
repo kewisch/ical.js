@@ -12,10 +12,14 @@ suite('design', function() {
       });
 
       test('#(un)decorate', function() {
+        var expectedDecode = 'The quick brown fox jumps over the lazy dog.';
         var undecorated = 'VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcy' +
                           'BvdmVyIHRoZSBsYXp5IGRvZy4=';
 
         var decorated = subject.decorate(undecorated);
+        var decoded = decorated.decodeValue();
+
+        assert.equal(decoded, expectedDecode);
 
         assert.equal(
           subject.undecorate(decorated),
