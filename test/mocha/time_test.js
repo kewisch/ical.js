@@ -422,6 +422,37 @@ suite('icaltime', function() {
 
   });
 
+  suite('#toString', function() {
+    test('from fractional seconds', function() {
+      var subject = new ICAL.Time({
+        year: 2012,
+        month: 10,
+        day: 10,
+        minute: 50,
+        // I found this while testing in gaia
+        second: 8.3,
+        isDate: false
+      });
+
+      assert.equal(
+        subject.toString(),
+        '2012-10-10T00:50:08'
+      );
+    });
+  });
+
+  suite('#toICALString', function() {
+    test('date', function() {
+      var subject = ICAL.Time.fromString('2012-10-12');
+      assert.equal(subject.toICALString(), '20121012');
+    });
+
+    test('date-time', function() {
+      var subject = ICAL.Time.fromString('2012-10-12T07:08:09');
+      assert.equal(subject.toICALString(), '20121012T070809');
+    });
+  });
+
   suite('#toJSON', function() {
     test('with utc time', function() {
       var time = new Time({

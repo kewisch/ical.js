@@ -254,6 +254,10 @@ ICAL.helpers = {
 
   pad2: function pad(data) {
     if (typeof(data) !== 'string') {
+      // handle fractions.
+      if (typeof(data) === 'number') {
+        data = parseInt(data);
+      }
       data = String(data);
     }
 
@@ -3472,6 +3476,21 @@ ICAL.Binary = (function() {
         return 0;
       } else {
         return this.zone.utc_offset(this);
+      }
+    },
+
+    /**
+     * Returns an RFC 5455 compliant ical representation of this object.
+     *
+     * @return {String} ical date/date-time.
+     */
+    toICALString: function() {
+      var string = this.toString();
+
+      if (string.length > 10) {
+        return ICAL.design.value['date-time'].toICAL(string);
+      } else {
+        return ICAL.design.value.date.toICAL(string);
       }
     },
 
