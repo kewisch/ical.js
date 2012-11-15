@@ -30,6 +30,10 @@ suite('bench', function() {
       ICAL.stringify(parsed);
     });
 
+    bench.add('ICAL.Recur#fromString v2', function() {
+      ICAL.Recur.fromString('FREQ=MONTHLY;UNTIL=2012-10-12;BYSETPOS=1');
+    });
+
     ['pre1'].forEach(function(version) {
       // current version of ical
       var globalLib;
@@ -47,6 +51,12 @@ suite('bench', function() {
       }
 
       var parsed = globalLib.parse(icsData);
+
+      bench.add(version + ': ICAL.icalrecur#fromString v2', function() {
+        globalLib.icalrecur.fromString(
+          'FREQ=MONTHLY;UNTIL=20121012;BYSETPOS=1'
+        );
+      });
 
       bench.add(version + ': #parse', function() {
         var data = globalLib.parse(icsData);

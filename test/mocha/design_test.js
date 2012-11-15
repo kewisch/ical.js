@@ -12,10 +12,14 @@ suite('design', function() {
       });
 
       test('#(un)decorate', function() {
+        var expectedDecode = 'The quick brown fox jumps over the lazy dog.';
         var undecorated = 'VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcy' +
                           'BvdmVyIHRoZSBsYXp5IGRvZy4=';
 
         var decorated = subject.decorate(undecorated);
+        var decoded = decorated.decodeValue();
+
+        assert.equal(decoded, expectedDecode);
 
         assert.equal(
           subject.undecorate(decorated),
@@ -101,7 +105,7 @@ suite('design', function() {
             minute: 05,
             second: 11,
             isDate: false,
-            zone: ICAL.icaltimezone.utc_timezone
+            zone: ICAL.Timezone.utc_timezone
           }
         );
 
@@ -180,8 +184,26 @@ suite('design', function() {
         subject = subject.value.period;
       });
 
+      test('#(to|from)ICAL date/duration', function() {
+      });
+
+      test('#(to|from)ICAL date/date', function() {
+        var original = '19970101T180000Z/19970102T070000Z';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(
+          fromICAL,
+          '1997-01-01T18:00:00Z/1997-01-02T07:00:00Z'
+        );
+
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
       test('#(un)decorate', function() {
-        var undecorated = '19970101T180000Z/PT5H30M';
+        var undecorated = '1997-01-01T18:00:00Z/PT5H30M';
         var decorated = subject.decorate(
           undecorated
         );
@@ -216,11 +238,26 @@ suite('design', function() {
         subject = subject.value.recur;
       });
 
+      test('#(to|from)ICAL', function() {
+        var original = 'FREQ=MONTHLY;UNTIL=20121112T131415;COUNT=1';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(
+          fromICAL,
+          'FREQ=MONTHLY;UNTIL=2012-11-12T13:14:15;COUNT=1'
+        );
+
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
       test('#(un)decorate', function() {
-        var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR';
+        var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=2012-10-12';
         var decorated = subject.decorate(undecorated);
 
-        assert.instanceOf(decorated, ICAL.icalrecur);
+        assert.instanceOf(decorated, ICAL.Recur);
 
         assert.hasProperties(
           decorated,
@@ -229,6 +266,15 @@ suite('design', function() {
             parts: {
               BYDAY: ['MO', 'TU', 'WE', 'TH', 'FR']
             }
+          }
+        );
+
+        assert.hasProperties(
+          decorated.until,
+          {
+            year: 2012,
+            month: 10,
+            day: 12
           }
         );
 
@@ -244,8 +290,30 @@ suite('design', function() {
         subject = subject.value['utc-offset'];
       });
 
+      test('#(to|from)ICAL without seconds', function() {
+        var original = '-0500';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '-05:00');
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
+      test('#(to|from)ICAL with seconds', function() {
+        var original = '+054515';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '+05:45:15');
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
       test('#(un)decorate', function() {
-        var undecorated = '-0500';
+        var undecorated = '-05:00';
         var decorated = subject.decorate(undecorated);
 
         assert.equal(decorated.hours, 5, 'hours');

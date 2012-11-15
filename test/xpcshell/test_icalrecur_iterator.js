@@ -102,12 +102,12 @@ function test_init() {
 }
 
 function check_init_date(data, last, dtstart) {
-    var recur = new ICAL.icalrecur(data);
+    var recur = new ICAL.Recur(data);
 
     if (dtstart) {
-        dtstart = ICAL.icaltime.fromString(dtstart);
+        dtstart = ICAL.Time.fromString(dtstart);
     } else {
-        dtstart = ICAL.icaltime.epoch_time.clone();
+        dtstart = ICAL.Time.epoch_time.clone();
     }
 
     var iter = recur.iterator(dtstart);
@@ -115,12 +115,12 @@ function check_init_date(data, last, dtstart) {
 }
 
 function check_init_throw(data, expectedMessage, dtstart, stack) {
-    var recur = new ICAL.icalrecur(data);
+    var recur = new ICAL.Recur(data);
 
     if (dtstart) {
-        dtstart = ICAL.icaltime.fromString(dtstart);
+        dtstart = ICAL.Time.fromString(dtstart);
     } else {
-        dtstart = ICAL.icaltime.epoch_time.clone();
+        dtstart = ICAL.Time.epoch_time.clone();
     }
 
     if (!stack) {

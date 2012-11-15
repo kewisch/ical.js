@@ -129,7 +129,7 @@ suite('recur_expansion', function() {
       component.addPropertyWithValue('rrule', 'FREQ=MONTHLY;BYMONTHDAY=13');
       component.addPropertyWithValue('rrule', 'FREQ=WEEKLY;BYDAY=TH');
 
-      var start = ICAL.icaltime.fromData({
+      var start = ICAL.Time.fromData({
         year: 2012,
         month: 2,
         day: 2

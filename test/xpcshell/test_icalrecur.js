@@ -10,8 +10,8 @@ function run_test() {
 }
 
 function test_roundtrip() {
-    var until = ICAL.icaltime.epoch_time.clone();
-    var a = new ICAL.icalrecur({
+    var until = ICAL.Time.epoch_time.clone();
+    var a = new ICAL.Recur({
         interval: 2,
         wkst: 3,
         until: until,
@@ -21,7 +21,7 @@ function test_roundtrip() {
 
     var iprop = a.toIcalProperty();
     do_check_eq(a.toString(), iprop.getStringValue());
-    var b = ICAL.icalrecur.fromIcalProperty(iprop);
+    var b = ICAL.Recur.fromIcalProperty(iprop);
     do_check_eq(a.toString(), b.toString());
 
     var str = a.toString();
@@ -30,8 +30,8 @@ function test_roundtrip() {
 }
 
 function test_components() {
-    var until = ICAL.icaltime.epoch_time.clone();
-    var a = new ICAL.icalrecur({
+    var until = ICAL.Time.epoch_time.clone();
+    var a = new ICAL.Recur({
         interval: 2,
         wkst: 3,
         until: until,
@@ -59,8 +59,8 @@ function test_components() {
 }
 
 function test_clone() {
-    var until = ICAL.icaltime.epoch_time.clone();
-    var a = new ICAL.icalrecur({
+    var until = ICAL.Time.epoch_time.clone();
+    var a = new ICAL.Recur({
         interval: 2,
         wkst: 3,
         until: until,

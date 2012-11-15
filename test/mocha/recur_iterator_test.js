@@ -1,8 +1,8 @@
 suite('recur_iterator', function() {
   var recur;
   var iterator;
-  var Time = ICAL.icaltime;
-  var Recur = ICAL.icalrecur;
+  var Time = ICAL.Time;
+  var Recur = ICAL.Recur;
 
   function addDates(expected, year, month, dates) {
     dates.forEach(function(date) {
@@ -66,8 +66,8 @@ suite('recur_iterator', function() {
 
   function createIterator(ruleString, timeString) {
     setup(function() {
-      var start = ICAL.icaltime.fromString(timeString);
-      recur = ICAL.icalrecur.fromString(ruleString);
+      var start = ICAL.Time.fromString(timeString);
+      recur = ICAL.Recur.fromString(ruleString);
       iterator = recur.iterator(start);
     });
   }
@@ -88,7 +88,7 @@ suite('recur_iterator', function() {
   suite('#toJSON', function() {
     createIterator(
       'FREQ=MONTHLY;COUNT=12;INTERVAL=3',
-      '20120201T090000'
+      '2012-02-01T09:00:00'
     );
 
     test('completed', function() {
@@ -98,7 +98,7 @@ suite('recur_iterator', function() {
       assert.isTrue(iterator.completed, 'is completed');
 
       var json = iterator.toJSON();
-      var newIter = new ICAL.icalrecur_iterator(json);
+      var newIter = new ICAL.RecurIterator(json);
 
       assert.equal(newIter.next(), null, 'new iter next');
       assert.isTrue(newIter.completed, true, 'new iter completed');
@@ -109,7 +109,7 @@ suite('recur_iterator', function() {
       iterator.next();
 
       var json = iterator.toJSON();
-      var newIter = new ICAL.icalrecur_iterator(json);
+      var newIter = new ICAL.RecurIterator(json);
       var inc = 0;
 
       while (inc++ < 8) {
@@ -136,7 +136,7 @@ suite('recur_iterator', function() {
       var json = iterator.toJSON();
       assert.deepEqual(json, expected);
 
-      var newIter = new ICAL.icalrecur_iterator(json);
+      var newIter = new ICAL.RecurIterator(json);
       var inc = 0;
 
       while (inc++ < 10) {
@@ -153,7 +153,7 @@ suite('recur_iterator', function() {
   suite('#normalizeByMonthDayRules', function() {
     createIterator(
       'FREQ=MONTHLY;COUNT=2',
-      '20120201T090000'
+      '2012-02-01T09:00:00'
     );
     test('positive rules', function() {
       var result = iterator.normalizeByMonthDayRules(
@@ -200,8 +200,8 @@ suite('recur_iterator', function() {
 
   suite('weekly until', function() {
     createIterator(
-      'FREQ=WEEKLY;UNTIL=20120424T065959Z;BYDAY=TU',
-      '20120410T090000'
+      'FREQ=WEEKLY;UNTIL=2012-04-24T06:59:59Z;BYDAY=TU',
+      '2012-04-10T09:00:00'
     );
 
     test('until complete', function() {
@@ -230,7 +230,7 @@ suite('recur_iterator', function() {
   suite('daily on weekdays', function() {
     createIterator(
       'FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR',
-      '20120102T090000'
+      '2012-01-02T09:00:00'
     );
 
     test('9 occurrences', function() {
@@ -272,9 +272,9 @@ suite('recur_iterator', function() {
 
     test('infinite', function() {
       var raw = 'FREQ=YEARLY;BYMONTH=3;BYDAY=TU';
-      var start = '19700308T020000';
-      var recur = ICAL.icalrecur.fromString(raw);
-      var start = ICAL.icaltime.fromString(start);
+      var start = '1970-03-08T02:00:00';
+      var recur = ICAL.Recur.fromString(raw);
+      var start = ICAL.Time.fromString(start);
 
       var iterator = recur.iterator(start);
       var limit = 1;
@@ -300,7 +300,7 @@ suite('recur_iterator', function() {
   suite('daily for 10 occurrences', function() {
     createIterator(
       'FREQ=DAILY;COUNT=10',
-      '20120901T090000'
+      '2012-09-01T09:00:00'
     );
 
     test('until end', function() {
@@ -325,7 +325,7 @@ suite('recur_iterator', function() {
   suite('every other day - forever', function() {
     createIterator(
       'FREQ=DAILY;INTERVAL=2',
-      '20120901T090000'
+      '2012-09-01T09:00:00'
     );
 
     test('10 times', function() {
@@ -354,7 +354,7 @@ suite('recur_iterator', function() {
   suite('every 10 days, 5 occurrences', function() {
     createIterator(
       'FREQ=DAILY;INTERVAL=10;COUNT=5',
-      '20120901T090000'
+      '2012-09-01T09:00:00'
     );
 
     test('until end', function() {
@@ -386,8 +386,8 @@ suite('recur_iterator', function() {
 
   suite('every day in January, for 3 years', function() {
     createIterator(
-      'FREQ=YEARLY;UNTIL=20150131T090000Z;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA',
-      '20120501T090000'
+      'FREQ=YEARLY;UNTIL=2015-01-31T09:00:00Z;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA',
+      '2012-05-01T09:00:00'
     );
 
     var months = [
@@ -410,7 +410,7 @@ suite('recur_iterator', function() {
       });
 
       var dates = [];
-      var endDate = ICAL.icaltime.fromString('20150131T090000Z');
+      var endDate = ICAL.Time.fromString('2015-01-31T09:00:00Z');
       var max = expected.length;
       var calls = 0;
       var next;
@@ -442,7 +442,7 @@ suite('recur_iterator', function() {
   suite('weekly for 10 occurrences', function() {
     createIterator(
       'FREQ=WEEKLY;COUNT=10',
-      '20120105T090000'
+      '2012-01-05T09:00:00'
     );
 
     var expected = [
@@ -476,8 +476,8 @@ suite('recur_iterator', function() {
 
   suite('Weekly until December 24, 2012', function() {
     createIterator(
-      'FREQ=WEEKLY;UNTIL=20121224T000000Z',
-      '20121115T000000'
+      'FREQ=WEEKLY;UNTIL=2012-12-24T00:00:00Z',
+      '2012-11-15T00:00:00'
     );
 
     var expected = [
@@ -509,7 +509,7 @@ suite('recur_iterator', function() {
   suite('every other week forever', function() {
     createIterator(
       'FREQ=WEEKLY;INTERVAL=2;WKST=SU',
-      '20120115T090000'
+      '2012-01-15T09:00:00'
     );
 
     var expected = [
@@ -541,7 +541,7 @@ suite('recur_iterator', function() {
   suite('weekly on tuesday and thursday for five weeks', function() {
     createIterator(
       'FREQ=WEEKLY;COUNT=4;WKST=SU;BYDAY=TU,TH',
-      '20120101T090000'
+      '2012-01-01T09:00:00'
     );
 
     var expected = [
@@ -574,8 +574,8 @@ suite('recur_iterator', function() {
 
   suite('every other week on mo,we,fi until dec 24th 1997', function() {
     createIterator(
-      'FREQ=WEEKLY;INTERVAL=2;UNTIL=19971224T090000Z;WKST=SU;BYDAY=MO,WE,FR',
-      '19970901T090000'
+      'FREQ=WEEKLY;INTERVAL=2;UNTIL=1997-12-24T09:00:00Z;WKST=SU;BYDAY=MO,WE,FR',
+      '1997-09-01T09:00:00'
     );
 
     var expected = [];
@@ -607,7 +607,7 @@ suite('recur_iterator', function() {
   suite('monthly on first friday for 10 occurrences', function() {
     createIterator(
       'FREQ=MONTHLY;COUNT=10;BYDAY=1FR',
-      '20120107T000000'
+      '2012-01-07T00:00:00'
     );
 
     var expected = [
@@ -645,7 +645,7 @@ suite('recur_iterator', function() {
   suite('every thursday 31th forever', function() {
     createIterator(
       'FREQ=MONTHLY;BYDAY=TH;BYMONTHDAY=31',
-      '20120131T090000'
+      '2012-01-31T09:00:00'
     );
 
     var expected = [
@@ -676,7 +676,7 @@ suite('recur_iterator', function() {
   suite('every other month; first and last sunday for 4 occurrences', function() {
     createIterator(
       'FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=1SU,-1SU',
-      '20121101T090000'
+      '2012-11-01T09:00:00'
     );
 
     var expected = [
@@ -705,7 +705,7 @@ suite('recur_iterator', function() {
   suite('monthly third to last day of month forever', function() {
     createIterator(
       'FREQ=MONTHLY;BYMONTHDAY=-3',
-      '20120101T090000'
+      '2012-01-01T09:00:00'
     );
 
     var expected = [
@@ -735,7 +735,7 @@ suite('recur_iterator', function() {
     suite('MO', function() {
       createIterator(
         'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO',
-        '19970805T090000'
+        '1997-08-05T09:00:00'
       );
 
       var expected = [];
@@ -757,7 +757,7 @@ suite('recur_iterator', function() {
     suite('SU', function() {
       createIterator(
         'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=SU',
-        '19970805T090000'
+        '1997-08-05T09:00:00'
       );
 
       var expected = [];
@@ -783,7 +783,7 @@ suite('recur_iterator', function() {
     return;
     createIterator(
       'FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3',
-      '19970904T090000'
+      '1997-09-04T09:00:00'
     );
 
     // taken directly from rfc
@@ -810,7 +810,7 @@ suite('recur_iterator', function() {
   suite('monthly, each month last day that is monday', function() {
     createIterator(
       'FREQ=MONTHLY;BYMONTHDAY=-1;BYDAY=MO',
-      '20120101T090000'
+      '2012-01-01T09:00:00'
     );
 
     var expected = [
@@ -837,7 +837,7 @@ suite('recur_iterator', function() {
   suite('weekly on tuesday', function() {
     createIterator(
       'FREQ=WEEKLY;BYDAY=TU',
-      '20120911T090000'
+      '2012-09-11T09:00:00'
     );
 
     test('for 5 occurrences', function() {
@@ -874,7 +874,7 @@ suite('recur_iterator', function() {
   suite('every friday 13th forever', function() {
     createIterator(
       'FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13',
-      '20120401T090000'
+      '2012-04-01T09:00:00'
     );
 
     test('for 3 occurrences', function() {
@@ -907,3 +907,5 @@ suite('recur_iterator', function() {
   });
 
 });
+
+
