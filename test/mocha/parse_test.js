@@ -124,7 +124,7 @@ suite('parserv2', function() {
 
       assert.throws(function() {
         subject(ical);
-      }, /mismatched components/);
+      }, /invalid/);
     });
 
   });

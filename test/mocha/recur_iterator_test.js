@@ -871,6 +871,49 @@ suite('recur_iterator', function() {
     });
   });
 
+  suite('buisness days for 50 occurances', function() {
+    createIterator(
+      'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
+      '2012-01-02T09:00:00'
+    );
+
+    test('for 50 occurances', function() {
+      var next;
+      var dates = [];
+
+      // must start at multiple of 5
+      var max = 50;
+
+      var inc = 0;
+
+      var expected = [];
+      var expectedNum = max;
+      var date = new Date(2012, 0, 2, 9);
+
+      while (expectedNum--) {
+        // save the previous date
+        expected.push(date);
+
+        date = new Date(date.valueOf());
+
+        if ((expectedNum % 5) === 0) {
+          date.setDate(date.getDate() + 3);
+        } else {
+          date.setDate(date.getDate() + 1);
+        }
+      }
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(expected, dates);
+    });
+
+  });
+
   suite('every friday 13th forever', function() {
     createIterator(
       'FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13',
