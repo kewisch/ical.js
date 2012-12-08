@@ -226,11 +226,20 @@ suite('ICAL.Event', function() {
       });
     });
 
-    test('trying to relate unrelated component', function() {
+    test('trying to relate unrelated component (without strict)', function() {
       var exception = exceptions[0];
       var prop = exception.getFirstProperty('uid');
       prop.setValue('foo');
 
+      subject.relateException(exception);
+    });
+
+    test('trying to relate unrelated component (with strict)', function() {
+      var exception = exceptions[0];
+      var prop = exception.getFirstProperty('uid');
+      prop.setValue('foo');
+
+      subject.strictExceptions = true;
       assert.throws(function() {
         subject.relateException(exception);
       }, /unrelated/);
