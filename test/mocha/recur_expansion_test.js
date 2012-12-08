@@ -53,8 +53,10 @@ suite('recur_expansion', function() {
     test('.ruleDates', function() {
       var expected = [
         new Date(2012, 10, 5, 10),
-        new Date(2012, 10, 10, 10)
+        new Date(2012, 10, 10, 10),
+        new Date(2012, 10, 30, 10)
       ];
+
 
       var dates = subject.ruleDates.map(function(time) {
         return time.toJSDate();
@@ -172,12 +174,13 @@ suite('recur_expansion', function() {
       new Date(2012, 10, 5, 10),
       new Date(2012, 10, 6, 10),
       new Date(2012, 10, 10, 10),
+      new Date(2012, 10, 30, 10),
       new Date(2013, 0, 1, 10)
     ];
 
-    test('5 items', function() {
+    test('6 items', function() {
       var dates = [];
-      var max = 5;
+      var max = 6;
       var inc = 0;
       var next;
 
