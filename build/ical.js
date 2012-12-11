@@ -2600,6 +2600,22 @@ ICAL.Binary = (function() {
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
+
+  /**
+   * Timezone representation, created by passing in a tzid and component.
+   *
+   *    var vcalendar;
+   *    var timezoneComp = vcalendar.getFirstSubcomponent('vtimezone');
+   *    var tzid = timezoneComp.getFirstPropertyValue('tzid');
+   *
+   *    var timezone = new ICAL.Timezone({
+   *      component: timezoneComp,
+   *      tzid
+   *    });
+   *
+   *
+   * @param {Object} data options for class (see above).
+   */
   ICAL.Timezone = function icaltimezone(data) {
     this.wrappedJSObject = this;
     this.fromData(data);
@@ -2640,7 +2656,7 @@ ICAL.Binary = (function() {
         if (typeof aData.component == "string") {
           this.component = this.componentFromString(aData.component);
         } else {
-          this.component = ICAL.helpers.clone(aData.component, true);
+          this.component = aData.component;
         }
       } else {
         this.component = null;
@@ -2648,17 +2664,17 @@ ICAL.Binary = (function() {
       return this;
     },
 
-    componentFromString: function componentFromString(str) {
-      this.component = ICAL.toJSON(str, true);
-      return this.component;
-    },
-
-    utc_offset: function utc_offset(tt) {
+    /**
+     * Finds the utcOffset the given time would occur in this timezone.
+     *
+     * @return {Number} utc offset in seconds.
+     */
+    utcOffset: function utc_offset(tt) {
       if (this == ICAL.Timezone.utc_timezone || this == ICAL.Timezone.local_timezone) {
         return 0;
       }
 
-      this.ensure_coverage(tt.year);
+      this._ensureCoverage(tt.year);
 
       if (!this.changes || this.changes.length == 0) {
         return 0;
@@ -2673,10 +2689,11 @@ ICAL.Binary = (function() {
         second: tt.second
       };
 
-      var change_num = this.find_nearby_change(tt_change);
+      var change_num = this._findNearbyChange(tt_change);
       var change_num_to_use = -1;
       var step = 1;
 
+      // TODO: replace with bin search?
       for (;;) {
         var change = ICAL.helpers.clone(this.changes[change_num], true);
         if (change.utc_offset < change.prev_utc_offset) {
@@ -2736,7 +2753,7 @@ ICAL.Binary = (function() {
       return zone_change.utc_offset;
     },
 
-    find_nearby_change: function icaltimezone_find_nearby_change(change) {
+    _findNearbyChange: function icaltimezone_find_nearby_change(change) {
       var lower = 0,
         middle = 0;
       var upper = this.changes.length;
@@ -2757,7 +2774,7 @@ ICAL.Binary = (function() {
       return middle;
     },
 
-    ensure_coverage: function ensure_coverage(aYear) {
+    _ensureCoverage: function(aYear) {
       if (ICAL.Timezone._minimum_expansion_year == -1) {
         var today = ICAL.Time.now();
         ICAL.Timezone._minimum_expansion_year = today.year;
@@ -2775,18 +2792,18 @@ ICAL.Binary = (function() {
       }
 
       if (!this.changes || this.expand_end_year < aYear) {
-        this.expand_changes(changes_end_year);
+        this._expandChanges(changes_end_year);
       }
     },
 
-    expand_changes: function expand_changes(aYear) {
+    _expandChanges: function(aYear) {
       var changes = [];
       if (this.component) {
         // HACK checking for component only needed for floating
         // tz, which is not in core libical.
         var subcomps = this.component.getAllSubcomponents();
         for (var compkey in subcomps) {
-          this.expand_vtimezone(subcomps[compkey], aYear, changes);
+          this._expandComponent(subcomps[compkey], aYear, changes);
         }
 
         this.changes = changes.concat(this.changes || []);
@@ -2796,14 +2813,14 @@ ICAL.Binary = (function() {
       this.change_end_year = aYear;
     },
 
-    expand_vtimezone: function expand_vtimezone(aComponent, aYear, changes) {
-      if (!aComponent.hasProperty("DTSTART") ||
-          !aComponent.hasProperty("TZOFFSETTO") ||
-          !aComponent.hasProperty("TZOFFSETFROM")) {
+    _expandComponent: function(aComponent, aYear, changes) {
+      if (!aComponent.hasProperty("dtstart") ||
+          !aComponent.hasProperty("tzoffsetto") ||
+          !aComponent.hasProperty("tzoffsetfrom")) {
         return null;
       }
 
-      var dtstart = aComponent.getFirstProperty("DTSTART").getFirstValue();
+      var dtstart = aComponent.getFirstProperty("dtstart").getFirstValue();
 
       function convert_tzoffset(offset) {
         return offset.factor * (offset.hours * 3600 + offset.minutes * 60);
@@ -2811,13 +2828,19 @@ ICAL.Binary = (function() {
 
       function init_changes() {
         var changebase = {};
-        changebase.is_daylight = (aComponent.name == "DAYLIGHT");
-        changebase.utc_offset = convert_tzoffset(aComponent.getFirstProperty("TZOFFSETTO").data);
-        changebase.prev_utc_offset = convert_tzoffset(aComponent.getFirstProperty("TZOFFSETFROM").data);
+        changebase.is_daylight = (aComponent.name == "daylight");
+        changebase.utc_offset = convert_tzoffset(
+          aComponent.getFirstProperty("tzoffsetto").getFirstValue()
+        );
+
+        changebase.prev_utc_offset = convert_tzoffset(
+          aComponent.getFirstProperty("tzoffsetfrom").getFirstValue()
+        );
+
         return changebase;
       }
 
-      if (!aComponent.hasProperty("RRULE") && !aComponent.hasProperty("RDATE")) {
+      if (!aComponent.hasProperty("rrule") && !aComponent.hasProperty("rdate")) {
         var change = init_changes();
         change.year = dtstart.year;
         change.month = dtstart.month;
@@ -2830,7 +2853,7 @@ ICAL.Binary = (function() {
                                         -change.prev_utc_offset);
         changes.push(change);
       } else {
-        var props = aComponent.getAllProperties("RDATE");
+        var props = aComponent.getAllProperties("rdate");
         for (var rdatekey in props) {
           var rdate = props[rdatekey];
           var change = init_changes();
@@ -2856,7 +2879,7 @@ ICAL.Binary = (function() {
           changes.push(change);
         }
 
-        var rrule = aComponent.getFirstProperty("RRULE").getFirstValue();
+        var rrule = aComponent.getFirstProperty("rrule").getFirstValue();
         // TODO multiple rrules?
 
         var change = init_changes();
@@ -3470,12 +3493,12 @@ ICAL.Binary = (function() {
       return copy;
     },
 
-    utc_offset: function utc_offset() {
+    utcOffset: function utc_offset() {
       if (this.zone == ICAL.Timezone.local_timezone ||
           this.zone == ICAL.Timezone.utc_timezone) {
         return 0;
       } else {
-        return this.zone.utc_offset(this);
+        return this.zone.utcOffset(this);
       }
     },
 
@@ -6183,6 +6206,17 @@ ICAL.ComponentParser = (function() {
         component = components[i];
 
         switch (component.name) {
+          case 'vtimezone':
+            if (this.parseTimezone) {
+              var tzid = component.getFirstPropertyValue('tzid');
+              if (tzid) {
+                this.ontimezone(new ICAL.Timezone({
+                  tzid: tzid,
+                  component: component
+                }));
+              }
+            }
+            break;
           case 'vevent':
             if (this.parseEvent) {
               this.onevent(new ICAL.Event(component));
