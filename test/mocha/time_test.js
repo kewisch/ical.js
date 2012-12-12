@@ -22,18 +22,69 @@ suite('icaltime', function() {
   });
 
   suite('setters', function() {
+    var subject;
 
-    suite('.day', function() {
-      test('beyond month', function() {
-        var subject = Time.fromData({ year: 2012, month: 1, day: 31 });
-        var result = subject.day += 1;
-
-        assert.equal(result, 32, 'should return real day math');
-
-        assert.equal(subject.month, 2, 'normalizes month');
-        assert.equal(subject.day, 1, 'normalizes day');
+    setup(function() {
+      subject = new ICAL.Time({
+        year: 2012,
+        month: 12,
+        day: 31,
+        // needed otherwise this object
+        // is treated as a date rather then
+        // date-time and hour/minute/second will
+        // not be normalized/adjusted.
+        hour: 0
       });
+
+      subject.debug = true;
     });
+
+    function movedToNextYear() {
+      console.log(subject._time, subject.toJSDate());
+      assert.equal(subject.day, 1);
+      assert.equal(subject.month, 1);
+      assert.equal(subject.year, 2013);
+    }
+
+    test('.month / .day beyond the year', function() {
+      subject.day++;
+      subject.month++;
+
+      assert.equal(subject.day, 1);
+      assert.equal(subject.month, 2);
+      assert.equal(subject.year, 2013);
+    });
+
+    test('.hour', function() {
+      subject.hour = 23;
+      subject.hour++;
+
+      movedToNextYear();
+      assert.equal(subject.hour, 0);
+    });
+
+    test('.minute', function() {
+      subject.minute = 59;
+      subject.hour = 23;
+      subject.minute++;
+
+      movedToNextYear();
+      assert.equal(subject.hour, 0);
+      assert.equal(subject.minute, 0);
+    });
+
+    test('.second', function() {
+      subject.hour = 23;
+      subject.minute = 59;
+      subject.second = 59;
+
+      subject.second++;
+
+      movedToNextYear();
+      assert.equal(subject.minute, 0);
+      assert.equal(subject.second, 0);
+    });
+
 
   });
 
