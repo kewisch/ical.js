@@ -530,6 +530,7 @@ suite('icaltime', function() {
 
       cp = dt.clone();
       cp.year += 1;
+
       var diff = cp.subtractDate(dt);
       var yearseconds = (365 + Time.is_leap_year(dt.year)) * 86400;
       assert.equal(diff.toSeconds(), yearseconds);
@@ -605,12 +606,6 @@ suite('icaltime', function() {
         var cur_seconds = dt.second;
         var add_seconds = data.add_seconds || 0;
 
-        dt.auto_normalize = false;
-        dt.second += add_seconds;
-        assert.equal(cur_seconds + add_seconds, dt.second);
-        dt.second = cur_seconds;
-
-        dt.auto_normalize = true;
         dt.second += add_seconds;
         assert.equal(dt, data.expect);
     }
