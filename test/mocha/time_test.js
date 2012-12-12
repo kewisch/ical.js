@@ -40,7 +40,6 @@ suite('icaltime', function() {
     });
 
     function movedToNextYear() {
-      console.log(subject._time, subject.toJSDate());
       assert.equal(subject.day, 1);
       assert.equal(subject.month, 1);
       assert.equal(subject.year, 2013);
@@ -463,11 +462,11 @@ suite('icaltime', function() {
     });
   });
 
-  suite('#start_doy_week', function() {
+  suite('#startDoyWeek', function() {
 
     test('forward (using defaults)', function() {
       var subject = Time.fromData({ year: 2012, month: 1, day: 20 });
-      var result = subject.start_doy_week();
+      var result = subject.startDoyWeek();
       assert.equal(result, 15, 'should start on sunday of that week');
     });
 
@@ -676,13 +675,13 @@ suite('icaltime', function() {
       dayOfWeek: Time.SUNDAY,
       dayOfYear: 1,
       startOfWeek: '2012-01-01T00:00:00',
-      end_of_week: '2012-01-07T00:00:00',
-      start_of_month: '2012-01-01',
-      end_of_month: '2012-01-31',
-      start_of_year: '2012-01-01',
-      end_of_year: '2012-12-31',
-      start_doy_week: 1,
-        week_number: 1,
+      endOfWeek: '2012-01-07T00:00:00',
+      startOfMonth: '2012-01-01',
+      endOfMonth: '2012-01-31',
+      startOfYear: '2012-01-01',
+      endOfYear: '2012-12-31',
+      startDoyWeek: 1,
+        weekNumber: 1,
     }, { /* A date in week number 53 */
       str: '2009-01-01T00:00:00',
       isDate: false,
@@ -696,13 +695,13 @@ suite('icaltime', function() {
       dayOfWeek: Time.THURSDAY,
       dayOfYear: 1,
       startOfWeek: '2008-12-28T00:00:00',
-      end_of_week: '2009-01-03T00:00:00',
-      start_of_month: '2009-01-01',
-      end_of_month: '2009-01-31',
-      start_of_year: '2009-01-01',
-      end_of_year: '2009-12-31',
-      start_doy_week: -3,
-      week_number: 53
+      endOfWeek: '2009-01-03T00:00:00',
+      startOfMonth: '2009-01-01',
+      endOfMonth: '2009-01-31',
+      startOfYear: '2009-01-01',
+      endOfYear: '2009-12-31',
+      startDoyWeek: -3,
+      weekNumber: 53
     }];
 
     for (var datakey in test_data) {
@@ -719,13 +718,13 @@ suite('icaltime', function() {
       assert.equal(data.dayOfWeek, dt.dayOfWeek());
       assert.equal(data.dayOfYear, dt.dayOfYear());
       assert.equal(data.startOfWeek, dt.startOfWeek());
-      assert.equal(data.end_of_week, dt.end_of_week());
-      assert.equal(data.start_of_month, dt.start_of_month());
-      assert.equal(data.end_of_month, dt.end_of_month().toString());
-      assert.equal(data.start_of_year, dt.start_of_year());
-      assert.equal(data.end_of_year, dt.end_of_year());
-      assert.equal(data.start_doy_week, dt.start_doy_week(Time.SUNDAY));
-      assert.equal(data.week_number, dt.week_number(Time.SUNDAY));
+      assert.equal(data.endOfWeek, dt.endOfWeek());
+      assert.equal(data.startOfMonth, dt.startOfMonth());
+      assert.equal(data.endOfMonth, dt.endOfMonth().toString());
+      assert.equal(data.startOfYear, dt.startOfYear());
+      assert.equal(data.endOfYear, dt.endOfYear());
+      assert.equal(data.startDoyWeek, dt.startDoyWeek(Time.SUNDAY));
+      assert.equal(data.weekNumber, dt.weekNumber(Time.SUNDAY));
       // TODO nthWeekDay
 
       dt = new Time();
