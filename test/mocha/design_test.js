@@ -1,4 +1,19 @@
 suite('design', function() {
+
+  var timezone;
+  testSupport.defineSample('timezones/America/New_York.ics', function(data) {
+    var parsed = ICAL.parse(data)[1];
+    var vcalendar = new ICAL.Component(parsed);
+    var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
+
+    timezone = new ICAL.Timezone(vtimezone);
+    ICAL.TimezoneService.register('test', timezone);
+  });
+
+  suiteTeardown(function() {
+    ICAL.TimezoneService.reset();
+  });
+
   var subject;
   setup(function() {
     subject = ICAL.design;
@@ -49,11 +64,13 @@ suite('design', function() {
         assert.equal(value, '20121010');
       });
 
-      test('#(un)decorate', function() {
+      test('#(un)decorate (custom timezone)', function() {
         var value = '2012-10-10';
+        var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
         var time = subject.decorate(
-          '2012-10-10'
+          value,
+          prop
         );
 
         assert.hasProperties(
@@ -63,7 +80,7 @@ suite('design', function() {
 
         assert.equal(
           subject.undecorate(time),
-          '2012-10-10'
+          value
         );
       });
     });
@@ -92,8 +109,9 @@ suite('design', function() {
 
       test('#(un)decorate (utc)', function() {
         var undecorated = '2012-09-01T13:05:11Z';
+        var prop = new ICAL.Property(['date-time', {}]);
 
-        var decorated = subject.decorate(undecorated);
+        var decorated = subject.decorate(undecorated, prop);
 
         assert.hasProperties(
           decorated,
@@ -115,9 +133,20 @@ suite('design', function() {
         );
       });
 
-      test('#(un)decorate (utc)', function() {
+      test('#(un)decorate (custom timezone)', function() {
+        var prop = new ICAL.Property(
+          ['date-time', { tzid: 'test' }]
+        );
+        assert.equal(prop.getParameter('tzid'), 'test');
+
+        ICAL.TimezoneService.register(
+          'America/Los_Angeles',
+          ICAL.Timezone.utcTimezone
+        );
+
         var undecorated = '2012-09-01T13:05:11';
-        var decorated = subject.decorate(undecorated);
+        var decorated = subject.decorate(undecorated, prop);
+        assert.equal(decorated.zone, timezone);
 
         assert.hasProperties(
           decorated,
@@ -184,9 +213,6 @@ suite('design', function() {
         subject = subject.value.period;
       });
 
-      test('#(to|from)ICAL date/duration', function() {
-      });
-
       test('#(to|from)ICAL date/date', function() {
         var original = '19970101T180000Z/19970102T070000Z';
         var fromICAL = subject.fromICAL(original);
@@ -202,10 +228,13 @@ suite('design', function() {
         );
       });
 
-      test('#(un)decorate', function() {
-        var undecorated = '1997-01-01T18:00:00Z/PT5H30M';
+      test('#(un)decorate (date-time/duration)', function() {
+        var prop = new ICAL.Property(['date', { tzid: 'test' }]);
+
+        var undecorated = '1997-01-01T18:00:00/PT5H30M';
         var decorated = subject.decorate(
-          undecorated
+          undecorated,
+          prop
         );
 
         assert.hasProperties(
@@ -217,6 +246,82 @@ suite('design', function() {
             hour: 18
           }
         );
+
+        assert.equal(decorated.start.zone, timezone);
+
+        assert.hasProperties(
+          decorated.duration,
+          {
+            hours: 5,
+            minutes: 30
+          }
+        );
+
+        assert.equal(
+          subject.undecorate(decorated),
+          undecorated
+        );
+      });
+
+      test('#(un)decorate (date-time/date-time)', function() {
+        var prop = new ICAL.Property(['date', { tzid: 'test' }]);
+
+        var undecorated = '1997-01-01T18:00:00/1998-01-01T17:00:00';
+        var decorated = subject.decorate(
+          undecorated,
+          prop
+        );
+
+        assert.hasProperties(
+          decorated.start,
+          {
+            year: 1997,
+            day: 1,
+            month: 1,
+            hour: 18
+          }
+        );
+
+        assert.hasProperties(
+          decorated.end,
+          {
+            year: 1998,
+            day: 1,
+            month: 1,
+            hour: 17
+          }
+        );
+
+
+        assert.equal(decorated.start.zone, timezone);
+        assert.equal(decorated.end.zone, timezone);
+
+        assert.equal(
+          subject.undecorate(decorated),
+          undecorated
+        );
+      });
+
+      test('#(un)decorate (date-time/duration)', function() {
+        var prop = new ICAL.Property(['date', { tzid: 'test' }]);
+
+        var undecorated = '1997-01-01T18:00:00/PT5H30M';
+        var decorated = subject.decorate(
+          undecorated,
+          prop
+        );
+
+        assert.hasProperties(
+          decorated.start,
+          {
+            year: 1997,
+            day: 1,
+            month: 1,
+            hour: 18
+          }
+        );
+
+        assert.equal(decorated.start.zone, timezone);
 
         assert.hasProperties(
           decorated.duration,
