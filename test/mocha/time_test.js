@@ -21,6 +21,39 @@ suite('icaltime', function() {
     assert.equal(g, Time.epochTime.toString());
   });
 
+  suite('initialize', function() {
+    var icsData;
+    testSupport.defineSample('timezones/America/New_York.ics', function(data) {
+      icsData = data;
+    });
+
+    test('with timezone', function() {
+      var parsed = ICAL.parse(icsData);
+      var vcalendar = new ICAL.Component(parsed[1]);
+      var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
+      var tzid = vtimezone.getFirstPropertyValue('tzid');
+
+      ICAL.TimezoneService.register(vtimezone);
+
+      // utc -5
+      var time = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 10,
+        timezone: tzid
+      });
+
+      // -5
+      assert.equal((time.utcOffset() / 60) / 60, -5);
+
+      assert.equal(
+        time.toUnixTime(),
+        Date.UTC(2012, 0, 1, 15) / 1000
+      );
+    });
+  });
+
   suite('setters', function() {
     var subject;
 

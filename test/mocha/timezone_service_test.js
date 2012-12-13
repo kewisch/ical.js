@@ -24,7 +24,7 @@ suite('timezone_service', function() {
 
   test('#reset', function() {
     var name = 'ZFOO';
-    subject.set(name, ICAL.Timezone.utcTimezone);
+    subject.register(name, ICAL.Timezone.utcTimezone);
     assert.isTrue(subject.has(name), 'should have set ' + name);
 
     subject.reset();
@@ -36,7 +36,7 @@ suite('timezone_service', function() {
       var name = 'test';
       assert.isFalse(subject.has(name));
 
-      subject.set(name, ICAL.Timezone.localTimezone);
+      subject.register(name, ICAL.Timezone.localTimezone);
       assert.isTrue(subject.has(name), 'is present after set');
       assert.equal(
         subject.get(name),
@@ -49,14 +49,14 @@ suite('timezone_service', function() {
 
     test('with invalid type', function() {
       assert.throws(function() {
-        subject.set('zzz', 'fff');
+        subject.register('zzz', 'fff');
       }, TypeError);
     });
 
     test('override', function() {
       // don't do this but you can if you want to shoot
       // yourself in the foot.
-      subject.set('Z', ICAL.Timezone.localTimezone);
+      subject.register('Z', ICAL.Timezone.localTimezone);
 
       assert.equal(
         subject.get('Z'),
@@ -70,7 +70,7 @@ suite('timezone_service', function() {
       var vtimezone = comp.getFirstSubcomponent('vtimezone');
       var tzid = vtimezone.getFirstPropertyValue('tzid');
 
-      subject.set(vtimezone);
+      subject.register(vtimezone);
 
       assert.isTrue(subject.has(tzid), 'successfully registed with component');
 
