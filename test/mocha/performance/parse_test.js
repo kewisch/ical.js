@@ -20,8 +20,6 @@ suite('parser benchmarks', function() {
   });
 
   suiteSetup(function() {
-    assert.notEqual(ICAL_beta1.Time, ICAL.Time);
-
     ['latest', 'beta1'].forEach(function(version) {
       // current version of ical
       var globalLib;
