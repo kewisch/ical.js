@@ -494,8 +494,8 @@ ICAL.design = (function() {
         // needs to be an uri
       },
       "date": {
-        decorate: function(aValue) {
-          return ICAL.Time.fromDateString(aValue);
+        decorate: function(aValue, aProp) {
+          return ICAL.Time.fromDateString(aValue, aProp);
         },
 
         /**
@@ -582,8 +582,8 @@ ICAL.design = (function() {
           return result;
         },
 
-        decorate: function(aValue) {
-          return ICAL.Time.fromDateTimeString(aValue);
+        decorate: function(aValue, aProp) {
+          return ICAL.Time.fromDateTimeString(aValue, aProp);
         },
 
         undecorate: function(aValue) {
@@ -658,8 +658,8 @@ ICAL.design = (function() {
           return result;
         },
 
-        decorate: function(aValue) {
-          return ICAL.Period.fromString(aValue);
+        decorate: function(aValue, aProp) {
+          return ICAL.Period.fromString(aValue, aProp);
         },
 
         undecorate: function(aValue) {
@@ -2004,11 +2004,11 @@ ICAL.Property = (function() {
     },
 
     _decorate: function(value) {
-      return design.value[this.type].decorate(value);
+      return design.value[this.type].decorate(value, this);
     },
 
     _undecorate: function(value) {
-      return design.value[this.type].undecorate(value);
+      return design.value[this.type].undecorate(value, this);
     },
 
     _setDecoratedValue: function(value, index) {
@@ -2400,7 +2400,7 @@ ICAL.Binary = (function() {
     }
   };
 
-  ICAL.Period.fromString = function fromString(str) {
+  ICAL.Period.fromString = function fromString(str, prop) {
     var parts = str.split('/');
 
     if (parts.length !== 2) {
@@ -2410,7 +2410,7 @@ ICAL.Binary = (function() {
     }
 
     var options = {
-      start: ICAL.Time.fromDateTimeString(parts[0])
+      start: ICAL.Time.fromDateTimeString(parts[0], prop)
     };
 
     var end = parts[1];
@@ -2418,7 +2418,7 @@ ICAL.Binary = (function() {
     if (ICAL.Duration.isValueString(end)) {
       options.duration = ICAL.Duration.fromString(end);
     } else {
-      options.end = ICAL.Time.fromDateTimeString(end);
+      options.end = ICAL.Time.fromDateTimeString(end, prop);
     }
 
     return new ICAL.Period(options);
@@ -2631,6 +2631,8 @@ ICAL.Binary = (function() {
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
+  var OPTIONS = ["tzid", "location", "tznames",
+                 "latitude", "longitude"];
 
   /**
    * Timezone representation, created by passing in a tzid and component.
@@ -2670,14 +2672,16 @@ ICAL.Binary = (function() {
     icalclass: "icaltimezone",
 
     fromData: function fromData(aData) {
-      var propsToCopy = ["tzid", "location", "tznames",
-                         "latitude", "longitude"];
-      for (var key in propsToCopy) {
-        var prop = propsToCopy[key];
+      if (aData instanceof ICAL.Component) {
+        this.component = aData;
+        this.tzid = this.component.getFirstPropertyValue('tzid');
+        return;
+      }
+
+      for (var key in OPTIONS) {
+        var prop = OPTIONS[key];
         if (aData && prop in aData) {
           this[prop] = aData[prop];
-        } else {
-          this[prop] = 0;
         }
       }
 
@@ -2701,7 +2705,7 @@ ICAL.Binary = (function() {
      * @return {Number} utc offset in seconds.
      */
     utcOffset: function utcOffset(tt) {
-      if (this == ICAL.Timezone.utc_timezone || this == ICAL.Timezone.local_timezone) {
+      if (this == ICAL.Timezone.utcTimezone || this == ICAL.Timezone.localTimezone) {
         return 0;
       }
 
@@ -2901,7 +2905,7 @@ ICAL.Binary = (function() {
             change.minute = rdate.time.minute;
             change.second = rdate.time.second;
 
-            if (rdate.time.zone == ICAL.Timezone.utc_timezone) {
+            if (rdate.time.zone == ICAL.Timezone.utcTimezone) {
               ICAL.Timezone.adjust_change(change, 0, 0, 0,
                                               -change.prev_utcOffset);
             }
@@ -2915,9 +2919,9 @@ ICAL.Binary = (function() {
 
         var change = init_changes();
 
-        if (rrule.until && rrule.until.zone == ICAL.Timezone.utc_timezone) {
+        if (rrule.until && rrule.until.zone == ICAL.Timezone.utcTimezone) {
           rrule.until.adjust(0, 0, 0, change.prev_utcOffset);
-          rrule.until.zone = ICAL.Timezone.local_timezone;
+          rrule.until.zone = ICAL.Timezone.localTimezone;
         }
 
         var iterator = rrule.iterator(dtstart);
@@ -2977,8 +2981,8 @@ ICAL.Binary = (function() {
   ICAL.Timezone.convert_time = function icaltimezone_convert_time(tt, from_zone, to_zone) {
     if (tt.isDate ||
         from_zone.tzid == to_zone.tzid ||
-        from_zone == ICAL.Timezone.local_timezone ||
-        to_zone == ICAL.Timezone.local_timezone) {
+        from_zone == ICAL.Timezone.localTimezone ||
+        to_zone == ICAL.Timezone.localTimezone) {
       tt.zone = to_zone;
       return tt;
     }
@@ -2997,10 +3001,11 @@ ICAL.Binary = (function() {
     return tt.fromData(aData);
   };
 
-  ICAL.Timezone.utc_timezone = ICAL.Timezone.fromData({
+  ICAL.Timezone.utcTimezone = ICAL.Timezone.fromData({
     tzid: "UTC"
   });
-  ICAL.Timezone.local_timezone = ICAL.Timezone.fromData({
+
+  ICAL.Timezone.localTimezone = ICAL.Timezone.fromData({
     tzid: "floating"
   });
 
@@ -3090,7 +3095,7 @@ ICAL.Binary = (function() {
 
     reset: function icaltime_reset() {
       this.fromData(ICAL.Time.epochTime);
-      this.zone = ICAL.Timezone.utc_timezone;
+      this.zone = ICAL.Timezone.utcTimezone;
     },
 
     resetTo: function icaltime_resetTo(year, month, day,
@@ -3123,7 +3128,7 @@ ICAL.Binary = (function() {
         this.reset();
       } else {
         if (useUTC) {
-          this.zone = ICAL.Timezone.utc_timezone;
+          this.zone = ICAL.Timezone.utcTimezone;
           this.year = aDate.getUTCFullYear();
           this.month = aDate.getUTCMonth() + 1;
           this.day = aDate.getUTCDate();
@@ -3131,7 +3136,7 @@ ICAL.Binary = (function() {
           this.minute = aDate.getUTCMinutes();
           this.second = aDate.getUTCSeconds();
         } else {
-          this.zone = ICAL.Timezone.local_timezone;
+          this.zone = ICAL.Timezone.localTimezone;
           this.year = aDate.getFullYear();
           this.month = aDate.getMonth() + 1;
           this.day = aDate.getDate();
@@ -3159,18 +3164,11 @@ ICAL.Binary = (function() {
       }
 
       if (aData && "timezone" in aData) {
-        var timezone = aData.timezone;
+        var zone = ICAL.TimezoneService.get(
+          aData.timezone
+        );
 
-        //TODO: replace with timezone service
-        switch (timezone) {
-          case 'Z':
-          case ICAL.Timezone.utc_timezone.tzid:
-            this.zone = ICAL.Timezone.utc_timezone;
-            break;
-          case ICAL.Timezone.local_timezone.tzid:
-            this.zone = ICAL.Timezone.local_timezone;
-            break;
-        }
+        this.zone = zone || ICAL.Timezone.localTimezone;
       }
 
       if (aData && "zone" in aData) {
@@ -3178,7 +3176,7 @@ ICAL.Binary = (function() {
       }
 
       if (!this.zone) {
-        this.zone = ICAL.Timezone.local_timezone;
+        this.zone = ICAL.Timezone.localTimezone;
       }
 
       return this;
@@ -3473,8 +3471,8 @@ ICAL.Binary = (function() {
     },
 
     utcOffset: function utc_offset() {
-      if (this.zone == ICAL.Timezone.local_timezone ||
-          this.zone == ICAL.Timezone.utc_timezone) {
+      if (this.zone == ICAL.Timezone.localTimezone ||
+          this.zone == ICAL.Timezone.utcTimezone) {
         return 0;
       } else {
         return this.zone.utcOffset(this);
@@ -3506,7 +3504,7 @@ ICAL.Binary = (function() {
                     ICAL.helpers.pad2(this.minute) + ':' +
                     ICAL.helpers.pad2(this.second);
 
-        if (this.zone === ICAL.Timezone.utc_timezone) {
+        if (this.zone === ICAL.Timezone.utcTimezone) {
           result += 'Z';
         }
       }
@@ -3515,7 +3513,7 @@ ICAL.Binary = (function() {
     },
 
     toJSDate: function toJSDate() {
-      if (this.zone == ICAL.Timezone.local_timezone) {
+      if (this.zone == ICAL.Timezone.localTimezone) {
         if (this.isDate) {
           return new Date(this.year, this.month - 1, this.day);
         } else {
@@ -3524,7 +3522,7 @@ ICAL.Binary = (function() {
         }
       } else {
         return new Date(this.toUnixTime() * 1000);
-        var utcDate = this.convertToZone(ICAL.Timezone.utc_timezone);
+        var utcDate = this.convertToZone(ICAL.Timezone.utcTimezone);
         if (this.isDate) {
           return Date.UTC(this.year, this.month - 1, this.day);
         } else {
@@ -3636,7 +3634,7 @@ ICAL.Binary = (function() {
       var epoch = ICAL.Time.epochTime.clone();
       epoch.adjust(0, 0, 0, seconds);
       this.fromData(epoch);
-      this.zone = ICAL.Timezone.utc_timezone;
+      this.zone = ICAL.Timezone.utcTimezone;
     },
 
     toUnixTime: function toUnixTime() {
@@ -3800,22 +3798,39 @@ ICAL.Binary = (function() {
     });
   };
 
-  ICAL.Time.fromDateString = function(aValue) {
+  ICAL.Time.fromDateString = function(aValue, aProp) {
+    var zone;
+
+    if (aValue[10] === 'Z') {
+      zone = 'Z';
+    } else if (aProp) {
+      zone = aProp.getParameter('tzid');
+    }
+
     // YYYY-MM-DD
     // 2012-10-10
     return new ICAL.Time({
       year: ICAL.helpers.strictParseInt(aValue.substr(0, 4)),
       month: ICAL.helpers.strictParseInt(aValue.substr(5, 2)),
       day: ICAL.helpers.strictParseInt(aValue.substr(8, 2)),
+      timezone: zone,
       isDate: true
     });
   };
 
-  ICAL.Time.fromDateTimeString = function(aValue) {
+  ICAL.Time.fromDateTimeString = function(aValue, prop) {
     if (aValue.length < 19) {
       throw new Error(
         'invalid date-time value: "' + aValue + '"'
       );
+    }
+
+    var zone;
+
+    if (aValue[19] === 'Z') {
+      zone = 'Z';
+    } else if (prop) {
+      zone = prop.getParameter('tzid');
     }
 
     // 2012-10-10T10:10:10(Z)?
@@ -3825,12 +3840,9 @@ ICAL.Binary = (function() {
       day: ICAL.helpers.strictParseInt(aValue.substr(8, 2)),
       hour: ICAL.helpers.strictParseInt(aValue.substr(11, 2)),
       minute: ICAL.helpers.strictParseInt(aValue.substr(14, 2)),
-      second: ICAL.helpers.strictParseInt(aValue.substr(17, 2))
+      second: ICAL.helpers.strictParseInt(aValue.substr(17, 2)),
+      timezone: zone
     });
-
-    if (aValue[19] === 'Z') {
-      time.zone = ICAL.Timezone.utc_timezone;
-    }
 
     return time;
   };
