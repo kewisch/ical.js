@@ -154,7 +154,7 @@ suite('icaltime', function() {
 
       assert.hasProperties(subject, {
         year: 2012,
-        zone: Timezone.utc_timezone
+        zone: Timezone.utcTimezone
       });
     });
 
@@ -166,7 +166,7 @@ suite('icaltime', function() {
 
       assert.hasProperties(subject, {
         year: 2012,
-        zone: Timezone.local_timezone
+        zone: Timezone.localTimezone
       });
     });
   });
@@ -575,11 +575,11 @@ suite('icaltime', function() {
         day: 1,
         month: 1,
         hour: 3,
-        zone: Timezone.utc_timezone
+        zone: Timezone.utcTimezone
       });
 
       var after = new Time(time.toJSON());
-      assert.equal(after.zone, Timezone.utc_timezone);
+      assert.equal(after.zone, Timezone.utcTimezone);
 
       assert.deepEqual(
         after.toJSDate(),
@@ -596,7 +596,7 @@ suite('icaltime', function() {
         minute: 15,
         second: 1,
         isDate: false,
-        zone: Timezone.local_timezone
+        zone: Timezone.localTimezone
       });
 
       var expected = {
@@ -613,7 +613,7 @@ suite('icaltime', function() {
       assert.deepEqual(time.toJSON(), expected);
 
       var after = new Time(time.toJSON());
-      assert.equal(after.zone, Timezone.local_timezone);
+      assert.equal(after.zone, Timezone.localTimezone);
 
       assert.deepEqual(
         time.toJSDate(),
@@ -794,7 +794,7 @@ suite('icaltime', function() {
 
       dt = new Time();
       dt.resetTo(data.year, data.month, data.day, data.hour, data.minute,
-                 data.second, Timezone.utc_timezone);
+                 data.second, Timezone.utcTimezone);
       assert.equal(data.year, dt.year);
       assert.equal(data.month, dt.month);
       assert.equal(data.day, dt.day);

@@ -14,10 +14,7 @@ suite('timezone', function() {
         var vcalendar = new ICAL.Component(parsed);
         var comp = vcalendar.getFirstSubcomponent('vtimezone');
 
-        timezone = new ICAL.Timezone({
-          tzid: comp.getFirstPropertyValue('tzid'),
-          component: comp
-        });
+        timezone = new ICAL.Timezone(comp);
       });
 
       test('parse', testCb);

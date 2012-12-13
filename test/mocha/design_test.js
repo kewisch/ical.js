@@ -105,7 +105,7 @@ suite('design', function() {
             minute: 05,
             second: 11,
             isDate: false,
-            zone: ICAL.Timezone.utc_timezone
+            zone: ICAL.Timezone.utcTimezone
           }
         );
 
