@@ -18,7 +18,7 @@ suite('icaltime', function() {
     // TODO also check UTC dates
 
     g.reset();
-    assert.equal(g, Time.epoch_time.toString());
+    assert.equal(g, Time.epochTime.toString());
   });
 
   suite('setters', function() {
@@ -640,7 +640,7 @@ suite('icaltime', function() {
       var cp = dt.clone();
 
       assert.equal(dt.toUnixTime(), data.expect_unixtime);
-      var dur = dt.subtractDate(Time.epoch_time);
+      var dur = dt.subtractDate(Time.epochTime);
       assert.equal(dur.toSeconds(), data.expect_unixtime);
 
       cp = dt.clone();
