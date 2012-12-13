@@ -38,9 +38,6 @@ suite('parser benchmarks', function() {
         throw new Error('could not find ICAL_' + version);
       }
 
-
-
-
       bench.add(version + ': #parse', function() {
         var data = globalLib.parse(icsData);
       });

@@ -437,6 +437,71 @@ suite('icaltime', function() {
 
   });
 
+  suite('#toUnixTime', function() {
+    test('without timezone', function() {
+      var date = new Date(2012, 0, 22, 1, 7, 39);
+      var time = new ICAL.Time({
+        year: date.getUTCFullYear(),
+        month: date.getUTCMonth() + 1,
+        day: date.getUTCDate(),
+        hour: date.getUTCHours(),
+        minute: date.getUTCMinutes(),
+        second: date.getUTCSeconds()
+      });
+
+      assert.equal(
+        time.toUnixTime(),
+        date.valueOf() / 1000
+      );
+    });
+
+    suite('with timezone', function() {
+      var icsData;
+      testSupport.defineSample(
+        'timezones/America/Los_Angeles.ics',
+        function(data) {
+
+        icsData = data;
+      });
+
+      var subject;
+      var zone;
+
+      setup(function() {
+        var parsed = ICAL.parse(icsData)[1];
+        var vcalendar = new ICAL.Component(parsed);
+        var comp = vcalendar.getFirstSubcomponent('vtimezone');
+
+        zone = new ICAL.Timezone({
+          tzid: comp.getFirstPropertyValue('tzid'),
+          component: comp
+        });
+
+        subject = new ICAL.Time({
+          year: 2012,
+          month: 1,
+          day: 1,
+          hour: 10
+        }, zone);
+      });
+
+      test('result', function() {
+        // we know that subject is -8
+        var expectedTime = Date.UTC(
+          2012,
+          0,
+          1,
+          18
+        ) / 1000;
+
+        assert.equal(
+          subject.toUnixTime(),
+          expectedTime
+        );
+      });
+    });
+  });
+
   suite('#adjust', function() {
     var date = new Date(2012, 0, 25);
 
@@ -681,7 +746,7 @@ suite('icaltime', function() {
       startOfYear: '2012-01-01',
       endOfYear: '2012-12-31',
       startDoyWeek: 1,
-        weekNumber: 1,
+        weekNumber: 1
     }, { /* A date in week number 53 */
       str: '2009-01-01T00:00:00',
       isDate: false,
