@@ -512,6 +512,10 @@ ICAL.design = (function() {
                        aValue.substr(4, 2) + '-' +
                        aValue.substr(6, 2);
 
+          if (aValue[8] === 'Z') {
+            result += 'Z';
+          }
+
           return result;
         },
 
@@ -519,14 +523,20 @@ ICAL.design = (function() {
           // from: 2012-09-01
           // to: 20120901
 
-          if (aValue.length !== 10) {
+          if (aValue.length > 11) {
             //TODO: serialize warning?
             return aValue;
           }
 
-          return aValue.substr(0, 4) +
-                 aValue.substr(5, 2) +
-                 aValue.substr(8, 2);
+          var result = aValue.substr(0, 4) +
+                       aValue.substr(5, 2) +
+                       aValue.substr(8, 2);
+
+          if (aValue[10] === 'Z') {
+            result += 'Z';
+          }
+
+          return result;
         }
       },
       "date-time": {
@@ -850,7 +860,13 @@ ICAL.design = (function() {
       "rdate": {
         defaultType: "date-time",
         allowedTypes: ["date-time", "date", "period"],
-        multiValue: ','
+        multiValue: ',',
+        detectType: function(string) {
+          if (string.indexOf('/') !== -1) {
+            return 'period';
+          }
+          return (string.indexOf('T') === -1) ? 'date' : 'date-time';
+        }
       },
       "recurrence-id": {
         defaultType: "date-time",
@@ -1259,23 +1275,30 @@ ICAL.parse = (function() {
       if ('multiValue' in propertyDetails) {
         multiValue = propertyDetails.multiValue;
       }
+
+      if (value && 'detectType' in propertyDetails) {
+        valueType = propertyDetails.detectType(value);
+      }
     }
 
     // at this point params is mandatory per jcal spec
     params = params || {};
 
     // attempt to determine value
-    if (!('value' in params)) {
-      if (propertyDetails) {
-        valueType = propertyDetails.defaultType;
+    if (!valueType) {
+      if (!('value' in params)) {
+        if (propertyDetails) {
+          valueType = propertyDetails.defaultType;
+        } else {
+          valueType = DEFAULT_TYPE;
+        }
       } else {
-        valueType = DEFAULT_TYPE;
+        // possible to avoid this?
+        valueType = params.value.toLowerCase();
       }
-    } else {
-      // possible to avoid this?
-      valueType = params.value.toLowerCase();
-      delete params.value;
     }
+
+    delete params.value;
 
     /**
      * Note on `var result` juggling:
@@ -2065,7 +2088,7 @@ ICAL.Property = (function() {
 
       if (len < 1) {
         // its possible for a property to have no value.
-        return;
+        return [];
       }
 
       var i = 0;
@@ -2528,7 +2551,7 @@ ICAL.Binary = (function() {
   };
 
   ICAL.Duration.fromSeconds = function icalduration_from_seconds(aSeconds) {
-    return (new ICAL.Duration()).fromSeconds();
+    return (new ICAL.Duration()).fromSeconds(aSeconds);
   };
 
   /**
@@ -2677,7 +2700,7 @@ ICAL.Binary = (function() {
      *
      * @return {Number} utc offset in seconds.
      */
-    utcOffset: function utc_offset(tt) {
+    utcOffset: function utcOffset(tt) {
       if (this == ICAL.Timezone.utc_timezone || this == ICAL.Timezone.local_timezone) {
         return 0;
       }
@@ -2704,13 +2727,13 @@ ICAL.Binary = (function() {
       // TODO: replace with bin search?
       for (;;) {
         var change = ICAL.helpers.clone(this.changes[change_num], true);
-        if (change.utc_offset < change.prev_utc_offset) {
-          ICAL.helpers.dumpn("Adjusting " + change.utc_offset);
-          ICAL.Timezone.adjust_change(change, 0, 0, 0, change.utc_offset);
+        if (change.utcOffset < change.prev_utcOffset) {
+          ICAL.helpers.dumpn("Adjusting " + change.utcOffset);
+          ICAL.Timezone.adjust_change(change, 0, 0, 0, change.utcOffset);
         } else {
-          ICAL.helpers.dumpn("Adjusting prev " + change.prev_utc_offset);
+          ICAL.helpers.dumpn("Adjusting prev " + change.prev_utcOffset);
           ICAL.Timezone.adjust_change(change, 0, 0, 0,
-                                          change.prev_utc_offset);
+                                          change.prev_utcOffset);
         }
 
         var cmp = ICAL.Timezone._compare_change_fn(tt_change, change);
@@ -2738,12 +2761,12 @@ ICAL.Binary = (function() {
       }
 
       var zone_change = this.changes[change_num_to_use];
-      var utc_offset_change = zone_change.utc_offset - zone_change.prev_utc_offset;
+      var utcOffset_change = zone_change.utcOffset - zone_change.prev_utcOffset;
 
-      if (utc_offset_change < 0 && change_num_to_use > 0) {
+      if (utcOffset_change < 0 && change_num_to_use > 0) {
         var tmp_change = ICAL.helpers.clone(zone_change, true);
         ICAL.Timezone.adjust_change(tmp_change, 0, 0, 0,
-                                        tmp_change.prev_utc_offset);
+                                        tmp_change.prev_utcOffset);
 
         if (ICAL.Timezone._compare_change_fn(tt_change, tmp_change) < 0) {
           var prev_zone_change = this.changes[change_num_to_use - 1];
@@ -2758,7 +2781,7 @@ ICAL.Binary = (function() {
       }
 
       // TODO return is_daylight?
-      return zone_change.utc_offset;
+      return zone_change.utcOffset;
     },
 
     _findNearbyChange: function icaltimezone_find_nearby_change(change) {
@@ -2837,11 +2860,11 @@ ICAL.Binary = (function() {
       function init_changes() {
         var changebase = {};
         changebase.is_daylight = (aComponent.name == "daylight");
-        changebase.utc_offset = convert_tzoffset(
+        changebase.utcOffset = convert_tzoffset(
           aComponent.getFirstProperty("tzoffsetto").getFirstValue()
         );
 
-        changebase.prev_utc_offset = convert_tzoffset(
+        changebase.prev_utcOffset = convert_tzoffset(
           aComponent.getFirstProperty("tzoffsetfrom").getFirstValue()
         );
 
@@ -2858,7 +2881,7 @@ ICAL.Binary = (function() {
         change.second = dtstart.second;
 
         ICAL.Timezone.adjust_change(change, 0, 0, 0,
-                                        -change.prev_utc_offset);
+                                        -change.prev_utcOffset);
         changes.push(change);
       } else {
         var props = aComponent.getAllProperties("rdate");
@@ -2880,7 +2903,7 @@ ICAL.Binary = (function() {
 
             if (rdate.time.zone == ICAL.Timezone.utc_timezone) {
               ICAL.Timezone.adjust_change(change, 0, 0, 0,
-                                              -change.prev_utc_offset);
+                                              -change.prev_utcOffset);
             }
           }
 
@@ -2893,7 +2916,7 @@ ICAL.Binary = (function() {
         var change = init_changes();
 
         if (rrule.until && rrule.until.zone == ICAL.Timezone.utc_timezone) {
-          rrule.until.adjust(0, 0, 0, change.prev_utc_offset);
+          rrule.until.adjust(0, 0, 0, change.prev_utcOffset);
           rrule.until.zone = ICAL.Timezone.local_timezone;
         }
 
@@ -2915,7 +2938,7 @@ ICAL.Binary = (function() {
           change.isDate = occ.isDate;
 
           ICAL.Timezone.adjust_change(change, 0, 0, 0,
-                                          -change.prev_utc_offset);
+                                          -change.prev_utcOffset);
           changes.push(change);
         }
       }
@@ -2960,11 +2983,11 @@ ICAL.Binary = (function() {
       return tt;
     }
 
-    var utc_offset = from_zone.utc_offset(tt);
-    tt.adjust(0, 0, 0, - utc_offset);
+    var utcOffset = from_zone.utcOffset(tt);
+    tt.adjust(0, 0, 0, - utcOffset);
 
-    utc_offset = to_zone.utc_offset(tt);
-    tt.adjust(0, 0, 0, utc_offset);
+    utcOffset = to_zone.utcOffset(tt);
+    tt.adjust(0, 0, 0, utcOffset);
 
     return null;
   };
@@ -2982,7 +3005,14 @@ ICAL.Binary = (function() {
   });
 
   ICAL.Timezone.adjust_change = function icaltimezone_adjust_change(change, days, hours, minutes, seconds) {
-    return ICAL.Time.prototype.adjust.call(change, days, hours, minutes, seconds);
+    return ICAL.Time.prototype.adjust.call(
+      change,
+      days,
+      hours,
+      minutes,
+      seconds,
+      change
+    );
   };
 
   ICAL.Timezone._minimum_expansion_year = -1;
@@ -2998,34 +3028,68 @@ ICAL.Binary = (function() {
 
 (typeof(ICAL) === 'undefined')? ICAL = {} : '';
 (function() {
-  ICAL.Time = function icaltime(data) {
+
+  /**
+   * Time representation (similar to JS Date object).
+   * Fully independent of system (OS) timezone / time.
+   * Unlike JS Date month start at 1 (Jan) not zero.
+   *
+   *
+   *    var time = new ICAL.Time({
+   *      year: 2012,
+   *      month: 10,
+   *      day: 11
+   *      minute: 0,
+   *      second: 0,
+   *      isDate: false
+   *    });
+   *
+   *
+   * @param {Object} data initialization time.
+   * @param {ICAL.Timezone} zone timezone this position occurs in.
+   */
+  ICAL.Time = function icaltime(data, zone) {
     this.wrappedJSObject = this;
-    this.fromData(data);
+    var time = this._time = Object.create(null);
+
+    /* time defaults */
+    time.year = 0;
+    time.month = 1;
+    time.day = 1;
+    time.hour = 0;
+    time.minute = 0;
+    time.second = 0;
+    time.isDate = false;
+
+    this.fromData(data, zone);
   };
 
   ICAL.Time.prototype = {
 
-    year: 0,
-    month: 1,
-    day: 1,
-
-    hour: 0,
-    minute: 0,
-    second: 0,
-
-    isDate: false,
-    zone: null,
-
-    auto_normalize: false,
     icalclass: "icaltime",
     icaltype: "date-time",
 
+    /**
+     * @type ICAL.Timezone
+     */
+    zone: null,
+
+    /**
+     * Internal uses to indicate that a change has been
+     * made and the next read operation must attempt to
+     * normalize the value (for example changing the day to 33).
+     *
+     * @type Boolean
+     * @private
+     */
+    _pendingNormalization: false,
+
     clone: function icaltime_clone() {
-      return new ICAL.Time(this);
+      return new ICAL.Time(this._time, this.zone);
     },
 
     reset: function icaltime_reset() {
-      this.fromData(ICAL.Time.epoch_time);
+      this.fromData(ICAL.Time.epochTime);
       this.zone = ICAL.Timezone.utc_timezone;
     },
 
@@ -3079,26 +3143,15 @@ ICAL.Binary = (function() {
       return this;
     },
 
-    fromData: function fromData(aData) {
-      // TODO given we're switching formats, this may not be needed
-      var old_auto_normalize = this.auto_normalize;
-      this.auto_normalize = false;
-
-      var propsToCopy = {
-        year: 0,
-        month: 1,
-        day: 1,
-        hour: 0,
-        minute: 0,
-        second: 0
-      };
-      for (var key in propsToCopy) {
-        if (aData && key in aData) {
-          this[key] = aData[key];
-        } else {
-          this[key] = propsToCopy[key];
-        }
+    fromData: function fromData(aData, aZone) {
+      for (var key in aData) {
+        this[key] = aData[key];
       }
+
+      if (aZone) {
+        this.zone = aZone;
+      }
+
       if (aData && !("isDate" in aData)) {
         this.isDate = !("hour" in aData);
       } else if (aData && ("isDate" in aData)) {
@@ -3128,14 +3181,6 @@ ICAL.Binary = (function() {
         this.zone = ICAL.Timezone.local_timezone;
       }
 
-      if (aData && "auto_normalize" in aData) {
-        this.auto_normalize = aData.auto_normalize;
-      } else {
-        this.auto_normalize = old_auto_normalize;
-      }
-      if (this.auto_normalize) {
-        this.normalize();
-      }
       return this;
     },
 
@@ -3166,16 +3211,16 @@ ICAL.Binary = (function() {
     startOfWeek: function startOfWeek() {
       var result = this.clone();
       result.day -= this.dayOfWeek() - 1;
-      return result.normalize();
+      return result;
     },
 
-    end_of_week: function end_of_week() {
+    endOfWeek: function endOfWeek() {
       var result = this.clone();
       result.day += 7 - this.dayOfWeek();
-      return result.normalize();
+      return result;
     },
 
-    start_of_month: function start_of_month() {
+    startOfMonth: function startOfMonth() {
       var result = this.clone();
       result.day = 1;
       result.isDate = true;
@@ -3185,7 +3230,7 @@ ICAL.Binary = (function() {
       return result;
     },
 
-    end_of_month: function end_of_month() {
+    endOfMonth: function endOfMonth() {
       var result = this.clone();
       result.day = ICAL.Time.daysInMonth(result.month, result.year);
       result.isDate = true;
@@ -3195,7 +3240,7 @@ ICAL.Binary = (function() {
       return result;
     },
 
-    start_of_year: function start_of_year() {
+    startOfYear: function startOfYear() {
       var result = this.clone();
       result.day = 1;
       result.month = 1;
@@ -3206,7 +3251,7 @@ ICAL.Binary = (function() {
       return result;
     },
 
-    end_of_year: function end_of_year() {
+    endOfYear: function endOfYear() {
       var result = this.clone();
       result.day = 31;
       result.month = 12;
@@ -3217,7 +3262,7 @@ ICAL.Binary = (function() {
       return result;
     },
 
-    start_doy_week: function start_doy_week(aFirstDayOfWeek) {
+    startDoyWeek: function startDoyWeek(aFirstDayOfWeek) {
       var firstDow = aFirstDayOfWeek || ICAL.Time.SUNDAY;
       var delta = this.dayOfWeek() - firstDow;
       if (delta < 0) delta += 7;
@@ -3340,7 +3385,7 @@ ICAL.Binary = (function() {
       return false;
     },
 
-    week_number: function week_number(aWeekStart) {
+    weekNumber: function weekNumber(aWeekStart) {
       // This function courtesty of Julian Bucknall, published under the MIT license
       // http://www.boyet.com/articles/publishedarticles/calculatingtheisoweeknumb.html
       var doy = this.dayOfYear();
@@ -3354,16 +3399,16 @@ ICAL.Binary = (function() {
       var isoyear = this.year;
 
       if (dt.month == 12 && dt.day > 28) {
-        week1 = ICAL.Time.week_one_starts(isoyear + 1, aWeekStart);
+        week1 = ICAL.Time.weekOneStarts(isoyear + 1, aWeekStart);
         if (dt.compare(week1) < 0) {
-          week1 = ICAL.Time.week_one_starts(isoyear, aWeekStart);
+          week1 = ICAL.Time.weekOneStarts(isoyear, aWeekStart);
         } else {
           isoyear++;
         }
       } else {
-        week1 = ICAL.Time.week_one_starts(isoyear, aWeekStart);
+        week1 = ICAL.Time.weekOneStarts(isoyear, aWeekStart);
         if (dt.compare(week1) < 0) {
-          week1 = ICAL.Time.week_one_starts(--isoyear, aWeekStart);
+          week1 = ICAL.Time.weekOneStarts(--isoyear, aWeekStart);
         }
       }
 
@@ -3379,107 +3424,33 @@ ICAL.Binary = (function() {
       this.hour += mult * aDuration.hours;
       this.day += mult * aDuration.days;
       this.day += mult * 7 * aDuration.weeks;
-
-      this.normalize();
     },
 
     subtractDate: function icaltime_subtract(aDate) {
-      function leap_years_until(aYear) {
-        return ICAL.helpers.trunc(aYear / 4) -
-               ICAL.helpers.trunc(aYear / 100) +
-               ICAL.helpers.trunc(aYear / 400);
-      }
+      var unixTime = this.toUnixTime();
+      var other = aDate.toUnixTime();
+      var diff = (unixTime - other);
 
-      function leap_years_between(aStart, aEnd) {
-        if (aStart >= aEnd) {
-          return 0;
-        } else {
-          return leap_years_until(aEnd - 1) - leap_years_until(aStart);
-        }
-      }
-      var dur = new ICAL.Duration();
-
-      dur.seconds = this.second - aDate.second;
-      dur.minutes = this.minute - aDate.minute;
-      dur.hours = this.hour - aDate.hour;
-
-      if (this.year == aDate.year) {
-        var this_doy = this.dayOfYear();
-        var that_doy = aDate.dayOfYear();
-        dur.days = this_doy - that_doy;
-      } else if (this.year < aDate.year) {
-        var days_left_thisyear = 365 +
-          (ICAL.Time.is_leap_year(this.year) ? 1 : 0) -
-          this.dayOfYear();
-
-        dur.days -= days_left_thisyear + aDate.dayOfYear();
-        dur.days -= leap_years_between(this.year + 1, aDate.year);
-        dur.days -= 365 * (aDate.year - this.year - 1);
-      } else {
-        var days_left_thatyear = 365 +
-          (ICAL.Time.is_leap_year(aDate.year) ? 1 : 0) -
-          aDate.dayOfYear();
-
-        dur.days += days_left_thatyear + this.dayOfYear();
-        dur.days += leap_years_between(aDate.year + 1, this.year);
-        dur.days += 365 * (this.year - aDate.year - 1);
-      }
-
-      return dur.normalize();
+      return ICAL.Duration.fromSeconds(
+        diff
+      );
     },
 
     compare: function icaltime_compare(other) {
-      function cmp(attr) {
-        return ICAL.Time._cmp_attr(a, b, attr);
-      }
+      var a = this.toUnixTime();
+      var b = other.toUnixTime();
 
-      if (!other) return 0;
-
-      if (this.isDate || other.isDate) {
-        return this.compare_date_only_tz(other, this.zone);
-      }
-
-      var target_zone;
-      if (this.zone == ICAL.Timezone.local_timezone ||
-          other.zone == ICAL.Timezone.local_timezone) {
-        target_zone = ICAL.Timezone.local_timezone;
-      } else {
-        target_zone = ICAL.Timezone.utc_timezone;
-      }
-
-      var a = this.convert_to_zone(target_zone);
-      var b = other.convert_to_zone(target_zone);
-      var rc = 0;
-
-      if ((rc = cmp("year")) != 0) return rc;
-      if ((rc = cmp("month")) != 0) return rc;
-      if ((rc = cmp("day")) != 0) return rc;
-
-      if (a.isDate && b.isDate) {
-        // If both are dates, we are done
-        return 0;
-      } else if (b.isDate) {
-        // If b is a date, then a is greater
-        return 1;
-      } else if (a.isDate) {
-        // If a is a date, then b is greater
-        return -1;
-      }
-
-      if ((rc = cmp("hour")) != 0) return rc;
-      if ((rc = cmp("minute")) != 0) return rc;
-      if ((rc = cmp("second")) != 0) return rc;
-
-      // Now rc is 0 and the dates are equal
-      return rc;
+      if (a > b) return 1;
+      if (b > a) return -1;
+      return 0;
     },
 
-    compare_date_only_tz: function icaltime_compare_date_only_tz(other, tz) {
+    compareDateOnlyTz: function icaltime_compareDateOnlyTz(other, tz) {
       function cmp(attr) {
         return ICAL.Time._cmp_attr(a, b, attr);
       }
-      var a = this.convert_to_zone(tz);
-      var b = other.convert_to_zone(tz);
+      var a = this.convertToZone(tz);
+      var b = other.convertToZone(tz);
       var rc = 0;
 
       if ((rc = cmp("year")) != 0) return rc;
@@ -3489,7 +3460,7 @@ ICAL.Binary = (function() {
       return rc;
     },
 
-    convert_to_zone: function convert_to_zone(zone) {
+    convertToZone: function convertToZone(zone) {
       var copy = this.clone();
       var zone_equals = (this.zone.tzid == zone.tzid);
 
@@ -3552,7 +3523,8 @@ ICAL.Binary = (function() {
                           this.hour, this.minute, this.second, 0);
         }
       } else {
-        var utcDate = this.convert_to_zone(ICAL.Timezone.utc_timezone);
+        return new Date(this.toUnixTime() * 1000);
+        var utcDate = this.convertToZone(ICAL.Timezone.utc_timezone);
         if (this.isDate) {
           return Date.UTC(this.year, this.month - 1, this.day);
         } else {
@@ -3562,106 +3534,127 @@ ICAL.Binary = (function() {
       }
     },
 
-    normalize: function icaltime_normalize() {
-      if (this.isDate) {
-        this.hour = 0;
-        this.minute = 0;
-        this.second = 0;
+    _normalize: function icaltime_normalize() {
+      var isDate = this._time.isDate;
+      if (this._time.isDate) {
+        this._time.hour = 0;
+        this._time.minute = 0;
+        this._time.second = 0;
       }
-      this.icaltype = (this.isDate ? "date" : "date-time");
-
+      this.icaltype = (isDate ? "date" : "date-time");
       this.adjust(0, 0, 0, 0);
+
       return this;
     },
 
     adjust: function icaltime_adjust(aExtraDays, aExtraHours,
-                                     aExtraMinutes, aExtraSeconds) {
+                                     aExtraMinutes, aExtraSeconds, aTime) {
+
+      var minutesOverflow, hoursOverflow,
+          daysOverflow = 0, yearsOverflow = 0;
+
       var second, minute, hour, day;
-      var minutes_overflow, hours_overflow, days_overflow = 0,
-        years_overflow = 0;
       var daysInMonth;
 
-      if (!this.isDate) {
-        second = this.second + aExtraSeconds;
-        this.second = second % 60;
-        minutes_overflow = ICAL.helpers.trunc(second / 60);
-        if (this.second < 0) {
-          this.second += 60;
-          minutes_overflow--;
+      var time = aTime || this._time;
+
+      if (!time.isDate) {
+        second = time.second + aExtraSeconds;
+        time.second = second % 60;
+        minutesOverflow = ICAL.helpers.trunc(second / 60);
+        if (time.second < 0) {
+          time.second += 60;
+          minutesOverflow--;
         }
 
-        minute = this.minute + aExtraMinutes + minutes_overflow;
-        this.minute = minute % 60;
-        hours_overflow = ICAL.helpers.trunc(minute / 60);
-        if (this.minute < 0) {
-          this.minute += 60;
-          hours_overflow--;
+        minute = time.minute + aExtraMinutes + minutesOverflow;
+        time.minute = minute % 60;
+        hoursOverflow = ICAL.helpers.trunc(minute / 60);
+        if (time.minute < 0) {
+          time.minute += 60;
+          hoursOverflow--;
         }
 
-        hour = this.hour + aExtraHours + hours_overflow;
-        this.hour = hour % 24;
-        days_overflow = ICAL.helpers.trunc(hour / 24);
-        if (this.hour < 0) {
-          this.hour += 24;
-          days_overflow--;
+        hour = time.hour + aExtraHours + hoursOverflow;
+
+        time.hour = hour % 24;
+        daysOverflow = ICAL.helpers.trunc(hour / 24);
+        if (time.hour < 0) {
+          time.hour += 24;
+          daysOverflow--;
         }
       }
+
 
       // Adjust month and year first, because we need to know what month the day
       // is in before adjusting it.
-      if (this.month > 12) {
-        years_overflow = ICAL.helpers.trunc((this.month - 1) / 12);
-      } else if (this.month < 1) {
-        years_overflow = ICAL.helpers.trunc(this.month / 12) - 1;
+      if (time.month > 12) {
+        yearsOverflow = ICAL.helpers.trunc((time.month - 1) / 12);
+      } else if (time.month < 1) {
+        yearsOverflow = ICAL.helpers.trunc(time.month / 12) - 1;
       }
 
-      this.year += years_overflow;
-      this.month -= 12 * years_overflow;
+      time.year += yearsOverflow;
+      time.month -= 12 * yearsOverflow;
 
       // Now take care of the days (and adjust month if needed)
-      day = this.day + aExtraDays + days_overflow;
+      day = time.day + aExtraDays + daysOverflow;
+
       if (day > 0) {
         for (;;) {
-          var daysInMonth = ICAL.Time.daysInMonth(this.month, this.year);
+          var daysInMonth = ICAL.Time.daysInMonth(time.month, time.year);
           if (day <= daysInMonth) {
             break;
           }
 
-          this.month++;
-          if (this.month > 12) {
-            this.year++;
-            this.month = 1;
+          time.month++;
+          if (time.month > 12) {
+            time.year++;
+            time.month = 1;
           }
 
           day -= daysInMonth;
         }
       } else {
         while (day <= 0) {
-          if (this.month == 1) {
-            this.year--;
-            this.month = 12;
+          if (time.month == 1) {
+            time.year--;
+            time.month = 12;
           } else {
-            this.month--;
+            time.month--;
           }
 
-          day += ICAL.Time.daysInMonth(this.month, this.year);
+          day += ICAL.Time.daysInMonth(time.month, time.year);
         }
       }
 
-      this.day = day;
+      time.day = day;
       return this;
     },
 
     fromUnixTime: function fromUnixTime(seconds) {
-      var epoch = ICAL.Time.epoch_time.clone();
+      var epoch = ICAL.Time.epochTime.clone();
       epoch.adjust(0, 0, 0, seconds);
       this.fromData(epoch);
       this.zone = ICAL.Timezone.utc_timezone;
     },
 
     toUnixTime: function toUnixTime() {
-      var dur = this.subtractDate(ICAL.Time.epoch_time);
-      return dur.toSeconds();
+      var offset = this.utcOffset();
+
+      // we use the offset trick to ensure
+      // that we are getting the actual UTC time
+      var ms = Date.UTC(
+        this.year,
+        this.month - 1,
+        this.day,
+        this.hour,
+        this.minute,
+        this.second - offset
+      );
+
+      // seconds
+      return ms / 1000;
     },
 
     /**
@@ -3712,21 +3705,20 @@ ICAL.Binary = (function() {
 
   (function setupNormalizeAttributes() {
     // This needs to run before any instances are created!
-    function addAutoNormalizeAttribute(attr, mattr) {
-      ICAL.Time.prototype[mattr] = ICAL.Time.prototype[attr];
-
+    function defineAttr(attr) {
       Object.defineProperty(ICAL.Time.prototype, attr, {
-        get: function() {
-          return this[mattr];
-        },
-        set: function(val) {
-          this[mattr] = val;
-          if (this.auto_normalize) {
-            var old_normalize = this.auto_normalize;
-            this.auto_normalize = false;
-            this.normalize();
-            this.auto_normalize = old_normalize;
+        get: function getTimeAttr() {
+          if (this._pendingNormalization) {
+            this._normalize();
+            this._pendingNormalization = false;
           }
+
+          return this._time[attr];
+        },
+        set: function setTimeAttr(val) {
+          this._pendingNormalization = true;
+          this._time[attr] = val;
+
           return val;
         }
       });
@@ -3734,15 +3726,13 @@ ICAL.Binary = (function() {
     }
 
     if ("defineProperty" in Object) {
-      addAutoNormalizeAttribute("year", "mYear");
-      addAutoNormalizeAttribute("month", "mMonth");
-      addAutoNormalizeAttribute("day", "mDay");
-      addAutoNormalizeAttribute("hour", "mHour");
-      addAutoNormalizeAttribute("minute", "mMinute");
-      addAutoNormalizeAttribute("second", "mSecond");
-      addAutoNormalizeAttribute("isDate", "mIsDate");
-
-      ICAL.Time.prototype.auto_normalize = true;
+      defineAttr("year");
+      defineAttr("month");
+      defineAttr("day");
+      defineAttr("hour");
+      defineAttr("minute");
+      defineAttr("second");
+      defineAttr("isDate");
     }
   })();
 
@@ -3867,7 +3857,7 @@ ICAL.Binary = (function() {
     return ICAL.Time.fromJSDate(new Date(), false);
   };
 
-  ICAL.Time.week_one_starts = function week_one_starts(aYear, aWeekStart) {
+  ICAL.Time.weekOneStarts = function weekOneStarts(aYear, aWeekStart) {
     var t = ICAL.Time.fromData({
       year: aYear,
       month: 1,
@@ -3880,7 +3870,7 @@ ICAL.Binary = (function() {
     return t;
   };
 
-  ICAL.Time.epoch_time = ICAL.Time.fromData({
+  ICAL.Time.epochTime = ICAL.Time.fromData({
     year: 1970,
     month: 1,
     day: 1,
@@ -4350,7 +4340,6 @@ ICAL.RecurIterator = (function() {
           if ((this.last.dayOfWeek() < rule_dow && dow >= 0) || dow < 0) {
             // Initial time is after first day of BYDAY data
             this.last.day += dow;
-            this.last.normalize();
           }
         } else {
           var wkMap = icalrecur_iterator._wkdayMap[this.dtstart.dayOfWeek()];
@@ -4420,9 +4409,8 @@ ICAL.RecurIterator = (function() {
           var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
           this.last.day = daysInMonth + this.last.day + 1;
         }
-
-        this.last.normalize();
       }
+
     },
 
     next: function icalrecur_iterator_next() {
@@ -4557,7 +4545,6 @@ ICAL.RecurIterator = (function() {
         var week_no = this.by_data.BYWEEKNO[this.by_indices.BYWEEKNO];
 
         this.last.day += 7 * week_no;
-        this.last.normalize();
 
         if (end_of_data) {
           this.increment_year(1);
@@ -4838,7 +4825,6 @@ ICAL.RecurIterator = (function() {
 
       for (;;) {
         var tt = new ICAL.Time();
-        tt.auto_normalize = false;
         this.by_indices.BYDAY++;
 
         if (this.by_indices.BYDAY == this.by_data.BYDAY.length) {
@@ -4860,7 +4846,7 @@ ICAL.RecurIterator = (function() {
         tt.month = this.last.month;
         tt.day = this.last.day;
 
-        var startOfWeek = tt.start_doy_week(this.rule.wkst);
+        var startOfWeek = tt.startDoyWeek(this.rule.wkst);
 
         if (dow + startOfWeek < 1) {
           // The selected date is in the previous year
@@ -4877,12 +4863,9 @@ ICAL.RecurIterator = (function() {
          * the fact that when the year/month/day changes
          * it can effect the other operations that come after.
          */
-        this.last.auto_normalize = false;
         this.last.year = next.year;
         this.last.month = next.month;
         this.last.day = next.day;
-        this.last.auto_normalize = true;
-        this.last.normalize();
 
         return end_of_data;
       }
@@ -5036,9 +5019,9 @@ ICAL.RecurIterator = (function() {
           var month = this.by_data.BYMONTH[monthIdx];
           t.month = month;
           t.day = 1;
-          var first_week = t.week_number(this.rule.wkst);
+          var first_week = t.weekNumber(this.rule.wkst);
           t.day = ICAL.Time.daysInMonth(month, aYear);
-          var last_week = t.week_number(this.rule.wkst);
+          var last_week = t.weekNumber(this.rule.wkst);
           for (monthIdx = first_week; monthIdx < last_week; monthIdx++) {
             validWeeks[monthIdx] = 1;
           }
@@ -5199,7 +5182,7 @@ ICAL.RecurIterator = (function() {
         for (var daykey in expandedDays) {
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
-          var weekno = tt.week_number(this.rule.wkst);
+          var weekno = tt.weekNumber(this.rule.wkst);
 
           if (this.by_data.BYWEEKNO.indexOf(weekno)) {
             this.days.push(day);
@@ -5352,7 +5335,7 @@ ICAL.RecurIterator = (function() {
 
     check_contracting_rules: function check_contracting_rules() {
       var dow = this.last.dayOfWeek();
-      var weekNo = this.last.week_number(this.rule.wkst);
+      var weekNo = this.last.weekNumber(this.rule.wkst);
       var doy = this.last.dayOfYear();
 
       return (this.check_contract_restriction("BYSECOND", this.last.second) &&
@@ -5724,16 +5707,16 @@ ICAL.RecurExpansion = (function() {
       var idx;
 
       for (; i < len; i++) {
-        prop = props[i].getFirstValue();
+        props[i].getValues().forEach(function(prop) {
+          idx = ICAL.helpers.binsearchInsert(
+            result,
+            prop,
+            compareTime
+          );
 
-        idx = ICAL.helpers.binsearchInsert(
-          result,
-          prop,
-          compareTime
-        );
-
-        // ordered insert
-        result.splice(idx, 0, prop);
+          // ordered insert
+          result.splice(idx, 0, prop);
+        });
       }
 
       return result;
@@ -5751,6 +5734,29 @@ ICAL.RecurExpansion = (function() {
         this.ruleDate = this.last.clone();
         this.complete = true;
         return;
+      }
+
+      if (component.hasProperty('rdate')) {
+        this.ruleDates = this._extractDates(component, 'rdate');
+
+        // special hack for cases where first rdate is prior
+        // to the start date. We only check for the first rdate.
+        // This is mostly for google's crazy recurring date logic
+        // (contacts birthdays).
+        if ((this.ruleDates[0]) &&
+            (this.ruleDates[0].compare(this.dtstart) < 0)) {
+
+          this.ruleDateInc = 0;
+          this.last = this.ruleDates[0].clone();
+        } else {
+          this.ruleDateInc = ICAL.helpers.binsearchInsert(
+            this.ruleDates,
+            this.last,
+            compareTime
+          );
+        }
+
+        this.ruleDate = this.ruleDates[this.ruleDateInc];
       }
 
       if (component.hasProperty('rrule')) {
@@ -5771,17 +5777,6 @@ ICAL.RecurExpansion = (function() {
           // XXX: I find this suspicious might be a bug?
           iter.next();
         }
-      }
-
-      if (component.hasProperty('rdate')) {
-        this.ruleDates = this._extractDates(component, 'rdate');
-        this.ruleDateInc = ICAL.helpers.binsearchInsert(
-          this.ruleDates,
-          this.last,
-          compareTime
-        );
-
-        this.ruleDate = this.ruleDates[this.ruleDateInc];
       }
 
       if (component.hasProperty('exdate')) {
@@ -5874,6 +5869,10 @@ ICAL.Event = (function() {
 
     this.exceptions = Object.create(null);
 
+    if (options && options.strictExceptions) {
+      this.strictExceptions = options.strictExceptions;
+    }
+
     if (options && options.exceptions) {
       options.exceptions.forEach(this.relateException, this);
     }
@@ -5887,6 +5886,13 @@ ICAL.Event = (function() {
      * @type Array[ICAL.Event]
      */
     exceptions: null,
+
+    /**
+     * When true will verify exceptions are related by their UUID.
+     *
+     * @type {Boolean}
+     */
+    strictExceptions: false,
 
     /**
      * Relates a given event exception to this object.
@@ -5908,7 +5914,7 @@ ICAL.Event = (function() {
         obj = new ICAL.Event(obj);
       }
 
-      if (obj.uid !== this.uid) {
+      if (this.strictExceptions && obj.uid !== this.uid) {
         throw new Error('attempted to relate unrelated exception');
       }
 
