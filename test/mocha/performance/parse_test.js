@@ -2,10 +2,11 @@ if (testSupport.isNode) {
   var Benchmark = require('benchmark');
 }
 
+// we should really only require two + the latest
 testSupport.requireBenchmarkBuild('pre1');
-testSupport.requireICAL();
+testSupport.requireBenchmarkBuild('beta1');
 
-suite('bench', function() {
+suite('parser benchmarks', function() {
 
   var icsData;
   var bench;
@@ -20,21 +21,7 @@ suite('bench', function() {
 
   suiteSetup(function() {
 
-    var parsed = ICAL.parse(icsData);
-
-    bench.add('#parse v2', function() {
-      var data = ICAL.parse(icsData);
-    });
-
-    bench.add('#stringify v2', function() {
-      ICAL.stringify(parsed);
-    });
-
-    bench.add('ICAL.Recur#fromString v2', function() {
-      ICAL.Recur.fromString('FREQ=MONTHLY;UNTIL=2012-10-12;BYSETPOS=1');
-    });
-
-    ['pre1'].forEach(function(version) {
+    ['latest', 'beta1'].forEach(function(version) {
       // current version of ical
       var globalLib;
       // prefix name for test
@@ -52,12 +39,6 @@ suite('bench', function() {
 
       var parsed = globalLib.parse(icsData);
 
-      bench.add(version + ': ICAL.icalrecur#fromString v2', function() {
-        globalLib.icalrecur.fromString(
-          'FREQ=MONTHLY;UNTIL=20121012;BYSETPOS=1'
-        );
-      });
-
       bench.add(version + ': #parse', function() {
         var data = globalLib.parse(icsData);
       });
@@ -71,6 +52,8 @@ suite('bench', function() {
 
   test('benchmark', function(done) {
     this.timeout((bench.maxTime * 2) * 1000);
+    // quick formatting hack
+    console.log();
 
     bench.on('cycle', function(event) {
       console.log(String(event.target));
