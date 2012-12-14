@@ -3,7 +3,13 @@ suite('timezone', function() {
   var timezone;
 
 
-  function timezoneTest(tzid, testCb) {
+  function timezoneTest(tzid, name, testCb) {
+    if (typeof(name) === 'function') {
+      testCb = name;
+      name = 'parse';
+    }
+
+
     suite(tzid, function() {
       testSupport.defineSample('timezones/' + tzid + '.ics', function(data) {
         icsData = data;
@@ -14,13 +20,10 @@ suite('timezone', function() {
         var vcalendar = new ICAL.Component(parsed);
         var comp = vcalendar.getFirstSubcomponent('vtimezone');
 
-        timezone = new ICAL.Timezone({
-          tzid: comp.getFirstPropertyValue('tzid'),
-          component: comp
-        });
+        timezone = new ICAL.Timezone(comp);
       });
 
-      test('parse', testCb);
+      test(name, testCb);
     });
   }
 
@@ -69,6 +72,31 @@ suite('timezone', function() {
         }.bind(this, tzid));
       }
     });
+  });
+
+  timezoneTest('America/Los_Angeles', '#expandedUntilYear', function() {
+    var time = new ICAL.Time({
+      year: 2012,
+      zone: timezone
+    });
+
+    time.utcOffset();
+    assert.equal(timezone.expandedUntilYear, 2012);
+
+    time = new ICAL.Time({
+      year: 2014,
+      zone: timezone
+    });
+
+    time.utcOffset();
+    assert.equal(timezone.expandedUntilYear, 2014);
+
+    time = new ICAL.Time({
+      year: 1997,
+      zone: timezone
+    });
+    time.utcOffset();
+    assert.equal(timezone.expandedUntilYear, 2014);
   });
 
 });

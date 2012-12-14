@@ -18,22 +18,105 @@ suite('icaltime', function() {
     // TODO also check UTC dates
 
     g.reset();
-    assert.equal(g, Time.epoch_time.toString());
+    assert.equal(g, Time.epochTime.toString());
+  });
+
+  suite('initialize', function() {
+    var icsData;
+    testSupport.defineSample('timezones/America/New_York.ics', function(data) {
+      icsData = data;
+    });
+
+    test('with timezone', function() {
+      var parsed = ICAL.parse(icsData);
+      var vcalendar = new ICAL.Component(parsed[1]);
+      var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
+      var tzid = vtimezone.getFirstPropertyValue('tzid');
+
+      ICAL.TimezoneService.register(vtimezone);
+
+      // utc -5
+      var time = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 10,
+        timezone: tzid
+      });
+
+      // -5
+      assert.equal((time.utcOffset() / 60) / 60, -5);
+
+      assert.equal(
+        time.toUnixTime(),
+        Date.UTC(2012, 0, 1, 15) / 1000
+      );
+    });
   });
 
   suite('setters', function() {
+    var subject;
 
-    suite('.day', function() {
-      test('beyond month', function() {
-        var subject = Time.fromData({ year: 2012, month: 1, day: 31 });
-        var result = subject.day += 1;
-
-        assert.equal(result, 32, 'should return real day math');
-
-        assert.equal(subject.month, 2, 'normalizes month');
-        assert.equal(subject.day, 1, 'normalizes day');
+    setup(function() {
+      subject = new ICAL.Time({
+        year: 2012,
+        month: 12,
+        day: 31,
+        // needed otherwise this object
+        // is treated as a date rather then
+        // date-time and hour/minute/second will
+        // not be normalized/adjusted.
+        hour: 0
       });
+
+      subject.debug = true;
     });
+
+    function movedToNextYear() {
+      assert.equal(subject.day, 1);
+      assert.equal(subject.month, 1);
+      assert.equal(subject.year, 2013);
+    }
+
+    test('.month / .day beyond the year', function() {
+      subject.day++;
+      subject.month++;
+
+      assert.equal(subject.day, 1);
+      assert.equal(subject.month, 2);
+      assert.equal(subject.year, 2013);
+    });
+
+    test('.hour', function() {
+      subject.hour = 23;
+      subject.hour++;
+
+      movedToNextYear();
+      assert.equal(subject.hour, 0);
+    });
+
+    test('.minute', function() {
+      subject.minute = 59;
+      subject.hour = 23;
+      subject.minute++;
+
+      movedToNextYear();
+      assert.equal(subject.hour, 0);
+      assert.equal(subject.minute, 0);
+    });
+
+    test('.second', function() {
+      subject.hour = 23;
+      subject.minute = 59;
+      subject.second = 59;
+
+      subject.second++;
+
+      movedToNextYear();
+      assert.equal(subject.minute, 0);
+      assert.equal(subject.second, 0);
+    });
+
 
   });
 
@@ -104,7 +187,7 @@ suite('icaltime', function() {
 
       assert.hasProperties(subject, {
         year: 2012,
-        zone: Timezone.utc_timezone
+        zone: Timezone.utcTimezone
       });
     });
 
@@ -116,7 +199,7 @@ suite('icaltime', function() {
 
       assert.hasProperties(subject, {
         year: 2012,
-        zone: Timezone.local_timezone
+        zone: Timezone.localTimezone
       });
     });
   });
@@ -387,6 +470,71 @@ suite('icaltime', function() {
 
   });
 
+  suite('#toUnixTime', function() {
+    test('without timezone', function() {
+      var date = new Date(2012, 0, 22, 1, 7, 39);
+      var time = new ICAL.Time({
+        year: date.getUTCFullYear(),
+        month: date.getUTCMonth() + 1,
+        day: date.getUTCDate(),
+        hour: date.getUTCHours(),
+        minute: date.getUTCMinutes(),
+        second: date.getUTCSeconds()
+      });
+
+      assert.equal(
+        time.toUnixTime(),
+        date.valueOf() / 1000
+      );
+    });
+
+    suite('with timezone', function() {
+      var icsData;
+      testSupport.defineSample(
+        'timezones/America/Los_Angeles.ics',
+        function(data) {
+
+        icsData = data;
+      });
+
+      var subject;
+      var zone;
+
+      setup(function() {
+        var parsed = ICAL.parse(icsData)[1];
+        var vcalendar = new ICAL.Component(parsed);
+        var comp = vcalendar.getFirstSubcomponent('vtimezone');
+
+        zone = new ICAL.Timezone({
+          tzid: comp.getFirstPropertyValue('tzid'),
+          component: comp
+        });
+
+        subject = new ICAL.Time({
+          year: 2012,
+          month: 1,
+          day: 1,
+          hour: 10
+        }, zone);
+      });
+
+      test('result', function() {
+        // we know that subject is -8
+        var expectedTime = Date.UTC(
+          2012,
+          0,
+          1,
+          18
+        ) / 1000;
+
+        assert.equal(
+          subject.toUnixTime(),
+          expectedTime
+        );
+      });
+    });
+  });
+
   suite('#adjust', function() {
     var date = new Date(2012, 0, 25);
 
@@ -412,11 +560,11 @@ suite('icaltime', function() {
     });
   });
 
-  suite('#start_doy_week', function() {
+  suite('#startDoyWeek', function() {
 
     test('forward (using defaults)', function() {
       var subject = Time.fromData({ year: 2012, month: 1, day: 20 });
-      var result = subject.start_doy_week();
+      var result = subject.startDoyWeek();
       assert.equal(result, 15, 'should start on sunday of that week');
     });
 
@@ -460,11 +608,11 @@ suite('icaltime', function() {
         day: 1,
         month: 1,
         hour: 3,
-        zone: Timezone.utc_timezone
+        zone: Timezone.utcTimezone
       });
 
       var after = new Time(time.toJSON());
-      assert.equal(after.zone, Timezone.utc_timezone);
+      assert.equal(after.zone, Timezone.utcTimezone);
 
       assert.deepEqual(
         after.toJSDate(),
@@ -481,7 +629,7 @@ suite('icaltime', function() {
         minute: 15,
         second: 1,
         isDate: false,
-        zone: Timezone.local_timezone
+        zone: Timezone.localTimezone
       });
 
       var expected = {
@@ -498,7 +646,7 @@ suite('icaltime', function() {
       assert.deepEqual(time.toJSON(), expected);
 
       var after = new Time(time.toJSON());
-      assert.equal(after.zone, Timezone.local_timezone);
+      assert.equal(after.zone, Timezone.localTimezone);
 
       assert.deepEqual(
         time.toJSDate(),
@@ -525,11 +673,12 @@ suite('icaltime', function() {
       var cp = dt.clone();
 
       assert.equal(dt.toUnixTime(), data.expect_unixtime);
-      var dur = dt.subtractDate(Time.epoch_time);
+      var dur = dt.subtractDate(Time.epochTime);
       assert.equal(dur.toSeconds(), data.expect_unixtime);
 
       cp = dt.clone();
       cp.year += 1;
+
       var diff = cp.subtractDate(dt);
       var yearseconds = (365 + Time.is_leap_year(dt.year)) * 86400;
       assert.equal(diff.toSeconds(), yearseconds);
@@ -605,12 +754,6 @@ suite('icaltime', function() {
         var cur_seconds = dt.second;
         var add_seconds = data.add_seconds || 0;
 
-        dt.auto_normalize = false;
-        dt.second += add_seconds;
-        assert.equal(cur_seconds + add_seconds, dt.second);
-        dt.second = cur_seconds;
-
-        dt.auto_normalize = true;
         dt.second += add_seconds;
         assert.equal(dt, data.expect);
     }
@@ -630,13 +773,13 @@ suite('icaltime', function() {
       dayOfWeek: Time.SUNDAY,
       dayOfYear: 1,
       startOfWeek: '2012-01-01T00:00:00',
-      end_of_week: '2012-01-07T00:00:00',
-      start_of_month: '2012-01-01',
-      end_of_month: '2012-01-31',
-      start_of_year: '2012-01-01',
-      end_of_year: '2012-12-31',
-      start_doy_week: 1,
-        week_number: 1,
+      endOfWeek: '2012-01-07T00:00:00',
+      startOfMonth: '2012-01-01',
+      endOfMonth: '2012-01-31',
+      startOfYear: '2012-01-01',
+      endOfYear: '2012-12-31',
+      startDoyWeek: 1,
+        weekNumber: 1
     }, { /* A date in week number 53 */
       str: '2009-01-01T00:00:00',
       isDate: false,
@@ -650,13 +793,13 @@ suite('icaltime', function() {
       dayOfWeek: Time.THURSDAY,
       dayOfYear: 1,
       startOfWeek: '2008-12-28T00:00:00',
-      end_of_week: '2009-01-03T00:00:00',
-      start_of_month: '2009-01-01',
-      end_of_month: '2009-01-31',
-      start_of_year: '2009-01-01',
-      end_of_year: '2009-12-31',
-      start_doy_week: -3,
-      week_number: 53
+      endOfWeek: '2009-01-03T00:00:00',
+      startOfMonth: '2009-01-01',
+      endOfMonth: '2009-01-31',
+      startOfYear: '2009-01-01',
+      endOfYear: '2009-12-31',
+      startDoyWeek: -3,
+      weekNumber: 53
     }];
 
     for (var datakey in test_data) {
@@ -673,18 +816,18 @@ suite('icaltime', function() {
       assert.equal(data.dayOfWeek, dt.dayOfWeek());
       assert.equal(data.dayOfYear, dt.dayOfYear());
       assert.equal(data.startOfWeek, dt.startOfWeek());
-      assert.equal(data.end_of_week, dt.end_of_week());
-      assert.equal(data.start_of_month, dt.start_of_month());
-      assert.equal(data.end_of_month, dt.end_of_month().toString());
-      assert.equal(data.start_of_year, dt.start_of_year());
-      assert.equal(data.end_of_year, dt.end_of_year());
-      assert.equal(data.start_doy_week, dt.start_doy_week(Time.SUNDAY));
-      assert.equal(data.week_number, dt.week_number(Time.SUNDAY));
+      assert.equal(data.endOfWeek, dt.endOfWeek());
+      assert.equal(data.startOfMonth, dt.startOfMonth());
+      assert.equal(data.endOfMonth, dt.endOfMonth().toString());
+      assert.equal(data.startOfYear, dt.startOfYear());
+      assert.equal(data.endOfYear, dt.endOfYear());
+      assert.equal(data.startDoyWeek, dt.startDoyWeek(Time.SUNDAY));
+      assert.equal(data.weekNumber, dt.weekNumber(Time.SUNDAY));
       // TODO nthWeekDay
 
       dt = new Time();
       dt.resetTo(data.year, data.month, data.day, data.hour, data.minute,
-                 data.second, Timezone.utc_timezone);
+                 data.second, Timezone.utcTimezone);
       assert.equal(data.year, dt.year);
       assert.equal(data.month, dt.month);
       assert.equal(data.day, dt.day);

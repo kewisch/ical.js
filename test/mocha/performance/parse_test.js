@@ -20,7 +20,6 @@ suite('parser benchmarks', function() {
   });
 
   suiteSetup(function() {
-
     ['latest', 'beta1'].forEach(function(version) {
       // current version of ical
       var globalLib;
@@ -37,14 +36,42 @@ suite('parser benchmarks', function() {
         throw new Error('could not find ICAL_' + version);
       }
 
-      var parsed = globalLib.parse(icsData);
-
       bench.add(version + ': #parse', function() {
         var data = globalLib.parse(icsData);
       });
 
       bench.add(version + ': #stringify', function() {
         globalLib.stringify(parsed);
+      });
+
+      bench.add(version + ': create and clone time', function() {
+        var time = new globalLib.Time({
+          year: 2012,
+          month: 1,
+          day: 32,
+          seconds: 1
+        });
+
+        if (time.day !== 1) {
+          throw new Error('test sanity fails for .day');
+        }
+
+        if (time.month !== 2) {
+          throw new Error('test sanity fails for .month');
+        }
+
+        time.clone();
+      });
+
+      var parsed = globalLib.parse(icsData);
+      var comp = new globalLib.Component(parsed[1]);
+      var tz = comp.getFirstSubcomponent('vtimezone');
+      var std = tz.getFirstSubcomponent('standard');
+      var rrule = std.getFirstPropertyValue('rrule');
+
+      bench.add(version + ': timezone iterator & first iteration', function() {
+        var iterator = rrule.iterator(std.getFirstPropertyValue('dstart'));
+        iterator.next();
       });
     });
 

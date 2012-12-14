@@ -275,7 +275,7 @@ suite('Property', function() {
 
     test('no values', function() {
       subject = new ICAL.Property(fixtures.noValue);
-      assert.ok(!subject.getValues());
+      assert.deepEqual(subject.getValues(), []);
     });
   });
 
