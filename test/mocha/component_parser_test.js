@@ -8,6 +8,7 @@ suite('component_parser', function() {
 
   suite('#process', function() {
     var events = [];
+    var timezones = [];
 
     function eventEquals(a, b, msg) {
       if (!a)
@@ -30,6 +31,7 @@ suite('component_parser', function() {
     function setupProcess(options) {
       setup(function(done) {
         events.length = 0;
+        timezones.length = 0;
 
         subject = new ICAL.ComponentParser(options);
 
@@ -39,6 +41,10 @@ suite('component_parser', function() {
 
         subject.onevent = function(event) {
           events.push(event);
+        }
+
+        subject.ontimezone = function(tz) {
+          timezones.push(tz);
         }
 
         subject.oncomplete = function() {
@@ -54,7 +60,14 @@ suite('component_parser', function() {
 
       test('parse result', function() {
         assert.length(events, 0);
+        assert.length(timezones, 1);
+
+        var tz = timezones[0];
+
+        assert.instanceOf(tz, ICAL.Timezone);
+        assert.equal(tz.tzid, 'America/Los_Angeles');
       });
+
     });
 
     suite('with events', function() {
