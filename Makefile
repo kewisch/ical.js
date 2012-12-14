@@ -19,6 +19,9 @@ VENDOR_FILE_LIST= $(LIB)/helpers.js \
 	$(LIB)/event.js \
 	$(LIB)/component_parser.js
 
+OLSON_DB_REMOTE=http://www.iana.org/time-zones/repository/releases/tzdata2012j.tar.gz
+OLSON_DIR=$(PWD)/tools/tzurl/olson
+
 .PHONY: dev
 dev: package test-agent-config node-deps
 
@@ -92,3 +95,22 @@ test-browser:
 .PHONY: test-server
 test-server:
 	./node_modules/test-agent/bin/js-test-agent server --growl
+
+.PHONY: timezones
+timezones:
+	# download tzurl
+	if [ -d tools/tzurl ]; then \
+		echo "tzurl downloaded"; \
+	else \
+		svn export -r40 http://tzurl.googlecode.com/svn/trunk/ tools/tzurl ; \
+	fi;
+	if [ -d $(OLSON_DIR) ]; then \
+		echo "Using olson db from $(OLSON_DIR)"; \
+	else \
+		wget $(OLSON_DB_REMOTE) -O tools/tzurl/olson.tar.gz; \
+		mkdir $(OLSON_DIR); \
+		tar xvfz tools/tzurl/olson.tar.gz -C $(OLSON_DIR); \
+	fi;
+	# build it
+	make -C tools/tzurl OLSON_DIR=$(OLSON_DIR)
+	./tools/tzurl/vzic
