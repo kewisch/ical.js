@@ -35,6 +35,7 @@
       'period',
       'duration',
       'timezone',
+      'timezone_service',
       'time',
       'recur',
       'recur_iterator'

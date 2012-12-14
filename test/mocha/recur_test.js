@@ -11,7 +11,7 @@ suite('recur', function() {
         if (dtstart) {
           dtstart = ICAL.Time.fromString(dtstart);
         } else {
-          dtstart = ICAL.Time.epoch_time.clone();
+          dtstart = ICAL.Time.epochTime.clone();
         }
         var iter = recur.iterator(dtstart);
         assert.equal(iter.next().toString(), last);
@@ -24,7 +24,7 @@ suite('recur', function() {
         if (dtstart) {
           dtstart = ICAL.Time.fromString(dtstart);
         } else {
-          dtstart = ICAL.Time.epoch_time.clone();
+          dtstart = ICAL.Time.epochTime.clone();
         }
         assert.throws(function() {
           var iter = recur.iterator(dtstart);
@@ -155,7 +155,7 @@ suite('recur', function() {
   });
 
   test('#clone', function() {
-    var until = ICAL.Time.epoch_time.clone();
+    var until = ICAL.Time.epochTime.clone();
     var a = new ICAL.Recur({
         interval: 2,
         wkst: 3,
@@ -218,7 +218,7 @@ suite('recur', function() {
   });
 
   test('components', function() {
-    var until = ICAL.Time.epoch_time.clone();
+    var until = ICAL.Time.epochTime.clone();
     var a = new ICAL.Recur({
       interval: 2,
       wkst: 3,
@@ -333,7 +333,7 @@ suite('recur', function() {
   });
 
   test('#toString - round trip', function() {
-    var until = ICAL.Time.epoch_time.clone();
+    var until = ICAL.Time.epochTime.clone();
     var data = {
       interval: 2,
       wkst: 3,
