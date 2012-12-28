@@ -2,6 +2,35 @@ suite('ICAL.Event', function() {
 
   var icsData;
 
+  function rangeException(nth) {
+    if (!nth || nth <= 0) {
+      nth = 1;
+    }
+
+    var iter = subject.iterator();
+    var last;
+
+    while (nth--) {
+      last = iter.next();
+    }
+
+    var newEvent = new ICAL.Event();
+
+    newEvent.uid = subject.uid;
+
+    newEvent.component.addPropertyWithValue(
+      'recurrence-id',
+      last
+    );
+
+    newEvent.component.addPropertyWithValue(
+      'range',
+      subject.THISANDFUTURE
+    );
+
+    return newEvent;
+  }
+
   testSupport.defineSample('recur_instances.ics', function(data) {
     icsData = data;
   });
@@ -33,6 +62,7 @@ suite('ICAL.Event', function() {
   suite('initializer', function() {
     test('only with component', function() {
       assert.equal(subject.component, primaryItem);
+      assert.instanceOf(subject.rangeExceptions, Array);
     });
 
     test('with exceptions', function() {
@@ -116,6 +146,63 @@ suite('ICAL.Event', function() {
   suite('#getOccurrenceDetails', function() {
     setup(function() {
       exceptions.forEach(subject.relateException, subject);
+    });
+
+    suite('RANGE=THISANDFUTURE', function() {
+      test('starts earlier ends later', function() {
+        var exception = rangeException(1);
+        var rid = exception.recurrenceId;
+        var time = rid.clone();
+
+        exception.startDate = rid.clone();
+        exception.endDate = rid.clone();
+
+        // starts 2 hours & 2 min early
+        exception.startDate.hour -= 2;
+        exception.startDate.minute += 2;
+
+        // starts 1 hour - 2 min later
+        exception.endDate.hour += 1;
+        exception.endDate.minute -= 2;
+
+        subject.relateException(exception);
+
+        // create a time that has no exception
+        // but past the RID.
+        var occurs = rid.clone();
+        occurs.day += 3;
+        occurs.hour = 13;
+        occurs.minutes = 15;
+
+        var details = subject.getOccurrenceDetails(
+          occurs
+        );
+
+        assert.ok(details, 'has details');
+        assert.equal(details.item, exception, 'uses exception');
+
+        var expectedStart = occurs.clone();
+        var expectedEnd = occurs.clone();
+
+        // same offset (in different day) as the difference
+        // in the original exception.d
+        expectedStart.hour -= 2;
+        expectedStart.minute += 2;
+        expectedEnd.hour += 1;
+        expectedEnd.minute -= 2;
+
+        assert.deepEqual(
+          details.startDate.toJSDate(),
+          expectedStart.toJSDate(),
+          'start time offset'
+        );
+
+        assert.deepEqual(
+          details.endDate.toJSDate(),
+          expectedEnd.toJSDate(),
+          'end time offset'
+        );
+      });
     });
 
     test('exception', function() {
@@ -254,6 +341,94 @@ suite('ICAL.Event', function() {
         new ICAL.Event(exception);
 
       assert.deepEqual(subject.exceptions, expected);
+      assert.length(subject.rangeExceptions, 0, 'does not add range');
+    });
+
+    suite('with RANGE=THISANDFUTURE', function() {
+      function exceptionTime(index, mod) {
+        mod = mod || 0;
+
+
+        var item = subject.rangeExceptions[index];
+        var utc = item[0];
+        var time = new ICAL.Time();
+        time.fromUnixTime(utc + mod);
+
+        return time;
+      }
+
+      var list;
+
+      setup(function() {
+        list = [
+          rangeException(3),
+          rangeException(10),
+          rangeException(1)
+        ];
+
+        list.forEach(subject.relateException.bind(subject));
+        assert.length(subject.rangeExceptions, 3);
+      });
+
+      function nthRangeException(nth) {
+        return subject.rangeExceptions[nth];
+      }
+
+      function listDetails(obj) {
+        return [
+          obj.recurrenceId.toUnixTime(),
+          obj.recurrenceId.toString()
+        ];
+      }
+
+      test('ranges', function() {
+        var expected = [
+          listDetails(list[2]), // 1st
+          listDetails(list[0]), // 2nd
+          listDetails(list[1])  // 3rd
+        ];
+
+        assert.deepEqual(
+          subject.rangeExceptions,
+          expected
+        );
+      });
+
+      test('#findRangeException', function() {
+        var before = exceptionTime(0, -1);
+        var on = exceptionTime(0);
+        var first = exceptionTime(0, 1);
+        var second = exceptionTime(1, 30);
+        var third = exceptionTime(2, 100000);
+
+        assert.ok(
+          !subject.findRangeException(before),
+          'find before range'
+        );
+
+        assert.ok(
+          !subject.findRangeException(on),
+          'day of exception does not need a modification'
+        );
+
+        assert.equal(
+          subject.findRangeException(first),
+          nthRangeException(0)[1],
+          'finds first item'
+        );
+
+        assert.equal(
+          subject.findRangeException(second),
+          nthRangeException(1)[1],
+          'finds second item'
+        );
+
+        assert.equal(
+          subject.findRangeException(third),
+          nthRangeException(2)[1],
+          'finds third item'
+        );
+      });
     });
   });
 
@@ -265,6 +440,23 @@ suite('ICAL.Event', function() {
     test('when is exception', function() {
       var subject = new ICAL.Event(exceptions[0]);
       assert.isFalse(subject.isRecurring());
+    });
+  });
+
+  suite('#modifiesFuture', function() {
+
+    test('without range or exception', function() {
+      assert.isFalse(subject.isRecurrenceException());
+      assert.isFalse(subject.modifiesFuture());
+    });
+
+    test('with range and exception', function() {
+      subject.component.addPropertyWithValue(
+        'range',
+        subject.THISANDFUTURE
+      );
+
+      assert.isTrue(subject.modifiesFuture());
     });
   });
 

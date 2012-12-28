@@ -117,7 +117,6 @@ suite('icaltime', function() {
       assert.equal(subject.second, 0);
     });
 
-
   });
 
   suite('#fromJSDate', function() {
@@ -533,6 +532,25 @@ suite('icaltime', function() {
         );
       });
     });
+  });
+
+  test('#fromUnixTime', function() {
+    var time = new ICAL.Time({
+      year: 2012,
+      month: 1,
+      day: 5,
+      month: 1,
+      hour: 8,
+      timezone: 'Z'
+    });
+
+    var otherTime = new ICAL.Time();
+    otherTime.fromUnixTime(time.toUnixTime());
+
+    assert.deepEqual(
+      time.toJSDate(),
+      otherTime.toJSDate()
+    );
   });
 
   suite('#adjust', function() {
