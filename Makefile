@@ -41,8 +41,8 @@ node-deps:
 	cp node_modules/chai/chai.js test-agent/
 
 	# benchmark
-	rm -Rf test/mocha/support/benchmark.js
-	cp node_modules/benchmark/benchmark.js test/mocha/support/
+	rm -Rf test/support/benchmark.js
+	cp node_modules/benchmark/benchmark.js test/support/
 
  # test-agent
 	rm -f test-agent/test-agent.js
@@ -84,10 +84,10 @@ test: test-browser test-node
 .PHONY: test-node
 test-node:
 	./node_modules/mocha/bin/mocha --ui tdd \
-		test/mocha/helper.js \
-		test/mocha/*_test.js \
-		test/mocha/acceptance/*_test.js \
-		test/mocha/performance/*_test.js
+		test/helper.js \
+		test/*_test.js \
+		test/acceptance/*_test.js \
+		test/performance/*_test.js
 
 .PHONY: test-browser
 test-browser:

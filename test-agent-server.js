@@ -4,7 +4,7 @@ var Agent = require('test-agent'),
     Suite = Agent.Suite,
     suite = new Suite({
       path: __dirname,
-      testDir: 'test/mocha/',
+      testDir: 'test/',
       libDir: 'lib/ical/',
       testSuffix: '_test.js'
     });

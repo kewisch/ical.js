@@ -10,7 +10,7 @@ suite('parserv2', function() {
    * (one to parse, one is expected
    */
   suite('full parser tests', function() {
-    var root = 'test/mocha/parser/';
+    var root = 'test/parser/';
     var list = [
       "rfc",
       'single_empty_vcalendar',

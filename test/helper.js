@@ -66,7 +66,7 @@
     }
 
     if (typeof(window) === 'undefined') {
-      var lib = require(__dirname + '/../../' + file);
+      var lib = require(__dirname + '/../' + file);
       if (typeof(callback) !== 'undefined') {
         callback(lib);
       }
@@ -143,7 +143,7 @@
    */
   testSupport.load = function(path, callback) {
     if (testSupport.isNode) {
-      var root = __dirname + '/../../';
+      var root = __dirname + '/../';
       require('fs').readFile(root + path, 'utf8', function(err, contents) {
         callback(err, contents);
       });
@@ -180,10 +180,10 @@
   };
 
   testSupport.helper = function(lib) {
-    testSupport.require('/test/mocha/support/' + lib);
+    testSupport.require('/test/support/' + lib);
   }
 
-  testSupport.require('/test/mocha/support/benchmark.js');
+  testSupport.require('/test/support/benchmark.js');
 
   // Load it here so its pre-loaded in all suite blocks...
   testSupport.requireICAL();
