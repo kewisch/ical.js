@@ -119,6 +119,40 @@ suite('icaltime', function() {
 
   });
 
+  suite('#subtractDate', function() {
+    testSupport.useTimezones('America/Los_Angeles', 'America/New_York');
+
+    test('relative diff between two times', function() {
+      // 3 hours ahead of west
+      var east = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 10,
+        minute: 20,
+        timezone: 'America/New_York'
+      });
+
+
+      var west = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 12,
+        minute: 50,
+        timezone: 'America/Los_Angeles'
+      });
+
+      var diff = west.subtractDate(east);
+
+      assert.hasProperties(diff, {
+        hours: 2,
+        minutes: 30,
+        isNegative: false
+      });
+    });
+  });
+
   suite('#fromJSDate', function() {
 
     test('utc', function() {
@@ -344,7 +378,7 @@ suite('icaltime', function() {
 
   suite('#nthWeekDay', function() {
     suite('negative', function() {
-      test('last saturday in Sept 2012 (target before current day)', function() {
+      test('last saturday in Sept 2012 (before current day)', function() {
         var time = Time.fromData({ year: 2012, month: 9, day: 1 });
 
         var day = time.nthWeekDay(Time.SATURDAY, -1);

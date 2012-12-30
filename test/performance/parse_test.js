@@ -44,6 +44,26 @@ suite('parser benchmarks', function() {
         globalLib.stringify(parsed);
       });
 
+      bench.add(version + ': subtract date', function() {
+        var time = new globalLib.Time({
+          year: 2012,
+          month: 1,
+          day: 1,
+          hour: 10,
+          minute: 3
+        });
+
+        var time2 = time = new globalLib.Time({
+          year: 2012,
+          month: 10,
+          day: 1,
+          hour: 1,
+          minute: 55
+        });
+
+        time.subtractDate(time2);
+      });
+
       var dur = new globalLib.Duration({
         days: 3,
         hour: 3,
