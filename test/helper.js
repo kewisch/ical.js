@@ -66,16 +66,76 @@
     }
 
     if (typeof(window) === 'undefined') {
-      var lib = require(__dirname + '/../../' + file);
+      var lib = require(__dirname + '/../' + file);
       if (typeof(callback) !== 'undefined') {
         callback(lib);
       }
     } else {
       window.require(file, callback);
     }
-  }
+  };
 
-  //chai has no backtraces in ff
+  /**
+   * Registers a given timezone from samples with the timezone service.
+   *
+   * @param {String} zone like "America/Los_Angeles".
+   * @param {Function} callback fired when load/register is complete.
+   */
+  testSupport.registerTimezone = function(zone, callback) {
+    if (!this._timezones) {
+      this._timezones = Object.create(null);
+    }
+
+    var ics = this._timezones[zone];
+
+    function register(ics) {
+      var parsed = ICAL.parse(ics)[1];
+      var calendar = new ICAL.Component(parsed);
+      var vtimezone = calendar.getFirstSubcomponent('vtimezone');
+
+      var zone = new ICAL.Timezone(vtimezone);
+
+      ICAL.TimezoneService.register(vtimezone);
+    }
+
+    if (ics) {
+      setTimeout(function() {
+        callback(null, register(ics));
+      }, 0);
+    } else {
+      var path = 'samples/timezones/' + zone + '.ics';
+      testSupport.load(path, function(err, data) {
+        if (err) {
+          done(err);
+        }
+        var zone = register(data);
+        this._timezones[zone] = data;
+
+        callback(null, register(data));
+      }.bind(this));
+    }
+  };
+
+  /**
+   * Registers a timezones for a given suite of tests.
+   * Uses suiteSetup to stage and will use suiteTeardown
+   * to purge all timezones for clean tests...
+   *
+   */
+  testSupport.useTimezones = function(zones) {
+    suiteTeardown(function() {
+      // to ensure clean tests
+      ICAL.TimezoneService.reset();
+    });
+
+    Array.prototype.slice.call(arguments).forEach(function(zone) {
+      suiteSetup(function(done) {
+        testSupport.registerTimezone(zone, done);
+      });
+    });
+  };
+
+  //'chai has no backtraces in ff
   //this patch will change the error
   //class used to provide real .stack.
   function setupChai(chai) {
@@ -116,11 +176,11 @@
           assert.deepEqual(
             given[key],
             props[key],
-            msg + ' property equality for (' + key  + ') '
+            msg + ' property equality for (' + key + ') '
           );
         }
       }
-    }
+    };
   }
 
   function requireChai(file, callback) {
@@ -143,7 +203,7 @@
    */
   testSupport.load = function(path, callback) {
     if (testSupport.isNode) {
-      var root = __dirname + '/../../';
+      var root = __dirname + '/../';
       require('fs').readFile(root + path, 'utf8', function(err, contents) {
         callback(err, contents);
       });
@@ -158,7 +218,7 @@
             callback(null, xhr.responseText);
           }
         }
-      }
+      };
       xhr.send(null);
     }
   };
@@ -180,10 +240,10 @@
   };
 
   testSupport.helper = function(lib) {
-    testSupport.require('/test/mocha/support/' + lib);
-  }
+    testSupport.require('/test/support/' + lib);
+  };
 
-  testSupport.require('/test/mocha/support/benchmark.js');
+  testSupport.require('/test/support/benchmark.js');
 
   // Load it here so its pre-loaded in all suite blocks...
   testSupport.requireICAL();

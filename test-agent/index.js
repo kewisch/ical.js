@@ -13,7 +13,7 @@
   worker.use(TestAgent.BrowserWorker.MochaDriver, {
     /* path to mocha */
     mochaUrl: './mocha.js',
-    testHelperUrl: '../test/mocha/helper.js',
+    testHelperUrl: '../test/helper.js',
     reporter: 'HTML',
     ui: 'tdd'
   });
