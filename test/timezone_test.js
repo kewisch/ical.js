@@ -2,7 +2,6 @@ suite('timezone', function() {
   var icsData;
   var timezone;
 
-
   function timezoneTest(tzid, name, testCb) {
     if (typeof(name) === 'function') {
       testCb = name;
@@ -43,6 +42,7 @@ suite('timezone', function() {
       offsets: {
         'America/Los_Angeles': -8,
         'America/New_York': -5,
+        'America/Denver': -7,
         'America/Atikokan': -5 // single tz
       }
     },
@@ -52,6 +52,7 @@ suite('timezone', function() {
       time: { year: 2012, month: 3, day: 11, hour: 2 },
       offsets: {
         'America/Los_Angeles': -7,
+        'America/Denver': -6,
         'America/New_York': -4,
         'America/Atikokan': -5
       }
