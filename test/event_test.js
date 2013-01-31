@@ -482,14 +482,85 @@ suite('ICAL.Event', function() {
     assert.deepEqual(expected, subject.organizer);
   });
 
-  test('#startDate', function() {
-    var expected = primaryItem.getFirstPropertyValue('dtstart');
-    assert.deepEqual(expected, subject.startDate);
-  });
+  [
+    ['dtstart', 'startDate'],
+    ['dtend', 'endDate']
+  ].forEach(function(dateType) {
+    var ical = dateType[0];
+    var prop = dateType[1];
+    var timeProp;
+    var changeTime;
 
-  test('#endDate', function() {
-    var expected = primaryItem.getFirstPropertyValue('dtend');
-    assert.deepEqual(expected, subject.endDate);
+    suite('#' + prop, function() {
+      var tzid = 'America/Denver';
+      testSupport.useTimezones(tzid);
+
+      setup(function() {
+        timeProp = primaryItem.getFirstProperty(ical);
+      });
+
+      test('get', function() {
+        var expected = timeProp.getFirstValue(ical);
+        assert.deepEqual(expected, subject[prop]);
+      });
+
+      function changesTzid(newTzid) {
+        assert.notEqual(
+          timeProp.getFirstValue().zone.tzid,
+          changeTime.zone.tzid,
+          'zones are different'
+        );
+
+        subject[prop] = changeTime;
+        assert.equal(
+          newTzid,
+          timeProp.getParameter('tzid'),
+          'removes timezone id'
+        );
+      }
+
+      test('changing timezone from America/Los_Angeles', function() {
+        changeTime = new ICAL.Time({
+          year: 2012,
+          month: 1,
+          timezone: tzid
+        });
+
+        changesTzid(tzid);
+      });
+
+      test('changing timezone from floating to UTC', function() {
+        timeProp.setValue(new ICAL.Time({
+          year: 2012,
+          month: 1
+        }));
+
+        changeTime = new ICAL.Time({
+          year: 2012,
+          month: 1,
+          timezone: 'Z'
+        });
+
+        changesTzid(undefined);
+      });
+
+      test('changing timezone to floating', function() {
+        timeProp.setValue(new ICAL.Time({
+          year: 2012,
+          month: 1,
+          timezone: 'Z'
+        }));
+
+        changeTime = new ICAL.Time({
+          year: 2012,
+          month: 1
+        });
+
+        changesTzid(undefined);
+      });
+
+    });
+
   });
 
   test('#duration', function() {
