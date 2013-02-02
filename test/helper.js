@@ -188,7 +188,7 @@
     if (testSupport.isNode) {
       setupChai(require('chai'));
     } else {
-      require('/test-agent/chai.js', function() {
+      require('/node_modules/chai/chai.js', function() {
         setupChai(chai);
       });
     }
@@ -243,7 +243,10 @@
     testSupport.require('/test/support/' + lib);
   };
 
-  testSupport.require('/test/support/benchmark.js');
+  testSupport.require('/node_modules/benchmark/benchmark.js');
+
+  testSupport.requireBenchmarkBuild('previous');
+  testSupport.require('/test/support/performance.js');
 
   // Load it here so its pre-loaded in all suite blocks...
   testSupport.requireICAL();
