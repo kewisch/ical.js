@@ -7,10 +7,12 @@
   var ICAL = {};
 
   if (typeof(window) === 'undefined') {
-    global.ICAL_beta1 = ICAL;
+    global.ICAL_previous = ICAL;
   } else {
-    window.ICAL_beta1 = ICAL;
+    window.ICAL_previous = ICAL;
   }
+
+  ICAL.version = 'previous';
 
   ICAL.foldLength = 75;
   ICAL.newLineChar = '\r\n';
@@ -6211,3 +6213,4 @@
 
   return ICAL;
 }());
+

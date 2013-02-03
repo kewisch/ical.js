@@ -15,10 +15,9 @@ There is a validator that demonstrates how to use the library in a webpage in th
 
 ## Developing
 
-The browser build is always found under build/ical.js build/ical.min.js
-coming soon.
+Run: `npm install .`
 
-Run `make package`
+The browser build is always found under build/ical.js. 
 
 ### Tests
 
@@ -30,9 +29,7 @@ You need nodejs/nodejs to install the testing tools.
 
 #### in the browser
 
-1.  Run `make dev`
-
-2.  Run `make test-server`
+1.  Run `make test-server`
     Go to http://localhost:8789/test-agent/index.html
     Run all tests with `make test-browser`
 
