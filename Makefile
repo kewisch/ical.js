@@ -24,32 +24,7 @@ OLSON_DB_REMOTE=http://www.iana.org/time-zones/repository/releases/tzdata2012j.t
 OLSON_DIR=$(PWD)/tools/tzurl/olson
 
 .PHONY: dev
-dev: package test-agent-config node-deps
-
-.PHONY: node-deps
-node-deps:
-	npm install .
-	# mocha
-	rm -f test-agent/mocha.js
-	cp node_modules/mocha/mocha.js test-agent/
-
-	rm -f test-agent/mocha.css
-	cp node_modules/mocha/mocha.css test-agent/
-
-	#chai
-	rm -f test-agent/chai.js
-	cp node_modules/chai/chai.js test-agent/
-
-	# benchmark
-	rm -Rf test/support/benchmark.js
-	cp node_modules/benchmark/benchmark.js test/support/
-
- # test-agent
-	rm -f test-agent/test-agent.js
-	cp node_modules/test-agent/test-agent.js test-agent/
-
-	rm -f test-agent/test-agent.css
-	cp node_modules/test-agent/test-agent.css test-agent/
+dev: package test-agent-config
 
 .PHONY: package
 package:
