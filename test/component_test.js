@@ -287,15 +287,31 @@ suite('Component', function() {
     assert.equal(lastProp.component, subject);
   });
 
-  test('#addPropertyWithValue', function() {
-    var subject = new ICAL.Component('vevent');
+  suite('#addPropertyWithValue', function() {
+    test('adding a text property', function() {
+      var subject = new ICAL.Component('vevent');
 
-    subject.addPropertyWithValue('description', 'value');
+      subject.addPropertyWithValue('description', 'value');
 
-    var all = subject.getAllProperties();
+      var all = subject.getAllProperties();
 
-    assert.equal(all[0].name, 'description');
-    assert.equal(all[0].getFirstValue(), 'value');
+      assert.equal(all[0].name, 'description');
+      assert.equal(all[0].type, 'text');
+      assert.equal(all[0].getFirstValue(), 'value');
+    });
+
+    test('adding a date-time property', function() {
+      var subject = new ICAL.Component('vevent');
+      var propval = ICAL.Time.fromString('2012-10-12T07:08:09');
+
+      subject.addPropertyWithValue('created', propval);
+
+      var all = subject.getAllProperties();
+
+      assert.equal(all[0].name, 'created');
+      assert.equal(all[0].type, 'date-time');
+      assert.equal(all[0].getFirstValue(), propval);
+    });
   });
 
   test('#updatePropertyWithValue', function() {
