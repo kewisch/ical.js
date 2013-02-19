@@ -2702,27 +2702,39 @@ ICAL.Binary = (function() {
       this.changes = [];
 
       if (aData instanceof ICAL.Component) {
+        // Either a component is passed directly
         this.component = aData;
-        this.tzid = this.component.getFirstPropertyValue('tzid');
-        return null;
-      }
-
-      for (var key in OPTIONS) {
-        var prop = OPTIONS[key];
-        if (aData && prop in aData) {
-          this[prop] = aData[prop];
-        }
-      }
-
-      if (aData && "component" in aData) {
-        if (typeof aData.component == "string") {
-          this.component = this.componentFromString(aData.component);
-        } else {
-          this.component = aData.component;
-        }
       } else {
-        this.component = null;
+        // Otherwise the component may be in the data object
+        if (aData && "component" in aData) {
+          if (typeof aData.component == "string") {
+            // If a string was passed, parse it as a component
+            var icalendar = ICAL.parse(aData.component);
+            this.component = new ICAL.Component(icalendar[1]);
+          } else if (aData.component instanceof ICAL.Component) {
+            // If it was a component already, then just set it
+            this.component = aData.component;
+          } else {
+            // Otherwise just null out the component
+            this.component = null;
+          }
+        }
+
+        // Copy remaining passed properties
+        for (var key in OPTIONS) {
+          var prop = OPTIONS[key];
+          if (aData && prop in aData) {
+            this[prop] = aData[prop];
+          }
+        }
       }
+
+      // If we have a component but no TZID, attempt to get it from the
+      // component's properties.
+      if (this.component instanceof ICAL.Component && !this.tzid) {
+        this.tzid = this.component.getFirstPropertyValue('tzid');
+      }
+
       return this;
     },
 
