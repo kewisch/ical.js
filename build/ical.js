@@ -3512,13 +3512,11 @@ ICAL.TimezoneService = (function() {
      * @return {ICAL.Duration} difference in duration.
      */
     subtractDate: function icaltime_subtract(aDate) {
-      var unixTime = this.toUnixTime() + this.utcOffset();
-      var other = aDate.toUnixTime() + aDate.utcOffset();
-      var diff = (unixTime - other);
-
-      return ICAL.Duration.fromSeconds(
-        diff
-      );
+      // The unix time already has timezone offsets applied, we just need to
+      // compare them.
+      var unixTime = this.toUnixTime();
+      var other = aDate.toUnixTime();
+      return ICAL.Duration.fromSeconds(unixTime - other);
     },
 
     compare: function icaltime_compare(other) {
