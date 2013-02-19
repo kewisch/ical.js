@@ -2688,7 +2688,8 @@ ICAL.Binary = (function() {
 
       if (aData && "component" in aData) {
         if (typeof aData.component == "string") {
-          this.component = this.componentFromString(aData.component);
+          let icalendar = ICAL.parse(aData.component);
+          this.component = new ICAL.Component(icalendar[1]);
         } else {
           this.component = aData.component;
         }
