@@ -4147,7 +4147,7 @@ ICAL.TimezoneService = (function() {
       if (this.count) {
         str += ";COUNT=" + this.count;
       }
-      if (this.interval != 1) {
+      if (this.interval > 1) {
         str += ";INTERVAL=" + this.interval;
       }
       for (var k in this.parts) {
@@ -4226,6 +4226,11 @@ ICAL.TimezoneService = (function() {
 
     INTERVAL: function(value, dict) {
       dict.interval = ICAL.helpers.strictParseInt(value);
+      if (dict.interval < 1) {
+        // 0 or negative values are not allowed, some engines seem to generate
+        // it though. Assume 1 instead.
+        dict.interval = 1;
+      }
     },
 
     UNTIL: function(value, dict) {
