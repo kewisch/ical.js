@@ -330,6 +330,14 @@ suite('recur', function() {
     });
 
     verifyFail('WKST=ofo', /invalid WKST/);
+
+    // Zero or negative interval should be accepted as interval=1
+    verify('INTERVAL=0', {
+      interval: 1
+    });
+    verify('INTERVAL=-1', {
+      interval: 1
+    });
   });
 
   test('#toString - round trip', function() {
