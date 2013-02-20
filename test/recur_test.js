@@ -394,5 +394,26 @@ suite('recur', function() {
       }(map));
     }
   });
+  suite('ICAL.Recur#numericDayToIcalDay', function() {
+    var expected = {}
+    expected[Time.SUNDAY] = 'SU';
+    expected[Time.MONDAY] = 'MO';
+    expected[Time.TUESDAY] = 'TU';
+    expected[Time.WEDNESDAY] = 'WE';
+    expected[Time.THURSDAY] = 'TH';
+    expected[Time.FRIDAY] = 'FR';
+    expected[Time.SATURDAY] = 'SA';
+
+    for (var map in expected) {
+      (function(map) {
+        test(map + ' to ' + expected[map], function() {
+          assert.equal(
+            ICAL.Recur.numericDayToIcalDay(map),
+            expected[map]
+          );
+        });
+      }(map));
+    }
+  });
 
  });

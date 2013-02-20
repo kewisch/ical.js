@@ -4201,6 +4201,19 @@ ICAL.TimezoneService = (function() {
     return DOW_MAP[string];
   };
 
+  /**
+   * Convert a numeric day value into its ical representation (SU, MO, etc..)
+   *
+   * @param {Numeric} numeric value of given day.
+   * @return {String} day ical day.
+   */
+  ICAL.Recur.numericDayToIcalDay = function toIcalDay(num) {
+    //XXX: this is here so we can deal with possibly invalid number values.
+    //     Also, this allows consistent mapping between day numbers and day
+    //     names for external users.
+    return REVERSE_DOW_MAP[num];
+  };
+
   var VALID_DAY_NAMES = /^(SU|MO|TU|WE|TH|FR|SA)$/;
   var VALID_BYDAY_PART = /^([+-])?(5[0-3]|[1-4][0-9]|[1-9])?(SU|MO|TU|WE|TH|FR|SA)$/
   var ALLOWED_FREQ = ['SECONDLY', 'MINUTELY', 'HOURLY',
@@ -4440,8 +4453,8 @@ ICAL.RecurIterator = (function() {
             this.last.day += dow;
           }
         } else {
-          var wkMap = icalrecur_iterator._wkdayMap[this.dtstart.dayOfWeek()];
-          parts.BYDAY = [wkMap];
+          var dayName = ICAL.Recur.numericDayToIcalDay(this.dtstart.dayOfWeek());
+          parts.BYDAY = [dayName];
         }
       }
 
@@ -5439,7 +5452,7 @@ ICAL.RecurIterator = (function() {
       return (this.check_contract_restriction("BYSECOND", this.last.second) &&
               this.check_contract_restriction("BYMINUTE", this.last.minute) &&
               this.check_contract_restriction("BYHOUR", this.last.hour) &&
-              this.check_contract_restriction("BYDAY", icalrecur_iterator._wkdayMap[dow]) &&
+              this.check_contract_restriction("BYDAY", ICAL.Recur.numericDayToIcalDay(dow)) &&
               this.check_contract_restriction("BYWEEKNO", weekNo) &&
               this.check_contract_restriction("BYMONTHDAY", this.last.day) &&
               this.check_contract_restriction("BYMONTH", this.last.month) &&
@@ -5482,8 +5495,6 @@ ICAL.RecurIterator = (function() {
     }
 
   };
-
-  icalrecur_iterator._wkdayMap = ["", "SU", "MO", "TU", "WE", "TH", "FR", "SA"];
 
   icalrecur_iterator._indexMap = {
     "BYSECOND": 0,
