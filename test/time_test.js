@@ -122,7 +122,7 @@ suite('icaltime', function() {
   suite('#subtractDate', function() {
     testSupport.useTimezones('America/Los_Angeles', 'America/New_York');
 
-    test('relative diff between two times', function() {
+    test('absolute diff between two times', function() {
       // 3 hours ahead of west
       var east = new ICAL.Time({
         year: 2012,
@@ -146,9 +146,62 @@ suite('icaltime', function() {
       var diff = west.subtractDate(east);
 
       assert.hasProperties(diff, {
-        hours: 2,
+        hours: 5,
         minutes: 30,
         isNegative: false
+      });
+    });
+
+    test('absolute diff in same timezone', function() {
+      var t1 = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 21,
+        minute: 50,
+        timezone: 'America/Los_Angeles'
+      });
+      var t2 = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 8,
+        minute: 30,
+        timezone: 'America/Los_Angeles'
+      });
+
+      var diff = t1.subtractDate(t2);
+
+      assert.hasProperties(diff, {
+        hours: 13,
+        minutes: 20,
+        isNegative: false
+      });
+    });
+    test('negative absolute difference', function() {
+      var t1 = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 8,
+        minute: 30,
+        timezone: 'America/Los_Angeles'
+      });
+      var t2 = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 21,
+        minute: 50,
+        timezone: 'America/Los_Angeles'
+      });
+
+      var diff = t1.subtractDate(t2);
+
+      assert.hasProperties(diff, {
+        hours: 13,
+        minutes: 20,
+        isNegative: true
       });
     });
   });
