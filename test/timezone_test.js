@@ -48,6 +48,20 @@ suite('timezone', function() {
     },
 
     {
+      time: { year: 2003, month: 10, day: 26, hour: 1 },
+      offsets: {
+        'America/Denver': -6
+      }
+    },
+
+    {
+      time: { year: 2003, month: 10, day: 26, hour: 2 },
+      offsets: {
+        'America/Denver': -7
+      }
+    },
+
+    {
       // just after US DST
       time: { year: 2012, month: 3, day: 11, hour: 2 },
       offsets: {
