@@ -1512,6 +1512,19 @@ ICAL.Component = (function() {
   }
 
   Component.prototype = {
+    /**
+     * Hydrated properties are inserted into the _properties array at the same
+     * position as in the jCal array, so its possible the array contains
+     * undefined values for unhydrdated properties. To avoid iterating the
+     * array when checking if all properties have been hydrated, we save the
+     * count here.
+     */
+    _hydratedPropertyCount: 0,
+
+    /**
+     * The same count as for _hydratedPropertyCount, but for subcomponents
+     */
+    _hydratedComponentCount: 0,
 
     get name() {
       return this.jCal[NAME_INDEX];
@@ -1520,6 +1533,7 @@ ICAL.Component = (function() {
     _hydrateComponent: function(index) {
       if (!this._components) {
         this._components = [];
+        this._hydratedComponentCount = 0;
       }
 
       if (this._components[index]) {
@@ -1531,12 +1545,14 @@ ICAL.Component = (function() {
         this
       );
 
+      this._hydratedComponentCount++;
       return this._components[index] = comp;
     },
 
     _hydrateProperty: function(index) {
       if (!this._properties) {
         this._properties = [];
+        this._hydratedPropertyCount = 0;
       }
 
       if (this._properties[index]) {
@@ -1548,6 +1564,7 @@ ICAL.Component = (function() {
         this
       );
 
+      this._hydratedPropertyCount++;
       return this._properties[index] = prop;
     },
 
@@ -1603,7 +1620,7 @@ ICAL.Component = (function() {
         return result;
       } else {
         if (!this._components ||
-            (this._components.length !== jCalLen)) {
+            (this._hydratedComponentCount !== jCalLen)) {
           var i = 0;
           for (; i < jCalLen; i++) {
             this._hydrateComponent(i);
@@ -1701,7 +1718,7 @@ ICAL.Component = (function() {
         return result;
       } else {
         if (!this._properties ||
-            (this._properties.length !== jCalLen)) {
+            (this._hydratedPropertyCount !== jCalLen)) {
           var i = 0;
           for (; i < jCalLen; i++) {
             this._hydrateProperty(i);
@@ -1783,10 +1800,12 @@ ICAL.Component = (function() {
     addSubcomponent: function(component) {
       if (!this._components) {
         this._components = [];
+        this._hydratedComponentCount = 0;
       }
 
       var idx = this.jCal[COMPONENT_INDEX].push(component.jCal);
       this._components[idx - 1] = component;
+      this._hydratedComponentCount++;
     },
 
     /**
@@ -1797,7 +1816,11 @@ ICAL.Component = (function() {
      * @return {Boolean} true when comp is removed.
      */
     removeSubcomponent: function(nameOrComp) {
-      return this._removeObject(COMPONENT_INDEX, '_components', nameOrComp);
+      var removed = this._removeObject(COMPONENT_INDEX, '_components', nameOrComp);
+      if (removed) {
+        this._hydratedComponentCount--;
+      }
+      return removed;
     },
 
     /**
@@ -1807,7 +1830,9 @@ ICAL.Component = (function() {
      * @param {String} [name] (lowercase) component name.
      */
     removeAllSubcomponents: function(name) {
-      return this._removeAllObjects(COMPONENT_INDEX, '_components', name);
+      var removed = this._removeAllObjects(COMPONENT_INDEX, '_components', name);
+      this._hydratedComponentCount = 0;
+      return removed;
     },
 
     /**
@@ -1825,9 +1850,11 @@ ICAL.Component = (function() {
 
       if (!this._properties) {
         this._properties = [];
+        this._hydratedPropertyCount = 0;
       }
 
       this._properties[idx - 1] = property;
+      this._hydratedPropertyCount++;
     },
 
     /**
@@ -1873,7 +1900,11 @@ ICAL.Component = (function() {
      * @return {Boolean} true when deleted.
      */
     removeProperty: function(nameOrProp) {
-      return this._removeObject(PROPERTY_INDEX, '_properties', nameOrProp);
+      var removed = this._removeObject(PROPERTY_INDEX, '_properties', nameOrProp);
+      if (removed) {
+        this._hydratedPropertyCount--;
+      }
+      return removed;
     },
 
     /**
@@ -1882,7 +1913,9 @@ ICAL.Component = (function() {
      * @param {String} [name] (lowecase) optional property name.
      */
     removeAllProperties: function(name) {
-      return this._removeAllObjects(PROPERTY_INDEX, '_properties', name);
+      var removed = this._removeAllObjects(PROPERTY_INDEX, '_properties', name);
+      this._hydratedPropertyCount = 0;
+      return removed;
     },
 
     toJSON: function() {
