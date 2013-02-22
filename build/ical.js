@@ -2357,11 +2357,19 @@ ICAL.Binary = (function() {
   ICAL.Period = function icalperiod(aData) {
     this.wrappedJSObject = this;
 
+    if (!aData) {
+        throw new Error('Period must be initialized with data');
+    }
+
     if ('start' in aData) {
       if (!(aData.start instanceof ICAL.Time)) {
         throw new TypeError('.start must be an instance of ICAL.Time');
       }
       this.start = aData.start;
+    }
+
+    if (('end' in aData) && ('duration' in aData)) {
+      throw new Error('cannot accept both end and duration');
     }
 
     if ('end' in aData) {
@@ -2373,7 +2381,7 @@ ICAL.Binary = (function() {
 
     if ('duration' in aData) {
       if (!(aData.duration instanceof ICAL.Duration)) {
-        throw new TypeError('.start must be an instance of ICAL.Duration');
+        throw new TypeError('.duration must be an instance of ICAL.Duration');
       }
       this.duration = aData.duration;
     }
@@ -2503,10 +2511,6 @@ ICAL.Binary = (function() {
           this[prop] = 0;
         }
       }
-
-      if (aData && "factor" in aData) {
-        this.isNegative = (aData.factor == "-1");
-      }
     },
 
     reset: function reset() {
@@ -2587,11 +2591,27 @@ ICAL.Binary = (function() {
       case 'S':
         type = 'seconds';
         break;
+      default:
+        // Not a valid chunk
+        return 0;
     }
 
     if (type) {
-      object[type] = parseInt(number);
+      if (!number && number !== 0) {
+        throw new Error(
+          'invalid duration value: Missing number before "' + letter + '"'
+        );
+      }
+      var num = parseInt(number, 10);
+      if (ICAL.helpers.isStrictlyNaN(num)) {
+        throw new Error(
+          'invalid duration value: Invalid number "' + number + '" before "' + letter + '"'
+        );
+      }
+      object[type] = num;
     }
+
+    return 1;
   }
 
   /**
@@ -2606,13 +2626,21 @@ ICAL.Binary = (function() {
   ICAL.Duration.fromString = function icalduration_from_string(aStr) {
     var pos = 0;
     var dict = Object.create(null);
+    var chunks = 0;
 
     while ((pos = aStr.search(DURATION_LETTERS)) !== -1) {
       var type = aStr[pos];
       var numeric = aStr.substr(0, pos);
       aStr = aStr.substr(pos + 1);
 
-      parseDurationChunk(type, numeric, dict);
+      chunks += parseDurationChunk(type, numeric, dict);
+    }
+
+    if (chunks < 2) {
+      // There must be at least a chunk with "P" and some unit chunk
+      throw new Error(
+        'invalid duration value: Not enough duration components in "' + aStr + '"'
+      );
     }
 
     return new ICAL.Duration(dict);
