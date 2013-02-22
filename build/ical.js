@@ -2357,11 +2357,19 @@ ICAL.Binary = (function() {
   ICAL.Period = function icalperiod(aData) {
     this.wrappedJSObject = this;
 
+    if (!aData) {
+        throw new Error('Period must be initialized with data');
+    }
+
     if ('start' in aData) {
       if (!(aData.start instanceof ICAL.Time)) {
         throw new TypeError('.start must be an instance of ICAL.Time');
       }
       this.start = aData.start;
+    }
+
+    if (('end' in aData) && ('duration' in aData)) {
+      throw new Error('cannot accept both end and duration');
     }
 
     if ('end' in aData) {
@@ -2373,7 +2381,7 @@ ICAL.Binary = (function() {
 
     if ('duration' in aData) {
       if (!(aData.duration instanceof ICAL.Duration)) {
-        throw new TypeError('.start must be an instance of ICAL.Duration');
+        throw new TypeError('.duration must be an instance of ICAL.Duration');
       }
       this.duration = aData.duration;
     }
