@@ -2889,12 +2889,17 @@ ICAL.Binary = (function() {
             change.hour = dtstart.hour;
             change.minute = dtstart.minute;
             change.second = dtstart.second;
+
+            if (dtstart.zone != ICAL.Timezone.utcTimezone) {
+              ICAL.Timezone.adjust_change(change, 0, 0, 0,
+                                              -change.prevUtcOffset);
+            }
           } else {
             change.hour = time.hour;
             change.minute = time.minute;
             change.second = time.second;
 
-            if (time.zone == ICAL.Timezone.utcTimezone) {
+            if (time.zone != ICAL.Timezone.utcTimezone) {
               ICAL.Timezone.adjust_change(change, 0, 0, 0,
                                               -change.prevUtcOffset);
             }
