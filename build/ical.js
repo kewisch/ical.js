@@ -3542,11 +3542,19 @@ ICAL.TimezoneService = (function() {
     subtractDate: function icaltime_subtract(aDate) {
       var unixTime = this.toUnixTime() + this.utcOffset();
       var other = aDate.toUnixTime() + aDate.utcOffset();
-      var diff = (unixTime - other);
+      return ICAL.Duration.fromSeconds(unixTime - other);
+    },
 
-      return ICAL.Duration.fromSeconds(
-        diff
-      );
+    /**
+     * Subtract the date details, taking timezones into account.
+     *
+     * @param {ICAL.Time}  The date to subtract.
+     * @return {ICAL.Duration}  The difference in duration.
+     */
+    subtractDateTz: function icaltime_subtract_abs(aDate) {
+      var unixTime = this.toUnixTime();
+      var other = aDate.toUnixTime();
+      return ICAL.Duration.fromSeconds(unixTime - other);
     },
 
     compare: function icaltime_compare(other) {
