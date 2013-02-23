@@ -124,6 +124,22 @@ suite('Component', function() {
       assert.equal(subject.name, 'foo');
       assert.ok(!subject.getAllSubcomponents());
     });
+
+    test('with name from end', function() {
+      // We need our own subject for this test
+      var oursubject = new ICAL.Component(fixtures.components);
+
+      // Get one from the end first
+      var comps = fixtures.components[2];
+      oursubject.getAllSubcomponents(comps[comps.length - 1][0]);
+
+      // Now get them all, they MUST be hydrated
+      var results = oursubject.getAllSubcomponents();
+      for (var i = 0; i < results.length; i++) {
+        assert.isDefined(results[i]);
+        assert.equal(results[i].jCal, subject.jCal[2][i]);
+      }
+    });
   });
 
   test('#addSubcomponent', function() {
@@ -271,6 +287,22 @@ suite('Component', function() {
       results.forEach(function(item, i) {
         assert.equal(item.jCal, subject.jCal[1][i]);
       });
+    });
+
+    test('with name from end', function() {
+      // We need our own subject for this test
+      var oursubject = new ICAL.Component(fixtures.components);
+
+      // Get one from the end first
+      var props = fixtures.components[1];
+      oursubject.getAllProperties(props[props.length - 1][0]);
+
+      // Now get them all, they MUST be hydrated
+      var results = oursubject.getAllProperties();
+      for (var i = 0; i < results.length; i++) {
+        assert.isDefined(results[i]);
+        assert.equal(results[i].jCal, subject.jCal[1][i]);
+      }
     });
   });
 
