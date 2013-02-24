@@ -195,4 +195,24 @@ suite('timezone', function() {
       assert.equal(subject3.toString(), '2012-03-11T01:59:00');
     });
   });
+
+  timezoneTest('America/Los_Angeles', '#fromData string component', function() {
+    var subject = new ICAL.Timezone({
+      component: timezone.component.toString(),
+      tzid: 'Makebelieve/Different'
+    });
+
+    assert.equal(subject.expandedUntilYear, 0);
+    assert.equal(subject.tzid, 'Makebelieve/Different');
+    assert.equal(subject.component.getFirstPropertyValue('tzid'), 'America/Los_Angeles');
+  });
+
+  timezoneTest('America/Los_Angeles', '#fromData component in data', function() {
+    var subject = new ICAL.Timezone({
+      component: timezone.component,
+    });
+
+    assert.equal(subject.tzid, 'America/Los_Angeles');
+    assert.deepEqual(subject.component, timezone.component);
+  });
 });
