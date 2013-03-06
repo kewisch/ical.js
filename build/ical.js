@@ -6325,33 +6325,35 @@ ICAL.Event = (function() {
      * We will not add/remove/update the VTIMEZONE subcomponents
      *  leading to invalid ICAL data...
      */
-    _setTime: function(name, value) {
-      var currentProp = this.component.getFirstProperty(name);
-      var currentValue;
+    _setTime: function(propName, time) {
+      var prop = this.component.getFirstProperty(propName);
 
-      if (currentProp && (currentValue = currentProp.getFirstValue())) {
-        var newTzid = value.zone.tzid;
-        var currentTzid = currentProp.getParameter('tzid');
-
-        if (currentTzid !== newTzid) {
-          /**
-           * Both the localTimezone and the utcTimezone avoid TZID.
-           * We must remove the tzid param in these cases otherwise
-           * the time is either wrong or invalid.
-           */
-          if (
-            value.zone === ICAL.Timezone.localTimezone ||
-            value.zone === ICAL.Timezone.utcTimezone
-          ) {
-            currentProp.removeParameter('tzid');
-          } else {
-            // for the case where we are switching between to timezones.
-            currentProp.setParameter('tzid', newTzid);
-          }
-        }
+      if (!prop) {
+        prop = new ICAL.Property(propName);
+        this.component.addProperty(prop);
       }
 
-      this._setProp(name, value);
+      // type conversion
+      if (time.isDate && prop.type !== 'date') {
+        prop.resetType('date');
+      }
+
+      if (!time.isDate && prop.type !== 'date-time') {
+        prop.resetType('date-time');
+      }
+
+      // utc and local don't get a tzid
+      if (
+        time.zone === ICAL.Timezone.localTimezone ||
+        time.zone === ICAL.Timezone.utcTimezone
+      ) {
+        // remove the tzid
+        prop.removeParameter('tzid');
+      } else {
+        prop.setParameter('tzid', time.zone.tzid);
+      }
+
+      prop.setValue(time);
     },
 
     _setProp: function(name, value) {
