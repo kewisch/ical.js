@@ -1,5 +1,9 @@
 suite('ICAL.Event', function() {
 
+
+  var testTzid = 'America/New_York';
+  testSupport.useTimezones(testTzid);
+
   var icsData;
 
   function rangeException(nth) {
@@ -57,6 +61,140 @@ suite('ICAL.Event', function() {
     });
 
     subject = new ICAL.Event(primaryItem);
+  });
+
+  suite('changing timezones', function() {
+
+    var dateFields = [
+      ['startDate', 'dtstart'],
+      ['endDate', 'dtend']
+    ];
+
+    function verifyTzidHandling(eventProp, icalProp) {
+
+      var time;
+      var property;
+      setup(function() {
+        property = subject.component.getFirstProperty(icalProp);
+
+        assert.ok(
+          property.getParameter('tzid'),
+          'has tzid'
+        );
+
+        assert.isFalse(
+          property.getParameter('tzid') === testTzid
+        );
+      });
+
+      test('to floating time', function() {
+        subject[eventProp] = time = new ICAL.Time({
+          year: 2012,
+          month: 1,
+          day: 1,
+          minute: 30,
+          isDate: false
+        });
+
+        assert.ok(
+          !property.getParameter('tzid'), 'removes tzid'
+        );
+
+        assert.include(
+          property.toICAL(),
+          time.toICALString()
+        );
+      });
+
+      test('to utc time', function() {
+        subject[eventProp] = time = new ICAL.Time({
+          year: 2013,
+          month: 1,
+          day: 1,
+          minute: 30,
+          isDate: false,
+          timezone: 'Z'
+        });
+
+        assert.ok(
+          !property.getParameter('tzid'),
+          'removes tzid'
+        );
+
+        assert.include(
+          property.toICAL(),
+          time.toICALString()
+        );
+      });
+
+      test('to another timezone', function() {
+        subject[eventProp] = time = new ICAL.Time({
+          year: 2013,
+          month: 1,
+          day: 1,
+          minute: 30,
+          isDate: false,
+          timezone: testTzid
+        });
+
+        assert.equal(
+          property.getParameter('tzid'),
+          testTzid
+        );
+
+        assert.include(
+          property.toICAL(),
+          time.toICALString()
+        );
+      });
+
+      test('type date-time -> date', function() {
+        // ensure we are in the right time type
+        property.resetType('date-time');
+
+        subject[eventProp] = time = new ICAL.Time({
+          year: 2013,
+          month: 1,
+          day: 1,
+          isDate: true
+        });
+
+        assert.equal(property.type, 'date');
+
+        assert.include(
+          property.toICAL(),
+          time.toICALString()
+        );
+      });
+
+      test('type date -> date-time', function() {
+        // ensure we are in the right time type
+        property.resetType('date');
+
+        subject[eventProp] = time = new ICAL.Time({
+          year: 2013,
+          month: 1,
+          day: 1,
+          hour: 3,
+          isDate: false
+        });
+
+        assert.equal(property.type, 'date-time');
+
+        assert.include(
+          property.toICAL(),
+          time.toICALString()
+        );
+      });
+    }
+
+    dateFields.forEach(function(field) {
+      suite(
+        field[0],
+        verifyTzidHandling.bind(this, field[0], field[1])
+      );
+    });
+
   });
 
   suite('initializer', function() {
