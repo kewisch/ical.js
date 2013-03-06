@@ -367,6 +367,14 @@ suite('Property', function() {
       subject.setValue('xxx');
       assert.equal(subject.getFirstValue(), 'xxx');
     });
+
+    test('multivalue property', function() {
+      var subject = new ICAL.Property("categories");
+      subject.setValues(["work", "play"]);
+      subject.setValue("home");
+      assert.deepEqual(subject.getValues(), ["home"]);
+      assert.equal(subject.getFirstValue(), "home");
+    });
   });
 
   test('#toJSON', function() {
