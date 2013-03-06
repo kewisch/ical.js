@@ -106,7 +106,7 @@
       var path = 'samples/timezones/' + zone + '.ics';
       testSupport.load(path, function(err, data) {
         if (err) {
-          done(err);
+          callback(err);
         }
         var zone = register(data);
         this._timezones[zone] = data;
