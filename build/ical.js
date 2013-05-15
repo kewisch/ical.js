@@ -4289,7 +4289,7 @@ ICAL.TimezoneService = (function() {
         str += ';UNTIL=' + this.until.toString();
       }
       if ('wkst' in this && this.wkst !== ICAL.Time.DEFAULT_WEEK_START) {
-        str += ';WKST=' + REVERSE_DOW_MAP[this.wkst];
+        str += ';WKST=' + ICAL.Recur.numericDayToIcalDay(this.wkst);
       }
       return str;
     }
