@@ -76,6 +76,7 @@ suite('ical/duration', function() {
         }
         subject.normalize();
         assert.equal(subject.toString(), str);
+        assert.equal(subject.toICALString(), str);
       });
     }
 

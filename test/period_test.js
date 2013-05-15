@@ -11,10 +11,13 @@ suite('ical/period', function() {
   suite('#fromString', function() {
     var assertions = {};
 
-    function verify(string, data) {
+    function verify(string, icalstring, data) {
       var key;
       test('parse: "' + string + '"', function() {
         var subject = ICAL.Period.fromString(string);
+
+        assert.equal(subject.toICALString(), icalstring);
+        assert.equal(subject.toString(), string);
 
         if ('start' in data) {
           assert.instanceOf(subject.start, ICAL.Time);
@@ -26,16 +29,20 @@ suite('ical/period', function() {
         }
 
         if ('end' in data) {
-          assert.instanceOf(subject.end, ICAL.Time);
-          assert.hasProperties(
-            subject.end,
-            data.end,
-            'end property'
-          );
+          if (data.end) {
+            assert.instanceOf(subject.end, ICAL.Time);
+            assert.hasProperties(
+              subject.end,
+              data.end,
+              'end property'
+            );
+          } else {
+            assert.isNull(subject.end);
+          }
         }
 
         if ('duration' in data) {
-          if (data['duration']) {
+          if (data.duration) {
             assert.instanceOf(subject.duration, ICAL.Duration);
             assert.hasProperties(
               subject.duration,
@@ -47,13 +54,21 @@ suite('ical/period', function() {
           }
         }
 
-        if ('calculated_duration' in data) {
+        if ('calculatedDuration' in data) {
           var dur = subject.getDuration();
 
           if ('duration' in data && data.duration) {
             assert.hasProperties(dur, data.duration, 'duration matches calculated');
           } 
-          assert.hasProperties(dur, data.calculated_duration);
+          assert.hasProperties(dur, data.calculatedDuration);
+        }
+        if ('calculatedEnd' in data) {
+          var end = subject.getEnd();
+
+          if ('end' in data && data.end) {
+            assert.hasProperties(end, data.end, 'duration matches calculated');
+          } 
+          assert.hasProperties(end, data.calculatedEnd);
         }
       });
     }
@@ -71,7 +86,7 @@ suite('ical/period', function() {
     verifyFail('invalid end param', '1997-01-02T07:00:00Z/some time after', /invalid date-time value/);
     verifyFail('invalid end param that might be a duration', '1997-01-02T07:00:00Z/Psome time after', /invalid duration value/);
 
-    verify('1997-01-01T18:30:20Z/1997-01-02T07:00:00Z', {
+    verify('1997-01-01T18:30:20Z/1997-01-02T07:00:00Z', '19970101T183020Z/19970102T070000Z', {
       start: {
         year: 1997,
         month: 1,
@@ -89,43 +104,50 @@ suite('ical/period', function() {
       },
 
       duration: null,
-      calculated_duration: {
+      calculatedDuration: {
         isNegative: false,
         hours: 12,
         minutes: 29,
         seconds: 40
-      }
+      },
+      calculatedEnd: {
+        year: 1997,
+        month: 1,
+        day: 2,
+        hour: 07
+      },
     });
 
-    verify('1997-01-01T18:00:00Z/PT5H30M', {
+    verify('1997-01-01T18:00:00Z/PT5H30M', '19970101T180000Z/PT5H30M', {
       start: {
         year: 1997,
         month: 1,
         day: 1,
         hour: 18
       },
-
       duration: {
         isNegative: false,
         hours: 5,
         minutes: 30
       },
-      calculated_duration: {
+      end:null,
+      calculatedDuration: {
         isNegative: false,
         hours: 5,
         minutes: 30
+      },
+      calculatedEnd: {
+        year: 1997,
+        month: 1,
+        day: 1,
+        hour: 23,
+        minute: 30
       }
     });
 
   });
 
   suite('#fromData', function() {
-    test('empty object', function() {
-      assert.throws(function() {
-        ICAL.Period.fromData();
-      }, /must be initialized/);
-    });
-
     test('valid start,end', function() {
       var subject = ICAL.Period.fromData({
         start: start,
@@ -146,6 +168,37 @@ suite('ical/period', function() {
       assert.isNull(subject.end);
       assert.hasProperties(subject.duration, duration, 'duration');
     });
+
+    test('end value exists but is null', function() {
+      var subject = ICAL.Period.fromData({
+        start: start,
+        end: null
+      });
+      assert.hasProperties(subject.start, start, 'start date');
+      assert.isNull(subject.end);
+      assert.isNull(subject.duration);
+    });
+
+    test('start value exists but is null', function() {
+      var subject = ICAL.Period.fromData({
+        start: null,
+        duration: duration,
+      });
+      assert.isNull(subject.start);
+      assert.isNull(subject.end);
+      assert.hasProperties(subject.duration, duration, 'duration');
+    });
+
+    test('duration value exists but is null', function() {
+      var subject = ICAL.Period.fromData({
+        start: start,
+        duration: null,
+      });
+      assert.hasProperties(subject.start, start, 'start date');
+      assert.isNull(subject.end);
+      assert.isNull(subject.duration);
+    });
+
     test('start,end and duration', function() {
       assert.throws(function() {
         var subject = ICAL.Period.fromData({
