@@ -191,7 +191,7 @@ suite('Property', function() {
 
   test('#resetType', function() {
     var subject = new ICAL.Property('dtstart');
-    subject.setValue(new ICAL.Time({ year: 2012 }));
+    subject.setValue(new ICAL.Time({ year: 2012, hour: 10, minute: 1 }));
 
     assert.equal(subject.type, 'date-time');
 
@@ -202,6 +202,30 @@ suite('Property', function() {
     subject.setValue(new ICAL.Time({ year: 2012 }));
 
     var ical = subject.toICAL();
+  });
+
+  suite('#getDefaultType', function() {
+    test('known type', function() {
+      var subject = new ICAL.Property('dtstart');
+      subject.setValue(new ICAL.Time({ year: 2012, hour: 20 }));
+
+      assert.equal(subject.type, 'date-time');
+      assert.equal(subject.getDefaultType(), 'date-time');
+
+      subject.setValue(new ICAL.Time({ year: 2012 }));
+
+      assert.equal(subject.type, 'date');
+      assert.equal(subject.getDefaultType(), 'date-time');
+    });
+
+    test('unknown type', function() {
+      var subject = new ICAL.Property('x-unknown');
+      subject.setValue(new ICAL.Time({ year: 2012, hour: 20 }));
+
+      assert.equal(subject.getFirstValue().icaltype, 'date-time');
+      assert.equal(subject.type, 'date-time');
+      assert.isNull(subject.getDefaultType());
+    });
   });
 
   suite('#getFirstValue', function() {
@@ -327,6 +351,7 @@ suite('Property', function() {
       subject.setValue('2012-09-01T13:00:00');
       var value = subject.getFirstValue();
 
+      assert.equal(subject.type, 'date-time');
       assert.instanceOf(value, ICAL.Time);
 
       assert.hasProperties(value, {
@@ -349,10 +374,11 @@ suite('Property', function() {
       });
 
       subject.setValue(time);
+      assert.equal(subject.type, 'date');
 
       assert.equal(
         subject.jCal[3],
-        ICAL.design.value['date-time'].undecorate(time)
+        ICAL.design.value['date'].undecorate(time)
       );
 
       assert.equal(
