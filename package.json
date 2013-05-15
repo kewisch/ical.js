@@ -22,5 +22,19 @@
 
   "scripts": {
     "test": "make test-node"
+  },
+
+  "testling": {
+    "files": [
+        "test/helper.js",
+        "test/*_test.js",
+        "test/acceptance/*_test.js"
+    ],
+    "browsers": [
+      "ie9", "ie10",
+      "chrome25",
+      "firefox17", "firefox19",
+      "safari6"
+    ]
   }
 }
