@@ -138,13 +138,20 @@ suite('timezone', function() {
   });
 
   timezoneTest('America/Los_Angeles', '#expandedUntilYear', function() {
+
+    function calcYear(yr) {
+        return Math.max(ICAL.Timezone._minimumExpansionYear, yr) +
+               ICAL.Timezone.EXTRA_COVERAGE;
+    }
+
     var time = new ICAL.Time({
       year: 2012,
       zone: timezone
     });
+    var expectedCoverage = calcYear(time.year);
 
     time.utcOffset();
-    assert.equal(timezone.expandedUntilYear, 2012);
+    assert.equal(timezone.expandedUntilYear, expectedCoverage);
 
     time = new ICAL.Time({
       year: 2014,
@@ -152,21 +159,29 @@ suite('timezone', function() {
     });
 
     time.utcOffset();
-    assert.equal(timezone.expandedUntilYear, 2014);
+    assert.equal(timezone.expandedUntilYear, expectedCoverage);
 
     time = new ICAL.Time({
       year: 1997,
       zone: timezone
     });
     time.utcOffset();
-    assert.equal(timezone.expandedUntilYear, 2014);
+    assert.equal(timezone.expandedUntilYear, expectedCoverage);
+
+    time = new ICAL.Time({
+      year: expectedCoverage + 3,
+      zone: timezone
+    });
+    expectedCoverage = calcYear(time.year);
+    time.utcOffset();
+    assert.equal(timezone.expandedUntilYear, expectedCoverage);
 
     time = new ICAL.Time({
       year: ICAL.Timezone.MAX_YEAR + 1,
       zone: timezone
     });
     time.utcOffset();
-    assert.equal(timezone.expandedUntilYear, ICAL.Timezone.MAX_YEAR + 1);
+    assert.equal(timezone.expandedUntilYear, ICAL.Timezone.MAX_YEAR);
   });
 
   suite('#convertTime', function() {
