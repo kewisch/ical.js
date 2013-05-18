@@ -187,7 +187,6 @@ ICAL.helpers = {
       for (var name in aSrc) {
         // uses prototype method to allow use of Object.create(null);
         if (Object.prototype.hasOwnProperty.call(aSrc, name)) {
-          this.dumpn("Cloning " + name + "\n");
           if (aDeep) {
             result[name] = ICAL.helpers.clone(aSrc[name], true);
           } else {
@@ -2209,7 +2208,6 @@ ICAL.Property = (function() {
       } else {
         this.jCal[VALUE_INDEX] = value;
       }
-
     },
 
     /**
@@ -2848,16 +2846,13 @@ ICAL.Binary = (function() {
       for (;;) {
         var change = ICAL.helpers.clone(this.changes[change_num], true);
         if (change.utcOffset < change.prevUtcOffset) {
-          ICAL.helpers.dumpn("Adjusting " + change.utcOffset);
           ICAL.Timezone.adjust_change(change, 0, 0, 0, change.utcOffset);
         } else {
-          ICAL.helpers.dumpn("Adjusting prev " + change.prevUtcOffset);
           ICAL.Timezone.adjust_change(change, 0, 0, 0,
                                           change.prevUtcOffset);
         }
 
         var cmp = ICAL.Timezone._compare_change_fn(tt_change, change);
-        ICAL.helpers.dumpn("Compare" + cmp + " / " + change.toString());
 
         if (cmp >= 0) {
           change_num_to_use = change_num;
@@ -4228,13 +4223,11 @@ ICAL.TimezoneService = (function() {
     },
 
     getNextOccurrence: function getNextOccurrence(aStartTime, aRecurrenceId) {
-      ICAL.helpers.dumpn("GNO: " + aRecurrenceId + " / " + aStartTime);
       var iter = this.iterator(aStartTime);
       var next, cdt;
 
       do {
         next = iter.next();
-        ICAL.helpers.dumpn("Checking " + next + " <= " + aRecurrenceId);
       } while (next && next.compare(aRecurrenceId) <= 0);
 
       if (next && aRecurrenceId.zone) {
