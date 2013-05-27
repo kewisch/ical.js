@@ -1505,9 +1505,7 @@ ICAL.Component = (function() {
     // mostly for legacy reasons.
     this.jCal = jCal;
 
-    if (parent) {
-      this.parent = parent;
-    }
+    this.parent = parent || null;
   }
 
   Component.prototype = {
@@ -1733,6 +1731,10 @@ ICAL.Component = (function() {
     _removeObjectByIndex: function(jCalIndex, cache, index) {
       // remove cached version
       if (cache && cache[index]) {
+        var obj = cache[index];
+        if ("parent" in obj) {
+            obj.parent = null;
+        }
         cache.splice(index, 1);
       }
 
@@ -1768,26 +1770,17 @@ ICAL.Component = (function() {
     _removeAllObjects: function(jCalIndex, cache, name) {
       var cached = this[cache];
 
-      if (name) {
-        var objects = this.jCal[jCalIndex];
-        var i = objects.length - 1;
+      // Unfortunately we have to run through all children to reset their
+      // parent property.
+      var objects = this.jCal[jCalIndex];
+      var i = objects.length - 1;
 
-        // descending search required because splice
-        // is used and will effect the indices.
-        for (; i >= 0; i--) {
-          if (objects[i][NAME_INDEX] === name) {
-            this._removeObjectByIndex(jCalIndex, cached, i);
-          }
+      // descending search required because splice
+      // is used and will effect the indices.
+      for (; i >= 0; i--) {
+        if (!name || objects[i][NAME_INDEX] === name) {
+          this._removeObjectByIndex(jCalIndex, cached, i);
         }
-      } else {
-        if (cache in this) {
-          // I think its probable that when we remove all
-          // of a type we may want to add to it again so it
-          // makes sense to reuse the object in that case.
-          // For now we remove the contents of the array.
-          this[cache].length = 0;
-        }
-        this.jCal[jCalIndex].length = 0;
       }
     },
 
@@ -1802,9 +1795,14 @@ ICAL.Component = (function() {
         this._hydratedComponentCount = 0;
       }
 
+      if (component.parent) {
+        component.parent.removeSubcomponent(component);
+      }
+
       var idx = this.jCal[COMPONENT_INDEX].push(component.jCal);
       this._components[idx - 1] = component;
       this._hydratedComponentCount++;
+      component.parent = this;
     },
 
     /**
@@ -1844,16 +1842,20 @@ ICAL.Component = (function() {
         throw new TypeError('must instance of ICAL.Property');
       }
 
-      var idx = this.jCal[PROPERTY_INDEX].push(property.jCal);
-      property.component = this;
-
       if (!this._properties) {
         this._properties = [];
         this._hydratedPropertyCount = 0;
       }
 
+
+      if (property.parent) {
+        property.parent.removeProperty(property);
+      }
+
+      var idx = this.jCal[PROPERTY_INDEX].push(property.jCal);
       this._properties[idx - 1] = property;
       this._hydratedPropertyCount++;
+      property.parent = this;
     },
 
     /**
@@ -1863,10 +1865,10 @@ ICAL.Component = (function() {
      * @param {Object} value property value.
      */
     addPropertyWithValue: function(name, value) {
-      var prop = new ICAL.Property(name, this);
+      var prop = new ICAL.Property(name);
       prop.setValue(value);
 
-      this.addProperty(prop, this);
+      this.addProperty(prop);
 
       return prop;
     },
@@ -1954,9 +1956,9 @@ ICAL.Property = (function() {
    * @param {Array|String} jCal raw jCal representation OR
    *  the new name of the property (when creating).
    *
-   * @param {ICAL.Component} [component] parent component.
+   * @param {ICAL.Component} [parent] parent component.
    */
-  function Property(jCal, component) {
+  function Property(jCal, parent) {
     if (typeof(jCal) === 'string') {
       // because we a creating by name we need
       // to find the type when creating the property.
@@ -1977,7 +1979,7 @@ ICAL.Property = (function() {
     }
 
     this.jCal = jCal;
-    this.component = component;
+    this.parent = parent || null;
     this._updateType();
   }
 
