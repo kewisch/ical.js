@@ -54,6 +54,42 @@ suite('icaltime', function() {
     });
   });
 
+  suite('.icaltime', function() {
+    function verify(time, type) {
+      test('convert time ' + JSON.stringify(time), function() {
+        assert.equal(
+          (new ICAL.Time(time)).icaltype,
+          type
+        );
+      });
+    }
+
+    verify({ year: 2013, month: 1, day: 1 }, 'date');
+    verify(
+      { year: 2013, month: 1, day: 1, hour: 3, isDate: true },
+      'date'
+    );
+
+    verify(
+      { year: 2013, month: 1, day: 1, hour: 22 },
+      'date-time'
+    );
+
+    verify(
+      { year: 2013, isDate: false },
+      'date-time'
+    );
+
+    test('converting types during runtime', function() {
+      var time = new ICAL.Time({
+        year: 2013, isDate: false
+      });
+
+      time.isDate = true;
+      assert.equal(time.icaltype, 'date');
+    });
+  });
+
   suite('setters', function() {
     var subject;
 
