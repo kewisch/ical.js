@@ -3255,7 +3255,11 @@ ICAL.TimezoneService = (function() {
   ICAL.Time.prototype = {
 
     icalclass: "icaltime",
-    icaltype: "date-time",
+
+    // is read only strictly defined by isDate
+    get icaltype() {
+      return this.isDate ? 'date' : 'date-time';
+    },
 
     /**
      * @type ICAL.Timezone
@@ -3333,6 +3337,8 @@ ICAL.TimezoneService = (function() {
 
     fromData: function fromData(aData, aZone) {
       for (var key in aData) {
+        // ical type cannot be set
+        if (key === 'icaltype') continue;
         this[key] = aData[key];
       }
 
@@ -3345,8 +3351,6 @@ ICAL.TimezoneService = (function() {
       } else if (aData && ("isDate" in aData)) {
         this.isDate = aData.isDate;
       }
-
-      this.icaltype = (this.isDate ? "date" : "date-time");
 
       if (aData && "timezone" in aData) {
         var zone = ICAL.TimezoneService.get(
@@ -3746,7 +3750,6 @@ ICAL.TimezoneService = (function() {
         this._time.minute = 0;
         this._time.second = 0;
       }
-      this.icaltype = (isDate ? "date" : "date-time");
       this.adjust(0, 0, 0, 0);
 
       return this;
