@@ -28,7 +28,8 @@ suite('parserv2', function() {
       'integer',
       'period',
       'utc_offset',
-      'component'
+      'component',
+      'tzid_with_gmt'
     ];
 
     list.forEach(function(path) {
