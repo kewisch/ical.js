@@ -138,7 +138,7 @@ suite('parserv2', function() {
       };
 
       assert.deepEqual(
-        subject._parseParameters(input, 0),
+        subject._parseParameters(input, 0)[0],
         expected
       );
     });
