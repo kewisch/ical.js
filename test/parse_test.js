@@ -18,8 +18,6 @@ suite('parserv2', function() {
       'newline_junk',
       'unfold_properties',
       'quoted_params',
-      'multivalue',
-      'recur',
       'base64',
       'dates',
       'time',
@@ -28,7 +26,8 @@ suite('parserv2', function() {
       'integer',
       'period',
       'utc_offset',
-      'component'
+      'component',
+      'tzid_with_gmt'
     ];
 
     list.forEach(function(path) {
@@ -137,7 +136,7 @@ suite('parserv2', function() {
       };
 
       assert.deepEqual(
-        subject._parseParameters(input, 0),
+        subject._parseParameters(input, 0)[0],
         expected
       );
     });
