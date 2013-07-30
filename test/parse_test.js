@@ -18,8 +18,6 @@ suite('parserv2', function() {
       'newline_junk',
       'unfold_properties',
       'quoted_params',
-      'multivalue',
-      'recur',
       'base64',
       'dates',
       'time',
