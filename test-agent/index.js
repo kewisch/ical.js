@@ -28,7 +28,7 @@
     },
 
     'open': function() {
-      console.log('socket open');
+      setTimeout(worker.ready.bind(worker), 0);
     },
 
     'close': function() {
