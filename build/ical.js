@@ -1204,6 +1204,9 @@ ICAL.parse = (function() {
     // name of property or begin/end
     var name;
     var value;
+    // params is only overridden if paramPos !== -1.
+    // we can't do params = params || {} later on
+    // because it sacrifices ops.
     var params = {};
 
     /**
