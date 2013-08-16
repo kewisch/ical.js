@@ -153,8 +153,8 @@ suite('recur', function() {
     checkDate({
       freq: 'MONTHLY',
       parts: {
-        BYMONTHDAY: ['1'],
-        BYDAY: ['WE']
+        BYDAY: ['WE'],
+        BYMONTHDAY: [1]
       }
     }, '1970-04-01T00:00:00Z');
 

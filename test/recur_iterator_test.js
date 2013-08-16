@@ -948,7 +948,81 @@ suite('recur_iterator', function() {
 
     });
   });
+  suite('Every 11th & 31st every month', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYMONTHDAY=11,31',
+      '2013-04-01T08:00:00'
+    );
 
+    test('for 6 occurrences', function() {
+      var next;
+      var dates = [];
+      
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 6;
+      var inc = 0;
+
+      var expected = [
+        new Date(2013, 3, 11, 8),
+        new Date(2013, 4, 11, 8),
+        new Date(2013, 4, 31, 8),
+        new Date(2013, 5, 11, 8),
+        new Date(2013, 6, 11, 8),
+        new Date(2013, 6, 31, 8)
+      ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Every WE & SA the 6th, 20th & 31st every month', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYDAY=WE,SA;BYMONTHDAY=6,20,31',
+      '2013-07-01T08:00:00'
+    );
+
+    test('for 6 occurrences', function() {
+      var next;
+      var dates = [];
+      
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 6;
+      var inc = 0;
+
+      var expected = [
+        new Date(2013, 6, 6, 8),
+        new Date(2013, 6, 20, 8),
+        new Date(2013, 6, 31, 8),
+        new Date(2013, 7, 31, 8),
+        new Date(2013, 10, 6, 8),
+        new Date(2013, 10, 20, 8)
+      ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
 });
 
 
