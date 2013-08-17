@@ -149,6 +149,14 @@ suite('recur', function() {
         BYDAY: ['-3MO']
       }
     }, '1970-01-12T00:00:00Z');
+    
+    checkDate({
+      freq: 'MONTHLY',
+      parts: {
+        BYDAY: ['WE'],
+        BYMONTHDAY: [1]
+      }
+    }, '1970-04-01T00:00:00Z');
 
     // TODO bymonthday else part
     // TODO check weekly without byday instances + 1 same wkday
