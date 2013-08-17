@@ -39,6 +39,109 @@ suite('Component', function() {
     assert.ok(!newComp.getAllProperties());
   });
 
+  suite('parenting', function() {
+    // Today we hear a tale about Tom, Marge, Bernhard and Claire.
+    var tom, bernhard, claire, marge, relationship
+    var house, otherhouse;
+    setup(function() {
+      tom = new ICAL.Component("tom");
+      bernhard = new ICAL.Component("bernhard");
+      claire = new ICAL.Component("claire");
+      marge = new ICAL.Component("marge");
+      relationship = new ICAL.Component("vrelationship");
+      house = new ICAL.Property("house");
+      otherhouse = new ICAL.Property("otherhouse");
+    });
+
+    test('basic', function() {
+      // Tom and Bernhard are best friends. They are happy and single.
+      assert.isNull(tom.parent);
+      assert.isNull(bernhard.parent);
+
+      // One day, they get to know Marge, who is also single.
+      assert.isNull(marge.parent);
+
+      // Tom and Bernhard play rock paper scissors on who gets a first shot at
+      // Marge and Tom wins. After a few nice dates they get together.
+      relationship.addSubcomponent(tom);
+      relationship.addSubcomponent(marge);
+
+      // Both are happy as can be and tell everyone about their love. Nothing
+      // goes above their relationship!
+      assert.isNull(relationship.parent);
+      assert.equal(tom.parent, relationship);
+      assert.equal(marge.parent, relationship);
+
+      // Over the years, there are a few ups and downs.
+      relationship.removeSubcomponent(tom);
+      assert.isNull(relationship.parent);
+      assert.isNull(tom.parent);
+      assert.equal(marge.parent, relationship);
+      relationship.removeAllSubcomponents();
+      assert.isNull(marge.parent);
+
+      // But in the end they stay together.
+      relationship.addSubcomponent(tom);
+      relationship.addSubcomponent(marge);
+    });
+
+    test('multiple children', function() {
+      // After some happy years Tom and Marge get married. Tom is going to be father
+      // of his beautiful daughter Claire.
+      tom.addSubcomponent(claire);
+
+      // He has no doubt he is the father
+      assert.equal(claire.parent, tom);
+
+      // One day, Tom catches his wife in bed with his best friend Bernhard.
+      // Tom is very unhappy and requests a paternity test. It turns out that
+      // Claire is actually Bernhard's daughter.
+      bernhard.addSubcomponent(claire);
+
+      // Marge knew it all along. What a sad day. Claire is not Tom's daughter,
+      // but instead Bernhard's. Tom has no children, and Bernhard is the happy
+      // father of his daughter claire.
+      assert.equal(claire.parent, bernhard);
+      assert.isNull(tom.getFirstSubcomponent());
+      assert.equal(bernhard.getFirstSubcomponent(), claire);
+    });
+
+    test('properties', function() {
+      // Marge lives on a property near the Hamptons, she thinks it belongs to
+      // her.
+      marge.addProperty(house);
+      assert.equal(house.parent, marge);
+
+      // It seems that Tom didn't always trust Marge, he had fooled her. The
+      // house belongs to him.
+      tom.addProperty(house);
+      assert.equal(house.parent, tom);
+      assert.isNull(marge.getFirstProperty());
+
+      // Bernhard being an aggressive character, tries to throw Tom out of his
+      // own house. A long visit in the hospital lets neighbors believe noone
+      // lives there anymore.
+      tom.removeProperty(house);
+      assert.isNull(house.parent);
+
+      // Marge spends a few nights there, but also lives in her other house.
+      marge.addProperty(house);
+      marge.addProperty(otherhouse);
+      assert.equal(house.parent, marge);
+      assert.equal(otherhouse.parent, marge);
+
+      // Tom is back from the hospital and very mad. He throws marge out of his
+      // house. Unfortunately marge can no longer pay the rent for her other
+      // house either.
+      marge.removeAllProperties();
+      assert.isNull(house.parent);
+      assert.isNull(otherhouse.parent);
+
+      // What a mess. What do we lern from this testsuite? Infidelity is not a
+      // good idea. Always be faithful!
+    });
+  });
+
   suite('#getFirstSubcomponent', function() {
     var jCal;
     setup(function() {
@@ -316,7 +419,7 @@ suite('Component', function() {
     var lastProp = all[all.length - 1];
 
     assert.equal(lastProp, prop);
-    assert.equal(lastProp.component, subject);
+    assert.equal(lastProp.parent, subject);
   });
 
   test('#addPropertyWithValue', function() {
