@@ -6255,7 +6255,7 @@ ICAL.Event = (function() {
      */
     getOccurrenceDetails: function(occurrence) {
       var id = occurrence.toString();
-      var utc_id = occurrence.convertToZone(ICAL.Timezone.utcTimezone).toString();
+      var utcId = occurrence.convertToZone(ICAL.Timezone.utcTimezone).toString();
       var result = {
         //XXX: Clone?
         recurrenceId: occurrence
@@ -6266,8 +6266,8 @@ ICAL.Event = (function() {
         result.startDate = item.startDate;
         result.endDate = item.endDate;
         result.item = item;
-      } else if (utc_id in this.exceptions) {
-        var item = this.exceptions[utc_id];
+      } else if (utcId in this.exceptions) {
+        var item = this.exceptions[utcId];
         result.startDate = item.startDate;
         result.endDate = item.endDate;
         result.item = item;
