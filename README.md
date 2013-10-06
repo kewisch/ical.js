@@ -33,3 +33,7 @@ You need nodejs/nodejs to install the testing tools.
     Go to http://localhost:8789/test-agent/index.html
     Run all tests with `make test-browser`
 
+## Documentation
+
+Until a full reference documentation is available, please see the
+[wiki](https://github.com/mozilla-comm/ical.js/wiki) for a few examples.
