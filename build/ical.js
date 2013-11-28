@@ -4927,11 +4927,6 @@ ICAL.RecurIterator = (function() {
           continue;
         }
 
-        // after verify that the next date
-        // is in the current month we can increment
-        // it permanently.
-        //lastDay = date;
-
         // find next date
         var next = byMonthDay[dateIdx++];
 
@@ -6260,6 +6255,7 @@ ICAL.Event = (function() {
      */
     getOccurrenceDetails: function(occurrence) {
       var id = occurrence.toString();
+      var utcId = occurrence.convertToZone(ICAL.Timezone.utcTimezone).toString();
       var result = {
         //XXX: Clone?
         recurrenceId: occurrence
@@ -6267,6 +6263,11 @@ ICAL.Event = (function() {
 
       if (id in this.exceptions) {
         var item = result.item = this.exceptions[id];
+        result.startDate = item.startDate;
+        result.endDate = item.endDate;
+        result.item = item;
+      } else if (utcId in this.exceptions) {
+        var item = this.exceptions[utcId];
         result.startDate = item.startDate;
         result.endDate = item.endDate;
         result.item = item;

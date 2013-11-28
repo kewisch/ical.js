@@ -51,6 +51,7 @@ suite('ICAL.Event', function() {
     );
 
     var events = root.getAllSubcomponents('vevent');
+    ICAL.TimezoneService.register(root.getFirstSubcomponent('vtimezone'));
 
     events.forEach(function(event) {
       if (!event.hasProperty('recurrence-id')) {
@@ -406,6 +407,31 @@ suite('ICAL.Event', function() {
       );
 
       assert.equal(result.item, subject);
+    });
+
+    test('iterate over exceptions', function() {
+      for (var counter = 0, iterator = subject.iterator(); counter < 2; counter++) {
+        var result = subject.getOccurrenceDetails(iterator.next());
+        var exception = exceptions[counter];
+
+        assert.equal(
+          result.endDate.toString(),
+          exception.getFirstPropertyValue('dtend').toString(),
+          'end date'
+        );
+
+        assert.equal(
+          result.startDate.toString(),
+          exception.getFirstPropertyValue('dtstart').toString(),
+          'start date'
+        );
+
+        assert.deepEqual(
+          result.item.component.toJSON(),
+          exception.toJSON(),
+          'item'
+        );
+      }
     });
   });
 
