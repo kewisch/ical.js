@@ -2423,7 +2423,7 @@ ICAL.Binary = (function() {
       this.start = aData.start;
     }
 
-    if (aData && ('end' in aData) && ('duration' in aData)) {
+    if (aData && aData.end && aData.duration) {
       throw new Error('cannot accept both end and duration');
     }
 
@@ -2449,6 +2449,14 @@ ICAL.Binary = (function() {
     duration: null,
     icalclass: "icalperiod",
     icaltype: "period",
+
+    clone: function() {
+      return ICAL.Period.fromData({
+        start: this.start ? this.start.clone() : null,
+        end: this.end ? this.end.clone() : null,
+        duration: this.duration ? this.duration.clone() : null
+      });
+    },
 
     getDuration: function duration() {
       if (this.duration) {

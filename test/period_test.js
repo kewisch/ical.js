@@ -209,6 +209,17 @@ suite('ical/period', function() {
       }, /cannot accept both end and duration/);
     });
 
+    test('start,end and duration but one is null', function() {
+      var subject = ICAL.Period.fromData({
+        start: start,
+        end: null,
+        duration: duration
+      });
+      assert.hasProperties(subject.start, start, 'start date');
+      assert.isNull(subject.end);
+      assert.hasProperties(subject.duration, duration, 'duration');
+    });
+
     test('invalid start value', function() {
       assert.throws(function() {
         var subject = ICAL.Period.fromData({
@@ -249,6 +260,46 @@ suite('ical/period', function() {
           duration: duration
         });
         assert.equal(subject.toString(), '1970-01-02T03:04:05Z/PT3H2M1S');
+    });
+  });
+
+  suite("#clone", function() {
+    test('cloned start/duration', function() {
+      var subjectstart = start.clone();
+      var subjectduration = duration.clone();
+      var subject1 = ICAL.Period.fromData({start: subjectstart, duration: subjectduration});
+      var subject2 = subject1.clone();
+      subjectstart.hour++;
+      subjectduration.hours++;
+
+      assert.equal(subject1.start.hour, 4);
+      assert.equal(subject2.start.hour, 3);
+
+      assert.equal(subject1.duration.hours, 4);
+      assert.equal(subject2.duration.hours, 3);
+    });
+    test('cloned start/end', function() {
+      var subjectstart = start.clone();
+      var subjectend = end.clone();
+      var subject1 = ICAL.Period.fromData({start: subjectstart, end: subjectend});
+      var subject2 = subject1.clone();
+      subjectstart.hour++;
+      subjectend.hour++;
+
+      assert.equal(subject1.start.hour, 4);
+      assert.equal(subject2.start.hour, 3);
+
+      assert.equal(subject1.end.hour, 4);
+      assert.equal(subject2.end.hour, 3);
+    });
+    test('cloned empty object', function() {
+      // most importantly, this shouldn't throw.
+      var subject1 = ICAL.Period.fromData();
+      var subject2 = subject1.clone();
+
+      assert.equal(subject1.start, subject2.start);
+      assert.equal(subject1.end, subject2.end);
+      assert.equal(subject1.duration, subject2.duration);
     });
   });
 });
