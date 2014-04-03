@@ -2,7 +2,7 @@ suite('design', function() {
 
   var timezone;
   testSupport.defineSample('timezones/America/New_York.ics', function(data) {
-    var parsed = ICAL.parse(data)[1];
+    var parsed = ICAL.parse(data);
     var vcalendar = new ICAL.Component(parsed);
     var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
 

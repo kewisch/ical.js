@@ -23,7 +23,7 @@ suite('timezone', function() {
         });
 
         setup(function() {
-          var parsed = ICAL.parse(icsData)[1];
+          var parsed = ICAL.parse(icsData);
           var vcalendar = new ICAL.Component(parsed);
           var comp = vcalendar.getFirstSubcomponent('vtimezone');
 

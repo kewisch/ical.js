@@ -909,12 +909,12 @@ ICAL.stringify = (function() {
    * @return {String} ical document.
    */
   function stringify(jCal) {
-    if (!jCal[0] || jCal[0] !== 'icalendar') {
-      throw new Error('must provide full jCal document');
+    if (typeof jCal[0] == "string") {
+      // This is a single component
+      jCal = [jCal];
     }
 
-    // 1 because we skip the initial element.
-    var i = 1;
+    var i = 0;
     var len = jCal.length;
     var result = '';
 
@@ -1137,9 +1137,7 @@ ICAL.parse = (function() {
 
   function parser(input) {
     var state = {};
-    var root = state.component = [
-      'icalendar'
-    ];
+    var root = state.component = [];
 
     state.stack = [root];
 
@@ -1159,7 +1157,7 @@ ICAL.parse = (function() {
 
     state = null;
 
-    return root;
+    return (root.length == 1 ? root[0] : root);
   }
 
   // classes & constants
@@ -2767,8 +2765,8 @@ ICAL.Binary = (function() {
         if (aData && "component" in aData) {
           if (typeof aData.component == "string") {
             // If a string was passed, parse it as a component
-            var icalendar = ICAL.parse(aData.component);
-            this.component = new ICAL.Component(icalendar[1]);
+            var jCal = ICAL.parse(aData.component);
+            this.component = new ICAL.Component(jCal);
           } else if (aData.component instanceof ICAL.Component) {
             // If it was a component already, then just set it
             this.component = aData.component;
@@ -6624,7 +6622,7 @@ ICAL.ComponentParser = (function() {
     process: function(ical) {
       //TODO: this is sync now in the future we will have a incremental parser.
       if (typeof(ical) === 'string') {
-        ical = ICAL.parse(ical)[1];
+        ical = ICAL.parse(ical);
       }
 
       if (!(ical instanceof ICAL.Component)) {

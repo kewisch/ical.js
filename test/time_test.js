@@ -29,7 +29,7 @@ suite('icaltime', function() {
 
     test('with timezone', function() {
       var parsed = ICAL.parse(icsData);
-      var vcalendar = new ICAL.Component(parsed[1]);
+      var vcalendar = new ICAL.Component(parsed);
       var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
       var tzid = vtimezone.getFirstPropertyValue('tzid');
 
@@ -634,7 +634,7 @@ suite('icaltime', function() {
       var zone;
 
       setup(function() {
-        var parsed = ICAL.parse(icsData)[1];
+        var parsed = ICAL.parse(icsData);
         var vcalendar = new ICAL.Component(parsed);
         var comp = vcalendar.getFirstSubcomponent('vtimezone');
 

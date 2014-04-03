@@ -89,7 +89,7 @@
     var ics = this._timezones[zone];
 
     function register(ics) {
-      var parsed = ICAL.parse(ics)[1];
+      var parsed = ICAL.parse(ics);
       var calendar = new ICAL.Component(parsed);
       var vtimezone = calendar.getFirstSubcomponent('vtimezone');
 

@@ -538,9 +538,7 @@ suite('Component', function() {
   test('#toString', function() {
     var ical = subject.toString();
     var parsed = ICAL.parse(ical);
-    var fromICAL = new ICAL.Component(
-      parsed[1]
-    );
+    var fromICAL = new ICAL.Component(parsed);
 
     assert.deepEqual(subject.jCal, fromICAL.jCal);
   });

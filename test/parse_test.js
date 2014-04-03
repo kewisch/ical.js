@@ -29,7 +29,8 @@ suite('parserv2', function() {
       'period',
       'utc_offset',
       'component',
-      'tzid_with_gmt'
+      'tzid_with_gmt',
+      'multiple_root_components'
     ];
 
     list.forEach(function(path) {

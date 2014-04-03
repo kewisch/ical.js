@@ -328,51 +328,6 @@
     }
 
     /**
-     * Changes the format of the UNTIl part in the RECUR
-     * value type. When no UNTIL part is found the original
-     * is returned untouched.
-     *
-     * @param {String} type toICAL or fromICAL.
-     * @param {String} aValue the value to check.
-     * @return {String} upgraded/original value.
-     */
-    function recurReplaceUntil(aType, aValue) {
-      var idx = aValue.indexOf('UNTIL=');
-      if (idx === -1) {
-        return aValue;
-      }
-
-      idx += 6;
-
-      // everything before the value
-      var begin = aValue.substr(0, idx);
-
-      // everything after the value
-      var end;
-
-      // current until value
-      var until;
-
-      // end of value could be -1 meaning this is the last param.
-      var endValueIdx = aValue.indexOf(';', idx);
-
-      if (endValueIdx === -1) {
-        end = '';
-        until = aValue.substr(idx);
-      } else {
-        end = aValue.substr(endValueIdx);
-        until = aValue.substr(idx, endValueIdx - idx);
-      }
-
-      if (until.length > 10) {
-        until = design.value['date-time'][aType](until);
-      } else {
-        until = design.value.date[aType](until);
-      }
-
-      return begin + until + end;
-    }
-    /**
      * Design data used by the parser to decide if data is semantically correct
      */
     var design = {
@@ -672,15 +627,36 @@
           }
         },
         recur: {
-          fromICAL: recurReplaceUntil.bind(this, 'fromICAL'),
-          toICAL: recurReplaceUntil.bind(this, 'toICAL'),
+          fromICAL: function(string) {
+            return ICAL.Recur._stringToData(string, true);
+          },
+
+          toICAL: function(data) {
+            var str = "";
+            for (var k in data) {
+              var val = data[k]
+              if (k == "until") {
+                if (val.length > 10) {
+                  val = design.value['date-time'].toICAL(val);
+                } else {
+                  val = design.value['date'].toICAL(val);
+                }
+              } else if (k == "wkst") {
+                val = ICAL.Recur.numericDayToIcalDay(val);
+              } else if (ICAL.helpers.isArray(val)) {
+                val = val.join(",");
+              }
+              str += k.toUpperCase() + "=" + val + ";";
+            }
+            return str.substr(0, str.length - 1);
+          },
 
           decorate: function decorate(aValue) {
-            return ICAL.Recur.fromString(aValue);
+            return ICAL.Recur.fromData(aValue);
           },
 
           undecorate: function(aRecur) {
-            return aRecur.toString();
+            return aRecur.toJSON();
           }
         },
 
@@ -939,12 +915,12 @@
      * @return {String} ical document.
      */
     function stringify(jCal) {
-      if (!jCal[0] || jCal[0] !== 'icalendar') {
-        throw new Error('must provide full jCal document');
+      if (typeof jCal[0] == "string") {
+        // This is a single component
+        jCal = [jCal];
       }
 
-      // 1 because we skip the initial element.
-      var i = 1;
+      var i = 0;
       var len = jCal.length;
       var result = '';
 
@@ -1167,9 +1143,7 @@
 
     function parser(input) {
       var state = {};
-      var root = state.component = [
-        'icalendar'
-      ];
+      var root = state.component = [];
 
       state.stack = [root];
 
@@ -1189,7 +1163,7 @@
 
       state = null;
 
-      return root;
+      return (root.length == 1 ? root[0] : root);
     }
 
     // classes & constants
@@ -1204,11 +1178,16 @@
       var valuePos = line.indexOf(VALUE_DELIMITER);
       var paramPos = line.indexOf(PARAM_DELIMITER);
 
-      var nextPos = 0;
+      var lastParamIndex;
+      var lastValuePos;
+
       // name of property or begin/end
       var name;
       var value;
-      var params;
+      // params is only overridden if paramPos !== -1.
+      // we can't do params = params || {} later on
+      // because it sacrifices ops.
+      var params = {};
 
       /**
        * Different property cases
@@ -1220,6 +1199,8 @@
        * 2. ATTENDEE;ROLE=REQ-PARTICIPANT;
        *    // ROLE= is a param because : has not happened yet
        */
+        // when the parameter delimiter is after the
+        // value delimiter then its not a parameter.
 
       if ((paramPos !== -1 && valuePos !== -1)) {
         // when the parameter delimiter is after the
@@ -1229,20 +1210,23 @@
         }
       }
 
+      var parsedParams;
       if (paramPos !== -1) {
-        // when there are parameters (ATTENDEE;RSVP=TRUE;)
-        name = parser._formatName(line.substr(0, paramPos));
-        params = parser._parseParameters(line, paramPos);
-        if (valuePos !== -1) {
-          value = line.substr(valuePos + 1);
+        name = line.substring(0, paramPos).toLowerCase();
+        parsedParams = parser._parseParameters(line.substring(paramPos), 0);
+        params = parsedParams[0];
+        lastParamIndex = parsedParams[1].length + parsedParams[2] + paramPos;
+        if ((lastValuePos =
+          line.substring(lastParamIndex).indexOf(VALUE_DELIMITER)) !== -1) {
+          value = line.substring(lastParamIndex + lastValuePos + 1);
         }
       } else if (valuePos !== -1) {
         // without parmeters (BEGIN:VCAENDAR, CLASS:PUBLIC)
-        name = parser._formatName(line.substr(0, valuePos));
-        value = line.substr(valuePos + 1);
+        name = line.substring(0, valuePos).toLowerCase();
+        value = line.substring(valuePos + 1);
 
         if (name === 'begin') {
-          var newComponent = [parser._formatName(value), [], []];
+          var newComponent = [value.toLowerCase(), [], []];
           if (state.stack.length === 1) {
             state.component.push(newComponent);
           } else {
@@ -1251,9 +1235,7 @@
           state.stack.push(state.component);
           state.component = newComponent;
           return;
-        }
-
-        if (name === 'end') {
+        } else if (name === 'end') {
           state.component = state.stack.pop();
           return;
         }
@@ -1285,9 +1267,6 @@
           valueType = propertyDetails.detectType(value);
         }
       }
-
-      // at this point params is mandatory per jcal spec
-      params = params || {};
 
       // attempt to determine value
       if (!valueType) {
@@ -1353,6 +1332,9 @@
       var pos = 0;
       var delim = PARAM_NAME_DELIMITER;
       var result = {};
+      var name;
+      var value;
+      var type;
 
       // find the next '=' sign
       // use lastParam and pos to find name
@@ -1362,54 +1344,43 @@
       while ((pos !== false) &&
              (pos = helpers.unescapedIndexOf(line, delim, pos + 1)) !== -1) {
 
-        var name = line.substr(lastParam + 1, pos - lastParam - 1);
+        name = line.substr(lastParam + 1, pos - lastParam - 1);
 
         var nextChar = line[pos + 1];
-        var substrOffset = -2;
-
         if (nextChar === '"') {
           var valuePos = pos + 2;
           pos = helpers.unescapedIndexOf(line, '"', valuePos);
-          var value = line.substr(valuePos, pos - valuePos);
+          value = line.substr(valuePos, pos - valuePos);
           lastParam = helpers.unescapedIndexOf(line, PARAM_DELIMITER, pos);
         } else {
           var valuePos = pos + 1;
-          substrOffset = -1;
 
           // move to next ";"
           var nextPos = helpers.unescapedIndexOf(line, PARAM_DELIMITER, valuePos);
-
           if (nextPos === -1) {
             // when there is no ";" attempt to locate ":"
             nextPos = helpers.unescapedIndexOf(line, VALUE_DELIMITER, valuePos);
-            // no more tokens end of the line use .length
+
             if (nextPos === -1) {
               nextPos = line.length;
-              // because we are at the end we don't need to trim
-              // the found value of substr offset is zero
-              substrOffset = 0;
-            } else {
-              // next token is the beginning of the value
-              // so we must stop looking for the '=' token.
-              pos = false;
             }
+            pos = false;
           } else {
             lastParam = nextPos;
           }
 
-          var value = line.substr(valuePos, nextPos - valuePos);
+          value = line.substr(valuePos, nextPos - valuePos);
         }
-
-        var type = DEFAULT_TYPE;
 
         if (name in design.param && design.param[name].valueType) {
           type = design.param[name].valueType;
+        } else {
+          type = DEFAULT_TYPE;
         }
 
-        result[parser._formatName(name)] = parser._parseValue(value, type);
+        result[name.toLowerCase()] = parser._parseValue(value, type);
       }
-
-      return result;
+      return [result, value, valuePos];
     }
 
     /**
@@ -1511,9 +1482,7 @@
       // mostly for legacy reasons.
       this.jCal = jCal;
 
-      if (parent) {
-        this.parent = parent;
-      }
+      this.parent = parent || null;
     }
 
     Component.prototype = {
@@ -1739,6 +1708,10 @@
       _removeObjectByIndex: function(jCalIndex, cache, index) {
         // remove cached version
         if (cache && cache[index]) {
+          var obj = cache[index];
+          if ("parent" in obj) {
+              obj.parent = null;
+          }
           cache.splice(index, 1);
         }
 
@@ -1774,26 +1747,17 @@
       _removeAllObjects: function(jCalIndex, cache, name) {
         var cached = this[cache];
 
-        if (name) {
-          var objects = this.jCal[jCalIndex];
-          var i = objects.length - 1;
+        // Unfortunately we have to run through all children to reset their
+        // parent property.
+        var objects = this.jCal[jCalIndex];
+        var i = objects.length - 1;
 
-          // descending search required because splice
-          // is used and will effect the indices.
-          for (; i >= 0; i--) {
-            if (objects[i][NAME_INDEX] === name) {
-              this._removeObjectByIndex(jCalIndex, cached, i);
-            }
+        // descending search required because splice
+        // is used and will effect the indices.
+        for (; i >= 0; i--) {
+          if (!name || objects[i][NAME_INDEX] === name) {
+            this._removeObjectByIndex(jCalIndex, cached, i);
           }
-        } else {
-          if (cache in this) {
-            // I think its probable that when we remove all
-            // of a type we may want to add to it again so it
-            // makes sense to reuse the object in that case.
-            // For now we remove the contents of the array.
-            this[cache].length = 0;
-          }
-          this.jCal[jCalIndex].length = 0;
         }
       },
 
@@ -1808,9 +1772,14 @@
           this._hydratedComponentCount = 0;
         }
 
+        if (component.parent) {
+          component.parent.removeSubcomponent(component);
+        }
+
         var idx = this.jCal[COMPONENT_INDEX].push(component.jCal);
         this._components[idx - 1] = component;
         this._hydratedComponentCount++;
+        component.parent = this;
       },
 
       /**
@@ -1850,16 +1819,20 @@
           throw new TypeError('must instance of ICAL.Property');
         }
 
-        var idx = this.jCal[PROPERTY_INDEX].push(property.jCal);
-        property.component = this;
-
         if (!this._properties) {
           this._properties = [];
           this._hydratedPropertyCount = 0;
         }
 
+
+        if (property.parent) {
+          property.parent.removeProperty(property);
+        }
+
+        var idx = this.jCal[PROPERTY_INDEX].push(property.jCal);
         this._properties[idx - 1] = property;
         this._hydratedPropertyCount++;
+        property.parent = this;
       },
 
       /**
@@ -1869,10 +1842,10 @@
        * @param {Object} value property value.
        */
       addPropertyWithValue: function(name, value) {
-        var prop = new ICAL.Property(name, this);
+        var prop = new ICAL.Property(name);
         prop.setValue(value);
 
-        this.addProperty(prop, this);
+        this.addProperty(prop);
 
         return prop;
       },
@@ -1960,9 +1933,9 @@
      * @param {Array|String} jCal raw jCal representation OR
      *  the new name of the property (when creating).
      *
-     * @param {ICAL.Component} [component] parent component.
+     * @param {ICAL.Component} [parent] parent component.
      */
-    function Property(jCal, component) {
+    function Property(jCal, parent) {
       if (typeof(jCal) === 'string') {
         // because we a creating by name we need
         // to find the type when creating the property.
@@ -1983,7 +1956,7 @@
       }
 
       this.jCal = jCal;
-      this.component = component;
+      this.parent = parent || null;
       this._updateType();
     }
 
@@ -2430,7 +2403,7 @@
         this.start = aData.start;
       }
 
-      if (aData && ('end' in aData) && ('duration' in aData)) {
+      if (aData && aData.end && aData.duration) {
         throw new Error('cannot accept both end and duration');
       }
 
@@ -2456,6 +2429,14 @@
       duration: null,
       icalclass: "icalperiod",
       icaltype: "period",
+
+      clone: function() {
+        return ICAL.Period.fromData({
+          start: this.start ? this.start.clone() : null,
+          end: this.end ? this.end.clone() : null,
+          duration: this.duration ? this.duration.clone() : null
+        });
+      },
 
       getDuration: function duration() {
         if (this.duration) {
@@ -2790,8 +2771,8 @@
           if (aData && "component" in aData) {
             if (typeof aData.component == "string") {
               // If a string was passed, parse it as a component
-              var icalendar = ICAL.parse(aData.component);
-              this.component = new ICAL.Component(icalendar[1]);
+              var jCal = ICAL.parse(aData.component);
+              this.component = new ICAL.Component(jCal);
             } else if (aData.component instanceof ICAL.Component) {
               // If it was a component already, then just set it
               this.component = aData.component;
@@ -3261,7 +3242,11 @@
     ICAL.Time.prototype = {
 
       icalclass: "icaltime",
-      icaltype: "date-time",
+
+      // is read only strictly defined by isDate
+      get icaltype() {
+        return this.isDate ? 'date' : 'date-time';
+      },
 
       /**
        * @type ICAL.Timezone
@@ -3339,6 +3324,8 @@
 
       fromData: function fromData(aData, aZone) {
         for (var key in aData) {
+          // ical type cannot be set
+          if (key === 'icaltype') continue;
           this[key] = aData[key];
         }
 
@@ -3351,8 +3338,6 @@
         } else if (aData && ("isDate" in aData)) {
           this.isDate = aData.isDate;
         }
-
-        this.icaltype = (this.isDate ? "date" : "date-time");
 
         if (aData && "timezone" in aData) {
           var zone = ICAL.TimezoneService.get(
@@ -3752,7 +3737,6 @@
           this._time.minute = 0;
           this._time.second = 0;
         }
-        this.icaltype = (isDate ? "date" : "date-time");
         this.adjust(0, 0, 0, 0);
 
         return this;
@@ -4162,18 +4146,8 @@
       this.wrappedJSObject = this;
       this.parts = {};
 
-      if (typeof(data) === 'object') {
-        for (var key in data) {
-          this[key] = data[key];
-        }
-
-        if (this.until && !(this.until instanceof ICAL.Time)) {
-          this.until = new ICAL.Time(this.until);
-        }
-      }
-
-      if (!this.parts) {
-        this.parts = {};
+      if (data && typeof(data) === 'object') {
+        this.fromData(data);
       }
     };
 
@@ -4209,23 +4183,21 @@
       },
 
       addComponent: function addPart(aType, aValue) {
-        if (!(aType in this.parts)) {
-          this.parts[aType] = [aValue];
+        var ucname = aType.toUpperCase();
+        if (ucname in this.parts) {
+          this.parts[ucname].push(aValue);
         } else {
-          this.parts[aType].push(aValue);
+          this.parts[ucname] = [aValue];
         }
       },
 
       setComponent: function setComponent(aType, aValues) {
-        this.parts[aType] = aValues;
+        this.parts[aType.toUpperCase()] = aValues;
       },
 
-      getComponent: function getComponent(aType, aCount) {
-        var ucName = aType.toUpperCase();
-        var components = (ucName in this.parts ? this.parts[ucName] : []);
-
-        if (aCount) aCount.value = components.length;
-        return components;
+      getComponent: function getComponent(aType) {
+        var ucname = aType.toUpperCase();
+        return (ucname in this.parts ? this.parts[ucname] : []);
       },
 
       getNextOccurrence: function getNextOccurrence(aStartTime, aRecurrenceId) {
@@ -4243,33 +4215,58 @@
         return next;
       },
 
+      fromData: function(data) {
+        for (var key in data) {
+          var uckey = key.toUpperCase();
+
+          if (uckey in partDesign) {
+            if (ICAL.helpers.isArray(data[key])) {
+              this.parts[uckey] = data[key];
+            } else {
+              this.parts[uckey] = [data[key]];
+            }
+          } else {
+            this[key] = data[key];
+          }
+        }
+
+        if (this.wkst && typeof this.wkst != "number") {
+          this.wkst = ICAL.Recur.icalDayToNumericDay(this.wkst);
+        }
+
+        if (this.until && !(this.until instanceof ICAL.Time)) {
+          this.until = ICAL.Time.fromString(this.until);
+        }
+      },
+
       toJSON: function() {
-        //XXX: extract this list up to proto?
-        var propsToCopy = [
-          "freq",
-          "count",
-          "until",
-          "wkst",
-          "interval",
-          "parts"
-        ];
+        var res = Object.create(null);
+        res.freq = this.freq;
 
-        var result = Object.create(null);
-
-        var i = 0;
-        var len = propsToCopy.length;
-        var prop;
-
-        for (; i < len; i++) {
-          var prop = propsToCopy[i];
-          result[prop] = this[prop];
+        if (this.count) {
+          res.count = this.count;
         }
 
-        if (result.until instanceof ICAL.Time) {
-          result.until = result.until.toJSON();
+        if (this.interval > 1) {
+          res.interval = this.interval;
         }
 
-        return result;
+        for (var k in this.parts) {
+          var kparts = this.parts[k];
+          if (ICAL.helpers.isArray(kparts) && kparts.length == 1) {
+            res[k.toLowerCase()] = kparts[0];
+          } else {
+            res[k.toLowerCase()] = ICAL.helpers.clone(this.parts[k]);
+          }
+        }
+
+        if (this.until) {
+          res.until = this.until.toString();
+        }
+        if ('wkst' in this && this.wkst !== ICAL.Time.DEFAULT_WEEK_START) {
+          res.wkst = ICAL.Recur.numericDayToIcalDay(this.wkst);
+        }
+        return res;
       },
 
       toString: function icalrecur_toString() {
@@ -4351,7 +4348,7 @@
                         'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 
     var optionDesign = {
-      FREQ: function(value, dict) {
+      FREQ: function(value, dict, fmtIcal) {
         // yes this is actually equal or faster then regex.
         // upside here is we can enumerate the valid values.
         if (ALLOWED_FREQ.indexOf(value) !== -1) {
@@ -4364,11 +4361,11 @@
         }
       },
 
-      COUNT: function(value, dict) {
+      COUNT: function(value, dict, fmtIcal) {
         dict.count = ICAL.helpers.strictParseInt(value);
       },
 
-      INTERVAL: function(value, dict) {
+      INTERVAL: function(value, dict, fmtIcal) {
         dict.interval = ICAL.helpers.strictParseInt(value);
         if (dict.interval < 1) {
           // 0 or negative values are not allowed, some engines seem to generate
@@ -4377,11 +4374,19 @@
         }
       },
 
-      UNTIL: function(value, dict) {
-        dict.until = ICAL.Time.fromString(value);
+      UNTIL: function(value, dict, fmtIcal) {
+        if (fmtIcal) {
+          if (value.length > 10) {
+            dict.until = ICAL.design.value['date-time'].fromICAL(value);
+          } else {
+            dict.until = ICAL.design.value.date.fromICAL(value);
+          }
+        } else {
+          dict.until = ICAL.Time.fromString(value);
+        }
       },
 
-      WKST: function(value, dict) {
+      WKST: function(value, dict, fmtIcal) {
         if (VALID_DAY_NAMES.test(value)) {
           dict.wkst = ICAL.Recur.icalDayToNumericDay(value);
         } else {
@@ -4409,8 +4414,17 @@
     };
 
     ICAL.Recur.fromString = function(string) {
+      var data = ICAL.Recur._stringToData(string, false);
+      return new ICAL.Recur(data);
+    };
+
+    ICAL.Recur.fromData = function(aData) {
+      return new ICAL.Recur(aData);
+    };
+
+    ICAL.Recur._stringToData= function(string, fmtIcal) {
       var dict = Object.create(null);
-      var dictParts = dict.parts = Object.create(null);
+      var dict = {};
 
       // split is slower in FF but fast enough.
       // v8 however this is faster then manual split?
@@ -4419,24 +4433,29 @@
 
       for (var i = 0; i < len; i++) {
         var parts = values[i].split('=');
-        var name = parts[0];
+        var ucname = parts[0].toUpperCase();
+        var lcname = parts[0].toLowerCase();
+        var name = (fmtIcal ? lcname : ucname);
         var value = parts[1];
 
-        if (name in partDesign) {
+        if (ucname in partDesign) {
           var partArr = value.split(',');
           var partArrIdx = 0;
           var partArrLen = partArr.length;
 
           for (; partArrIdx < partArrLen; partArrIdx++) {
-            partArr[partArrIdx] = partDesign[name](partArr[partArrIdx]);
+            partArr[partArrIdx] = partDesign[ucname](partArr[partArrIdx]);
           }
-          dictParts[name] = partArr;
-        } else if (name in optionDesign) {
-          optionDesign[name](value, dict);
+          dict[name] = (partArr.length == 1 ? partArr[0] : partArr);
+        } else if (ucname in optionDesign) {
+          optionDesign[ucname](value, dict, fmtIcal);
+        } else {
+          // Don't swallow unknown values. Just set them as they are.
+          dict[lcname] = value;
         }
       }
 
-      return new ICAL.Recur(dict);
+      return dict;
     };
 
   })();
@@ -4850,7 +4869,7 @@
         }
 
         // unique and sort
-        return newRules.sort();
+        return newRules.sort(function(a,b){return a - b});
       },
 
       /**
@@ -4863,13 +4882,12 @@
        *                           increment the current day (this.last).
        */
       _byDayAndMonthDay: function(isInit) {
-       var byMonthDay; // setup in initMonth
+        var byMonthDay; // setup in initMonth
         var byDay = this.by_data.BYDAY;
 
         var date;
         var dateIdx = 0;
         var dateLen; // setup in initMonth
-        var dayIdx = 0;
         var dayLen = byDay.length;
 
         // we are not valid by default
@@ -4877,6 +4895,10 @@
 
         var daysInMonth;
         var self = this;
+        // we need a copy of this, because a DateTime gets normalized
+        // automatically if the day is out of range. At some points we 
+        // set the last day to 0 to start counting.
+        var lastDay = this.last.day;
 
         function initMonth() {
           daysInMonth = ICAL.Time.daysInMonth(
@@ -4890,50 +4912,52 @@
           );
 
           dateLen = byMonthDay.length;
+
+          // For the case of more than one occurrence in one month
+          // we have to be sure to start searching after the last
+          // found date or at the last BYMONTHDAY.
+          while (byMonthDay[dateIdx] <= lastDay && dateIdx < dateLen - 1) {
+            dateIdx++;
+          }
         }
 
         function nextMonth() {
-          self.last.day = 1;
+          // since the day is incremented at the start
+          // of the loop below, we need to start at 0
+          lastDay = 0;
           self.increment_month();
-          initMonth();
-
           dateIdx = 0;
-          dayIdx = 0;
+          initMonth();
         }
 
         initMonth();
 
         // should come after initMonth
         if (isInit) {
-          this.last.day -= 1;
+          lastDay -= 1;
         }
 
         while (!dataIsValid) {
-          // find next date
-          var next = byMonthDay[dateIdx++];
-
           // increment the current date. This is really
           // important otherwise we may fall into the infinite
           // loop trap. The initial date takes care of the case
           // where the current date is the date we are looking
           // for.
-          date = this.last.day + 1;
+          date = lastDay + 1;
 
           if (date > daysInMonth) {
             nextMonth();
             continue;
           }
 
-          // after verify that the next date
-          // is in the current month we can increment
-          // it permanently.
-          this.last.day = date;
+          // find next date
+          var next = byMonthDay[dateIdx++];
 
           // this logic is dependant on the BYMONTHDAYS
           // being in order (which is done by #normalizeByMonthDayRules)
-          if (next >= this.last.day) {
+          if (next >= date) {
             // if the next month day is in the future jump to it.
-            this.last.day = next;
+            lastDay = next;
           } else {
             // in this case the 'next' monthday has past
             // we must move to the month.
@@ -4943,11 +4967,12 @@
 
           // Now we can loop through the day rules to see
           // if one matches the current month date.
-          for (dayIdx = 0; dayIdx < dayLen; dayIdx++) {
+          for (var dayIdx = 0; dayIdx < dayLen; dayIdx++) {
             var parts = this.ruleDayOfWeek(byDay[dayIdx]);
             var pos = parts[0];
             var dow = parts[1];
 
+            this.last.day = lastDay;
             if (this.last.isNthWeekDay(dow, pos)) {
               // when we find the valid one we can mark
               // the conditions as met and break the loop.
@@ -4962,7 +4987,9 @@
           // cannot be matched in the current month.
           // When we reach the end of possible combinations
           // in the current month we iterate to the next one.
-          if (!dataIsValid && dateIdx === (dateLen - 1)) {
+          // since dateIdx is incremented right after getting
+          // "next", we don't need dateLen -1 here.
+          if (!dataIsValid && dateIdx === dateLen) {
             nextMonth();
             continue;
           }
@@ -5041,9 +5068,10 @@
           if (day > daysInMonth) {
             this.last.day = 1;
             data_valid = this.is_day_in_byday(this.last);
+          } else {
+            this.last.day = day;
           }
 
-          this.last.day = day;
         } else {
           this.last.day = this.by_data.BYMONTHDAY[0];
           this.increment_month();
@@ -5069,7 +5097,7 @@
           var tt = new ICAL.Time();
           this.by_indices.BYDAY++;
 
-          if (this.by_indices.BYDAY == this.by_data.BYDAY.length) {
+          if (this.by_indices.BYDAY == Object.keys(this.by_data.BYDAY).length) {
             this.by_indices.BYDAY = 0;
             end_of_data = 1;
           }
@@ -5191,6 +5219,7 @@
       },
 
       increment_month: function increment_month() {
+        this.last.day = 1;
         if (this.has_by_data("BYMONTH")) {
           this.by_indices.BYMONTH++;
 
@@ -5201,7 +5230,6 @@
 
           this.last.month = this.by_data.BYMONTH[this.by_indices.BYMONTH];
         } else {
-          var inc;
           if (this.rule.freq == "MONTHLY") {
             this.last.month += this.rule.interval;
           } else {
@@ -6250,6 +6278,7 @@
        */
       getOccurrenceDetails: function(occurrence) {
         var id = occurrence.toString();
+        var utcId = occurrence.convertToZone(ICAL.Timezone.utcTimezone).toString();
         var result = {
           //XXX: Clone?
           recurrenceId: occurrence
@@ -6257,6 +6286,11 @@
 
         if (id in this.exceptions) {
           var item = result.item = this.exceptions[id];
+          result.startDate = item.startDate;
+          result.endDate = item.endDate;
+          result.item = item;
+        } else if (utcId in this.exceptions) {
+          var item = this.exceptions[utcId];
           result.startDate = item.startDate;
           result.endDate = item.endDate;
           result.item = item;
@@ -6594,7 +6628,7 @@
       process: function(ical) {
         //TODO: this is sync now in the future we will have a incremental parser.
         if (typeof(ical) === 'string') {
-          ical = ICAL.parse(ical)[1];
+          ical = ICAL.parse(ical);
         }
 
         if (!(ical instanceof ICAL.Component)) {
@@ -6640,7 +6674,4 @@
     return ComponentParser;
 
   }());
-
-
 }());
-
