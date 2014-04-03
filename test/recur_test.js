@@ -242,18 +242,17 @@ suite('recur', function() {
     assert.deepEqual(a.getComponent('BYWTF'), []);
 
     a.addComponent('BYDAY', '+2MO');
-    assert.deepEqual(a.getComponent('BYDAY'), ['-1SU', '+2MO']);
-    assert.deepEqual(a.getComponent('BYWTF'), []);
+    assert.deepEqual(a.getComponent('byday'), ['-1SU', '+2MO']);
+    assert.deepEqual(a.getComponent('bywtf'), []);
 
     a.setComponent('BYDAY', ['WE', 'TH']);
     assert.deepEqual(a.getComponent('BYDAY'), ['WE', 'TH']);
 
     a.addComponent('BYMONTHDAY', '31');
-    assert.deepEqual(a.getComponent('BYMONTHDAY'), ['31']);
+    assert.deepEqual(a.getComponent('bymonthday'), ['31']);
 
-    var count = {};
-    a.getComponent('BYDAY', count);
-    assert.equal(count.value, 2);
+    var comp = a.getComponent('BYDAY');
+    assert.equal(comp.length, 2);
   });
 
   suite('#fromString', function() {
