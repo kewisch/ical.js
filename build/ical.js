@@ -322,51 +322,6 @@ ICAL.design = (function() {
   }
 
   /**
-   * Changes the format of the UNTIl part in the RECUR
-   * value type. When no UNTIL part is found the original
-   * is returned untouched.
-   *
-   * @param {String} type toICAL or fromICAL.
-   * @param {String} aValue the value to check.
-   * @return {String} upgraded/original value.
-   */
-  function recurReplaceUntil(aType, aValue) {
-    var idx = aValue.indexOf('UNTIL=');
-    if (idx === -1) {
-      return aValue;
-    }
-
-    idx += 6;
-
-    // everything before the value
-    var begin = aValue.substr(0, idx);
-
-    // everything after the value
-    var end;
-
-    // current until value
-    var until;
-
-    // end of value could be -1 meaning this is the last param.
-    var endValueIdx = aValue.indexOf(';', idx);
-
-    if (endValueIdx === -1) {
-      end = '';
-      until = aValue.substr(idx);
-    } else {
-      end = aValue.substr(endValueIdx);
-      until = aValue.substr(idx, endValueIdx - idx);
-    }
-
-    if (until.length > 10) {
-      until = design.value['date-time'][aType](until);
-    } else {
-      until = design.value.date[aType](until);
-    }
-
-    return begin + until + end;
-  }
-  /**
    * Design data used by the parser to decide if data is semantically correct
    */
   var design = {
@@ -666,15 +621,36 @@ ICAL.design = (function() {
         }
       },
       recur: {
-        fromICAL: recurReplaceUntil.bind(this, 'fromICAL'),
-        toICAL: recurReplaceUntil.bind(this, 'toICAL'),
+        fromICAL: function(string) {
+          return ICAL.Recur._stringToData(string, true);
+        },
+
+        toICAL: function(data) {
+          var str = "";
+          for (var k in data) {
+            var val = data[k]
+            if (k == "until") {
+              if (val.length > 10) {
+                val = design.value['date-time'].toICAL(val);
+              } else {
+                val = design.value['date'].toICAL(val);
+              }
+            } else if (k == "wkst") {
+              val = ICAL.Recur.numericDayToIcalDay(val);
+            } else if (ICAL.helpers.isArray(val)) {
+              val = val.join(",");
+            }
+            str += k.toUpperCase() + "=" + val + ";";
+          }
+          return str.substr(0, str.length - 1);
+        },
 
         decorate: function decorate(aValue) {
-          return ICAL.Recur.fromString(aValue);
+          return ICAL.Recur.fromData(aValue);
         },
 
         undecorate: function(aRecur) {
-          return aRecur.toString();
+          return aRecur.toJSON();
         }
       },
 
@@ -4166,18 +4142,8 @@ ICAL.TimezoneService = (function() {
     this.wrappedJSObject = this;
     this.parts = {};
 
-    if (typeof(data) === 'object') {
-      for (var key in data) {
-        this[key] = data[key];
-      }
-
-      if (this.until && !(this.until instanceof ICAL.Time)) {
-        this.until = new ICAL.Time(this.until);
-      }
-    }
-
-    if (!this.parts) {
-      this.parts = {};
+    if (data && typeof(data) === 'object') {
+      this.fromData(data);
     }
   };
 
@@ -4245,33 +4211,58 @@ ICAL.TimezoneService = (function() {
       return next;
     },
 
+    fromData: function(data) {
+      for (var key in data) {
+        var uckey = key.toUpperCase();
+
+        if (uckey in partDesign) {
+          if (ICAL.helpers.isArray(data[key])) {
+            this.parts[uckey] = data[key];
+          } else {
+            this.parts[uckey] = [data[key]];
+          }
+        } else {
+          this[key] = data[key];
+        }
+      }
+
+      if (this.wkst && typeof this.wkst != "number") {
+        this.wkst = ICAL.Recur.icalDayToNumericDay(this.wkst);
+      }
+
+      if (this.until && !(this.until instanceof ICAL.Time)) {
+        this.until = ICAL.Time.fromString(this.until);
+      }
+    },
+
     toJSON: function() {
-      //XXX: extract this list up to proto?
-      var propsToCopy = [
-        "freq",
-        "count",
-        "until",
-        "wkst",
-        "interval",
-        "parts"
-      ];
+      var res = Object.create(null);
+      res.freq = this.freq;
 
-      var result = Object.create(null);
-
-      var i = 0;
-      var len = propsToCopy.length;
-      var prop;
-
-      for (; i < len; i++) {
-        var prop = propsToCopy[i];
-        result[prop] = this[prop];
+      if (this.count) {
+        res.count = this.count;
       }
 
-      if (result.until instanceof ICAL.Time) {
-        result.until = result.until.toJSON();
+      if (this.interval > 1) {
+        res.interval = this.interval;
       }
 
-      return result;
+      for (var k in this.parts) {
+        var kparts = this.parts[k];
+        if (ICAL.helpers.isArray(kparts) && kparts.length == 1) {
+          res[k.toLowerCase()] = kparts[0];
+        } else {
+          res[k.toLowerCase()] = ICAL.helpers.clone(this.parts[k]);
+        }
+      }
+
+      if (this.until) {
+        res.until = this.until.toString();
+      }
+      if ('wkst' in this && this.wkst !== ICAL.Time.DEFAULT_WEEK_START) {
+        res.wkst = ICAL.Recur.numericDayToIcalDay(this.wkst);
+      }
+      return res;
     },
 
     toString: function icalrecur_toString() {
@@ -4353,7 +4344,7 @@ ICAL.TimezoneService = (function() {
                       'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 
   var optionDesign = {
-    FREQ: function(value, dict) {
+    FREQ: function(value, dict, fmtIcal) {
       // yes this is actually equal or faster then regex.
       // upside here is we can enumerate the valid values.
       if (ALLOWED_FREQ.indexOf(value) !== -1) {
@@ -4366,11 +4357,11 @@ ICAL.TimezoneService = (function() {
       }
     },
 
-    COUNT: function(value, dict) {
+    COUNT: function(value, dict, fmtIcal) {
       dict.count = ICAL.helpers.strictParseInt(value);
     },
 
-    INTERVAL: function(value, dict) {
+    INTERVAL: function(value, dict, fmtIcal) {
       dict.interval = ICAL.helpers.strictParseInt(value);
       if (dict.interval < 1) {
         // 0 or negative values are not allowed, some engines seem to generate
@@ -4379,11 +4370,19 @@ ICAL.TimezoneService = (function() {
       }
     },
 
-    UNTIL: function(value, dict) {
-      dict.until = ICAL.Time.fromString(value);
+    UNTIL: function(value, dict, fmtIcal) {
+      if (fmtIcal) {
+        if (value.length > 10) {
+          dict.until = ICAL.design.value['date-time'].fromICAL(value);
+        } else {
+          dict.until = ICAL.design.value.date.fromICAL(value);
+        }
+      } else {
+        dict.until = ICAL.Time.fromString(value);
+      }
     },
 
-    WKST: function(value, dict) {
+    WKST: function(value, dict, fmtIcal) {
       if (VALID_DAY_NAMES.test(value)) {
         dict.wkst = ICAL.Recur.icalDayToNumericDay(value);
       } else {
@@ -4411,8 +4410,17 @@ ICAL.TimezoneService = (function() {
   };
 
   ICAL.Recur.fromString = function(string) {
+    var data = ICAL.Recur._stringToData(string, false);
+    return new ICAL.Recur(data);
+  };
+
+  ICAL.Recur.fromData = function(aData) {
+    return new ICAL.Recur(aData);
+  };
+
+  ICAL.Recur._stringToData= function(string, fmtIcal) {
     var dict = Object.create(null);
-    var dictParts = dict.parts = Object.create(null);
+    var dict = {};
 
     // split is slower in FF but fast enough.
     // v8 however this is faster then manual split?
@@ -4421,24 +4429,29 @@ ICAL.TimezoneService = (function() {
 
     for (var i = 0; i < len; i++) {
       var parts = values[i].split('=');
-      var name = parts[0];
+      var ucname = parts[0].toUpperCase();
+      var lcname = parts[0].toLowerCase();
+      var name = (fmtIcal ? lcname : ucname);
       var value = parts[1];
 
-      if (name in partDesign) {
+      if (ucname in partDesign) {
         var partArr = value.split(',');
         var partArrIdx = 0;
         var partArrLen = partArr.length;
 
         for (; partArrIdx < partArrLen; partArrIdx++) {
-          partArr[partArrIdx] = partDesign[name](partArr[partArrIdx]);
+          partArr[partArrIdx] = partDesign[ucname](partArr[partArrIdx]);
         }
-        dictParts[name] = partArr;
-      } else if (name in optionDesign) {
-        optionDesign[name](value, dict);
+        dict[name] = (partArr.length == 1 ? partArr[0] : partArr);
+      } else if (ucname in optionDesign) {
+        optionDesign[ucname](value, dict, fmtIcal);
+      } else {
+        // Don't swallow unknown values. Just set them as they are.
+        dict[lcname] = value;
       }
     }
 
-    return new ICAL.Recur(dict);
+    return dict;
   };
 
 })();

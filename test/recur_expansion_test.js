@@ -102,7 +102,7 @@ suite('recur_expansion', function() {
 
       component.removeAllProperties('rdate');
       component.removeAllProperties('exdate');
-      component.addPropertyWithValue('rrule', 'FREQ=WEEKLY;COUNT=3;BYDAY=SU');
+      component.addPropertyWithValue('rrule', { freq: "WEEKLY", count: 3, byday: ["SU"] });
 
       var subject = new ICAL.RecurExpansion({
         component: component,
@@ -128,8 +128,8 @@ suite('recur_expansion', function() {
     });
 
     test('multiple rules', function() {
-      component.addPropertyWithValue('rrule', 'FREQ=MONTHLY;BYMONTHDAY=13');
-      component.addPropertyWithValue('rrule', 'FREQ=WEEKLY;BYDAY=TH');
+      component.addPropertyWithValue('rrule', { freq: "MONTHLY", bymonthday: [13] });
+      component.addPropertyWithValue('rrule', { freq: "WEEKLY", byday: ["TH"] });
 
       var start = ICAL.Time.fromData({
         year: 2012,

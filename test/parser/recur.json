@@ -5,25 +5,31 @@
         "rrule",
         {},
         "recur",
-        "FREQ=MONTHLY;BYMONTH=1"
+        { "freq": "MONTHLY", "bymonth": [1,3] }
       ],
       [
         "rrule",
         {},
         "recur",
-        "FREQ=DAILY;UNTIL=2012-10-11"
+        { "freq": "MONTHLY", "bymonth": 2 }
       ],
       [
         "rrule",
         {},
         "recur",
-        "FREQ=DAILY;UNTIL=2012-10-11T12:13:14"
+        { "freq": "DAILY", "until": "2012-10-11" }
       ],
       [
         "rrule",
         {},
         "recur",
-        "FREQ=DAILY;UNTIL=2012-10-11T12:13:14Z"
+        { "freq": "DAILY", "until": "2012-10-11T12:13:14" }
+      ],
+      [
+        "rrule",
+        {},
+        "recur",
+        { "freq": "DAILY", "until": "2012-10-11T12:13:14Z" }
       ]
     ],
     []

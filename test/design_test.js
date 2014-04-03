@@ -347,10 +347,11 @@ suite('design', function() {
         var original = 'FREQ=MONTHLY;UNTIL=20121112T131415;COUNT=1';
         var fromICAL = subject.fromICAL(original);
 
-        assert.equal(
-          fromICAL,
-          'FREQ=MONTHLY;UNTIL=2012-11-12T13:14:15;COUNT=1'
-        );
+        assert.deepEqual(fromICAL, {
+          freq: 'MONTHLY',
+          until: '2012-11-12T13:14:15',
+          count: 1
+        })
 
         assert.equal(
           subject.toICAL(fromICAL),
@@ -359,7 +360,7 @@ suite('design', function() {
       });
 
       test('#(un)decorate', function() {
-        var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=2012-10-12';
+        var undecorated = { freq: "MONTHLY", byday: ["MO", "TU", "WE", "TH", "FR"], until: "2012-10-12" };
         var decorated = subject.decorate(undecorated);
 
         assert.instanceOf(decorated, ICAL.Recur);
@@ -383,10 +384,7 @@ suite('design', function() {
           }
         );
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
     });
 
