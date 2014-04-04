@@ -955,8 +955,10 @@ ICAL.stringify = (function() {
     var paramName;
     for (paramName in params) {
       if (params.hasOwnProperty(paramName)) {
+        var value = stringify._rfc6868Unescape(params[paramName]);
+
         line += ';' + paramName.toUpperCase();
-        line += '=' + stringify.propertyValue(params[paramName]);
+        line += '=' + stringify.propertyValue(value);
       }
     }
 
@@ -1092,6 +1094,17 @@ ICAL.stringify = (function() {
     }
     return value;
   }
+
+  /**
+   * Internal helper for rfc6868. Exposing this on ICAL.stringify so that
+   * hackers can disable the rfc6868 parsing if the really need to.
+   */
+  stringify._rfc6868Unescape = function(val) {
+    return val.replace(/[\n^]/g, function(x) {
+      return RFC6868_REPLACE_MAP[x] || x;
+    });
+  }
+  var RFC6868_REPLACE_MAP = { '"': "^'", "\n": "^n", "^": "^^" };
 
   return stringify;
 
@@ -1396,10 +1409,22 @@ ICAL.parse = (function() {
         type = DEFAULT_PARAM_TYPE;
       }
 
+      value = parser._rfc6868Escape(value);
       result[name.toLowerCase()] = parser._parseValue(value, type);
     }
     return [result, value, valuePos];
   }
+
+  /**
+   * Internal helper for rfc6868. Exposing this on ICAL.parse so that
+   * hackers can disable the rfc6868 parsing if the really need to.
+   */
+  parser._rfc6868Escape = function(val) {
+    return val.replace(/\^['n^]/g, function(x) {
+      return RFC6868_REPLACE_MAP[x] || x;
+    });
+  };
+  var RFC6868_REPLACE_MAP = { "^'": '"', "^n": "\n", "^^": "^" };
 
   /**
    * Parse a multi value string

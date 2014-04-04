@@ -1,0 +1,11 @@
+["vcalendar",
+  [
+    [
+      "attendee",
+      { "cn": "Caret ^ DQUOTE \" Newline \n End" },
+      "cal-address",
+      "mailto:user@example.com"
+    ]
+  ],
+  []
+]
