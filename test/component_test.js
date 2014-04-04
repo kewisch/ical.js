@@ -22,21 +22,31 @@ suite('Component', function() {
     subject = new ICAL.Component(fixtures.components);
   });
 
-  test('initialize component', function() {
-    var raw = ['description', {}, 'text', 'value'];
-    subject = new ICAL.Component(raw);
+  suite("initialization", function() {
+    test('initialize component', function() {
+      var raw = ['description', {}, 'text', 'value'];
+      subject = new ICAL.Component(raw);
 
-    assert.equal(subject.jCal, raw, 'has jCal');
-    assert.equal(subject.name, 'description');
-  });
+      assert.equal(subject.jCal, raw, 'has jCal');
+      assert.equal(subject.name, 'description');
+    });
 
-  test('new component without jCal', function() {
-    var newComp = new ICAL.Component('vevent');
+    test('new component without jCal', function() {
+      var newComp = new ICAL.Component('vevent');
 
-    assert.equal(newComp.jCal[0], 'vevent');
+      assert.equal(newComp.jCal[0], 'vevent');
 
-    assert.ok(!newComp.getAllSubcomponents());
-    assert.ok(!newComp.getAllProperties());
+      assert.ok(!newComp.getAllSubcomponents());
+      assert.ok(!newComp.getAllProperties());
+    });
+
+    test("#fromString", function() {
+      var comp = ICAL.Component.fromString("BEGIN:VCALENDAR\nX-CALPROP:value\nEND:VCALENDAR");
+      assert.equal(comp.name, "vcalendar");
+      var prop = comp.getFirstProperty();
+      assert.equal(prop.name, "x-calprop");
+      assert.equal(prop.getFirstValue(), "value");
+    });
   });
 
   suite('parenting', function() {

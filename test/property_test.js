@@ -105,6 +105,20 @@ suite('Property', function() {
 
       assert.ok(!subject.getFirstValue());
     });
+    suite('#fromString', function() {
+      test('x-prop with known type', function() {
+        var prop = ICAL.Property.fromString("X-FOO;VALUE=BOOLEAN:TRUE");
+        assert.equal(prop.name, "x-foo");
+        assert.equal(prop.type, "boolean");
+        assert.isTrue(prop.getFirstValue());
+      });
+
+      test("invalid prop", function() {
+        assert.throws(function() {
+          ICAL.Property.fromString("BWAHAHAHAHA");
+        }, /invalid line/);
+      });
+    });
   });
 
   test('#getParameter', function() {
@@ -414,5 +428,4 @@ suite('Property', function() {
 
     assert.deepEqual(fromJSON.jCal, subject.jCal);
   });
-
 });

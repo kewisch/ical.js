@@ -6,7 +6,7 @@
         "bar": ";hidden=value",
         "foo": "baz"
       },
-      "text",
+      "unknown",
       "realvalue yep"
     ]
   ],
