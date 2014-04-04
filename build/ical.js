@@ -818,7 +818,7 @@ ICAL.design = (function() {
       },
       "geo": {
         defaultType: "float",
-        multiValue: ";"
+        structuredValue: ";"
       },
       /* TODO exactly 2 values */"last-modified": {
         defaultType: "date-time"
@@ -853,7 +853,7 @@ ICAL.design = (function() {
       },
       "request-status": {
         defaultType: "text",
-        multiValue: ";"
+        structuredValue: ";"
       },
       "priority": {
         defaultType: "integer"
@@ -992,6 +992,7 @@ ICAL.stringify = (function() {
 
     var propDetails;
     var multiValue = false;
+    var structuredValue = false;
     var isDefault = false;
 
     if (jsName in design.property) {
@@ -999,6 +1000,10 @@ ICAL.stringify = (function() {
 
       if ('multiValue' in propDetails) {
         multiValue = propDetails.multiValue;
+      }
+
+      if ('structuredValue' in propDetails) {
+        structuredValue = propDetails.structuredValue;
       }
 
       if ('defaultType' in propDetails) {
@@ -1028,6 +1033,10 @@ ICAL.stringify = (function() {
     if (multiValue) {
       line += stringify.multiValue(
         property.slice(3), multiValue, valueType
+      );
+    } else if (structuredValue) {
+      line += stringify.multiValue(
+        property[3], structuredValue, valueType
       );
     } else {
       line += stringify.value(property[3], valueType);
@@ -1248,6 +1257,7 @@ ICAL.parse = (function() {
 
     var valueType;
     var multiValue = false;
+    var structuredValue = false;
     var propertyDetails;
 
     if (name in design.property) {
@@ -1255,6 +1265,10 @@ ICAL.parse = (function() {
 
       if ('multiValue' in propertyDetails) {
         multiValue = propertyDetails.multiValue;
+      }
+
+      if ('structuredValue' in propertyDetails) {
+        structuredValue = propertyDetails.structuredValue;
       }
 
       if (value && 'detectType' in propertyDetails) {
@@ -1290,6 +1304,9 @@ ICAL.parse = (function() {
       if (multiValue) {
         var result = [name, params, valueType];
         parser._parseMultiValue(value, multiValue, valueType, result);
+      } else if (structuredValue) {
+        value = parser._parseMultiValue(value, structuredValue, valueType, []);
+        var result = [name, params, valueType, value];
       } else {
         value = parser._parseValue(value, valueType);
         var result = [name, params, valueType, value];

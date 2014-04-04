@@ -12,16 +12,13 @@
       "geo",
       {},
       "float",
-      10.10,
-      10.05
+      [10.10, 10.05]
     ],
     [
       "request-status",
       {},
       "text",
-      "3.1",
-      "Invalid property value",
-      "DTSTART:96-Apr-01"
+      ["3.1", "Invalid property value", "DTSTART:96-Apr-01"]
     ],
     [
       "rdate",
