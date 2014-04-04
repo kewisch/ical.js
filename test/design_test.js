@@ -217,9 +217,9 @@ suite('design', function() {
         var original = '19970101T180000Z/19970102T070000Z';
         var fromICAL = subject.fromICAL(original);
 
-        assert.equal(
+        assert.deepEqual(
           fromICAL,
-          '1997-01-01T18:00:00Z/1997-01-02T07:00:00Z'
+          ['1997-01-01T18:00:00Z', '1997-01-02T07:00:00Z']
         );
 
         assert.equal(
@@ -231,7 +231,7 @@ suite('design', function() {
       test('#(un)decorate (date-time/duration)', function() {
         var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
-        var undecorated = '1997-01-01T18:00:00/PT5H30M';
+        var undecorated = ['1997-01-01T18:00:00', 'PT5H30M'];
         var decorated = subject.decorate(
           undecorated,
           prop
@@ -257,16 +257,13 @@ suite('design', function() {
           }
         );
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
 
       test('#(un)decorate (date-time/date-time)', function() {
         var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
-        var undecorated = '1997-01-01T18:00:00/1998-01-01T17:00:00';
+        var undecorated = ['1997-01-01T18:00:00', '1998-01-01T17:00:00'];
         var decorated = subject.decorate(
           undecorated,
           prop
@@ -296,16 +293,13 @@ suite('design', function() {
         assert.equal(decorated.start.zone, timezone);
         assert.equal(decorated.end.zone, timezone);
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
 
       test('#(un)decorate (date-time/duration)', function() {
         var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
-        var undecorated = '1997-01-01T18:00:00/PT5H30M';
+        var undecorated = ['1997-01-01T18:00:00', 'PT5H30M'];
         var decorated = subject.decorate(
           undecorated,
           prop
@@ -331,10 +325,7 @@ suite('design', function() {
           }
         );
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
     });
 

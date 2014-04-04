@@ -623,36 +623,31 @@ ICAL.design = (function() {
 
         fromICAL: function(string) {
           var parts = string.split('/');
-          var result = design.value['date-time'].fromICAL(parts[0]) + '/';
+          parts[0] = design.value['date-time'].fromICAL(parts[0]);
 
-          if (ICAL.Duration.isValueString(parts[1])) {
-            result += parts[1];
-          } else {
-            result += design.value['date-time'].fromICAL(parts[1]);
+          if (!ICAL.Duration.isValueString(parts[1])) {
+            parts[1] = design.value['date-time'].fromICAL(parts[1]);
           }
 
-          return result;
+          return parts;
         },
 
-        toICAL: function(string) {
-          var parts = string.split('/');
-          var result = design.value['date-time'].toICAL(parts[0]) + '/';
+        toICAL: function(parts) {
+          parts[0] = design.value['date-time'].toICAL(parts[0]);
 
-          if (ICAL.Duration.isValueString(parts[1])) {
-            result += parts[1];
-          } else {
-            result += design.value['date-time'].toICAL(parts[1]);
+          if (!ICAL.Duration.isValueString(parts[1])) {
+            parts[1] = design.value['date-time'].toICAL(parts[1]);
           }
 
-          return result;
+          return parts.join("/");
         },
 
         decorate: function(aValue, aProp) {
-          return ICAL.Period.fromString(aValue, aProp);
+          return ICAL.Period.fromJSON(aValue, aProp);
         },
 
         undecorate: function(aValue) {
-          return aValue.toString();
+          return aValue.toJSON();
         }
       },
       recur: {
@@ -2492,6 +2487,10 @@ ICAL.Binary = (function() {
       return this.start + "/" + (this.end || this.duration);
     },
 
+    toJSON: function() {
+      return [this.start.toString(), (this.end || this.duration).toString()];
+    },
+
     toICALString: function() {
       return this.start.toICALString() + "/" +
              (this.end || this.duration).toICALString();
@@ -2526,6 +2525,19 @@ ICAL.Binary = (function() {
     return new ICAL.Period(aData);
   };
 
+  ICAL.Period.fromJSON = function(aData, aProp) {
+    if (ICAL.Duration.isValueString(aData[1])) {
+      return ICAL.Period.fromData({
+        start: ICAL.Time.fromDateTimeString(aData[0], aProp),
+        duration: ICAL.Duration.fromString(aData[1])
+      });
+    } else {
+      return ICAL.Period.fromData({
+        start: ICAL.Time.fromDateTimeString(aData[0], aProp),
+        end: ICAL.Time.fromDateTimeString(aData[1], aProp)
+      });
+    }
+  };
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
