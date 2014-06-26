@@ -4360,7 +4360,7 @@ ICAL.TimezoneService = (function() {
   };
 
   var VALID_DAY_NAMES = /^(SU|MO|TU|WE|TH|FR|SA)$/;
-  var VALID_BYDAY_PART = /^([+-])?(5[0-3]|[1-4][0-9]|[1-9])?(SU|MO|TU|WE|TH|FR|SA)$/
+  var VALID_BYDAY_PART = /^([+-])?(5[0-3]|[1-4][0-9]|[1-9])?(SU|MO|TU|WE|TH|FR|SA)$/;
   var ALLOWED_FREQ = ['SECONDLY', 'MINUTELY', 'HOURLY',
                       'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 
