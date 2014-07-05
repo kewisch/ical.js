@@ -114,6 +114,18 @@ suite('parserv2', function() {
       }, /invalid line/);
     });
 
+    test('invalid quoted params', function() {
+      var ical = 'BEGIN:VCALENDAR\n';
+      ical += 'X-FOO;BAR="quoted\n';
+      // an invalid newline inside quoted parameter
+      ical += 'params";FOO=baz:realvalue\n';
+      ical += 'END:VCALENDAR';
+
+      assert.throws(function() {
+        subject(ical);
+      }, /invalid line/);
+    });
+
     test('missing component end', function() {
       var ical = 'BEGIN:VCALENDAR\n';
       ical += 'BEGIN:VEVENT\n';
