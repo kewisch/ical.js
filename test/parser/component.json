@@ -1,25 +1,21 @@
-[
-  "icalendar",
+["vcalendar",
+  [],
   [
-    "vcalendar",
-    [],
     [
+      "vevent",
+      [["summary", {}, "text", "foo \\nbar"]],
       [
-        "vevent",
-        [["summary", {}, "text", "foo \\nbar"]],
         [
-          [
-            "valarm",
-            [["summary", {}, "text", "escaped, comma"]],
-            []
-          ]
+          "valarm",
+          [["summary", {}, "text", "escaped, comma"]],
+          []
         ]
-      ],
-      [
-        "vevent",
-        [["summary", {}, "text", "another"]],
-        []
       ]
+    ],
+    [
+      "vevent",
+      [["summary", {}, "text", "another"]],
+      []
     ]
   ]
 ]

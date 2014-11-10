@@ -47,7 +47,7 @@ suite('ICAL.Event', function() {
     exceptions.length = 0;
 
     var root = new ICAL.Component(
-      ICAL.parse(icsData)[1]
+      ICAL.parse(icsData)
     );
 
     var events = root.getAllSubcomponents('vevent');
@@ -268,11 +268,11 @@ suite('ICAL.Event', function() {
       });
 
       test('to string roundtrip', function() {
-        var aComp = new ICAL.Component(ICAL.parse(icsData)[1]);
+        var aComp = new ICAL.Component(ICAL.parse(icsData));
         var aEvent = new ICAL.Event(aComp);
 
         var bComp = new ICAL.Component(
-          ICAL.parse(aComp.toString())[1]
+          ICAL.parse(aComp.toString())
         );
 
         var bEvent = new ICAL.Event(bComp);
@@ -445,7 +445,7 @@ suite('ICAL.Event', function() {
       });
 
       test('result', function() {
-        var subject = new ICAL.Component(ICAL.parse(icsData)[1]);
+        var subject = new ICAL.Component(ICAL.parse(icsData));
         subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
 
         var expected = {

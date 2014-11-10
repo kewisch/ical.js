@@ -149,7 +149,7 @@ suite('recur', function() {
         BYDAY: ['-3MO']
       }
     }, '1970-01-12T00:00:00Z');
-    
+
     checkDate({
       freq: 'MONTHLY',
       parts: {
@@ -197,15 +197,11 @@ suite('recur', function() {
       );
 
       var props = {
-        parts: {
-          BYDAY: ['1SU', '2MO'],
-          BYSETPOS: [1]
-        },
-        wkst: ICAL.Time.MONDAY,
-        until: recur.until.toJSON(),
+        byday: ['1SU', '2MO'],
+        bysetpos: 1,
+        until: '2012-10-01T09:00:00',
         freq: 'MONTHLY',
-        count: 10,
-        interval: 1
+        count: 10
       };
 
       var result = recur.toJSON();
@@ -216,11 +212,13 @@ suite('recur', function() {
       assert.instanceOf(fromJSON.until, ICAL.Time);
 
       assert.hasProperties(fromJSON, {
-        parts: props.parts,
-        wkst: props.wkst,
         freq: props.freq,
         count: props.count,
-        interval: props.interval
+      });
+
+      assert.hasProperties(fromJSON.parts, {
+        BYDAY: props.byday,
+        BYSETPOS: [props.bysetpos]
       });
     });
   });
@@ -242,18 +240,17 @@ suite('recur', function() {
     assert.deepEqual(a.getComponent('BYWTF'), []);
 
     a.addComponent('BYDAY', '+2MO');
-    assert.deepEqual(a.getComponent('BYDAY'), ['-1SU', '+2MO']);
-    assert.deepEqual(a.getComponent('BYWTF'), []);
+    assert.deepEqual(a.getComponent('byday'), ['-1SU', '+2MO']);
+    assert.deepEqual(a.getComponent('bywtf'), []);
 
     a.setComponent('BYDAY', ['WE', 'TH']);
     assert.deepEqual(a.getComponent('BYDAY'), ['WE', 'TH']);
 
     a.addComponent('BYMONTHDAY', '31');
-    assert.deepEqual(a.getComponent('BYMONTHDAY'), ['31']);
+    assert.deepEqual(a.getComponent('bymonthday'), ['31']);
 
-    var count = {};
-    a.getComponent('BYDAY', count);
-    assert.equal(count.value, 2);
+    var comp = a.getComponent('BYDAY');
+    assert.equal(comp.length, 2);
   });
 
   suite('#fromString', function() {
@@ -345,6 +342,76 @@ suite('recur', function() {
     });
     verify('INTERVAL=-1', {
       interval: 1
+    });
+  });
+
+
+  suite('recur data types', function() {
+    test('invalid freq', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=123");
+      }, /invalid frequency/);
+    });
+
+    test('invalid wkst', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=WEEKLY;WKST=DUNNO");
+      }, /invalid WKST value/);
+    });
+
+    test('invalid count', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=WEEKLY;COUNT=MAYBE10");
+      }, /Could not extract integer from/);
+    });
+
+    test('invalid interval', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=WEEKLY;INTERVAL=ADAGIO");
+      }, /Could not extract integer from/);
+    });
+
+    test('invalid numeric byday', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=WEEKLY;BYDAY=1,2,3");
+      }, /invalid BYDAY value/);
+    });
+
+    test('extra structured recur values', function() {
+      var rec = ICAL.Recur.fromString("RSCALE=ISLAMIC-CIVIL;FREQ=YEARLY;BYMONTH=9");
+      assert.equal(rec.rscale, "ISLAMIC-CIVIL");
+    });
+
+    test('single BYxxx value from string', function() {
+      var rec = ICAL.Recur.fromString("FREQ=MINUTELY;BYSECOND=5");
+      var comp = rec.getComponent("bysecond");
+      assert.equal(comp.length, 1);
+      assert.equal(comp[0], 5);
+    });
+
+    test('single BYxxx value from jCal', function() {
+      var prop = new ICAL.Property("rrule");
+      prop.setValue({ freq: "minutely", bysecond: 5 });
+      var val = prop.getFirstValue();
+
+      var comp = val.getComponent("bysecond");
+      assert.equal(comp.length, 1);
+      assert.equal(comp[0], 5);
+    });
+
+    test('multiple BYxxx values from string', function() {
+      var rec = ICAL.Recur.fromString("FREQ=YEARLY;BYYEARDAY=20,30,40");
+      var comp = rec.getComponent("byyearday");
+      assert.deepEqual(comp, [20,30,40]);
+    });
+
+    test('multiple BYxxx values from jCal', function() {
+      var prop = new ICAL.Property("rrule");
+      prop.setValue({ freq: "yearly", byyearday: [20,30,40] });
+      var val = prop.getFirstValue();
+
+      var comp = val.getComponent("byyearday");
+      assert.deepEqual(comp, [20,30,40]);
     });
   });
 

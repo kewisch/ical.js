@@ -2,7 +2,7 @@ suite('design', function() {
 
   var timezone;
   testSupport.defineSample('timezones/America/New_York.ics', function(data) {
-    var parsed = ICAL.parse(data)[1];
+    var parsed = ICAL.parse(data);
     var vcalendar = new ICAL.Component(parsed);
     var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
 
@@ -217,9 +217,9 @@ suite('design', function() {
         var original = '19970101T180000Z/19970102T070000Z';
         var fromICAL = subject.fromICAL(original);
 
-        assert.equal(
+        assert.deepEqual(
           fromICAL,
-          '1997-01-01T18:00:00Z/1997-01-02T07:00:00Z'
+          ['1997-01-01T18:00:00Z', '1997-01-02T07:00:00Z']
         );
 
         assert.equal(
@@ -231,7 +231,7 @@ suite('design', function() {
       test('#(un)decorate (date-time/duration)', function() {
         var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
-        var undecorated = '1997-01-01T18:00:00/PT5H30M';
+        var undecorated = ['1997-01-01T18:00:00', 'PT5H30M'];
         var decorated = subject.decorate(
           undecorated,
           prop
@@ -257,16 +257,13 @@ suite('design', function() {
           }
         );
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
 
       test('#(un)decorate (date-time/date-time)', function() {
         var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
-        var undecorated = '1997-01-01T18:00:00/1998-01-01T17:00:00';
+        var undecorated = ['1997-01-01T18:00:00', '1998-01-01T17:00:00'];
         var decorated = subject.decorate(
           undecorated,
           prop
@@ -296,16 +293,13 @@ suite('design', function() {
         assert.equal(decorated.start.zone, timezone);
         assert.equal(decorated.end.zone, timezone);
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
 
       test('#(un)decorate (date-time/duration)', function() {
         var prop = new ICAL.Property(['date', { tzid: 'test' }]);
 
-        var undecorated = '1997-01-01T18:00:00/PT5H30M';
+        var undecorated = ['1997-01-01T18:00:00', 'PT5H30M'];
         var decorated = subject.decorate(
           undecorated,
           prop
@@ -331,10 +325,7 @@ suite('design', function() {
           }
         );
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
     });
 
@@ -347,10 +338,11 @@ suite('design', function() {
         var original = 'FREQ=MONTHLY;UNTIL=20121112T131415;COUNT=1';
         var fromICAL = subject.fromICAL(original);
 
-        assert.equal(
-          fromICAL,
-          'FREQ=MONTHLY;UNTIL=2012-11-12T13:14:15;COUNT=1'
-        );
+        assert.deepEqual(fromICAL, {
+          freq: 'MONTHLY',
+          until: '2012-11-12T13:14:15',
+          count: 1
+        })
 
         assert.equal(
           subject.toICAL(fromICAL),
@@ -359,7 +351,7 @@ suite('design', function() {
       });
 
       test('#(un)decorate', function() {
-        var undecorated = 'FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=2012-10-12';
+        var undecorated = { freq: "MONTHLY", byday: ["MO", "TU", "WE", "TH", "FR"], until: "2012-10-12" };
         var decorated = subject.decorate(undecorated);
 
         assert.instanceOf(decorated, ICAL.Recur);
@@ -383,10 +375,7 @@ suite('design', function() {
           }
         );
 
-        assert.equal(
-          subject.undecorate(decorated),
-          undecorated
-        );
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
       });
     });
 
@@ -431,6 +420,124 @@ suite('design', function() {
       });
     });
 
-  });
+    suite("unknown and default values", function() {
+      test("unknown x-prop", function() {
+        var prop = new ICAL.Property("x-wr-calname");
+        assert.equal(prop.type, "unknown");
 
+        prop = ICAL.Property.fromString("X-WR-CALNAME:value");
+        assert.equal(prop.type, "unknown");
+      });
+
+      test("unknown iana prop", function() {
+        var prop = new ICAL.Property("standardized");
+        assert.equal(prop.type, "unknown");
+
+        prop = ICAL.Property.fromString("STANDARDIZED:value");
+        assert.equal(prop.type, "unknown");
+      });
+
+      test("known text type", function() {
+        var prop = new ICAL.Property("description");
+        assert.equal(prop.type, "text");
+
+        prop = ICAL.Property.fromString("DESCRIPTION:value");
+        assert.equal(prop.type, "text");
+      });
+
+      test("encoded text value roundtrip", function() {
+        var prop = new ICAL.Property("description");
+        prop.setValue("hello, world");
+        var propVal = prop.toICAL();
+        assert.equal(propVal, "DESCRIPTION:hello\\, world");
+
+        prop = ICAL.Property.fromString(propVal);
+        assert.equal(prop.getFirstValue(), "hello, world");
+      });
+
+      test("encoded unknown value roundtrip", function() {
+        var prop = new ICAL.Property("x-wr-calname");
+        prop.setValue("hello, world");
+        var propVal = prop.toICAL();
+        assert.equal(propVal, "X-WR-CALNAME:hello, world");
+
+        prop = ICAL.Property.fromString(propVal);
+        assert.equal(prop.getFirstValue(), "hello, world");
+      });
+
+      test("encoded unknown value from string", function() {
+        var prop = ICAL.Property.fromString("X-WR-CALNAME:hello\\, world");
+        assert.equal(prop.getFirstValue(), "hello\\, world");
+      });
+
+      suite("registration", function() {
+        test("newly registered property", function() {
+          var prop = new ICAL.Property("nonstandard");
+          assert.equal(prop.type, "unknown");
+
+          ICAL.design.registerProperty("nonstandard", {
+            defaultType: "date-time"
+          });
+
+          prop = new ICAL.Property("nonstandard");
+          assert.equal(prop.type, "date-time");
+        });
+
+        test("double property registration", function() {
+          assert.throws(function() {
+            ICAL.design.registerProperty("dtstart", {});
+          }, /already registered/);
+        });
+
+        test("unknown value type", function() {
+          var prop = ICAL.Property.fromString("X-PROP;VALUE=FUZZY:WARM");
+          assert.equal(prop.name, "x-prop");
+          assert.equal(prop.type, "fuzzy");
+          assert.equal(prop.getFirstValue(), "WARM");
+          prop.setValue("FREEZING");
+          assert.equal(prop.getFirstValue(), "FREEZING");
+        });
+
+        test("newly registered value type", function() {
+          ICAL.design.registerValue("fuzzy", {
+            fromICAL: function(aValue) {
+              return aValue.toLowerCase();
+            },
+            toICAL: function(aValue) {
+              return aValue.toUpperCase();
+            }
+          });
+
+          var prop = ICAL.Property.fromString("X-PROP;VALUE=FUZZY:WARM");
+          assert.equal(prop.name, "x-prop");
+          assert.equal(prop.getFirstValue(), "warm");
+          assert.match(prop.toICAL(), /WARM/);
+        });
+
+        test("double value registration", function() {
+          assert.throws(function() {
+            ICAL.design.registerValue("text", {});
+          }, /already registered/);
+        });
+
+        test("newly registered parameter", function() {
+          var prop = ICAL.Property.fromString("X-PROP;VALS=a,b,c:def");
+          var param = prop.getParameter("vals");
+          assert.equal(param, "a,b,c");
+
+          ICAL.design.registerParameter("vals", { multiValue: "," });
+
+          prop = ICAL.Property.fromString("X-PROP;VALS=a,b,c:def");
+          param = prop.getParameter("vals");
+          assert.equal(param, ["a","b","c"]);
+        });
+
+        test("double parameter registration", function() {
+          assert.throws(function() {
+            ICAL.design.registerParameter("rsvp", {});
+          }, /already registered/);
+        });
+      });
+    });
+  });
 });

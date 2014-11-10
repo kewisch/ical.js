@@ -1,0 +1,10 @@
+[
+  ["vcalendar",
+    [ ["dtstamp", {}, "date-time", "2014-04-01T01:01:01Z" ] ],
+    []
+  ],
+  ["vcalendar",
+    [ ["dtstamp", {}, "date-time", "2014-04-01T02:02:02Z" ] ],
+    []
+  ]
+]

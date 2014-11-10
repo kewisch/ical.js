@@ -1,21 +1,17 @@
-["icalendar",
-  ["vcalendar",
+["vcalendar",
+  [
     [
-      [
-        "x-true",
-        {},
-        "boolean",
-        true
-      ],
-      [
-        "x-false",
-        {},
-        "boolean",
-        false
-      ]
+      "x-true",
+      {},
+      "boolean",
+      true
     ],
-    []
-  ]
+    [
+      "x-false",
+      {},
+      "boolean",
+      false
+    ]
+  ],
+  []
 ]
-
-

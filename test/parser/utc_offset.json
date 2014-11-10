@@ -1,10 +1,7 @@
-["icalendar",
-  ["vcalendar",
-    [
-      ["x-offset", {}, "utc-offset", "-05:00"],
-      ["x-offset-seconds", {}, "utc-offset", "+05:50:01"]
-    ],
-    []
-  ]
+["vcalendar",
+  [
+    ["x-offset", {}, "utc-offset", "-05:00"],
+    ["x-offset-seconds", {}, "utc-offset", "+05:50:01"]
+  ],
+  []
 ]
-

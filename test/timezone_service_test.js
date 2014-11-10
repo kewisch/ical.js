@@ -65,7 +65,7 @@ suite('timezone_service', function() {
     });
 
     test('using a component', function() {
-      var parsed = ICAL.parse(icsData)[1];
+      var parsed = ICAL.parse(icsData);
       var comp = new ICAL.Component(parsed);
       var vtimezone = comp.getFirstSubcomponent('vtimezone');
       var tzid = vtimezone.getFirstPropertyValue('tzid');

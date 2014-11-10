@@ -1,19 +1,17 @@
-["icalendar",
-  ["vcalendar",
+["vcalendar",
+  [
     [
-      [
-        "x-float",
-        {},
-        "float",
-        10.35
-      ],
-      [
-        "x-invalid-float",
-        {},
-        "float",
-        0.0
-      ]
+      "x-float",
+      {},
+      "float",
+      10.35
     ],
-    []
-  ]
+    [
+      "x-invalid-float",
+      {},
+      "float",
+      0.0
+    ]
+  ],
+  []
 ]

@@ -1,13 +1,11 @@
-["icalendar",
-  ["vcalendar",
+["vcalendar",
+  [
     [
-      [
-        "dtstart",
-        { "tzid": "(GMT +01:00)" },
-        "date-time",
-        "2011-10-28T16:00:00"
-      ]
-    ],
-    []
-  ]
+      "dtstart",
+      { "tzid": "(GMT +01:00)" },
+      "date-time",
+      "2011-10-28T16:00:00"
+    ]
+  ],
+  []
 ]

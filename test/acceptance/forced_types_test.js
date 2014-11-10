@@ -11,7 +11,7 @@ suite('ics test', function() {
 
   test('force type', function() {
     // just verify it can parse forced types
-    var result = ICAL.parse(icsData)[1];
+    var result = ICAL.parse(icsData);
     var component = new ICAL.Component(result);
     var vevent = component.getFirstSubcomponent(
       'vevent'

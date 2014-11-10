@@ -11,7 +11,7 @@ suite('ics - blank description', function() {
 
   test('summary', function() {
     // just verify it can parse blank lines
-    var result = ICAL.parse(icsData)[1];
+    var result = ICAL.parse(icsData);
     var component = new ICAL.Component(result);
     var vevent = component.getFirstSubcomponent(
       'vevent'

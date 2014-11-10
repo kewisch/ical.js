@@ -10,7 +10,7 @@ suite('ics - negative zero', function() {
   });
 
   test('summary', function() {
-    var result = ICAL.parse(icsData)[1];
+    var result = ICAL.parse(icsData);
     var component = new ICAL.Component(result);
     var vtimezone = component.getFirstSubcomponent(
       'vtimezone'

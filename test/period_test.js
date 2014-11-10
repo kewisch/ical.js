@@ -263,6 +263,19 @@ suite('ical/period', function() {
     });
   });
 
+  suite("generating jCal", function() {
+    test("jCal from parser", function() {
+      var prop = ICAL.parse.property("FREEBUSY:20140401T010101/PT1H");
+      var val = prop[3];
+      assert.deepEqual(val, ["2014-04-01T01:01:01", "PT1H"]);
+    });
+    test("jCal from property", function() {
+      var prop = ICAL.Property.fromString("FREEBUSY:20140401T010101/PT1H");
+      var val = prop.getFirstValue().toJSON();
+      assert.deepEqual(val, ["2014-04-01T01:01:01", "PT1H"]);
+    });
+  });
+
   suite("#clone", function() {
     test('cloned start/duration', function() {
       var subjectstart = start.clone();
