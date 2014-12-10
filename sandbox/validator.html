@@ -35,7 +35,6 @@
         try {
             // First load the source representation
             sourceResult = ICAL.parse(data.value)
-            results.textContent = sourceResult.toSource();
 
             // Try to jsonify it
             jsonResult = JSON.stringify(sourceResult, null, " ");
@@ -57,9 +56,6 @@
             component = new ICAL.Component(sourceResult[1]);
 
             try {
-                // Try to undecorate it
-                undecorated.textContent = component.jCal.toSource();
-
                 // Try to jsonify it
                 jsonResult = JSON.stringify(component, null, " ");
                 undecorated.textContent = jsonResult;
