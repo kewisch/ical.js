@@ -1061,6 +1061,44 @@ suite('recur_iterator', function() {
 
     });
   });
+
+  suite('monthly, on the 31st, BYMONTHDAY not set', function() {
+    createIterator(
+      'FREQ=MONTHLY',
+      '2013-01-31T08:00:00'
+    );
+
+    test('for 6 occurrences', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 6;
+      var inc = 0;
+
+      var expected = [
+        new Date(2013, 0, 31, 8),
+        new Date(2013, 2, 31, 8),
+        new Date(2013, 4, 31, 8),
+        new Date(2013, 6, 31, 8),
+        new Date(2013, 7, 31, 8),
+        new Date(2013, 9, 31, 8)
+      ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
 });
 
 
