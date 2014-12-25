@@ -989,4 +989,192 @@ suite('icaltime', function() {
     }
   });
 
+  suite('#compare', function() {
+    testSupport.useTimezones('America/New_York', 'America/Los_Angeles');
+
+    test('simple comparison', function() {
+      var a = Time.fromString('2001-01-01T00:00:00');
+      var b = Time.fromString('2001-01-01T00:00:00');
+      assert.equal(a.compare(b), 0);
+
+      b = Time.fromString('2002-01-01T00:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-02-01T00:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-02T00:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-01T01:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-01T00:01:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-01T00:00:01');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+    });
+
+    test('simple comparison one with a timezone, one without', function() {
+      // Floating timezone is effectively UTC. New York is 5 hours behind.
+      var a = Time.fromString('2001-01-01T00:00:00');
+      a.zone = ICAL.TimezoneService.get('America/New_York');
+      var b = Time.fromString('2001-01-01T05:00:00');
+      b.zone = Timezone.localTimezone;
+      assert.equal(a.compare(b), 0);
+
+      b = Time.fromString('2002-01-01T05:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-02-01T05:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-02T05:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-01T06:00:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-01T05:01:00');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+
+      b = Time.fromString('2001-01-01T05:00:01');
+      assert.equal(a.compare(b), -1);
+      assert.equal(b.compare(a), 1);
+    });
+
+    test('date-only comparison', function() {
+      var a = Time.fromString('2001-01-01');
+      var b = Time.fromString('2001-01-01');
+      assert.equal(a.compareDateOnlyTz(b, Timezone.localTimezone), 0);
+
+      b = Time.fromString('2002-01-01');
+      assert.equal(a.compareDateOnlyTz(b, Timezone.localTimezone), -1);
+      assert.equal(b.compareDateOnlyTz(a, Timezone.localTimezone), 1);
+
+      b = Time.fromString('2001-02-01');
+      assert.equal(a.compareDateOnlyTz(b, Timezone.localTimezone), -1);
+      assert.equal(b.compareDateOnlyTz(a, Timezone.localTimezone), 1);
+
+      b = Time.fromString('2001-01-02');
+      assert.equal(a.compareDateOnlyTz(b, Timezone.localTimezone), -1);
+      assert.equal(b.compareDateOnlyTz(a, Timezone.localTimezone), 1);
+    });
+
+    test('both are dates', function() {
+      var a = Time.fromString('2014-07-20');
+      a.zone = ICAL.TimezoneService.get('America/New_York');
+      var b = Time.fromString('2014-07-20');
+      b.zone = Timezone.localTimezone;
+
+      assert.ok(a.isDate);
+      assert.ok(b.isDate);
+
+      assert.equal(a.compareDateOnlyTz(b, a.zone), 0);
+      assert.equal(a.compareDateOnlyTz(b, b.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, a.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, b.zone), 0);
+
+      // Midnight in New York is after midnight UTC.
+      assert.equal(a.compare(b), 1);
+      assert.equal(b.compare(a), -1);
+    });
+
+    test('one is date, one isnt', function() {
+      var a = Time.fromString('2014-07-20T12:00:00.000');
+      a.zone = ICAL.TimezoneService.get('America/New_York');
+      var b = Time.fromString('2014-07-20');
+      b.zone = Timezone.localTimezone;
+
+      assert.ok(!a.isDate);
+      assert.ok(b.isDate);
+
+      assert.equal(a.compareDateOnlyTz(b, a.zone), 0);
+      assert.equal(a.compareDateOnlyTz(b, b.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, a.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, b.zone), 0);
+
+      // Midday in New York is after midnight UTC.
+      assert.equal(a.compare(b), 1);
+      assert.equal(b.compare(a), -1);
+    });
+
+    test('one is date, one isnt', function() {
+      var a = Time.fromString('2014-07-20T12:00:00.000');
+      a.zone = Timezone.localTimezone;
+      var b = Time.fromString('2014-07-20');
+      b.zone = ICAL.TimezoneService.get('America/New_York');
+
+      assert.ok(!a.isDate);
+      assert.ok(b.isDate);
+
+      assert.equal(a.compareDateOnlyTz(b, a.zone), 0);
+      assert.equal(a.compareDateOnlyTz(b, b.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, a.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, b.zone), 0);
+
+      // Midday UTC is after midnight in New York.
+      assert.equal(a.compare(b), 1);
+      assert.equal(b.compare(a), -1);
+    });
+
+    test('both are not dates', function() {
+      var a = Time.fromString('2014-07-20T12:00:00.000');
+      a.zone = ICAL.TimezoneService.get('America/New_York');
+      var b = Time.fromString('2014-07-20T12:00:00.000');
+      b.zone = Timezone.localTimezone;
+
+      assert.ok(!a.isDate);
+      assert.ok(!b.isDate);
+
+      assert.equal(a.compareDateOnlyTz(b, a.zone), 0);
+      assert.equal(a.compareDateOnlyTz(b, b.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, a.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, b.zone), 0);
+
+      // Midday in New York is after midday UTC.
+      assert.equal(a.compare(b), 1);
+      assert.equal(b.compare(a), -1);
+    });
+
+    test('two timezones', function() {
+      var a = Time.fromString('2014-07-20T02:00:00.000');
+      a.zone = ICAL.TimezoneService.get('America/New_York');
+      var b = Time.fromString('2014-07-19T23:00:00.000');
+      b.zone = ICAL.TimezoneService.get('America/Los_Angeles');
+
+      assert.ok(!a.isDate);
+      assert.ok(!b.isDate);
+
+      assert.equal(a.compareDateOnlyTz(b, a.zone), 0);
+      assert.equal(a.compareDateOnlyTz(b, b.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, a.zone), 0);
+      assert.equal(b.compareDateOnlyTz(a, b.zone), 0);
+      assert.equal(a.compare(b), 0);
+      assert.equal(b.compare(a), 0);
+
+      a.isDate = true;
+      b.isDate = true;
+
+      assert.equal(a.compareDateOnlyTz(b, a.zone), 1);
+      assert.equal(a.compareDateOnlyTz(b, b.zone), 1);
+      assert.equal(b.compareDateOnlyTz(a, a.zone), -1);
+      assert.equal(b.compareDateOnlyTz(a, b.zone), -1);
+      assert.equal(a.compare(b), 1);
+      assert.equal(b.compare(a), -1);
+    });
+  });
+
 });
