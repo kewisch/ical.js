@@ -1391,6 +1391,11 @@ ICAL.parse = (function() {
       if (nextChar === '"') {
         var valuePos = pos + 2;
         pos = helpers.unescapedIndexOf(line, '"', valuePos);
+        if (pos === -1) {
+          throw new ParserError(
+            'invalid line (no matching double quote) "' + line + '"'
+          );
+        }
         value = line.substr(valuePos, pos - valuePos);
         lastParam = helpers.unescapedIndexOf(line, PARAM_DELIMITER, pos);
       } else {
@@ -5152,10 +5157,13 @@ ICAL.RecurIterator = (function() {
         }
 
       } else {
-        this.last.day = this.by_data.BYMONTHDAY[0];
         this.increment_month();
         var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
-        this.last.day = Math.min(this.last.day, daysInMonth);
+        if (this.by_data.BYMONTHDAY[0] > daysInMonth) {
+          data_valid = 0;
+        } else {
+          this.last.day = this.by_data.BYMONTHDAY[0];
+        }
       }
 
       return data_valid;
