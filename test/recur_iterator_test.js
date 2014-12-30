@@ -1099,6 +1099,82 @@ suite('recur_iterator', function() {
 
     });
   });
+
+  suite('Every year the last day of February (rule with BYMONTH)', function() {
+    createIterator(
+      'FREQ=YEARLY;BYMONTHDAY=-1;BYMONTH=2',
+      '2014-02-28T08:00:00'
+    );
+
+    test('for 6 occurrences ', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 6;
+      var inc = 0;
+
+      var expected = [
+        new Date(2014, 1, 28, 8),
+        new Date(2015, 1, 28, 8),
+        new Date(2016, 1, 29, 8),
+        new Date(2017, 1, 28, 8),
+        new Date(2018, 1, 28, 8),
+        new Date(2019, 1, 28, 8)
+      ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Every year the last day of April (rule without BYMONTH)', function() {
+    createIterator(
+      'FREQ=YEARLY;BYMONTHDAY=-1',
+      '2014-04-30T08:00:00'
+    );
+
+    test('for 6 occurrences ', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 6;
+      var inc = 0;
+
+      var expected = [
+        new Date(2014, 3, 30, 8),
+        new Date(2015, 3, 30, 8),
+        new Date(2016, 3, 30, 8),
+        new Date(2017, 3, 30, 8),
+        new Date(2018, 3, 30, 8),
+        new Date(2019, 3, 30, 8)
+      ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
 });
 
 
