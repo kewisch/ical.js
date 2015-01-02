@@ -175,10 +175,6 @@ ICAL.helpers = {
     return obj;
   },
 
-  isArray: function(o) {
-    return o && (o instanceof Array || typeof o == "array");
-  },
-
   clone: function(aSrc, aDeep) {
     if (!aSrc || typeof aSrc != "object") {
       return aSrc;
@@ -186,7 +182,7 @@ ICAL.helpers = {
       return new Date(aSrc.getTime());
     } else if ("clone" in aSrc) {
       return aSrc.clone();
-    } else if (ICAL.helpers.isArray(aSrc)) {
+    } else if (Array.isArray(aSrc)) {
       var result = [];
       for (var i = 0; i < aSrc.length; i++) {
         result.push(aDeep ? ICAL.helpers.clone(aSrc[i], true) : aSrc[i]);
@@ -677,7 +673,7 @@ ICAL.design = (function() {
               }
             } else if (k == "wkst") {
               val = ICAL.Recur.numericDayToIcalDay(val);
-            } else if (ICAL.helpers.isArray(val)) {
+            } else if (Array.isArray(val)) {
               val = val.join(",");
             }
             str += k.toUpperCase() + "=" + val + ";";
@@ -4304,7 +4300,7 @@ ICAL.TimezoneService = (function() {
         var uckey = key.toUpperCase();
 
         if (uckey in partDesign) {
-          if (ICAL.helpers.isArray(data[key])) {
+          if (Array.isArray(data[key])) {
             this.parts[uckey] = data[key];
           } else {
             this.parts[uckey] = [data[key]];
@@ -4337,7 +4333,7 @@ ICAL.TimezoneService = (function() {
 
       for (var k in this.parts) {
         var kparts = this.parts[k];
-        if (ICAL.helpers.isArray(kparts) && kparts.length == 1) {
+        if (Array.isArray(kparts) && kparts.length == 1) {
           res[k.toLowerCase()] = kparts[0];
         } else {
           res[k.toLowerCase()] = ICAL.helpers.clone(this.parts[k]);
@@ -5417,7 +5413,12 @@ ICAL.RecurIterator = (function() {
       } else if (partCount == 1 && "BYMONTHDAY" in parts) {
         for (var monthdaykey in this.by_data.BYMONTHDAY) {
           var t2 = this.dtstart.clone();
-          t2.day = this.by_data.BYMONTHDAY[monthdaykey];
+          var day_ = this.by_data.BYMONTHDAY[monthdaykey];
+          if (day_ < 0) {
+            var daysInMonth = ICAL.Time.daysInMonth(t2.month, aYear);
+            day_ = day_ + daysInMonth + 1;
+          }
+          t2.day = day_;
           t2.year = aYear;
           t2.isDate = true;
           this.days.push(t2.dayOfYear());
@@ -5426,9 +5427,15 @@ ICAL.RecurIterator = (function() {
                  "BYMONTHDAY" in parts &&
                  "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          var month_ = this.by_data.BYMONTH[monthkey];
+          var daysInMonth = ICAL.Time.daysInMonth(month_, aYear);
           for (var monthdaykey in this.by_data.BYMONTHDAY) {
-            t.day = this.by_data.BYMONTHDAY[monthdaykey];
-            t.month = this.by_data.BYMONTH[monthkey];
+            var day_ = this.by_data.BYMONTHDAY[monthdaykey];
+            if (day_ < 0) {
+              day_ = day_ + daysInMonth + 1;
+            }
+            t.day = day_;
+            t.month = month_;
             t.year = aYear;
             t.isDate = true;
 
