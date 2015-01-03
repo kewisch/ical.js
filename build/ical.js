@@ -4272,12 +4272,12 @@ ICAL.TimezoneService = (function() {
     },
 
     setComponent: function setComponent(aType, aValues) {
-      this.parts[aType.toUpperCase()] = aValues;
+      this.parts[aType.toUpperCase()] = aValues.slice();
     },
 
     getComponent: function getComponent(aType) {
       var ucname = aType.toUpperCase();
-      return (ucname in this.parts ? this.parts[ucname] : []);
+      return (ucname in this.parts ? this.parts[ucname].slice() : []);
     },
 
     getNextOccurrence: function getNextOccurrence(aStartTime, aRecurrenceId) {
