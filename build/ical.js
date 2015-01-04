@@ -3825,6 +3825,12 @@ ICAL.TimezoneService = (function() {
     adjust: function icaltime_adjust(aExtraDays, aExtraHours,
                                      aExtraMinutes, aExtraSeconds, aTime) {
 
+      // Remove fractional parts
+      aExtraDays = ICAL.helpers.trunc(aExtraDays);
+      aExtraHours = ICAL.helpers.trunc(aExtraHours);
+      aExtraMinutes = ICAL.helpers.trunc(aExtraMinutes);
+      aExtraSeconds = ICAL.helpers.trunc(aExtraSeconds);
+
       var minutesOverflow, hoursOverflow,
           daysOverflow = 0, yearsOverflow = 0;
 
@@ -3917,7 +3923,7 @@ ICAL.TimezoneService = (function() {
       this.day = epoch.day;
       this.hour = epoch.hour;
       this.minute = epoch.minute;
-      this.second = Math.floor(epoch.second);
+      this.second = epoch.second;
     },
 
     toUnixTime: function toUnixTime() {
