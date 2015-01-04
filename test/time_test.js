@@ -675,6 +675,8 @@ suite('icaltime', function() {
       day: 5,
       month: 1,
       hour: 8,
+      minute: 4,
+      second: 13,
       timezone: 'Z'
     });
 
@@ -684,6 +686,18 @@ suite('icaltime', function() {
     assert.deepEqual(
       time.toJSDate(),
       otherTime.toJSDate()
+    );
+
+    otherTime.fromUnixTime(time.toUnixTime() + 0.123);
+
+    assert.equal(time.toUnixTime(), otherTime.toUnixTime());
+    assert.deepEqual(
+      time.toJSDate(),
+      otherTime.toJSDate()
+    );
+    assert.deepEqual(
+      time.second,
+      otherTime.second
     );
   });
 

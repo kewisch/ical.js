@@ -3917,7 +3917,7 @@ ICAL.TimezoneService = (function() {
       this.day = epoch.day;
       this.hour = epoch.hour;
       this.minute = epoch.minute;
-      this.second = epoch.second;
+      this.second = Math.floor(epoch.second);
     },
 
     toUnixTime: function toUnixTime() {
