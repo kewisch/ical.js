@@ -3465,12 +3465,20 @@ ICAL.TimezoneService = (function() {
     startOfWeek: function startOfWeek() {
       var result = this.clone();
       result.day -= this.dayOfWeek() - 1;
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
       return result;
     },
 
     endOfWeek: function endOfWeek() {
       var result = this.clone();
       result.day += 7 - this.dayOfWeek();
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
       return result;
     },
 
