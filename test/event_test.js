@@ -490,9 +490,9 @@ suite('ICAL.Event', function() {
         );
       });
 
-    })
+    });
 
-  })
+  });
 
   suite('#relateException', function() {
 
