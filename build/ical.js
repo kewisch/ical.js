@@ -6515,7 +6515,14 @@ ICAL.Event = (function() {
     },
 
     get endDate() {
-      return this._firstProp('dtend');
+      var end_date = this._firstProp('dtend');
+      if(end_date === null) {
+        end_date = this.startDate.clone();
+        if(this.startDate.isDate) {
+          end_date.addDuration(ICAL.Duration.fromSeconds(86400));
+        }
+      }
+      return end_date;
     },
 
     set endDate(value) {
