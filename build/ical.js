@@ -3319,9 +3319,6 @@ ICAL.TimezoneService = (function() {
     this.fromData(data, zone);
   };
 
-  ICAL.Time._dowCache = {};
-  ICAL.Time._wnCache = {};
-
   ICAL.Time.prototype = {
 
     icalclass: "icaltime",
@@ -3402,7 +3399,6 @@ ICAL.TimezoneService = (function() {
           this.second = aDate.getSeconds();
         }
       }
-      delete this._cachedUnixTime;
       return this;
     },
 
@@ -3439,17 +3435,10 @@ ICAL.TimezoneService = (function() {
         this.zone = ICAL.Timezone.localTimezone;
       }
 
-      delete this._cachedUnixTime;
       return this;
     },
 
     dayOfWeek: function icaltime_dayOfWeek() {
-      var dowCacheKey = (this.year << 9) + (this.month << 5) + this.day;
-      if (dowCacheKey in ICAL.Time._dowCache) {
-        // dump("found " + dowCacheKey + " in cache\n");
-        return ICAL.Time._dowCache[dowCacheKey];
-      }
-
       // Using Zeller's algorithm
       var q = this.day;
       var m = this.month + (this.month < 3 ? 12 : 0);
@@ -3464,7 +3453,6 @@ ICAL.TimezoneService = (function() {
 
       // Normalize to 1 = sunday
       h = ((h + 6) % 7) + 1;
-      ICAL.Time._dowCache[dowCacheKey] = h;
       return h;
     },
 
@@ -3660,11 +3648,6 @@ ICAL.TimezoneService = (function() {
     },
 
     weekNumber: function weekNumber(aWeekStart) {
-      var wnCacheKey = (this.year << 12) + (this.month << 8) + (this.day << 3) + aWeekStart;
-      if (wnCacheKey in ICAL.Time._wnCache) {
-        // dump("found " + wnCacheKey + " in cache\n");
-        return ICAL.Time._wnCache[wnCacheKey];
-      }
       // This function courtesty of Julian Bucknall, published under the MIT license
       // http://www.boyet.com/articles/publishedarticles/calculatingtheisoweeknumb.html
       var doy = this.dayOfYear();
@@ -3692,9 +3675,7 @@ ICAL.TimezoneService = (function() {
       }
 
       var daysBetween = (dt.subtractDate(week1).toSeconds() / 86400);
-      var answer = ICAL.helpers.trunc(daysBetween / 7) + 1;
-      ICAL.Time._wnCache[wnCacheKey] = answer;
-      return answer;
+      return ICAL.helpers.trunc(daysBetween / 7) + 1;
     },
 
     addDuration: function icaltime_add(aDuration) {
@@ -3719,8 +3700,6 @@ ICAL.TimezoneService = (function() {
       this.minute = minute;
       this.hour = hour;
       this.day = day;
-
-      delete this._cachedUnixTime;
     },
 
     /**
@@ -3933,8 +3912,6 @@ ICAL.TimezoneService = (function() {
       }
 
       time.day = day;
-
-      delete this._cachedUnixTime;
       return this;
     },
 
@@ -3949,14 +3926,9 @@ ICAL.TimezoneService = (function() {
       this.hour = epoch.hour;
       this.minute = epoch.minute;
       this.second = Math.floor(epoch.second);
-
-      delete this._cachedUnixTime;
     },
 
     toUnixTime: function toUnixTime() {
-      if ("_cachedUnixTime" in this) {
-        return this._cachedUnixTime;
-      }
       var offset = this.utcOffset();
 
       // we use the offset trick to ensure
@@ -3971,8 +3943,7 @@ ICAL.TimezoneService = (function() {
       );
 
       // seconds
-      this._cachedUnixTime = ms / 1000;
-      return this._cachedUnixTime;
+      return ms / 1000;
     },
 
     /**
