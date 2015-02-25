@@ -5494,8 +5494,6 @@ ICAL.RecurIterator = (function() {
             }
           } else {
             for (var daycodedkey in this.by_data.BYDAY) {
-              //TODO: This should return dates in order of occurrence
-              //      (1,2,3, etc...) instead of by weekday (su, mo, etc..)
               var coded_day = this.by_data.BYDAY[daycodedkey];
               var parts = this.ruleDayOfWeek(coded_day);
               var pos = parts[0];
@@ -5525,6 +5523,9 @@ ICAL.RecurIterator = (function() {
             }
           }
         }
+        // Return dates in order of occurrence (1,2,3,...) instead
+        // of by groups of weekdays (1,8,15,...,2,9,16,...).
+        this.days.sort(function(a,b){return a - b;}); // Comparator function allows to sort numbers.
       } else if (partCount == 2 && "BYDAY" in parts && "BYMONTHDAY" in parts) {
         var expandedDays = this.expand_by_day(aYear);
 

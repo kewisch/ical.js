@@ -268,7 +268,7 @@ suite('recur_iterator', function() {
     });
   });
 
-  suite('yearly & by month', function() {
+  suite('yearly & by month with one by day', function() {
 
     test('infinite', function() {
       var raw = 'FREQ=YEARLY;BYMONTH=3;BYDAY=TU';
@@ -1161,6 +1161,86 @@ suite('recur_iterator', function() {
         new Date(2018, 3, 30, 8),
         new Date(2019, 3, 30, 8)
       ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Yearly, every WE and FR of January and March (more BYMONTH and more BYDAY)', function() {
+    createIterator(
+      'FREQ=YEARLY;BYMONTH=1,3;BYDAY=WE,FR',
+      '2014-01-01T08:00:00'
+    );
+
+    test('for all the occurrences on January and March in the first year', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 18;
+      var inc = 0;
+
+      var expected = [
+        new Date(2014, 0, 1, 8),  new Date(2014, 0, 3, 8),
+        new Date(2014, 0, 8, 8),  new Date(2014, 0, 10, 8),
+        new Date(2014, 0, 15, 8), new Date(2014, 0, 17, 8),
+        new Date(2014, 0, 22, 8), new Date(2014, 0, 24, 8),
+        new Date(2014, 0, 29, 8), new Date(2014, 0, 31, 8),
+        new Date(2014, 2, 5, 8),  new Date(2014, 2, 7, 8),
+        new Date(2014, 2, 12, 8), new Date(2014, 2, 14, 8),
+        new Date(2014, 2, 19, 8), new Date(2014, 2, 21, 8),
+        new Date(2014, 2, 26, 8), new Date(2014, 2, 28, 8)
+      ];
+
+      while (inc < max) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Yearly, every day of January (one BYMONTH and more BYDAY)', function() {
+    createIterator(
+      'FREQ=YEARLY;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA',
+      '2014-01-01T08:00:00'
+    );
+
+    test('for 31 occurrences on January in the first year', function() {
+      var next;
+      var date;
+      var dates = [];
+      var expected = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var max = 31;
+      var inc = 0;
+
+      while (inc < max) {
+        date = new Date(2014, 0, inc + 1, 8);
+        expected.push(date);
+        inc++;
+      }
+
+      inc = 0;
 
       while (inc < max) {
         var value = iterator.next().toJSDate();
