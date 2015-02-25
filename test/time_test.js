@@ -1023,6 +1023,95 @@ suite('icaltime', function() {
     }
   });
 
+  test('startOfWeek with different first day of week', function () {
+    var test_data = [{ /* A Sunday */
+      str: '2012-01-01T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2011-12-26',
+          TUESDAY: '2011-12-27',
+          WEDNESDAY: '2011-12-28',
+          THURSDAY: '2011-12-29',
+          FRIDAY: '2011-12-30',
+          SATURDAY: '2011-12-31'
+      }
+    },{ /* A Monday */
+      str: '2012-01-02T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2012-01-02',
+          TUESDAY: '2011-12-27',
+          WEDNESDAY: '2011-12-28',
+          THURSDAY: '2011-12-29',
+          FRIDAY: '2011-12-30',
+          SATURDAY: '2011-12-31'
+      }
+    },{ /* A Tuesday */
+      str: '2012-01-03T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2012-01-02',
+          TUESDAY: '2012-01-03',
+          WEDNESDAY: '2011-12-28',
+          THURSDAY: '2011-12-29',
+          FRIDAY: '2011-12-30',
+          SATURDAY: '2011-12-31'
+      }
+    },{ /* A Wednesday */
+      str: '2012-01-04T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2012-01-02',
+          TUESDAY: '2012-01-03',
+          WEDNESDAY: '2012-01-04',
+          THURSDAY: '2011-12-29',
+          FRIDAY: '2011-12-30',
+          SATURDAY: '2011-12-31'
+      }
+    },{ /* A Thursday */
+      str: '2012-01-05T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2012-01-02',
+          TUESDAY: '2012-01-03',
+          WEDNESDAY: '2012-01-04',
+          THURSDAY: '2012-01-05',
+          FRIDAY: '2011-12-30',
+          SATURDAY: '2011-12-31'
+      }
+    },{ /* A Friday */
+      str: '2012-01-06T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2012-01-02',
+          TUESDAY: '2012-01-03',
+          WEDNESDAY: '2012-01-04',
+          THURSDAY: '2012-01-05',
+          FRIDAY: '2012-01-06',
+          SATURDAY: '2011-12-31'
+      }
+    },{ /* A Saturday */
+      str: '2012-01-07T12:01:00',
+      firstDayOfWeek: {
+          SUNDAY: '2012-01-01',
+          MONDAY: '2012-01-02',
+          TUESDAY: '2012-01-03',
+          WEDNESDAY: '2012-01-04',
+          THURSDAY: '2012-01-05',
+          FRIDAY: '2012-01-06',
+          SATURDAY: '2012-01-07'
+      }
+    }];
+
+    for (var datakey in test_data) {
+      var data = test_data[datakey];
+      var dt = Time.fromString(data.str);
+      for (var day in data.firstDayOfWeek) {
+          assert.equal(data.firstDayOfWeek[day], dt.startOfWeek(ICAL.Time[day]).toString());
+      }
+    }
+  });
+
   suite('#compare', function() {
     testSupport.useTimezones('America/New_York', 'America/Los_Angeles');
 
