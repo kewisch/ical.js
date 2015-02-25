@@ -3462,9 +3462,10 @@ ICAL.TimezoneService = (function() {
       return diypm[is_leap][this.month - 1] + this.day;
     },
 
-    startOfWeek: function startOfWeek() {
+    startOfWeek: function startOfWeek(aWeekStart) {
+      var firstDow = aWeekStart || ICAL.Time.SUNDAY;
       var result = this.clone();
-      result.day -= this.dayOfWeek() - 1;
+      result.day -= ((this.dayOfWeek() + 7 - firstDow) % 7);
       result.isDate = true;
       result.hour = 0;
       result.minute = 0;
@@ -3472,9 +3473,10 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
-    endOfWeek: function endOfWeek() {
+    endOfWeek: function endOfWeek(aWeekStart) {
+      var firstDow = aWeekStart || ICAL.Time.SUNDAY;
       var result = this.clone();
-      result.day += 7 - this.dayOfWeek();
+      result.day += (7 - this.dayOfWeek() + firstDow - ICAL.Time.SUNDAY) % 7;
       result.isDate = true;
       result.hour = 0;
       result.minute = 0;
