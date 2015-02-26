@@ -9,6 +9,49 @@
       },
       "cal-address",
       "mailto:foo@bar.com"
+    ],
+    [
+      "x-foo",
+      {
+        "param1": "VAL1"
+      },
+      "unknown",
+      "FOO;BAR"
+    ],
+    [
+      "x-foo2",
+      {
+        "param1": "VAL1",
+        "param2": "VAL2"
+      },
+      "unknown",
+      "FOO;BAR"
+    ],
+    [
+      "x-bar",
+      {
+        "param1": "VAL1:FOO"
+      },
+      "unknown",
+      "BAZ;BAR"
+    ],
+    [
+      "x-baz",
+      {
+        "param1": "VAL1:FOO",
+        "param2": "VAL2"
+      },
+      "unknown",
+      "BAZ;BAR"
+    ],
+    [
+      "x-baz2",
+      {
+        "param1": "VAL1",
+        "param2": "VAL2:FOO"
+      },
+      "unknown",
+      "BAZ;BAR"
     ]
   ],
   []
