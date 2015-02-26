@@ -510,8 +510,10 @@ ICAL.design = (function() {
 
           var result = matches[1] + '-' +
                        matches[2] + '-' +
-                       matches[3] +
-                       matches[4]; // Z
+                       matches[3];
+          if (matches.length > 4 ) {
+            result += matches[4];
+          }
           return result;
         },
 
@@ -549,8 +551,10 @@ ICAL.design = (function() {
                        matches[3] + 'T' +
                        matches[4] + ':' +
                        matches[5] + ':' +
-                       matches[6] +
-                       matches[7]; // Z
+                       matches[6];
+          if (matches.length > 7 ) {
+            result += matches[7];
+          }
           return result;
         },
 
