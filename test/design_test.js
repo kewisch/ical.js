@@ -52,8 +52,22 @@ suite('design', function() {
         var value = subject.fromICAL(
           '20121010'
         );
-
         assert.equal(value, '2012-10-10');
+
+        value = subject.fromICAL(
+          '2012-10-10'
+        );
+        assert.equal(value, '2012-10-10');
+
+        value = subject.fromICAL(
+          '20121010Z'
+        );
+        assert.equal(value, '2012-10-10Z');
+
+        value = subject.fromICAL(
+          '2012-10-10Z'
+        );
+        assert.equal(value, '2012-10-10Z');
       });
 
       test('#toICAL', function() {
@@ -104,6 +118,11 @@ suite('design', function() {
         assert.equal(
           subject.toICAL(expected),
           value
+        );
+
+        assert.equal(
+          subject.fromICAL(expected),
+          expected
         );
       });
 
