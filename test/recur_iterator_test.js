@@ -1255,6 +1255,158 @@ suite('recur_iterator', function() {
 
     });
   });
+
+  suite('Repeat Monthly every Wednesday, Friday and the third Monday', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYDAY=3MO,WE,FR',
+      '2015-01-02T08:00:00'
+    );
+
+    var expected = [
+      new Date(2015, 0, 2, 8),
+      new Date(2015, 0, 7, 8),
+      new Date(2015, 0, 9, 8),
+      new Date(2015, 0, 14, 8),
+      new Date(2015, 0, 16, 8),
+      new Date(2015, 0, 19, 8),
+      new Date(2015, 0, 21, 8),
+      new Date(2015, 0, 23, 8)
+    ];
+
+    test('for ' + expected.length + ' occurrences ', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var inc = 0;
+
+      while (inc < expected.length) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Repeat Monthly, the fifth Saturday (BYDAY=5SA)', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYDAY=5SA',
+      '2015-02-04T08:00:00'
+    );
+
+    var expected = [
+      new Date(2015, 4, 30, 8),
+      new Date(2015, 7, 29, 8),
+      new Date(2015, 9, 31, 8),
+      new Date(2016, 0, 30, 8),
+      new Date(2016, 3, 30, 8),
+      new Date(2016, 6, 30, 8)
+    ];
+
+    test('for ' + expected.length + ' occurrences ', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var inc = 0;
+
+      while (inc < expected.length) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Repeat Monthly, the fifth Wednesday every two months (BYDAY=5WE)', function() {
+    createIterator(
+      'FREQ=MONTHLY;INTERVAL=2;BYDAY=5WE',
+      '2015-01-01T08:00:00'
+    );
+
+    var expected = [
+      new Date(2015, 6, 29, 8),
+      new Date(2015, 8, 30, 8),
+      new Date(2016, 2, 30, 8),
+      new Date(2016, 10, 30, 8),
+      new Date(2017, 2, 29, 8),
+      new Date(2017, 4, 31, 8)
+    ];
+
+    test('for ' + expected.length + ' occurrences ', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var inc = 0;
+
+      while (inc < expected.length) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
+  suite('Repeat Monthly, the 2nd Monday, 5th Wednesday and the 5th to last Saturday every month', function() {
+    createIterator(
+      'FREQ=MONTHLY;BYDAY=2MO,-5WE,5SA',
+      '2015-04-01T08:00:00'
+    );
+
+    var expected = [
+      new Date(2015, 3, 1, 8),
+      new Date(2015, 3, 13, 8),
+      new Date(2015, 4, 11, 8),
+      new Date(2015, 4, 30, 8),
+      new Date(2015, 5, 8, 8),
+      new Date(2015, 6, 1, 8),
+      new Date(2015, 6, 13, 8)
+    ];
+
+    test('for ' + expected.length + ' occurrences ', function() {
+      var next;
+      var dates = [];
+
+      assert.isFalse(recur.isFinite(), 'finite');
+
+      var inc = 0;
+
+      while (inc < expected.length) {
+        var value = iterator.next().toJSDate();
+        dates.push(value);
+        inc++;
+      }
+
+      assert.deepEqual(
+        dates,
+        expected
+      );
+
+    });
+  });
+
 });
 
 
