@@ -59,4 +59,23 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
     time.clone();
   });
 
+  var _time = new ICAL.Time({
+    year: 2012,
+    month: 1,
+    day: 32,
+    seconds: 1
+  });
+
+  perf.test('toUnixTime', function() {
+    _time.toUnixTime();
+  });
+
+  perf.test('dayOfWeek', function() {
+    _time.dayOfWeek();
+  });
+
+  perf.test('weekNumber', function() {
+    _time.weekNumber();
+  });
+
 });
