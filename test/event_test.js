@@ -467,6 +467,33 @@ suite('ICAL.Event', function() {
     });
   });
 
+  suite('#recurEventsNoDtend', function() {
+
+    var icsData;
+
+    testSupport.defineSample('recur_no_dtend.ics', function(data) {
+      icsData = data;
+    });
+
+    test('event results', function() {
+      var subject = new ICAL.Component(ICAL.parse(icsData));
+      var events = subject.getAllSubcomponents('vevent');
+
+      events.forEach(function(event) {
+        var ev = new ICAL.Event(event);
+        var itr = ev.iterator().next();
+        assert.doesNotThrow(
+          function() {
+            ev.getOccurrenceDetails(itr);
+          },
+          "TypeError"
+        );
+      });
+
+    });
+
+  });
+
   suite('#relateException', function() {
 
     test('trying to relate an exception to an exception', function() {
