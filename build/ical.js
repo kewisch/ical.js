@@ -3403,10 +3403,12 @@ ICAL.TimezoneService = (function() {
     },
 
     fromData: function fromData(aData, aZone) {
-      for (var key in aData) {
-        // ical type cannot be set
-        if (key === 'icaltype') continue;
-        this[key] = aData[key];
+      if (aData) {
+        for (var key in aData) {
+          // ical type cannot be set
+          if (key === 'icaltype') continue;
+          this[key] = aData[key];
+        }
       }
 
       if (aZone) {
