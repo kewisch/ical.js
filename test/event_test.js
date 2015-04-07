@@ -798,4 +798,99 @@ suite('ICAL.Event', function() {
     });
   });
 
+  suite('duration instead of dtend', function() {
+    var icsData;
+
+    testSupport.defineSample('duration_instead_of_dtend.ics', function(data) {
+      icsData = data;
+    });
+
+    test('result', function() {
+      var subject = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      assert.equal(subject.startDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 6,
+          day: 30,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      }).toString());
+
+      assert.equal(subject.endDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 6,
+          day: 31,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      }).toString());
+
+      assert.equal(subject.duration.toString(), 'P1D');
+    });
+  });
+
+  suite('only a dtstart date', function() {
+    var icsData;
+
+    testSupport.defineSample('only_dtstart_date.ics', function(data) {
+      icsData = data;
+    });
+
+    test('result', function() {
+      var subject = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      assert.equal(subject.startDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 6,
+          day: 30,
+          hour: 0,
+          isDate: true,
+          timezone: testTzid
+      }).toString());
+
+      assert.equal(subject.endDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 6,
+          day: 31,
+          hour: 6,
+          isDate: true,
+          timezone: testTzid
+      }).toString());
+
+      assert.equal(subject.duration.toString(), 'P1D');
+    });
+  });
+
+  suite('only a dtstart time', function() {
+    var icsData;
+
+    testSupport.defineSample('only_dtstart_time.ics', function(data) {
+      icsData = data;
+    });
+
+    test('result', function() {
+      var subject = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      assert.equal(subject.startDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 6,
+          day: 30,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      }).toString());
+
+      assert.equal(subject.endDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 6,
+          day: 30,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      }).toString());
+
+      assert.equal(subject.duration.toString(), 'PT0S');
+    });
+  });
 });
