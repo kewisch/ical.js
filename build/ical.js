@@ -6518,7 +6518,17 @@ ICAL.Event = (function() {
     },
 
     get endDate() {
-      return this._firstProp('dtend');
+      var endDate = this._firstProp('dtend');
+      if (!endDate) {
+          var duration = this._firstProp('duration');
+          endDate = this.startDate.clone();
+          if (duration) {
+              endDate.addDuration(duration);
+          } else if (endDate.isDate) {
+              endDate.day += 1;
+          }
+      }
+      return endDate;
     },
 
     set endDate(value) {
@@ -6526,7 +6536,11 @@ ICAL.Event = (function() {
     },
 
     get duration() {
-      return this.endDate.subtractDate(this.startDate);
+      var duration = this._firstProp('duration');
+      if (!duration) {
+        return this.endDate.subtractDate(this.startDate);
+      }
+      return duration;
     },
 
     get location() {
