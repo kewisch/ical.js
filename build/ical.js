@@ -4724,33 +4724,43 @@ ICAL.RecurIterator = (function() {
       }
 
       if (this.rule.freq == "MONTHLY" && this.has_by_data("BYDAY")) {
-
-        var coded_day = this.by_data.BYDAY[this.by_indices.BYDAY];
-        var parts = this.ruleDayOfWeek(coded_day);
-        var pos = parts[0];
-        var dow = parts[1];
-
+        var tempLast = null;
+        var initLast = this.last.clone();
         var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
-        var poscount = 0;
 
-        if (pos >= 0) {
-          for (this.last.day = 1; this.last.day <= daysInMonth; this.last.day++) {
-            if (this.last.dayOfWeek() == dow) {
-              if (++poscount == pos || pos == 0) {
-                break;
-              }
+        // Check every weekday in BYDAY with relative dow and pos.
+        for (var i in this.by_data.BYDAY) {
+          this.last = initLast.clone();
+          var parts = this.ruleDayOfWeek(this.by_data.BYDAY[i]);
+          var pos = parts[0];
+          var dow = parts[1];
+          var dayOfMonth = this.last.nthWeekDay(dow, pos);
+
+          // If |pos| >= 6, the byday is invalid for a monthly rule.
+          if (pos >= 6 || pos <= -6) {
+            throw new Error("Malformed values in BYDAY part");
+          }
+
+          // If a Byday with pos=+/-5 is not in the current month it
+          // must be searched in the next months.
+          if (dayOfMonth > daysInMonth || dayOfMonth <= 0) {
+            // Skip if we have already found a "last" in this month.
+            if (tempLast && tempLast.month == initLast.month) {
+              continue;
+            }
+            while (dayOfMonth > daysInMonth || dayOfMonth <= 0) {
+              this.increment_month();
+              daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
+              dayOfMonth = this.last.nthWeekDay(dow, pos);
             }
           }
-        } else {
-          pos = -pos;
-          for (this.last.day = daysInMonth; this.last.day != 0; this.last.day--) {
-            if (this.last.dayOfWeek() == dow) {
-              if (++poscount == pos) {
-                break;
-              }
-            }
+
+          this.last.day = dayOfMonth;
+          if (!tempLast || this.last.compare(tempLast) < 0) {
+            tempLast = this.last.clone();
           }
         }
+        this.last = tempLast.clone();
 
         //XXX: This feels like a hack, but we need to initialize
         //     the BYMONTHDAY case correctly and byDayAndMonthDay handles

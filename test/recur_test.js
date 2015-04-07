@@ -70,7 +70,7 @@ suite('recur', function() {
     checkThrow({
       freq: 'MONTHLY',
       parts: {
-        BYDAY: ['-5TH']
+        BYDAY: ['-6TH']
       }
     }, 'Malformed values in BYDAY part', '1970-02-01T00:00:00Z');
 
