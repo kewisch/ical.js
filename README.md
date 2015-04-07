@@ -1,4 +1,4 @@
-# jsical - Javascript parser for rfc5545 [![NPM](https://nodei.co/npm/ical.js.png)](https://npmjs.org/package/ical.js)
+# jsical - Javascript parser for rfc5545
 
 This is a library to parse the iCalendar format defined in
 [rfc5545](http://tools.ietf.org/html/rfc5545), as well as similar formats like
@@ -16,7 +16,7 @@ I am also aiming for a caldav.js when this is done. Most algorithms here were
 taken from [libical](https://github.com/libical/libical). If you are bugfixing
 this library, please check if the fix can be upstreamed to libical.
 
-[![Build Status](https://secure.travis-ci.org/mozilla-comm/ical.js.png?branch=master)](http://travis-ci.org/mozilla-comm/ical.js)
+[![Build Status](https://secure.travis-ci.org/mozilla-comm/ical.js.png?branch=master)](http://travis-ci.org/mozilla-comm/ical.js) [![npm version](https://badge.fury.io/js/ical.js.svg)](http://badge.fury.io/js/ical.js)
 
 ## Validator 
 
