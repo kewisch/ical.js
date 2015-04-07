@@ -1389,4 +1389,59 @@ suite('icaltime', function() {
     });
   });
 
+  test('cache cleared', function() {
+    // This test ensures the cached Unix time is cleared whenever the time is changed.
+    var time = new Time({
+      year: 2015,
+      month: 4,
+      day: 3,
+      hour: 12,
+      minute: 34,
+      second: 56,
+      zone: Timezone.utcTimezone
+    });
+
+    assert.equal(time.toUnixTime(), 1428064496);
+    time.year++;
+    assert.equal(time.toUnixTime(), 1459686896);
+    time.month++;
+    assert.equal(time.toUnixTime(), 1462278896);
+    time.day++;
+    assert.equal(time.toUnixTime(), 1462365296);
+    time.hour++;
+    assert.equal(time.toUnixTime(), 1462368896);
+    time.minute++;
+    assert.equal(time.toUnixTime(), 1462368956);
+    time.second++;
+    assert.equal(time.toUnixTime(), 1462368957);
+
+    time.adjust(-397, -1, -1, -1);
+    assert.equal(time.toUnixTime(), 1428064496);
+
+    time.resetTo(2016, 5, 4, 13, 35, 57);
+    assert.equal(time.toUnixTime(), 1462368957);
+
+    // time.fromString('2015-04-03T12:34:56Z');
+    // assert.equal(time.toUnixTime(), 1428064496);
+
+    time.fromJSDate(new Date(Date.UTC(2015, 0, 1)), true);
+    assert.equal(time.toUnixTime(), 1420070400);
+
+    time.fromData({
+      year: 2015,
+      month: 4,
+      day: 3,
+      hour: 12,
+      minute: 34,
+      second: 56,
+      zone: Timezone.utcTimezone
+    });
+    assert.equal(time.toUnixTime(), 1428064496);
+
+    time.addDuration(ICAL.Duration.fromString('P1D'));
+    assert.equal(time.toUnixTime(), 1428150896);
+
+    time.fromUnixTime(1234567890);
+    assert.equal(time.toUnixTime(), 1234567890);
+  });
 });
