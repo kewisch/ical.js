@@ -16,13 +16,19 @@ var OLSON_DIR = process.env.OLSON_DIR || path.join(TZURL_DIR, 'olson');
 module.exports = function(grunt) {
   var libinfo = {
     cwd: 'lib/ical',
-    files:[
+    files: [
       'helpers.js', 'design.js', 'stringify.js', 'parse.js', 'component.js',
       'property.js', 'utc_offset.js', 'binary.js', 'period.js', 'duration.js',
       'timezone.js', 'timezone_service.js', 'time.js', 'recur.js',
       'recur_iterator.js', 'recur_expansion.js', 'event.js',
       'component_parser.js'
-    ]
+    ],
+    test: {
+      head: ['test/helper.js'],
+      unit: ['test/*_test.js'],
+      acceptance: ['test/acceptance/*_test.js'],
+      performance: ['test/performance/*_test.js']
+    }
   };
   libinfo.absfiles = libinfo.files.map(function(f) { return path.join(libinfo.cwd, f); });
 
@@ -46,6 +52,21 @@ module.exports = function(grunt) {
       }
     },
 
+    mocha_istanbul: {
+      coverage: {
+        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
+        options: {
+          root: './lib/ical/',
+          mochaOptions: ['--ui', 'tdd']
+        }
+      }
+    },
+    coveralls: {
+      options: {
+        src: './coverage/lcov.info'
+      }
+    },
+
     mochacli: {
       options: {
         ui: 'tdd',
@@ -54,13 +75,13 @@ module.exports = function(grunt) {
         reporter: reporter
       },
       performance: {
-        src: ['test/helper.js', 'test/performance/*_test.js']
+        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.performance %>']
       },
       acceptance: {
-        src: ['test/helper.js', 'test/acceptance/*_test.js']
+        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.acceptance %>']
       },
       unit: {
-        src: ['test/helper.js', 'test/*_test.js']
+        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>']
       }
     }
   });
@@ -164,10 +185,14 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-mocha-cli');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('grunt-coveralls');
 
-  grunt.registerTask('default', 'package');
+  grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat']);
+  grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('test', ['test-browser', 'test-node']);
   grunt.registerTask('test-node', ['mochacli']);
+  grunt.registerTask('test-ci', ['test-node', 'coverage', 'coveralls']);
   grunt.registerTask('dev', ['package', 'test-agent-config']);
 };
