@@ -3,3 +3,4 @@ node_modules
 *.pyc
 tools/tzurl
 zoneinfo
+coverage/
