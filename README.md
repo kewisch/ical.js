@@ -6,7 +6,7 @@ vCard.
 
 There are still some issues to be taken care of, but the library works for most
 cases. If you would like to help out and would like to discuss any API changes,
-please [contact me](mailto:mozilla@kewis.ch).
+please [contact me](mailto:mozilla@kewis.ch) or create an issue.
 
 The inital goal was to use this as a replacement for libical in the [Mozilla
 Calendar Project](http://www.mozilla.org/projects/calendar/), but the library
@@ -20,7 +20,9 @@ this library, please check if the fix can be upstreamed to libical.
 
 ## Validator 
 
-There is a validator that demonstrates how to use the library in a webpage in the [sandbox/](https://github.com/mozilla-comm/ical.js/tree/master/sandbox) subdirectory.
+There is a validator that demonstrates how to use the library in a webpage in
+the [sandbox/](https://github.com/mozilla-comm/ical.js/tree/master/sandbox)
+subdirectory.
 
 [Try the validator online](http://mozilla-comm.github.com/ical.js/validator.html), it always uses the latest copy of ical.js.
 
@@ -28,27 +30,37 @@ There is a validator that demonstrates how to use the library in a webpage in th
 
 Run: `npm install ical.js`
 
+NOTE: ical.js will work with node 0.8.x, but the development dependencies
+contain packages that require a later version. Please use
+`npm install --production ical.js` for node 0.8.x
+
 ## Developing
 
 Run: `npm install .`
 
-The browser build is always found under build/ical.js. 
+The single-file browser build can be found under [build/ical.js](build/ical.js)
+and needs to be rebuilt before pushing. Please see
+[CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ### Tests
 
-You need nodejs/nodejs to install the testing tools.
+Tests can either be run via node or in the browser, but setting up the testing
+infrastructure requires [node](https://github.com/joyent/node). More
+information on how to set up and run tests can be found on
+[the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests).
 
 #### in node js
 
-1. `make test-node`
+    grunt test-node
 
 #### in the browser
 
-1.  Run `make test-server`
-    Go to http://localhost:8789/test-agent/index.html
-    Run all tests with `make test-browser`
+Running `grunt test-server` will start a webserver and open the page in your
+browser. You can then select and execute tests as you wish. If you want to run
+all tests you can also open a second terminal and run `grunt test-browser`
 
 ## Documentation
 
-Until a full reference documentation is available, please see the
-[wiki](https://github.com/mozilla-comm/ical.js/wiki) for a few examples.
+Aside from inline documentation and jsdoc in the source, there are some guides
+and descriptions in [the wiki](https://github.com/mozilla-comm/ical.js/wiki).
+If you are missing anything, please don't hesitate to create an issue.

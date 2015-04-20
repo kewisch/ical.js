@@ -74,7 +74,7 @@
       scope.call(this, context);
 
       test('benchmark', function(done) {
-        this.timeout(null);
+        this.timeout(0);
         // quick formatting hack
         console.log();
 
