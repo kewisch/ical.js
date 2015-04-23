@@ -147,7 +147,7 @@ module.exports = function(grunt) {
     client.start();
   });
 
-  grunt.registerTask('test-server', 'Start browser test server', function() {
+  grunt.registerTask('run-test-server', 'Start browser test server', function() {
     var done = this.async();
 
     var server = new WebsocketServer();
@@ -227,6 +227,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat']);
   grunt.registerTask('coverage', 'mocha_istanbul');
+  grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
   grunt.registerTask('test-ci', ['test-node', 'coverage', 'coveralls']);
   grunt.registerTask('dev', ['package', 'test-agent-config']);
