@@ -34,6 +34,10 @@ module.exports = function(grunt) {
 
   var reporter = grunt.option('reporter') || 'spec';
 
+  if (grunt.cli.tasks.indexOf('inspector') > -1) {
+    grunt.option('debug', true);
+  }
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     libinfo: libinfo,
@@ -61,9 +65,20 @@ module.exports = function(grunt) {
         }
       }
     },
+
     coveralls: {
       unit: {
         src: './coverage/lcov.info'
+      }
+    },
+
+    'node-inspector': {
+      test: {}
+    },
+
+    concurrent: {
+      inspector: {
+        tasks: ['mochacli:unit', 'node-inspector']
       }
     },
 
@@ -71,7 +86,6 @@ module.exports = function(grunt) {
       options: {
         ui: 'tdd',
         'debug-brk': grunt.option('debug'),
-        inspector: grunt.option('inspector'),
         reporter: reporter
       },
       performance: {
@@ -83,6 +97,26 @@ module.exports = function(grunt) {
       unit: {
         src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>']
       }
+    }
+  });
+
+  grunt.registerTask('test-node', 'internal', function() {
+    if (grunt.option('debug')) {
+      var done = this.async();
+      var open = require('biased-opener');
+      open('http://127.0.0.1:8080/debug?port=5858', {
+          preferredBrowsers : ['chrome', 'chromium', 'opera']
+        }, function(err, okMsg) {
+          if (err) {
+             // unable to launch one of preferred browsers for some reason
+             console.log(err.message);
+             console.log('Please open the URL manually in Chrome/Chromium/Opera or similar browser');
+          }
+          done();
+      });
+      grunt.task.run('concurrent');
+    } else {
+      grunt.task.run('mochacli');
     }
   });
 
@@ -183,16 +217,17 @@ module.exports = function(grunt) {
     exec(path.join(TZURL_DIR, 'vzic'));
   });
 
+  grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-coveralls');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
-  grunt.loadNpmTasks('grunt-coveralls');
+  grunt.loadNpmTasks('grunt-node-inspector');
 
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat']);
   grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-node', ['mochacli']);
   grunt.registerTask('test-ci', ['test-node', 'coverage', 'coveralls']);
   grunt.registerTask('dev', ['package', 'test-agent-config']);
 };
