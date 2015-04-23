@@ -34,10 +34,6 @@ module.exports = function(grunt) {
 
   var reporter = grunt.option('reporter') || 'spec';
 
-  if (grunt.cli.tasks.indexOf('inspector') > -1) {
-    grunt.option('debug', true);
-  }
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     libinfo: libinfo,
@@ -77,9 +73,10 @@ module.exports = function(grunt) {
     },
 
     concurrent: {
-      inspector: {
-        tasks: ['mochacli:unit', 'node-inspector']
-      }
+      all: ['mochacli', 'node-inspector'],
+      unit: ['mochacli:unit', 'node-inspector'],
+      acceptance: ['mochacli:acceptance', 'node-inspector'],
+      single: ['mochacli:single', 'node-inspector'],
     },
 
     mochacli: {
@@ -96,11 +93,14 @@ module.exports = function(grunt) {
       },
       unit: {
         src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>']
+      },
+      single: {
+        src: ['<%= libinfo.test.head %>', grunt.option('test')]
       }
     }
   });
 
-  grunt.registerTask('test-node', 'internal', function() {
+  grunt.registerTask('test-node', 'internal', function(arg) {
     if (grunt.option('debug')) {
       var done = this.async();
       var open = require('biased-opener');
@@ -114,9 +114,9 @@ module.exports = function(grunt) {
           }
           done();
       });
-      grunt.task.run('concurrent');
+      grunt.task.run('concurrent:' + (arg || "all"));
     } else {
-      grunt.task.run('mochacli');
+      grunt.task.run('mochacli' + (arg ? ":" + arg : ""));
     }
   });
 
