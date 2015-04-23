@@ -229,6 +229,6 @@ module.exports = function(grunt) {
   grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-ci', ['test-node', 'coverage', 'coveralls']);
+  grunt.registerTask('test-ci', ['test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
   grunt.registerTask('dev', ['package', 'test-agent-config']);
 };
