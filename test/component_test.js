@@ -36,8 +36,8 @@ suite('Component', function() {
 
       assert.equal(newComp.jCal[0], 'vevent');
 
-      assert.ok(!newComp.getAllSubcomponents());
-      assert.ok(!newComp.getAllProperties());
+      assert.length(newComp.getAllSubcomponents(), 0);
+      assert.length(newComp.getAllProperties(), 0);
     });
 
     test("#fromString", function() {
@@ -241,7 +241,7 @@ suite('Component', function() {
     test('without components', function() {
       subject = new ICAL.Component(['foo', [], []]);
       assert.equal(subject.name, 'foo');
-      assert.ok(!subject.getAllSubcomponents());
+      assert.length(subject.getAllSubcomponents(), 0);
     });
 
     test('with name from end', function() {
@@ -325,7 +325,7 @@ suite('Component', function() {
     test('all', function() {
       subject.removeAllSubcomponents();
       assert.length(subject.jCal[2], 0);
-      assert.ok(!subject.getAllSubcomponents());
+      assert.length(subject.getAllSubcomponents(), 0);
     });
   });
 
