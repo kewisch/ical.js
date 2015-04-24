@@ -1503,6 +1503,21 @@ suite('icaltime', function() {
       assert.isFalse(Time.is_leap_year(2100));
     });
 
+    test('fromDayOfYear', function() {
+      assert.equal(Time.fromDayOfYear(-730, 2001).toICALString(), "19990101");
+      assert.equal(Time.fromDayOfYear(-366, 2001).toICALString(), "19991231");
+      assert.equal(Time.fromDayOfYear(-365, 2001).toICALString(), "20000101");
+      assert.equal(Time.fromDayOfYear(0, 2001).toICALString(), "20001231");
+      assert.equal(Time.fromDayOfYear(365, 2001).toICALString(), "20011231");
+      assert.equal(Time.fromDayOfYear(366, 2001).toICALString(), "20020101");
+      assert.equal(Time.fromDayOfYear(730, 2001).toICALString(), "20021231");
+      assert.equal(Time.fromDayOfYear(731, 2001).toICALString(), "20030101");
+      assert.equal(Time.fromDayOfYear(1095, 2001).toICALString(), "20031231");
+      assert.equal(Time.fromDayOfYear(1096, 2001).toICALString(), "20040101");
+      assert.equal(Time.fromDayOfYear(1461, 2001).toICALString(), "20041231");
+      assert.equal(Time.fromDayOfYear(1826, 2001).toICALString(), "20051231");
+    });
+
     test('fromStringv2', function() {
       var subject = Time.fromStringv2("2015-01-01");
       var expected = {
