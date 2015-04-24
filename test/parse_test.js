@@ -19,6 +19,7 @@ suite('parserv2', function() {
       'unfold_properties',
       'quoted_params',
       'multivalue',
+      'values',
       'recur',
       'base64',
       'dates',
@@ -126,6 +127,30 @@ suite('parserv2', function() {
       assert.throws(function() {
         subject(ical);
       }, /invalid line/);
+    });
+
+    test('missing value with param delimiter', function() {
+      var ical = 'BEGIN:VCALENDAR\n' +
+                 'X-FOO;\n';
+      assert.throws(function() {
+        subject(ical);
+      }, "Invalid parameters in");
+    });
+
+    test('missing param name ', function() {
+      var ical = 'BEGIN:VCALENDAR\n' +
+                 'X-FOO;=\n';
+      assert.throws(function() {
+        subject(ical);
+      }, "Empty parameter name in");
+    });
+
+    test('missing param value', function() {
+      var ical = 'BEGIN:VCALENDAR\n' +
+                 'X-FOO;BAR=\n';
+      assert.throws(function() {
+        subject(ical);
+      }, "Missing parameter value in");
     });
 
     test('missing component end', function() {
