@@ -276,11 +276,29 @@ suite('icaltime', function() {
 
     test('floating', function() {
       var date = new Date(2012, 0, 1);
-      var subject = new Time.fromJSDate(date);
+      var subject = Time.fromJSDate(date);
 
       assert.deepEqual(
         subject.toJSDate(),
         date
+      );
+    });
+
+    test('reset', function() {
+      var subject = Time.fromJSDate(null);
+      var expected = {
+        year: 1970,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isDate: false,
+        timezone: "Z"
+      };
+
+      assert.hasProperties(
+        subject, expected
       );
     });
   });
@@ -818,6 +836,31 @@ suite('icaltime', function() {
         time.toJSDate(),
         after.toJSDate()
       );
+    });
+
+    test('with null timezone', function() {
+      var time = new Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 2,
+        minute: 15,
+        second: 1,
+        isDate: false,
+      });
+      time.zone = null;
+
+      var expected = {
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 2,
+        minute: 15,
+        second: 1,
+        isDate: false,
+      };
+
+      assert.deepEqual(time.toJSON(), expected);
     });
   });
 
@@ -1443,5 +1486,57 @@ suite('icaltime', function() {
 
     time.fromUnixTime(1234567890);
     assert.equal(time.toUnixTime(), 1234567890);
+  });
+
+  suite("static functions", function() {
+    test('daysInMonth', function() {
+      assert.equal(Time.daysInMonth(0, 2011), 30);
+      assert.equal(Time.daysInMonth(2, 2012), 29);
+      assert.equal(Time.daysInMonth(2, 2013), 28);
+      assert.equal(Time.daysInMonth(13, 2014), 30);
+    });
+
+    test('is_leap_year', function() {
+      assert.isTrue(Time.is_leap_year(1752));
+      assert.isTrue(Time.is_leap_year(2000));
+      assert.isTrue(Time.is_leap_year(2004));
+      assert.isFalse(Time.is_leap_year(2100));
+    });
+
+    test('fromStringv2', function() {
+      var subject = Time.fromStringv2("2015-01-01");
+      var expected = {
+        year: 2015,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isDate: true,
+        timezone: "floating"
+      };
+
+      assert.deepEqual(
+        subject.toJSON(), expected
+      );
+    });
+
+    test('weekOneStarts', function() {
+      assert.hasProperties(Time.weekOneStarts(2012), {
+        year: 2012,
+        month: 1,
+        day: 1
+      });
+      assert.hasProperties(Time.weekOneStarts(2012, Time.MONDAY), {
+        year: 2012,
+        month: 1,
+        day: 2
+      });
+      assert.hasProperties(Time.weekOneStarts(2012, Time.SATURDAY), {
+        year: 2012,
+        month: 1,
+        day: 7
+      });
+    });
   });
 });
