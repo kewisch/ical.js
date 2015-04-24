@@ -121,7 +121,7 @@ suite('ical/duration', function() {
       isNegative: false
     };
 
-    function verify(string, data) {
+    function verify(string, data, verifystring) {
       var expected = {};
       var key;
 
@@ -136,6 +136,7 @@ suite('ical/duration', function() {
       test('parse: "' + string + '"', function() {
         var subject = new ICAL.Duration.fromString(string);
         assert.hasProperties(subject, expected);
+        assert.equal(subject.toString(), verifystring || string);
       });
     }
 
@@ -153,7 +154,7 @@ suite('ical/duration', function() {
 
     verify('PT1H0M0S', {
       hours: 1
-    });
+    }, "PT1H");
 
     verify('PT15M', {
       minutes: 15
@@ -163,7 +164,7 @@ suite('ical/duration', function() {
       days: 15,
       hours: 5,
       seconds: 20
-    });
+    }, "P15DT5H20S");
 
     verify('-P0DT0H30M0S', {
       isNegative: true,
@@ -171,7 +172,7 @@ suite('ical/duration', function() {
       days: 0,
       minutes: 30,
       seconds: 0
-    });
+    }, "-PT30M");
 
     verifyFail('PT1WH', /Missing number before "H"/);
     verifyFail('PT1WsomeH', /Invalid number "some" before "H"/);
