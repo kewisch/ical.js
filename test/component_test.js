@@ -114,6 +114,12 @@ suite('Component', function() {
       assert.equal(claire.parent, bernhard);
       assert.isNull(tom.getFirstSubcomponent());
       assert.equal(bernhard.getFirstSubcomponent(), claire);
+
+      // Feeling depressed, Tom tries to find happyness with a pet, but all he
+      // got was scratches and sadness. That didn't go so well.
+      assert.throws(function() {
+        tom.addProperty("bird");
+      }, 'must instance of ICAL.Property')
     });
 
     test('properties', function() {
@@ -147,7 +153,7 @@ suite('Component', function() {
       assert.isNull(house.parent);
       assert.isNull(otherhouse.parent);
 
-      // What a mess. What do we lern from this testsuite? Infidelity is not a
+      // What a mess. What do we learn from this testsuite? Infidelity is not a
       // good idea. Always be faithful!
     });
   });
