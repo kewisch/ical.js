@@ -90,6 +90,14 @@ suite('Property', function() {
       assert.equal(subject.jCal[2], 'date-time');
     });
 
+    test('custom design value without defaultType', function() {
+      ICAL.design.property.custom = {};
+      subject = new ICAL.Property('custom');
+      assert.equal(subject.type, ICAL.design.defaultType);
+      assert.equal(subject.jCal[2], ICAL.design.defaultType);
+      delete ICAL.design.property.custom;
+    });
+
     test('new property by name (typeless)', function() {
       subject = new ICAL.Property(
         'description'

@@ -57,4 +57,28 @@ suite('ICAL.stringify', function() {
       });
     });
   });
+
+  suite('stringify property', function() {
+    test('custom property with no default type', function() {
+      ICAL.design.property.custom = {};
+      var subject = new ICAL.Property('custom');
+      subject.setValue('unescaped, right?');
+      assert.equal(subject.toICAL(), 'CUSTOM:unescaped, right?')
+
+      subject.resetType('integer');
+      subject.setValue(123);
+      assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
+
+      delete ICAL.design.property.custom;
+    });
+
+    test('custom property not using default type', function() {
+      ICAL.design.property.custom = { defaultType: 'text' };
+      var subject = new ICAL.Property('custom');
+      subject.resetType('integer');
+      subject.setValue(123);
+      assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
+      delete ICAL.design.property.custom;
+    });
+  });
 });
