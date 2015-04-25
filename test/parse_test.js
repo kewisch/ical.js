@@ -31,8 +31,7 @@ suite('parserv2', function() {
       'utc_offset',
       'component',
       'tzid_with_gmt',
-      'multiple_root_components',
-      'rfc6868'
+      'multiple_root_components'
     ];
 
     list.forEach(function(path) {

@@ -7,8 +7,7 @@ suite('ICAL.stringify', function() {
       'blank_line_end',
       'forced_types',
       'parserv2',
-      'utc_negative_zero',
-      'forced_types'
+      'utc_negative_zero'
     ];
 
     list.forEach(function(path) {
@@ -79,6 +78,16 @@ suite('ICAL.stringify', function() {
       subject.setValue(123);
       assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
       delete ICAL.design.property.custom;
+    });
+
+    test('rfc6868 roundtrip', function() {
+      var subject = new ICAL.Property('attendee');
+      var input = "caret ^ dquote \" newline \n end";
+      var expected = 'ATTENDEE;CN=caret ^^ dquote ^\' newline ^n end:mailto:id';
+      subject.setParameter('cn', input);
+      subject.setValue('mailto:id');
+      assert.equal(subject.toICAL(), expected);
+      assert.equal(ICAL.parse.property(expected)[1].cn, input);
     });
   });
 });
