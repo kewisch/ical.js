@@ -1,0 +1,9 @@
+{
+  "globalstrict": true,
+  "eqeqeq": false,
+  "-W041": false,
+  "strict": false,
+  "proto": true,
+  "shadow": true,
+  "predef": ["ICAL"]
+}

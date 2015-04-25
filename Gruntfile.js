@@ -97,6 +97,23 @@ module.exports = function(grunt) {
       single: {
         src: ['<%= libinfo.test.head %>', grunt.option('test')]
       }
+    },
+
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      lib: {
+        src: ['<%= libinfo.absfiles %>']
+      }
+    },
+    gjslint: {
+      options: {
+        flags: ['--flagfile .gjslintrc'],
+      },
+      lib: {
+        src: ['<%= libinfo.absfiles %>']
+      }
     }
   });
 
@@ -219,7 +236,9 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-coveralls');
+  grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-node-inspector');
@@ -227,8 +246,9 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat']);
   grunt.registerTask('coverage', 'mocha_istanbul');
+  grunt.registerTask('linters', ['jshint', 'gjslint']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-ci', ['test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
+  grunt.registerTask('test-ci', ['linters', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
   grunt.registerTask('dev', ['package', 'test-agent-config']);
 };
