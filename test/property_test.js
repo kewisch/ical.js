@@ -32,7 +32,7 @@ suite('Property', function() {
         '2012-10-01'
       ],
 
-      decoratedMutliValue: [
+      decoratedMultiValue: [
         'rdate',
         {},
         'date',
@@ -222,8 +222,6 @@ suite('Property', function() {
 
     assert.ok(!subject.getFirstValue());
     subject.setValue(new ICAL.Time({ year: 2012 }));
-
-    var ical = subject.toICAL();
   });
 
   suite('#getDefaultType', function() {
@@ -267,7 +265,7 @@ suite('Property', function() {
   suite('#getValues', function() {
     test('decorated', function() {
       subject = new ICAL.Property(
-        fixtures.decoratedMutliValue
+        fixtures.decoratedMultiValue
       );
 
       var result = subject.getValues();
