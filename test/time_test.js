@@ -889,19 +889,19 @@ suite('icaltime', function() {
       cp.year += 1;
 
       var diff = cp.subtractDate(dt);
-      var yearseconds = (365 + Time.is_leap_year(dt.year)) * 86400;
+      var yearseconds = (365 + Time.isLeapYear(dt.year)) * 86400;
       assert.equal(diff.toSeconds(), yearseconds);
 
       cp = dt.clone();
       cp.year += 2;
       var diff = cp.subtractDate(dt);
-      var yearseconds = (365 + Time.is_leap_year(dt.year) + 365 + Time.is_leap_year(dt.year + 1)) * 86400;
+      var yearseconds = (365 + Time.isLeapYear(dt.year) + 365 + Time.isLeapYear(dt.year + 1)) * 86400;
       assert.equal(diff.toSeconds(), yearseconds);
 
       cp = dt.clone();
       cp.year -= 1;
       var diff = cp.subtractDate(dt);
-      var yearseconds = (365 + Time.is_leap_year(cp.year)) * 86400;
+      var yearseconds = (365 + Time.isLeapYear(cp.year)) * 86400;
       assert.equal(diff.toSeconds(), -yearseconds);
 
       cp = dt.clone();
@@ -1041,7 +1041,7 @@ suite('icaltime', function() {
       assert.equal(data.hour, dt.hour);
       assert.equal(data.minute, dt.minute);
       assert.equal(data.second, dt.second);
-      assert.equal(data.leap_year, Time.is_leap_year(dt.year));
+      assert.equal(data.leap_year, Time.isLeapYear(dt.year));
       assert.equal(data.dayOfWeek, dt.dayOfWeek());
       assert.equal(data.dayOfYear, dt.dayOfYear());
       assert.equal(data.startOfWeek, dt.startOfWeek());
@@ -1496,11 +1496,11 @@ suite('icaltime', function() {
       assert.equal(Time.daysInMonth(13, 2014), 30);
     });
 
-    test('is_leap_year', function() {
-      assert.isTrue(Time.is_leap_year(1752));
-      assert.isTrue(Time.is_leap_year(2000));
-      assert.isTrue(Time.is_leap_year(2004));
-      assert.isFalse(Time.is_leap_year(2100));
+    test('isLeapYear', function() {
+      assert.isTrue(Time.isLeapYear(1752));
+      assert.isTrue(Time.isLeapYear(2000));
+      assert.isTrue(Time.isLeapYear(2004));
+      assert.isFalse(Time.isLeapYear(2100));
     });
 
     test('fromDayOfYear', function() {
