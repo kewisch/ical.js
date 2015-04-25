@@ -108,6 +108,11 @@ suite('Component', function() {
       // Claire is actually Bernhard's daughter.
       bernhard.addSubcomponent(claire);
 
+      // Bernhard is happy to hear about his daughter, while Tom goes about to
+      // tell everyone he knows. Claire is devastated and would have rather
+      // found out about this.
+      assert.isFalse(tom.removeSubcomponent(claire));
+
       // Marge knew it all along. What a sad day. Claire is not Tom's daughter,
       // but instead Bernhard's. Tom has no children, and Bernhard is the happy
       // father of his daughter claire.

@@ -424,6 +424,13 @@ suite('Property', function() {
       assert.deepEqual(subject.getValues(), ["home"]);
       assert.equal(subject.getFirstValue(), "home");
     });
+
+    test('single-value property setting multiple values', function() {
+      var subject = new ICAL.Property("location");
+      assert.throws(function() {
+        subject.setValues(["foo", "bar"]);
+      }, 'does not not support mulitValue');
+    });
   });
 
   test('#toJSON', function() {
