@@ -39,14 +39,54 @@ suite('recur_expansion', function() {
 
   createSubject('recur_instances.ics');
 
-  test('initialization', function() {
-    assert.deepEqual(
-      new Date(2012, 9, 2, 10),
-      subject.last.toJSDate()
-    );
+  suite('initialization', function() {
+    test('successful', function() {
+      assert.deepEqual(
+        new Date(2012, 9, 2, 10),
+        subject.last.toJSDate()
+      );
 
-    assert.instanceOf(subject.ruleIterators, Array);
-    assert.ok(subject.exDates);
+      assert.instanceOf(subject.ruleIterators, Array);
+      assert.ok(subject.exDates);
+    });
+
+    test('invalid', function() {
+      assert.throws(function() {
+        new ICAL.RecurExpansion({});
+      }, ".dtstart (ICAL.Time) must be given");
+      assert.throws(function() {
+        new ICAL.RecurExpansion({
+          dtstart: ICAL.Time.now()
+        });
+      }, ".ruleIterators or .component must be given");
+    });
+
+    test('default', function() {
+      var dtstart = ICAL.Time.fromData({
+        year: 2012,
+        month: 2,
+        day: 2
+      });
+      var subject = new ICAL.RecurExpansion({
+        dtstart: dtstart,
+        ruleIterators: []
+      });
+
+      assert.length(subject.ruleDates, 0);
+      assert.length(subject.exDates, 0);
+      assert.isFalse(subject.complete);
+
+      assert.deepEqual(subject.toJSON(), {
+        ruleIterators: [],
+        ruleDates: [],
+        exDates: [],
+        ruleDateInc: undefined,
+        exDateInc: undefined,
+        dtstart: dtstart.toJSON(),
+        last: dtstart.toJSON(),
+        complete: false
+      });
+    });
   });
 
   suite('#_ensureRules', function() {

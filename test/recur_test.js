@@ -2,6 +2,17 @@ suite('recur', function() {
   var Time = ICAL.Time;
   var Recur = ICAL.Recur;
 
+  suite('initialization', function() {
+    test('empty init', function() {
+      var recur = new ICAL.Recur();
+      assert.equal(recur.interval, 1);
+      assert.equal(recur.wkst, ICAL.Time.MONDAY);
+      assert.isNull(recur.until);
+      assert.isNull(recur.count);
+      assert.isNull(recur.freq);
+    });
+  });
+
   suite('#iterator', function() {
     function checkDate(data, last, dtstart) {
       var name = JSON.stringify(data);
@@ -345,6 +356,35 @@ suite('recur', function() {
     });
   });
 
+  suite('#getNextOccurrence', function() {
+    test('basic test', function() {
+      var rec = ICAL.Recur.fromString('FREQ=DAILY;INTERVAL=2');
+      var dtstart = ICAL.Time.epochTime.clone();
+      var recId = dtstart.clone();
+      recId.day += 20;
+
+      var next = rec.getNextOccurrence(dtstart, recId);
+      assert.deepEqual(next.toJSON(), {
+        year: 1970,
+        month: 1,
+        day: 23,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isDate: false,
+        timezone: 'UTC'
+      });
+    });
+
+    test('no next occurrence', function() {
+      var rec = ICAL.Recur.fromString('FREQ=DAILY;INTERVAL=2;UNTIL=1970-01-03T00:00:00Z');
+      var dtstart = ICAL.Time.epochTime.clone();
+      var recId = dtstart.clone();
+      recId.day += 20;
+
+      assert.isNull(rec.getNextOccurrence(dtstart, recId));
+    });
+  });
 
   suite('recur data types', function() {
     test('invalid freq', function() {
@@ -415,36 +455,47 @@ suite('recur', function() {
     });
   });
 
-  test('#toString - round trip', function() {
-    var until = ICAL.Time.epochTime.clone();
-    var data = {
-      interval: 2,
-      wkst: 3,
-      until: until,
-      count: 5,
-      freq: 'YEARLY',
-      parts: {
-        'BYDAY': 'TU',
-        'BYMONTH': '1'
-      }
-    };
+  suite('#toString', function() {
+    test('round trip', function() {
+      var until = ICAL.Time.epochTime.clone();
+      var data = {
+        interval: 2,
+        wkst: 3,
+        until: until,
+        count: 5,
+        freq: 'YEARLY',
+        parts: {
+          'BYDAY': 'TU',
+          'BYMONTH': '1'
+        }
+      };
 
-    var a = new ICAL.Recur(data);
-    var output = a.toString();
-    var b = ICAL.Recur.fromString(output);
+      var a = new ICAL.Recur(data);
+      var output = a.toString();
+      var b = ICAL.Recur.fromString(output);
 
-    assert.ok(a.toString(), 'outputs');
+      assert.ok(a.toString(), 'outputs');
 
-    assert.include(output, ';UNTIL=' + until.toString());
-    // wkst 3 == TU see DOW_MAP
-    assert.include(output, 'WKST=TU');
-    assert.include(output, 'COUNT=5');
-    assert.include(output, 'INTERVAL=2');
-    assert.include(output, 'FREQ=YEARLY');
-    assert.include(output, 'BYMONTH=1');
-    assert.include(output, 'BYDAY=TU');
+      assert.include(output, ';UNTIL=' + until.toString());
+      // wkst 3 == TU see DOW_MAP
+      assert.include(output, 'WKST=TU');
+      assert.include(output, 'COUNT=5');
+      assert.include(output, 'INTERVAL=2');
+      assert.include(output, 'FREQ=YEARLY');
+      assert.include(output, 'BYMONTH=1');
+      assert.include(output, 'BYDAY=TU');
 
-    assert.equal(a.toString(), b.toString(), 'roundtrip equality');
+      assert.equal(a.toString(), b.toString(), 'roundtrip equality');
+    });
+    test('not all props', function() {
+      var until = ICAL.Time.epochTime.clone();
+      var data = {
+        freq: 'YEARLY',
+      };
+
+      var a = new ICAL.Recur(data);
+      assert.equal(a.toString(), 'FREQ=YEARLY');
+    });
   });
 
   suite('ICAL.Recur#icalDayToNumericDay', function() {
@@ -469,6 +520,7 @@ suite('recur', function() {
       }(map));
     }
   });
+
   suite('ICAL.Recur#numericDayToIcalDay', function() {
     var expected = {}
     expected[Time.SUNDAY] = 'SU';
@@ -491,4 +543,4 @@ suite('recur', function() {
     }
   });
 
- });
+});

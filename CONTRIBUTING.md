@@ -22,9 +22,15 @@ to the API should be discussed in an issue beforehand. If you have a bug fix
 that doesn't affect the API or just adds methods and you don't want to waste
 time discussing it, feel free to just send a pull request and we'll see.
 
-When you send a pull request, don't forget to call `make package` to ensure the
+When you send a pull request, don't forget to call `grunt package` to ensure the
 browser build in `build/ical.js` is updated. This should be done in a separate
 commit.
+
+Also, you should check for linter errors and run the tests using `grunt
+linters` and `grunt test-node`. See the next section for details on tests. As
+they take a while, you can skip the performance tests using `grunt
+test-node:unit` and `grunt test-node:acceptance`, but if you are uncertain if
+your change may affect performance, you should run all tests.
 
 Currently the team working on ical.js consists of a very small number of
 voluntary contributors. If you don't get a reply in a timely manner please

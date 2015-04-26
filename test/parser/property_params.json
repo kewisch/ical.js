@@ -4,6 +4,7 @@
       "attendee",
       {
         "role": "REQ-PARTICIPANT;foo",
+        "delegated-from": "mailto:bar@baz.com",
         "partstat": "ACCEPTED",
         "rsvp": "TRUE"
       },

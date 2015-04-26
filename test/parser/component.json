@@ -7,7 +7,7 @@
       [
         [
           "valarm",
-          [["summary", {}, "text", "escaped, comma"]],
+          [["summary", {}, "text", "escaped, comma and; semicolon"]],
           []
         ]
       ]

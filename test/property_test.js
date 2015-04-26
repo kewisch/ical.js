@@ -32,7 +32,7 @@ suite('Property', function() {
         '2012-10-01'
       ],
 
-      decoratedMutliValue: [
+      decoratedMultiValue: [
         'rdate',
         {},
         'date',
@@ -88,6 +88,14 @@ suite('Property', function() {
       subject = new ICAL.Property('dtstart');
       assert.equal(subject.type, 'date-time');
       assert.equal(subject.jCal[2], 'date-time');
+    });
+
+    test('custom design value without defaultType', function() {
+      ICAL.design.property.custom = {};
+      subject = new ICAL.Property('custom');
+      assert.equal(subject.type, ICAL.design.defaultType);
+      assert.equal(subject.jCal[2], ICAL.design.defaultType);
+      delete ICAL.design.property.custom;
     });
 
     test('new property by name (typeless)', function() {
@@ -214,8 +222,6 @@ suite('Property', function() {
 
     assert.ok(!subject.getFirstValue());
     subject.setValue(new ICAL.Time({ year: 2012 }));
-
-    var ical = subject.toICAL();
   });
 
   suite('#getDefaultType', function() {
@@ -259,7 +265,7 @@ suite('Property', function() {
   suite('#getValues', function() {
     test('decorated', function() {
       subject = new ICAL.Property(
-        fixtures.decoratedMutliValue
+        fixtures.decoratedMultiValue
       );
 
       var result = subject.getValues();
@@ -314,6 +320,7 @@ suite('Property', function() {
     test('no values', function() {
       subject = new ICAL.Property(fixtures.noValue);
       assert.deepEqual(subject.getValues(), []);
+      assert.equal(subject.toICAL(), "X-FOO;PROP=prop:");
     });
   });
 
@@ -414,6 +421,13 @@ suite('Property', function() {
       subject.setValue("home");
       assert.deepEqual(subject.getValues(), ["home"]);
       assert.equal(subject.getFirstValue(), "home");
+    });
+
+    test('single-value property setting multiple values', function() {
+      var subject = new ICAL.Property("location");
+      assert.throws(function() {
+        subject.setValues(["foo", "bar"]);
+      }, 'does not not support mulitValue');
     });
   });
 
