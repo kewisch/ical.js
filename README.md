@@ -72,6 +72,12 @@ Chrome or Opera, depending on what you have installed. The tests will pause
 before execution starts so you can set breakpoints and debug the unit tests
 you are working on.
 
+If you run the performance tests comparison will be done between the current
+working version (latest), a previous build of ICAL.js (previous) and the
+unchanged copy of build/ical.js (from the master branch). See
+[the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests) for more
+details.
+
 #### in the browser
 
 Running `grunt test-server` will start a webserver and open the page in your

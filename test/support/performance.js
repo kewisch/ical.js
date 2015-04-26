@@ -3,7 +3,7 @@
  */
 (function(globals) {
 
-  var VERSIONS = ['latest', 'previous'];
+  var VERSIONS = ['latest', 'previous', 'upstream'];
 
   function Context(bench, options) {
     this.bench = bench;
@@ -14,20 +14,35 @@
       }
     }
 
-    if (typeof prefix !== 'undefined') {
-      this.prefix = prefix;
-    }
   }
 
   Context.prototype = {
     prefix: '',
     icalVersion: 'latest',
 
-    icalObject: function() {
-      if (this.icalVersion === 'latest') {
-        return globals.ICAL;
-      } else {
-        return globals['ICAL_' + this.icalVersion];
+    loadICAL: function(callback) {
+      if (this.icalObject) {
+        callback(this.icalObject);
+      } else if (this.icalVersion) {
+        if (this.icalVersion == "latest") {
+          this.icalObject = globals.ICAL;
+          callback(this.icalObject);
+        } else {
+          try {
+            var self = this;
+            testSupport.requireBenchmarkBuild(this.icalVersion, function() {
+              self.icalObject = globals['ICAL_' + self.icalVersion];
+              if (!self.icalObject) {
+                console.log('Version ICAL_' + self.icalVersion + ' not found, skipping');
+              }
+              callback(self.icalObject);
+            });
+          } catch (e) {
+            console.log('Version ICAL_' + this.icalVersion + ' not found, skipping');
+            this.icalObject = null;
+            callback(null);
+          }
+        }
       }
     },
 
@@ -47,7 +62,11 @@
           prefix: versionName + ': '
         });
 
-        suite(context, context.icalObject());
+        context.loadICAL(function(ICAL) {
+          if (ICAL) {
+            suite(context, ICAL);
+          }
+        });
       }, this);
     }
   };

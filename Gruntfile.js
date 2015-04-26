@@ -117,7 +117,64 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('performance-update', function(version) {
+    function copyMaster(callback) {
+      grunt.util.spawn({
+        cmd: 'git',
+        args: ['show', 'master:build/ical.js']
+      }, function(error, result, code) {
+        grunt.file.write(filepath, header + result.stdout + footer);
+        callback();
+      });
+    }
+
+    var filepath = 'build/benchmark/ical_' + version + '.js';
+    var header = "var ICAL_" + version + " = (function() { var ICAL = {};\n" +
+                 "if (typeof global !== 'undefined') global.ICAL_" + version + " = ICAL;\n";
+    var footer = "\nreturn ICAL; }());";
+
+    if (!version) {
+      grunt.fail.fatal('Need to specify build version name or "upstream" as parameter');
+    } else if (version == "upstream") {
+      var done = this.async();
+      grunt.util.spawn({
+        cmd: 'git',
+        args: ['diff', '--shortstat'],
+      }, function(error, result, code) {
+        if (result.stdout.length) {
+          grunt.log.ok('There are git changes, also comparing against master branch');
+          copyMaster(done);
+        } else {
+          grunt.util.spawn({
+            cmd: 'git',
+            args: ['symbolic-ref', 'HEAD']
+          }, function(error, result, code) {
+            var branch = result.stdout.replace('refs/heads/', '');
+            if (branch == 'master') {
+              grunt.log.ok('No git changes, not comparing against master branch');
+              grunt.file.delete(filepath);
+              done();
+            } else {
+              grunt.log.ok('Not on master, also comparing against master branch');
+              copyMaster(done);
+            }
+          });
+        }
+      });
+    } else {
+      grunt.file.copy('build/ical.js', filepath, {
+        process: function(contents) {
+          return header + contents + footer;
+        }
+      });
+      grunt.log.ok('Successfully created ' + filepath);
+    }
+  });
+
   grunt.registerTask('test-node', 'internal', function(arg) {
+    if (!arg || arg == 'performance') {
+      grunt.task.run('performance-update:upstream');
+    }
     if (grunt.option('debug')) {
       var done = this.async();
       var open = require('biased-opener');
