@@ -125,7 +125,7 @@ module.exports = function(grunt) {
   grunt.registerTask('linters', ['jshint', 'gjslint']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-ci', ['linters', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
+  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
   // Additional tasks:
   //   - tests.js: performance-update, test-node, test-browser,
   //   - timezones.js: timezones
