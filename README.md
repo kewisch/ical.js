@@ -30,19 +30,20 @@ subdirectory.
 
 Run: `npm install ical.js`
 
-NOTE: ICAL.js will work with node 0.8.x, but the development dependencies
-contain packages that require a later version. Please use
-`npm install --production ical.js` for node 0.8.x
+ICAL.js has no dependencies and uses fairly basic JavaScript. Therefore, it
+should work in all versions of node and modern browsers. It does use getters
+and setters, so the minimum version of Internet Explorer is 9.
 
 ## Developing
 
-To set up the development environment, run the following steps:
+To contribute to ICAL.js you need to set up the development environment. This
+requires node 0.10.x or later and grunt. Run the following steps to get
+started.
 
     npm install -g grunt-cli  # Might need to run with sudo
     npm install .
 
-This will make sure all dependencies are installed and provide you with all the
-needed tools for working on ICAL.js
+You can now dive into the code, run the tests and check coverage.
 
 ### Tests
 
