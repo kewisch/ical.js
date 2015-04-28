@@ -1,0 +1,3 @@
+--disable=131,110,6
+--nojsdoc
+--strict

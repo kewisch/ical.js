@@ -36,8 +36,8 @@ suite('Component', function() {
 
       assert.equal(newComp.jCal[0], 'vevent');
 
-      assert.ok(!newComp.getAllSubcomponents());
-      assert.ok(!newComp.getAllProperties());
+      assert.length(newComp.getAllSubcomponents(), 0);
+      assert.length(newComp.getAllProperties(), 0);
     });
 
     test("#fromString", function() {
@@ -108,12 +108,23 @@ suite('Component', function() {
       // Claire is actually Bernhard's daughter.
       bernhard.addSubcomponent(claire);
 
+      // Bernhard is happy to hear about his daughter, while Tom goes about to
+      // tell everyone he knows. Claire is devastated and would have rather
+      // found out about this.
+      assert.isFalse(tom.removeSubcomponent(claire));
+
       // Marge knew it all along. What a sad day. Claire is not Tom's daughter,
       // but instead Bernhard's. Tom has no children, and Bernhard is the happy
       // father of his daughter claire.
       assert.equal(claire.parent, bernhard);
       assert.isNull(tom.getFirstSubcomponent());
       assert.equal(bernhard.getFirstSubcomponent(), claire);
+
+      // Feeling depressed, Tom tries to find happyness with a pet, but all he
+      // got was scratches and sadness. That didn't go so well.
+      assert.throws(function() {
+        tom.addProperty("bird");
+      }, 'must instance of ICAL.Property')
     });
 
     test('properties', function() {
@@ -147,7 +158,7 @@ suite('Component', function() {
       assert.isNull(house.parent);
       assert.isNull(otherhouse.parent);
 
-      // What a mess. What do we lern from this testsuite? Infidelity is not a
+      // What a mess. What do we learn from this testsuite? Infidelity is not a
       // good idea. Always be faithful!
     });
   });
@@ -235,7 +246,7 @@ suite('Component', function() {
     test('without components', function() {
       subject = new ICAL.Component(['foo', [], []]);
       assert.equal(subject.name, 'foo');
-      assert.ok(!subject.getAllSubcomponents());
+      assert.length(subject.getAllSubcomponents(), 0);
     });
 
     test('with name from end', function() {
@@ -319,7 +330,7 @@ suite('Component', function() {
     test('all', function() {
       subject.removeAllSubcomponents();
       assert.length(subject.jCal[2], 0);
-      assert.ok(!subject.getAllSubcomponents());
+      assert.length(subject.getAllSubcomponents(), 0);
     });
   });
 

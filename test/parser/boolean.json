@@ -11,6 +11,12 @@
       {},
       "boolean",
       false
+    ],
+    [
+      "x-maybe",
+      {},
+      "boolean",
+      false
     ]
   ],
   []

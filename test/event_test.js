@@ -218,6 +218,13 @@ suite('ICAL.Event', function() {
         );
       });
     });
+
+    test('with strict exceptions', function() {
+      subject = new ICAL.Event(primaryItem, {
+        strictExceptions: true
+      });
+      assert.ok(subject.strictExceptions);
+    });
   });
 
   suite('creating a event', function() {
@@ -313,34 +320,40 @@ suite('ICAL.Event', function() {
         occurs.hour = 13;
         occurs.minutes = 15;
 
-        var details = subject.getOccurrenceDetails(
-          occurs
-        );
+        // Run the following tests twice, the second time around the results
+        // will be cached.
+        for (var i = 0; i < 2; i++) {
+          var suffix = (i == 1 ? " (cached)" : "");
+          var details = subject.getOccurrenceDetails(
+            occurs
+          );
 
-        assert.ok(details, 'has details');
-        assert.equal(details.item, exception, 'uses exception');
+          assert.ok(details, 'has details' + suffix);
+          assert.equal(details.item, exception, 'uses exception' + suffix);
 
-        var expectedStart = occurs.clone();
-        var expectedEnd = occurs.clone();
 
-        // same offset (in different day) as the difference
-        // in the original exception.d
-        expectedStart.hour -= 2;
-        expectedStart.minute += 2;
-        expectedEnd.hour += 1;
-        expectedEnd.minute -= 2;
+          var expectedStart = occurs.clone();
+          var expectedEnd = occurs.clone();
 
-        assert.deepEqual(
-          details.startDate.toJSDate(),
-          expectedStart.toJSDate(),
-          'start time offset'
-        );
+          // same offset (in different day) as the difference
+          // in the original exception.d
+          expectedStart.hour -= 2;
+          expectedStart.minute += 2;
+          expectedEnd.hour += 1;
+          expectedEnd.minute -= 2;
 
-        assert.deepEqual(
-          details.endDate.toJSDate(),
-          expectedEnd.toJSDate(),
-          'end time offset'
-        );
+          assert.deepEqual(
+            details.startDate.toJSDate(),
+            expectedStart.toJSDate(),
+            'start time offset' + suffix
+          );
+
+          assert.deepEqual(
+            details.endDate.toJSDate(),
+            expectedEnd.toJSDate(),
+            'end time offset' + suffix
+          );
+        }
       });
     });
 
@@ -635,143 +648,132 @@ suite('ICAL.Event', function() {
     });
   });
 
-  test('#uid', function() {
-    var expected = primaryItem.getFirstPropertyValue('uid');
-    expected = expected;
-    assert.equal(expected, subject.uid);
-  });
+  suite('date props', function() {
+    [
+      ['dtstart', 'startDate'],
+      ['dtend', 'endDate']
+    ].forEach(function(dateType) {
+      var ical = dateType[0];
+      var prop = dateType[1];
+      var timeProp;
+      var changeTime;
 
-  test('#organizer', function() {
-    var expected = primaryItem.getFirstPropertyValue('organizer');
-    assert.deepEqual(expected, subject.organizer);
-  });
+      suite('#' + prop, function() {
+        var tzid = 'America/Denver';
+        testSupport.useTimezones(tzid);
 
-  [
-    ['dtstart', 'startDate'],
-    ['dtend', 'endDate']
-  ].forEach(function(dateType) {
-    var ical = dateType[0];
-    var prop = dateType[1];
-    var timeProp;
-    var changeTime;
-
-    suite('#' + prop, function() {
-      var tzid = 'America/Denver';
-      testSupport.useTimezones(tzid);
-
-      setup(function() {
-        timeProp = primaryItem.getFirstProperty(ical);
-      });
-
-      test('get', function() {
-        var expected = timeProp.getFirstValue(ical);
-        assert.deepEqual(expected, subject[prop]);
-      });
-
-      function changesTzid(newTzid) {
-        assert.notEqual(
-          timeProp.getFirstValue().zone.tzid,
-          changeTime.zone.tzid,
-          'zones are different'
-        );
-
-        subject[prop] = changeTime;
-        assert.equal(
-          newTzid,
-          timeProp.getParameter('tzid'),
-          'removes timezone id'
-        );
-      }
-
-      test('changing timezone from America/Los_Angeles', function() {
-        changeTime = new ICAL.Time({
-          year: 2012,
-          month: 1,
-          timezone: tzid
+        setup(function() {
+          timeProp = primaryItem.getFirstProperty(ical);
         });
 
-        changesTzid(tzid);
-      });
-
-      test('changing timezone from floating to UTC', function() {
-        timeProp.setValue(new ICAL.Time({
-          year: 2012,
-          month: 1
-        }));
-
-        changeTime = new ICAL.Time({
-          year: 2012,
-          month: 1,
-          timezone: 'Z'
+        test('get', function() {
+          var expected = timeProp.getFirstValue(ical);
+          assert.deepEqual(expected, subject[prop]);
         });
 
-        changesTzid(undefined);
-      });
+        function changesTzid(newTzid) {
+          assert.notEqual(
+            timeProp.getFirstValue().zone.tzid,
+            changeTime.zone.tzid,
+            'zones are different'
+          );
 
-      test('changing timezone to floating', function() {
-        timeProp.setValue(new ICAL.Time({
-          year: 2012,
-          month: 1,
-          timezone: 'Z'
-        }));
+          subject[prop] = changeTime;
+          assert.equal(
+            newTzid,
+            timeProp.getParameter('tzid'),
+            'removes timezone id'
+          );
+        }
 
-        changeTime = new ICAL.Time({
-          year: 2012,
-          month: 1
+        test('changing timezone from America/Los_Angeles', function() {
+          changeTime = new ICAL.Time({
+            year: 2012,
+            month: 1,
+            timezone: tzid
+          });
+
+          changesTzid(tzid);
         });
 
-        changesTzid(undefined);
+        test('changing timezone from floating to UTC', function() {
+          timeProp.setValue(new ICAL.Time({
+            year: 2012,
+            month: 1
+          }));
+
+          changeTime = new ICAL.Time({
+            year: 2012,
+            month: 1,
+            timezone: 'Z'
+          });
+
+          changesTzid(undefined);
+        });
+
+        test('changing timezone to floating', function() {
+          timeProp.setValue(new ICAL.Time({
+            year: 2012,
+            month: 1,
+            timezone: 'Z'
+          }));
+
+          changeTime = new ICAL.Time({
+            year: 2012,
+            month: 1
+          });
+
+          changesTzid(undefined);
+        });
+
       });
 
     });
-
   });
 
-  test('#duration', function() {
-    var end = subject.endDate;
-    var start = subject.startDate;
-    var duration = end.subtractDate(start);
+  suite('remaining properties', function() {
+    function testProperty(prop, changeval) {
+      test('#' + prop, function() {
+        var expected = primaryItem.getFirstPropertyValue(prop);
+        assert.deepEqual(subject[prop], expected);
 
-    assert.deepEqual(
-      subject.duration.toString(),
-      duration.toString()
-    );
-  });
+        subject[prop] = changeval;
+        assert.equal(primaryItem.getFirstPropertyValue(prop), changeval);
+      });
+    }
 
-  test('#sequence', function() {
-    var expected = primaryItem.getFirstPropertyValue('sequence');
-    expected = expected;
+    testProperty('location', 'other');
+    testProperty('summary', 'other');
+    testProperty('description', 'other');
+    testProperty('organizer', 'other');
+    testProperty('uid', 'other');
+    testProperty('sequence', 123);
 
-    assert.deepEqual(subject.sequence, expected);
-  });
+    test('#duration', function() {
+      var end = subject.endDate;
+      var start = subject.startDate;
+      var duration = end.subtractDate(start);
 
-  test('#location', function() {
-    var expected = primaryItem.getFirstPropertyValue('location');
-    expected = expected;
-    assert.deepEqual(expected, subject.location);
-  });
+      assert.deepEqual(
+        subject.duration.toString(),
+        duration.toString()
+      );
+    });
 
-  test('#attendees', function() {
-    var props = primaryItem.getAllProperties('attendee');
-    assert.deepEqual(subject.attendees, props);
-  });
+    test('#attendees', function() {
+      var props = primaryItem.getAllProperties('attendee');
+      assert.deepEqual(subject.attendees, props);
+    });
 
-  test('#summary', function() {
-    var expected = primaryItem.getFirstPropertyValue('summary');
-    expected = expected;
-    assert.deepEqual(subject.summary, expected);
-  });
+    test('#recurrenceId', function() {
+      var subject = new ICAL.Event(exceptions[0]);
+      var expected = exceptions[0].getFirstPropertyValue('recurrence-id');
+      var changeval = exceptions[1].getFirstPropertyValue('recurrence-id');
+      assert.deepEqual(subject.recurrenceId, expected);
 
-  test('#description', function() {
-    var expected = primaryItem.getFirstPropertyValue('description');
-    expected = expected;
-    assert.deepEqual(subject.description, expected);
-  });
-
-  test('#recurrenceId', function() {
-    var subject = new ICAL.Event(exceptions[0]);
-    var expected = exceptions[0].getFirstPropertyValue('recurrence-id');
-    assert.deepEqual(subject.recurrenceId, expected);
+      subject.recurrenceId = changeval;
+      assert.deepEqual(subject.component.getFirstPropertyValue('recurrence-id'), changeval);
+    });
   });
 
   suite('#iterator', function() {

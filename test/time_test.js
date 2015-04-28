@@ -276,11 +276,29 @@ suite('icaltime', function() {
 
     test('floating', function() {
       var date = new Date(2012, 0, 1);
-      var subject = new Time.fromJSDate(date);
+      var subject = Time.fromJSDate(date);
 
       assert.deepEqual(
         subject.toJSDate(),
         date
+      );
+    });
+
+    test('reset', function() {
+      var subject = Time.fromJSDate(null);
+      var expected = {
+        year: 1970,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isDate: false,
+        timezone: "Z"
+      };
+
+      assert.hasProperties(
+        subject, expected
       );
     });
   });
@@ -819,6 +837,31 @@ suite('icaltime', function() {
         after.toJSDate()
       );
     });
+
+    test('with null timezone', function() {
+      var time = new Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 2,
+        minute: 15,
+        second: 1,
+        isDate: false,
+      });
+      time.zone = null;
+
+      var expected = {
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 2,
+        minute: 15,
+        second: 1,
+        isDate: false,
+      };
+
+      assert.deepEqual(time.toJSON(), expected);
+    });
   });
 
   test('calculations', function() {
@@ -846,19 +889,19 @@ suite('icaltime', function() {
       cp.year += 1;
 
       var diff = cp.subtractDate(dt);
-      var yearseconds = (365 + Time.is_leap_year(dt.year)) * 86400;
+      var yearseconds = (365 + Time.isLeapYear(dt.year)) * 86400;
       assert.equal(diff.toSeconds(), yearseconds);
 
       cp = dt.clone();
       cp.year += 2;
       var diff = cp.subtractDate(dt);
-      var yearseconds = (365 + Time.is_leap_year(dt.year) + 365 + Time.is_leap_year(dt.year + 1)) * 86400;
+      var yearseconds = (365 + Time.isLeapYear(dt.year) + 365 + Time.isLeapYear(dt.year + 1)) * 86400;
       assert.equal(diff.toSeconds(), yearseconds);
 
       cp = dt.clone();
       cp.year -= 1;
       var diff = cp.subtractDate(dt);
-      var yearseconds = (365 + Time.is_leap_year(cp.year)) * 86400;
+      var yearseconds = (365 + Time.isLeapYear(cp.year)) * 86400;
       assert.equal(diff.toSeconds(), -yearseconds);
 
       cp = dt.clone();
@@ -998,7 +1041,7 @@ suite('icaltime', function() {
       assert.equal(data.hour, dt.hour);
       assert.equal(data.minute, dt.minute);
       assert.equal(data.second, dt.second);
-      assert.equal(data.leap_year, Time.is_leap_year(dt.year));
+      assert.equal(data.leap_year, Time.isLeapYear(dt.year));
       assert.equal(data.dayOfWeek, dt.dayOfWeek());
       assert.equal(data.dayOfYear, dt.dayOfYear());
       assert.equal(data.startOfWeek, dt.startOfWeek());
@@ -1443,5 +1486,72 @@ suite('icaltime', function() {
 
     time.fromUnixTime(1234567890);
     assert.equal(time.toUnixTime(), 1234567890);
+  });
+
+  suite("static functions", function() {
+    test('daysInMonth', function() {
+      assert.equal(Time.daysInMonth(0, 2011), 30);
+      assert.equal(Time.daysInMonth(2, 2012), 29);
+      assert.equal(Time.daysInMonth(2, 2013), 28);
+      assert.equal(Time.daysInMonth(13, 2014), 30);
+    });
+
+    test('isLeapYear', function() {
+      assert.isTrue(Time.isLeapYear(1752));
+      assert.isTrue(Time.isLeapYear(2000));
+      assert.isTrue(Time.isLeapYear(2004));
+      assert.isFalse(Time.isLeapYear(2100));
+    });
+
+    test('fromDayOfYear', function() {
+      assert.equal(Time.fromDayOfYear(-730, 2001).toICALString(), "19990101");
+      assert.equal(Time.fromDayOfYear(-366, 2001).toICALString(), "19991231");
+      assert.equal(Time.fromDayOfYear(-365, 2001).toICALString(), "20000101");
+      assert.equal(Time.fromDayOfYear(0, 2001).toICALString(), "20001231");
+      assert.equal(Time.fromDayOfYear(365, 2001).toICALString(), "20011231");
+      assert.equal(Time.fromDayOfYear(366, 2001).toICALString(), "20020101");
+      assert.equal(Time.fromDayOfYear(730, 2001).toICALString(), "20021231");
+      assert.equal(Time.fromDayOfYear(731, 2001).toICALString(), "20030101");
+      assert.equal(Time.fromDayOfYear(1095, 2001).toICALString(), "20031231");
+      assert.equal(Time.fromDayOfYear(1096, 2001).toICALString(), "20040101");
+      assert.equal(Time.fromDayOfYear(1461, 2001).toICALString(), "20041231");
+      assert.equal(Time.fromDayOfYear(1826, 2001).toICALString(), "20051231");
+    });
+
+    test('fromStringv2', function() {
+      var subject = Time.fromStringv2("2015-01-01");
+      var expected = {
+        year: 2015,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isDate: true,
+        timezone: "floating"
+      };
+
+      assert.deepEqual(
+        subject.toJSON(), expected
+      );
+    });
+
+    test('weekOneStarts', function() {
+      assert.hasProperties(Time.weekOneStarts(2012), {
+        year: 2012,
+        month: 1,
+        day: 1
+      });
+      assert.hasProperties(Time.weekOneStarts(2012, Time.MONDAY), {
+        year: 2012,
+        month: 1,
+        day: 2
+      });
+      assert.hasProperties(Time.weekOneStarts(2012, Time.SATURDAY), {
+        year: 2012,
+        month: 1,
+        day: 7
+      });
+    });
   });
 });

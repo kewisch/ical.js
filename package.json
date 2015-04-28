@@ -1,6 +1,6 @@
 {
   "name": "ical.js",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Philipp Kewisch",
   "contributors": [
     "Github Contributors (https://github.com/mozilla-comm/ical.js/graphs/contributors)"
@@ -11,7 +11,6 @@
     "type": "git",
     "url": "http://github.com/mozilla-comm/ical.js.git"
   },
-
   "keywords": [
     "calendar",
     "iCalendar",
@@ -20,32 +19,48 @@
     "jCard",
     "parser"
   ],
-  "dependencies" : {},
+  "dependencies": {},
   "devDependencies": {
-    "mocha": "~1.7",
+    "benchmark": "~1.0",
+    "biased-opener": "^0.2.5",
     "chai": "0.5.2",
-    "test-agent": "~0.12",
-    "benchmark": "~1.0"
+    "closure-linter-wrapper": "^0.2.11",
+    "coveralls": "^2.11.2",
+    "grunt": "^0.4.5",
+    "grunt-concurrent": "^1.0.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-coveralls": "^1.0.0",
+    "grunt-gjslint": "^0.1.6",
+    "grunt-mocha-cli": "^1.13.0",
+    "grunt-mocha-istanbul": "^2.4.0",
+    "grunt-node-inspector": "^0.1.6",
+    "istanbul": "^0.3.13",
+    "mocha": "~1.7",
+    "node-static": "~0.5",
+    "open": "0.0.5",
+    "sync-exec": "^0.5.0",
+    "test-agent": "~0.12"
   },
   "license": "MPL-2.0",
   "engine": {
     "node": ">=0.4"
   },
-
   "scripts": {
-    "test": "make test-node"
+    "test": "grunt test-node"
   },
-
   "testling": {
     "files": [
-        "test/helper.js",
-        "test/*_test.js",
-        "test/acceptance/*_test.js"
+      "test/helper.js",
+      "test/*_test.js",
+      "test/acceptance/*_test.js"
     ],
     "browsers": [
-      "ie9", "ie10",
+      "ie9",
+      "ie10",
       "chrome25",
-      "firefox17", "firefox19",
+      "firefox17",
+      "firefox19",
       "safari6"
     ]
   }

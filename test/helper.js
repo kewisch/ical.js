@@ -49,11 +49,12 @@
   /**
    * Requires a benchmark build.
    *
-   * @param {String} number or version of the build (see build/benchmark/.
+   * @param {String} version of the build (see build/benchmark/*)
+   * @param {Function} optional callback called on completion
    */
-  testSupport.requireBenchmarkBuild = function(number) {
-    var path = '/build/benchmark/ical_' + number + '.js';
-    testSupport.require(path);
+  testSupport.requireBenchmarkBuild = function(version, callback) {
+    var path = '/build/benchmark/ical_' + version + '.js';
+    testSupport.require(path, callback);
   };
 
   testSupport.require = function cross_require(file, callback) {
@@ -244,8 +245,6 @@
   };
 
   testSupport.require('/node_modules/benchmark/benchmark.js');
-
-  testSupport.requireBenchmarkBuild('previous');
   testSupport.require('/test/support/performance.js');
 
   // Load it here so its pre-loaded in all suite blocks...

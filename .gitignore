@@ -3,3 +3,5 @@ node_modules
 *.pyc
 tools/tzurl
 zoneinfo
+coverage/
+build/benchmark/ical_upstream.js
