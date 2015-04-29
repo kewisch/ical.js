@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         'helpers.js', 'design.js', 'stringify.js', 'parse.js', 'component.js',
         'property.js', 'utc_offset.js', 'binary.js', 'period.js', 'duration.js',
         'timezone.js', 'timezone_service.js', 'time.js', 'recur.js',
-        'recur_iterator.js', 'recur_expansion.js', 'event.js',
+        'recur_iterator.js', 'recur_expansion.js', 'event.js', 'todo.js',
         'component_parser.js'
       ],
       test: {
