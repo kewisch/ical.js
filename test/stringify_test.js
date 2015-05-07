@@ -58,8 +58,15 @@ suite('ICAL.stringify', function() {
   });
 
   suite('stringify property', function() {
+    test('no explicit default set', function() {
+      var subject = new ICAL.Property('tz', new ICAL.Component('vcard'));
+      subject.setValue(ICAL.UtcOffset.fromString('+0500'));
+
+      var ical = ICAL.stringify.property(subject.toJSON());
+      assert.equal(ical, 'TZ;VALUE=UTC-OFFSET:+0500');
+    });
     test('custom property with no default type', function() {
-      ICAL.design.property.custom = {};
+      ICAL.design.defaultSet.property.custom = {};
       var subject = new ICAL.Property('custom');
       subject.setValue('unescaped, right?');
       assert.equal(subject.toICAL(), 'CUSTOM:unescaped, right?')
@@ -68,16 +75,16 @@ suite('ICAL.stringify', function() {
       subject.setValue(123);
       assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
 
-      delete ICAL.design.property.custom;
+      delete ICAL.design.defaultSet.property.custom;
     });
 
     test('custom property not using default type', function() {
-      ICAL.design.property.custom = { defaultType: 'text' };
+      ICAL.design.defaultSet.property.custom = { defaultType: 'text' };
       var subject = new ICAL.Property('custom');
       subject.resetType('integer');
       subject.setValue(123);
       assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
-      delete ICAL.design.property.custom;
+      delete ICAL.design.defaultSet.property.custom;
     });
 
     test('rfc6868 roundtrip', function() {

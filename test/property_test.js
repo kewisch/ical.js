@@ -3,11 +3,8 @@ suite('Property', function() {
 
   setup(function() {
     fixtures = {
-      component: [
-        'vevent',
-        [],
-        []
-      ],
+      component: [ 'vevent', [], [] ],
+      vcardComponent: ['vcard', [], []],
 
       noValue: [
         'x-foo',
@@ -73,6 +70,23 @@ suite('Property', function() {
       assert.isTrue(
         subject.isMultiValue, 'is multiValue'
       );
+
+      subject = new ICAL.Property('url');
+      assert.isFalse(
+        subject.isMultiValue, 'is not multiValue'
+      );
+    });
+
+    test('structured value', function() {
+      subject = new ICAL.Property('request-status');
+      assert.isTrue(
+        subject.isStructuredValue, 'is structured value'
+      );
+
+      subject = new ICAL.Property('url');
+      assert.isFalse(
+        subject.isStructuredValue, 'is not structured value'
+      );
     });
 
     test('decorated', function() {
@@ -88,14 +102,30 @@ suite('Property', function() {
       subject = new ICAL.Property('dtstart');
       assert.equal(subject.type, 'date-time');
       assert.equal(subject.jCal[2], 'date-time');
+      assert.equal(subject._designSet, ICAL.design.icalendar);
+    });
+
+    test('new vcard property without parent (unknown type)', function() {
+      subject = new ICAL.Property('anniversary');
+      assert.equal(subject.type, 'unknown');
+      assert.equal(subject.jCal[2], 'unknown');
+      assert.equal(subject._designSet, ICAL.design.icalendar);
+    });
+
+    test('new vcard property with vcard parent (known type)', function() {
+      var parent = new ICAL.Component(fixtures.vcardComponent)
+      subject = new ICAL.Property('anniversary', parent);
+      assert.equal(subject.type, 'date-and-or-time');
+      assert.equal(subject.jCal[2], 'date-and-or-time');
+      assert.equal(subject._designSet, ICAL.design.vcard);
     });
 
     test('custom design value without defaultType', function() {
-      ICAL.design.property.custom = {};
+      ICAL.design.defaultSet.property.custom = {};
       subject = new ICAL.Property('custom');
       assert.equal(subject.type, ICAL.design.defaultType);
       assert.equal(subject.jCal[2], ICAL.design.defaultType);
-      delete ICAL.design.property.custom;
+      delete ICAL.design.defaultSet.property.custom;
     });
 
     test('new property by name (typeless)', function() {
@@ -245,7 +275,15 @@ suite('Property', function() {
 
       assert.equal(subject.getFirstValue().icaltype, 'date-time');
       assert.equal(subject.type, 'date-time');
-      assert.isNull(subject.getDefaultType());
+      assert.equal(subject.getDefaultType(), 'unknown');
+    });
+
+    test('vcard type', function() {
+      var parent = new ICAL.Component(fixtures.vcardComponent)
+      var subject = new ICAL.Property('anniversary', parent);
+      subject.resetType('text');
+
+      assert.equal(subject.getDefaultType(), 'date-and-or-time');
     });
   });
 
@@ -328,7 +366,7 @@ suite('Property', function() {
   suite('#setValues', function() {
     test('decorated value', function() {
       var subject = new ICAL.Property('rdate');
-      var undecorate = ICAL.design.value['date-time'].undecorate;
+      var undecorate = ICAL.design.icalendar.value['date-time'].undecorate;
 
       var values = [
         new ICAL.Time({ year: 2012, month: 1 }),
@@ -400,7 +438,7 @@ suite('Property', function() {
 
       assert.equal(
         subject.jCal[3],
-        ICAL.design.value['date'].undecorate(time)
+        ICAL.design.icalendar.value['date'].undecorate(time)
       );
 
       assert.equal(

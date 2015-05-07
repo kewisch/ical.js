@@ -12,26 +12,31 @@ suite('parserv2', function() {
   suite('full parser tests', function() {
     var root = 'test/parser/';
     var list = [
-      "rfc",
-      'single_empty_vcalendar',
-      'property_params',
-      'newline_junk',
-      'unfold_properties',
-      'quoted_params',
-      'multivalue',
-      'values',
-      'recur',
-      'base64',
-      'dates',
-      'time',
-      'boolean',
-      'float',
-      'integer',
-      'period',
-      'utc_offset',
-      'component',
-      'tzid_with_gmt',
-      'multiple_root_components'
+      // icalendar tests
+      'rfc.ics',
+      'single_empty_vcalendar.ics',
+      'property_params.ics',
+      'newline_junk.ics',
+      'unfold_properties.ics',
+      'quoted_params.ics',
+      'multivalue.ics',
+      'values.ics',
+      'recur.ics',
+      'base64.ics',
+      'dates.ics',
+      'time.ics',
+      'boolean.ics',
+      'float.ics',
+      'integer.ics',
+      'period.ics',
+      'utc_offset.ics',
+      'component.ics',
+      'tzid_with_gmt.ics',
+      'multiple_root_components.ics',
+
+      // vcard tests
+      'vcard.vcf',
+      'vcard_author.vcf'
     ];
 
     list.forEach(function(path) {
@@ -41,7 +46,7 @@ suite('parserv2', function() {
 
         // fetch ical
         setup(function(done) {
-          testSupport.load(root + path + '.ics', function(err, data) {
+          testSupport.load(root + path, function(err, data) {
             if (err) {
               return done(new Error('failed to load ics'));
             }
@@ -52,7 +57,7 @@ suite('parserv2', function() {
 
         // fetch json
         setup(function(done) {
-          testSupport.load(root + path + '.json', function(err, data) {
+          testSupport.load(root + path.replace(/vcf|ics$/, 'json'), function(err, data) {
             if (err) {
               return done(new Error('failed to load .json'));
             }
@@ -176,7 +181,7 @@ suite('parserv2', function() {
       };
 
       assert.deepEqual(
-        subject._parseParameters(input, 0)[0],
+        subject._parseParameters(input, 0, ICAL.design.defaultSet)[0],
         expected
       );
     });
@@ -186,7 +191,7 @@ suite('parserv2', function() {
     var values = 'woot\\, category,foo,bar,baz';
     var result = [];
     assert.deepEqual(
-      subject._parseMultiValue(values, ',', 'text', result),
+      subject._parseMultiValue(values, ',', 'text', result, null, ICAL.design.defaultSet),
       ['woot, category', 'foo', 'bar', 'baz']
     );
   });
@@ -197,7 +202,7 @@ suite('parserv2', function() {
       var expected = 'start \n next';
 
       assert.equal(
-        subject._parseValue(value, 'text'),
+        subject._parseValue(value, 'text', ICAL.design.defaultSet),
         expected
       );
     });

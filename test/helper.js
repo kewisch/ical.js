@@ -37,6 +37,7 @@
       'timezone',
       'timezone_service',
       'time',
+      'vcard_time',
       'recur',
       'recur_iterator'
     ];
