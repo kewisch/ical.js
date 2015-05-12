@@ -1,6 +1,4 @@
 suite('recur_iterator', function() {
-  var recur;
-  var iterator;
   var Time = ICAL.Time;
   var Recur = ICAL.Recur;
 
@@ -64,14 +62,6 @@ suite('recur_iterator', function() {
     return list;
   }
 
-  function createIterator(ruleString, timeString) {
-    setup(function() {
-      var start = ICAL.Time.fromString(timeString);
-      recur = ICAL.Recur.fromString(ruleString);
-      iterator = recur.iterator(start);
-    });
-  }
-
   function getDaysIn(month) {
     var start = new Date(
       month.getFullYear(),
@@ -86,10 +76,13 @@ suite('recur_iterator', function() {
   }
 
   suite('#toJSON', function() {
-    createIterator(
-      'FREQ=MONTHLY;COUNT=12;INTERVAL=3',
-      '2012-02-01T09:00:00'
-    );
+    var recur, iterator;
+
+    setup(function() {
+      var start = ICAL.Time.fromString('2012-02-01T09:00:00');
+      recur = ICAL.Recur.fromString('FREQ=MONTHLY;COUNT=12;INTERVAL=3');
+      iterator = recur.iterator(start);
+    });
 
     test('completed', function() {
       var next;
@@ -151,10 +144,14 @@ suite('recur_iterator', function() {
   });
 
   suite('#normalizeByMonthDayRules', function() {
-    createIterator(
-      'FREQ=MONTHLY;COUNT=2',
-      '2012-02-01T09:00:00'
-    );
+    var recur, iterator;
+
+    setup(function() {
+      var start = ICAL.Time.fromString('2012-02-01T09:00:00');
+      recur = ICAL.Recur.fromString('FREQ=MONTHLY;COUNT=2');
+      iterator = recur.iterator(start);
+    });
+
     test('positive rules', function() {
       var result = iterator.normalizeByMonthDayRules(
         2012, 2, [21, 15]
@@ -195,1218 +192,691 @@ suite('recur_iterator', function() {
 
       assert.deepEqual(result, [1, 2]);
     });
-
   });
 
-  suite('weekly until', function() {
-    createIterator(
-      'FREQ=WEEKLY;UNTIL=2012-04-24T06:59:59Z;BYDAY=TU',
-      '2012-04-10T09:00:00'
-    );
+  function testRRULE(ruleString, options) {
+    var runner = options.only ? test.only : test;
+    runner(ruleString, function() {
+      if (!options.dtStart) {
+        options.dtStart = options.dates[0];
+      }
 
-    test('until complete', function() {
-      var next;
-      var dates = [];
+      var start = ICAL.Time.fromString(options.dtStart);
+      var recur = ICAL.Recur.fromString(ruleString);
+      var iterator = recur.iterator(start);
 
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      var max = 3;
       var inc = 0;
+      var dates = [];
+      var next, max;
 
-      var expected = [
-        new Date(2012, 3, 10, 9),
-        new Date(2012, 3, 17, 9)
-      ];
+      if ('max' in options) {
+        max = options.max;
+      } else if (recur.isFinite()) {
+        max = options.dates.length + 1;
+      } else {
+        max = options.dates.length;
+      }
+
+      assert.equal(recur.isFinite(), options.byCount || options.until || false);
+      assert.equal(recur.isByCount(), options.byCount || false);
 
       while (inc++ < max && (next = iterator.next())) {
-        var value = next.toJSDate();
-        dates.push(value);
+        dates.push(next.toString());
       }
-
-      assert.deepEqual(dates, expected);
+      assert.deepEqual(dates, options.dates || []);
     });
+  }
+  testRRULE.only = function(ruleString, options) {
+    options.only = true;
+    testRRULE(ruleString, options);
+  };
+
+  //yearly & by month with one by day
+  testRRULE('FREQ=YEARLY;BYMONTH=3;BYDAY=TU', {
+    dtStart: '1970-03-08T02:00:00',
+    dates: [
+      '1970-03-10T02:00:00'
+    ]
   });
 
-  suite('daily on weekdays', function() {
-    createIterator(
-      'FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR',
-      '2012-01-02T09:00:00'
-    );
-
-    test('9 occurrences', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 9;
-      var inc = 0;
-
-      var expected = [
-        new Date(2012, 0, 2, 9),
-        new Date(2012, 0, 3, 9),
-        new Date(2012, 0, 4, 9),
-        new Date(2012, 0, 5, 9),
-        new Date(2012, 0, 6, 9),
-        new Date(2012, 0, 9, 9),
-        new Date(2012, 0, 10, 9),
-        new Date(2012, 0, 11, 9),
-        new Date(2012, 0, 12, 9),
-        new Date(2012, 0, 13, 9)
-      ];
-
-      while (inc <= max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        expected,
-        dates
-      );
-    });
+  //daily for 10 occurrences'
+  testRRULE('FREQ=DAILY;COUNT=10', {
+    byCount: true,
+    dates: [
+      '2012-09-01T09:00:00',
+      '2012-09-02T09:00:00',
+      '2012-09-03T09:00:00',
+      '2012-09-04T09:00:00',
+      '2012-09-05T09:00:00',
+      '2012-09-06T09:00:00',
+      '2012-09-07T09:00:00',
+      '2012-09-08T09:00:00',
+      '2012-09-09T09:00:00',
+      '2012-09-10T09:00:00'
+    ]
   });
 
-  suite('yearly & by month with one by day', function() {
-
-    test('infinite', function() {
-      var raw = 'FREQ=YEARLY;BYMONTH=3;BYDAY=TU';
-      var start = '1970-03-08T02:00:00';
-      var recur = ICAL.Recur.fromString(raw);
-      var start = ICAL.Time.fromString(start);
-
-      var iterator = recur.iterator(start);
-      var limit = 1;
-      var cur = 0;
-
-      var rootDate = new Date(
-        1970, 2
-      );
-
-      while (limit > cur++) {
-        var next = iterator.next();
-        var date = next.toJSDate();
-
-        assert.equal(
-          date.getMonth(), 2,
-          'expected March for year ' + String(1970 + cur)
-        );
-      }
-    });
-
+  //every other day - forever
+  testRRULE('FREQ=DAILY;INTERVAL=2', {
+    dates: [
+      '2012-09-01T09:00:00',
+      '2012-09-03T09:00:00',
+      '2012-09-05T09:00:00',
+      '2012-09-07T09:00:00',
+      '2012-09-09T09:00:00',
+      '2012-09-11T09:00:00',
+      '2012-09-13T09:00:00',
+      '2012-09-15T09:00:00',
+      '2012-09-17T09:00:00',
+      '2012-09-19T09:00:00'
+    ]
   });
 
-  suite('daily for 10 occurrences', function() {
-    createIterator(
-      'FREQ=DAILY;COUNT=10',
-      '2012-09-01T09:00:00'
-    );
-
-    test('until end', function() {
-      var calls = 0;
-      var next;
-
-      assert.isTrue(recur.isFinite(), 'finite');
-      assert.isTrue(recur.isByCount(), 'by count');
-
-      while ((next = iterator.next())) {
-        ++calls;
-        assert.equal(iterator.occurrence_number, calls);
-        assert.deepEqual(
-          new Date(2012, 8, calls, 9),
-          next.toJSDate()
-        );
-      }
-      assert.equal(calls, 10);
-    });
+  // every 10 days, 5 occurrences
+  testRRULE('FREQ=DAILY;INTERVAL=10;COUNT=5', {
+    byCount: true,
+    dates: [
+      '2012-09-01T09:00:00',
+      '2012-09-11T09:00:00',
+      '2012-09-21T09:00:00',
+      '2012-10-01T09:00:00',
+      '2012-10-11T09:00:00'
+    ]
   });
 
-  suite('every other day - forever', function() {
-    createIterator(
-      'FREQ=DAILY;INTERVAL=2',
-      '2012-09-01T09:00:00'
-    );
-
-    test('10 times', function() {
-      assert.isFalse(recur.isFinite(), 'finite');
-      assert.isFalse(recur.isByCount(), 'by count');
-
-      var max = 10;
-      var cur = 0;
-      var next;
-
-      while (cur < max && (next = iterator.next())) {
-        cur++;
-        assert.equal(iterator.occurrence_number, cur);
-        // cur is 1 based we want zero based so -1
-        // 1 + ((cur - 1) * 2) == 1, 3, 5, etc..
-        var nextDay = 1 + ((cur - 1) * 2);
-        assert.deepEqual(
-          next.toJSDate(),
-          new Date(2012, 8, 1 + ((cur - 1) * 2), 9)
-        );
-      }
-    });
+  //every monday in January, for 3 years
+  testRRULE('FREQ=YEARLY;UNTIL=2015-01-31T09:00:00Z;BYMONTH=1;BYDAY=MO', {
+    dtStart: '2012-05-01T09:00:00',
+    until: true,
+    dates: [
+      '2013-01-07T09:00:00',
+      '2013-01-14T09:00:00',
+      '2013-01-21T09:00:00',
+      '2013-01-28T09:00:00',
+      '2014-01-06T09:00:00',
+      '2014-01-13T09:00:00',
+      '2014-01-20T09:00:00',
+      '2014-01-27T09:00:00',
+      '2015-01-05T09:00:00',
+      '2015-01-12T09:00:00',
+      '2015-01-19T09:00:00',
+      '2015-01-26T09:00:00'
+    ]
   });
 
-
-  suite('every 10 days, 5 occurrences', function() {
-    createIterator(
-      'FREQ=DAILY;INTERVAL=10;COUNT=5',
-      '2012-09-01T09:00:00'
-    );
-
-    test('until end', function() {
-      var calls = 0;
-      var next;
-
-      assert.isTrue(recur.isFinite(), 'is finite');
-      assert.isTrue(recur.isByCount(), 'is by count');
-
-      while ((next = iterator.next())) {
-        calls++;
-        assert.equal(iterator.occurrence_number, calls);
-        var expected = new Date(
-          2012,
-          8,
-          1 + ((calls - 1) * 10),
-          9
-        );
-
-        assert.deepEqual(
-          next.toJSDate(),
-          expected
-        );
-      }
-
-      assert.equal(calls, 5);
-    });
+  // weekly until
+  testRRULE('FREQ=WEEKLY;UNTIL=2012-04-24T06:59:59Z;BYDAY=TU', {
+    until: true,
+    dates: [
+      '2012-04-10T09:00:00',
+      '2012-04-17T09:00:00'
+    ]
   });
 
-  suite('every day in January, for 3 years', function() {
-    createIterator(
-      'FREQ=YEARLY;UNTIL=2015-01-31T09:00:00Z;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA',
-      '2012-05-01T09:00:00'
-    );
-
-    var months = [
-      new Date(2013, 0),
-      new Date(2014, 0),
-      new Date(2015, 0)
-    ];
-
-    test('until end', function() {
-      // take list of months and convert each month to an
-      // array of single dates. Then reduce list into
-      // one array of dates.
-      var expected = months.map(getDaysIn).reduce(function(a, b) {
-        return a.concat(b);
-      });
-
-      // then set the hour
-      expected.forEach(function(date) {
-        date.setHours(9);
-      });
-
-      var dates = [];
-      var endDate = ICAL.Time.fromString('2015-01-31T09:00:00Z');
-      var max = expected.length;
-      var calls = 0;
-      var next;
-
-      assert.isTrue(recur.isFinite(), 'is finite');
-      assert.deepEqual(
-        recur.until.toJSDate(),
-        endDate.toJSDate()
-      );
-
-      while ((next = iterator.next())) {
-        if (calls > (max + 90)) {
-          throw new Error(
-            'Too many dates created expected maximum of: ' + max +
-            ' currently at: ' + calls + ''
-          );
-          break;
-        }
-        calls++;
-        dates.push(next.toJSDate());
-      }
-
-      assert.length(dates, expected.length);
-      assert.deepEqual(dates.sort(), expected.sort());
-      assert.equal(calls, expected.length);
-    });
+  //daily on weekdays',
+  testRRULE('FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR', {
+    dates: [
+      '2012-01-02T09:00:00',
+      '2012-01-03T09:00:00',
+      '2012-01-04T09:00:00',
+      '2012-01-05T09:00:00',
+      '2012-01-06T09:00:00',
+      '2012-01-09T09:00:00',
+      '2012-01-10T09:00:00',
+      '2012-01-11T09:00:00',
+      '2012-01-12T09:00:00',
+      '2012-01-13T09:00:00'
+    ]
   });
 
-  suite('weekly for 10 occurrences', function() {
-    createIterator(
-      'FREQ=WEEKLY;COUNT=10',
-      '2012-01-05T09:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 0, 5, 9),
-      new Date(2012, 0, 12, 9),
-      new Date(2012, 0, 19, 9),
-      new Date(2012, 0, 26, 9),
-      new Date(2012, 1, 2, 9),
-      new Date(2012, 1, 9, 9),
-      new Date(2012, 1, 16, 9),
-      new Date(2012, 1, 23, 9),
-      new Date(2012, 2, 1, 9),
-      new Date(2012, 2, 8, 9)
-    ];
-
-    test('until end', function() {
-      assert.isTrue(recur.isFinite(), 'finite');
-      var dates = [];
-      var next;
-
-      while ((next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-    });
+  //weekly for 10 occurrences
+  testRRULE('FREQ=WEEKLY;COUNT=10', {
+    byCount: true,
+    dates: [
+      '2012-01-05T09:00:00',
+      '2012-01-12T09:00:00',
+      '2012-01-19T09:00:00',
+      '2012-01-26T09:00:00',
+      '2012-02-02T09:00:00',
+      '2012-02-09T09:00:00',
+      '2012-02-16T09:00:00',
+      '2012-02-23T09:00:00',
+      '2012-03-01T09:00:00',
+      '2012-03-08T09:00:00'
+    ]
   });
 
-  suite('Weekly until December 24, 2012', function() {
-    createIterator(
-      'FREQ=WEEKLY;UNTIL=2012-12-24T00:00:00Z',
-      '2012-11-15T00:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 10, 15),
-      new Date(2012, 10, 22),
-      new Date(2012, 10, 29),
-      new Date(2012, 11, 6),
-      new Date(2012, 11, 13),
-      new Date(2012, 11, 20)
-    ];
-
-    test('until end', function() {
-      var next;
-      var dates = [];
-
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      while ((next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-    });
+  //Weekly until December 24, 2012'
+  testRRULE('FREQ=WEEKLY;UNTIL=2012-12-24T00:00:00Z', {
+    until: true,
+    dates: [
+      '2012-11-15T00:00:00',
+      '2012-11-22T00:00:00',
+      '2012-11-29T00:00:00',
+      '2012-12-06T00:00:00',
+      '2012-12-13T00:00:00',
+      '2012-12-20T00:00:00'
+    ]
   });
 
-  suite('every other week forever', function() {
-    createIterator(
-      'FREQ=WEEKLY;INTERVAL=2;WKST=SU',
-      '2012-01-15T09:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 0, 15, 9),
-      new Date(2012, 0, 29, 9),
-      new Date(2012, 1, 12, 9),
-    ];
-
-    test(expected.length + ' occurrences', function() {
-      var next;
-      var cur = 0;
-      var max = expected.length;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      while(cur < max && (next = iterator.next())) {
-        dates.push(next.toJSDate())
-        cur++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-    });
+  //every other week forever'
+  testRRULE('FREQ=WEEKLY;INTERVAL=2;WKST=SU', {
+    dates: [
+      '2012-01-15T09:00:00',
+      '2012-01-29T09:00:00',
+      '2012-02-12T09:00:00'
+    ]
   });
 
-  suite('weekly on tuesday and thursday for five weeks', function() {
-    createIterator(
-      'FREQ=WEEKLY;COUNT=4;WKST=SU;BYDAY=TU,TH',
-      '2012-01-01T09:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 0, 3, 9),
-      new Date(2012, 0, 5, 9),
-      new Date(2012, 0, 10, 9),
-      new Date(2012, 0, 12, 9)
-    ];
-
-    test('until end', function() {
-      var next;
-      var dates = [];
-
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      var inc = 0;
-      var max = 10;
-
-      while ((next = iterator.next())) {
-        inc++;
-        if (inc > max) {
-          throw new Error('max');
-        }
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(dates, expected);
-    });
+  //weekly on tuesday and thursday for five weeks
+  testRRULE('FREQ=WEEKLY;COUNT=4;WKST=SU;BYDAY=TU,TH', {
+    dtStart: '2012-01-01T09:00:00',
+    byCount: true,
+    dates: [
+      '2012-01-03T09:00:00',
+      '2012-01-05T09:00:00',
+      '2012-01-10T09:00:00',
+      '2012-01-12T09:00:00'
+    ]
   });
 
-  suite('every other week on mo,we,fi until dec 24th 1997', function() {
-    createIterator(
-      'FREQ=WEEKLY;INTERVAL=2;UNTIL=1997-12-24T09:00:00Z;WKST=SU;BYDAY=MO,WE,FR',
-      '1997-09-01T09:00:00'
-    );
-
-    var expected = [];
-
-    // taken directly from rfc
-    addDates(expected, 1997, 8, [1, 3, 5, 15, 17, 19, 29]);
-    addDates(expected, 1997, 9, [1, 3, 13, 15, 17, 27, 29, 31]);
-    addDates(expected, 1997, 10, [10, 12, 14, 24, 26, 28]);
-    addDates(expected, 1997, 11, [8, 10, 12, 22, 24]);
-
-    test('until end', function() {
-      var dates = [];
-      var next;
-
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      while ((next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-    });
-
+  //every other week on mo,we,fi until dec 24th 1997
+  testRRULE('FREQ=WEEKLY;INTERVAL=2;UNTIL=1997-12-24T09:00:00Z;WKST=SU;BYDAY=MO,WE,FR', {
+    until: true,
+    dates: [
+      '1997-09-01T09:00:00', '1997-09-03T09:00:00', '1997-09-05T09:00:00',
+      '1997-09-15T09:00:00', '1997-09-17T09:00:00', '1997-09-19T09:00:00',
+      '1997-09-29T09:00:00', '1997-10-01T09:00:00', '1997-10-03T09:00:00',
+      '1997-10-13T09:00:00', '1997-10-15T09:00:00', '1997-10-17T09:00:00',
+      '1997-10-27T09:00:00', '1997-10-29T09:00:00', '1997-10-31T09:00:00',
+      '1997-11-10T09:00:00', '1997-11-12T09:00:00', '1997-11-14T09:00:00',
+      '1997-11-24T09:00:00', '1997-11-26T09:00:00', '1997-11-28T09:00:00',
+      '1997-12-08T09:00:00', '1997-12-10T09:00:00', '1997-12-12T09:00:00',
+      '1997-12-22T09:00:00', '1997-12-24T09:00:00'
+    ]
   });
 
-  suite('monthly on first friday for 10 occurrences', function() {
-    createIterator(
-      'FREQ=MONTHLY;COUNT=10;BYDAY=1FR',
-      '2012-01-07T00:00:00'
-    );
+  /* TODO byweekno is not well supported
+  testRRULE.only('FREQ=WEEKLY;BYWEEKNO=2,4,6', {
+    dates: [
+      '2015-01-11T08:00:00', // TODO the first occurrence is given twice
+      '2015-01-12T08:00:00', '2015-01-26T08:00:00', '2015-02-09T08:00:00',
+      '2016-01-11T08:00:00', '2016-01-25T08:00:00', '2016-02-08T08:00:00'
+    ]
+  });
+  */
 
-    var expected = [
-      // note we skipped the first friday of jan
-      // because the start date is _after_ that day.
-      new Date(2012, 1, 3),
-      new Date(2012, 2, 2),
-      new Date(2012, 3, 6),
-      new Date(2012, 4, 4),
-      new Date(2012, 5, 1),
-      new Date(2012, 6, 6),
-      new Date(2012, 7, 3),
-      new Date(2012, 8, 7),
-      new Date(2012, 9, 5),
-      new Date(2012, 10, 2)
-    ];
-
-    test('until end', function() {
-      var next;
-      var dates = [];
-
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      while ((next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-    });
+  //monthly on first friday for 10 occurrences
+  testRRULE('FREQ=MONTHLY;COUNT=10;BYDAY=1FR', {
+    dtStart: '2012-01-07T00:00:00',
+    byCount: true,
+    dates: [
+      '2012-02-03T00:00:00',
+      '2012-03-02T00:00:00',
+      '2012-04-06T00:00:00',
+      '2012-05-04T00:00:00',
+      '2012-06-01T00:00:00',
+      '2012-07-06T00:00:00',
+      '2012-08-03T00:00:00',
+      '2012-09-07T00:00:00',
+      '2012-10-05T00:00:00',
+      '2012-11-02T00:00:00'
+    ]
   });
 
-  suite('every thursday 31th forever', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYDAY=TH;BYMONTHDAY=31',
-      '2012-01-31T09:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 4, 31, 9),
-      new Date(2013, 0, 31, 9),
-      new Date(2013, 9, 31, 9)
-    ];
-
-    test('for 3 occurrences', function() {
-      var next;
-      var dates = [];
-      var inc = 0;
-      var max = 3;
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-    });
+  //every thursday 31th forever'
+  testRRULE('FREQ=MONTHLY;BYDAY=TH;BYMONTHDAY=31', {
+    dtStart: '2012-01-31T09:00:00',
+    dates: [
+      '2012-05-31T09:00:00',
+      '2013-01-31T09:00:00',
+      '2013-10-31T09:00:00'
+    ]
   });
 
-  suite('every other month; first and last sunday for 4 occurrences', function() {
-    createIterator(
-      'FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=1SU,-1SU',
-      '2012-11-01T09:00:00'
-    );
-
-    var expected = [
-      // nov 2012
-      new Date(2012, 10, 4, 9),
-      new Date(2012, 10, 25, 9),
-      // jan 2013
-      new Date(2013, 0, 6, 9),
-      new Date(2013, 0, 27, 9)
-    ];
-
-    test('until end', function() {
-      var next;
-      var dates = [];
-
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      while ((next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(dates, expected);
-    });
+  //every other month; first and last sunday for 4 occurrences
+  testRRULE('FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=1SU,-1SU', {
+    dtStart: '2012-11-01T09:00:00',
+    byCount: true,
+    dates: [
+      '2012-11-04T09:00:00',
+      '2012-11-25T09:00:00',
+      '2013-01-06T09:00:00',
+      '2013-01-27T09:00:00'
+    ]
   });
 
-  suite('monthly third to last day of month forever', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYMONTHDAY=-3',
-      '2012-01-01T09:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 0, 29, 9),
-      new Date(2012, 1, 27, 9),
-      new Date(2012, 2, 29, 9)
-    ];
-
-    test('three occurrences', function() {
-      var next;
-      var max = 3;
-      var cur = 0;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      while (cur++ < max && (next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(dates, expected);
-    });
+  //monthly third to last day of month forever
+  testRRULE('FREQ=MONTHLY;BYMONTHDAY=-3', {
+    dtStart: '2012-01-01T09:00:00',
+    dates: [
+      '2012-01-29T09:00:00',
+      '2012-02-27T09:00:00',
+      '2012-03-29T09:00:00'
+    ]
   });
 
-  suite('weekly WKST changes output', function() {
-
-    suite('MO', function() {
-      createIterator(
-        'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO',
-        '1997-08-05T09:00:00'
-      );
-
-      var expected = [];
-
-      addDates(expected, 1997, 7, [5, 10, 19, 24]);
-
-      test('until end', function() {
-        var dates = [];
-        var next;
-
-        while ((next = iterator.next())) {
-          dates.push(next.toJSDate());
-        }
-
-        assert.deepEqual(dates, expected);
-      });
-    });
-
-    suite('SU', function() {
-      createIterator(
-        'FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=SU',
-        '1997-08-05T09:00:00'
-      );
-
-      var expected = [];
-
-      addDates(expected, 1997, 7, [5, 17, 19, 31]);
-
-      test('until end', function() {
-        var dates = [];
-        var next;
-
-        while ((next = iterator.next())) {
-          dates.push(next.toJSDate());
-        }
-
-        assert.deepEqual(dates, expected);
-      });
-
-    });
+  //weekly WKST changes output'
+  //MO
+  testRRULE('FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=MO', {
+    byCount: true,
+    dates: [
+      '1997-08-05T09:00:00',
+      '1997-08-10T09:00:00',
+      '1997-08-19T09:00:00',
+      '1997-08-24T09:00:00'
+    ]
   });
 
-  suite('monthly, the third instance of tu,we,th', function() {
-    // TODO: we need to fix this case its confirmed failing.
-    return;
-    createIterator(
-      'FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3',
-      '1997-09-04T09:00:00'
-    );
-
-    // taken directly from rfc
-    var expected = [
-      new Date(1997, 8, 4, 9),
-      new Date(1997, 9, 7, 9),
-      new Date(1997, 10, 6, 9)
-    ];
-
-    test('until end', function() {
-      var next;
-      var dates = [];
-
-      assert.isTrue(recur.isFinite(), 'finite');
-
-      while ((next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(dates, expected);
-    });
+  //'weekly WKST changes output'
+  //SU
+  testRRULE('FREQ=WEEKLY;INTERVAL=2;COUNT=4;BYDAY=TU,SU;WKST=SU', {
+    byCount: true,
+    dates: [
+      '1997-08-05T09:00:00',
+      '1997-08-17T09:00:00',
+      '1997-08-19T09:00:00',
+      '1997-08-31T09:00:00'
+    ]
   });
 
-  suite('monthly, each month last day that is monday', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYMONTHDAY=-1;BYDAY=MO',
-      '2012-01-01T09:00:00'
-    );
-
-    var expected = [
-      new Date(2012, 3, 30, 9),
-      new Date(2012, 11, 31, 9)
-    ];
-
-    test(expected.length + ' occurrences', function() {
-      var next;
-      var dates = [];
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = expected.length;
-      var inc = 0;
-
-      while ((inc++ < max) && (next = iterator.next())) {
-        dates.push(next.toJSDate());
-      }
-
-      assert.deepEqual(dates, expected);
-    });
+  // monthly, the third instance of tu,we,th
+  testRRULE('FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3', {
+      byCount: true,
+      dates: [
+        '1997-09-04T09:00:00',
+        '1997-10-07T09:00:00',
+        '1997-11-06T09:00:00'
+      ]
   });
 
-  suite('weekly on tuesday', function() {
-    createIterator(
-      'FREQ=WEEKLY;BYDAY=TU',
-      '2012-09-11T09:00:00'
-    );
-
-    test('for 5 occurrences', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var expected = [
-        new Date(2012, 8, 11, 9),
-        new Date(2012, 8, 18, 9),
-        new Date(2012, 8, 25, 9),
-        new Date(2012, 9, 2, 9),
-        new Date(2012, 9, 9, 9)
-      ];
-
-      var inc = 0;
-      var max = 5;
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //monthly, each month last day that is monday
+  testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;BYDAY=MO', {
+    dtStart: '2012-01-01T09:00:00',
+    dates: [
+      '2012-04-30T09:00:00',
+      '2012-12-31T09:00:00'
+    ]
   });
 
-  suite('buisness days for 50 occurances', function() {
-    createIterator(
-      'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',
-      '2012-01-02T09:00:00'
-    );
-
-    test('for 50 occurances', function() {
-      var next;
-      var dates = [];
-
-      // must start at multiple of 5
-      var max = 50;
-
-      var inc = 0;
-
-      var expected = [];
-      var expectedNum = max;
-      var date = new Date(2012, 0, 2, 9);
-
-      while (expectedNum--) {
-        // save the previous date
-        expected.push(date);
-
-        date = new Date(date.valueOf());
-
-        if ((expectedNum % 5) === 0) {
-          date.setDate(date.getDate() + 3);
-        } else {
-          date.setDate(date.getDate() + 1);
-        }
-      }
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(expected, dates);
-    });
-
+  // weekly on tuesday
+  testRRULE('FREQ=WEEKLY;BYDAY=TU', {
+    dates: [
+      '2012-09-11T09:00:00',
+      '2012-09-18T09:00:00',
+      '2012-09-25T09:00:00',
+      '2012-10-02T09:00:00',
+      '2012-10-09T09:00:00'
+    ]
   });
 
-  suite('every friday 13th forever', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13',
-      '2012-04-01T09:00:00'
-    );
-
-    test('for 3 occurrences', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 3;
-      var inc = 0;
-
-      var expected = [
-        new Date(2012, 3, 13, 9),
-        new Date(2012, 6, 13, 9),
-        new Date(2013, 8, 13, 9)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
-  });
-  suite('Every 11th & 31st every month', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYMONTHDAY=11,31',
-      '2013-04-01T08:00:00'
-    );
-
-    test('for 6 occurrences', function() {
-      var next;
-      var dates = [];
-      
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 6;
-      var inc = 0;
-
-      var expected = [
-        new Date(2013, 3, 11, 8),
-        new Date(2013, 4, 11, 8),
-        new Date(2013, 4, 31, 8),
-        new Date(2013, 5, 11, 8),
-        new Date(2013, 6, 11, 8),
-        new Date(2013, 6, 31, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //buisness days for 31 occurances'
+  testRRULE('FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR', {
+    dates: [
+      '2012-01-02T09:00:00', '2012-01-03T09:00:00', '2012-01-04T09:00:00', '2012-01-05T09:00:00', '2012-01-06T09:00:00',
+      '2012-01-09T09:00:00', '2012-01-10T09:00:00', '2012-01-11T09:00:00', '2012-01-12T09:00:00', '2012-01-13T09:00:00',
+      '2012-01-16T09:00:00', '2012-01-17T09:00:00', '2012-01-18T09:00:00', '2012-01-19T09:00:00', '2012-01-20T09:00:00',
+      '2012-01-23T09:00:00', '2012-01-24T09:00:00', '2012-01-25T09:00:00', '2012-01-26T09:00:00', '2012-01-27T09:00:00',
+      '2012-01-30T09:00:00', '2012-01-31T09:00:00', '2012-02-01T09:00:00', '2012-02-02T09:00:00', '2012-02-03T09:00:00',
+      '2012-02-06T09:00:00', '2012-02-07T09:00:00', '2012-02-08T09:00:00', '2012-02-09T09:00:00', '2012-02-10T09:00:00',
+      '2012-02-13T09:00:00'
+    ]
   });
 
-  suite('Every WE & SA the 6th, 20th & 31st every month', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYDAY=WE,SA;BYMONTHDAY=6,20,31',
-      '2013-07-01T08:00:00'
-    );
-
-    test('for 6 occurrences', function() {
-      var next;
-      var dates = [];
-      
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 6;
-      var inc = 0;
-
-      var expected = [
-        new Date(2013, 6, 6, 8),
-        new Date(2013, 6, 20, 8),
-        new Date(2013, 6, 31, 8),
-        new Date(2013, 7, 31, 8),
-        new Date(2013, 10, 6, 8),
-        new Date(2013, 10, 20, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //every friday 13th forever'
+  testRRULE('FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13', {
+    dtStart: '2012-04-01T09:00:00',
+    dates: [
+      '2012-04-13T09:00:00',
+      '2012-07-13T09:00:00',
+      '2013-09-13T09:00:00'
+    ]
   });
 
-  suite('monthly, on the 3rd, BYMONTHDAY not set', function() {
-    createIterator(
-      'FREQ=MONTHLY',
-      '2013-04-03T08:00:00'
-    );
-
-    test('for 6 occurrences', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 6;
-      var inc = 0;
-
-      var expected = [
-        new Date(2013, 3, 3, 8),
-        new Date(2013, 4, 3, 8),
-        new Date(2013, 5, 3, 8),
-        new Date(2013, 6, 3, 8),
-        new Date(2013, 7, 3, 8),
-        new Date(2013, 8, 3, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //'Every 11th & 31st every month'
+  testRRULE('FREQ=MONTHLY;BYMONTHDAY=11,31', {
+    dtStart: '2013-04-01T08:00:00',
+    dates: [
+      '2013-04-11T08:00:00',
+      '2013-05-11T08:00:00',
+      '2013-05-31T08:00:00',
+      '2013-06-11T08:00:00',
+      '2013-07-11T08:00:00',
+      '2013-07-31T08:00:00'
+    ]
   });
 
-  suite('monthly, on the 31st, BYMONTHDAY not set', function() {
-    createIterator(
-      'FREQ=MONTHLY',
-      '2013-01-31T08:00:00'
-    );
-
-    test('for 6 occurrences', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 6;
-      var inc = 0;
-
-      var expected = [
-        new Date(2013, 0, 31, 8),
-        new Date(2013, 2, 31, 8),
-        new Date(2013, 4, 31, 8),
-        new Date(2013, 6, 31, 8),
-        new Date(2013, 7, 31, 8),
-        new Date(2013, 9, 31, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //Every WE & SA the 6th, 20th & 31st every month
+  testRRULE('FREQ=MONTHLY;BYDAY=WE,SA;BYMONTHDAY=6,20,31', {
+    dtStart: '2013-07-01T08:00:00',
+    dates: [
+      '2013-07-06T08:00:00',
+      '2013-07-20T08:00:00',
+      '2013-07-31T08:00:00',
+      '2013-08-31T08:00:00',
+      '2013-11-06T08:00:00',
+      '2013-11-20T08:00:00'
+    ]
   });
 
-  suite('Every year the last day of February (rule with BYMONTH)', function() {
-    createIterator(
-      'FREQ=YEARLY;BYMONTHDAY=-1;BYMONTH=2',
-      '2014-02-28T08:00:00'
-    );
-
-    test('for 6 occurrences ', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 6;
-      var inc = 0;
-
-      var expected = [
-        new Date(2014, 1, 28, 8),
-        new Date(2015, 1, 28, 8),
-        new Date(2016, 1, 29, 8),
-        new Date(2017, 1, 28, 8),
-        new Date(2018, 1, 28, 8),
-        new Date(2019, 1, 28, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //monthly, on the 3rd, BYMONTHDAY not set
+  testRRULE('FREQ=MONTHLY', {
+    dates: [
+      '2013-04-03T08:00:00',
+      '2013-05-03T08:00:00',
+      '2013-06-03T08:00:00',
+      '2013-07-03T08:00:00',
+      '2013-08-03T08:00:00',
+      '2013-09-03T08:00:00'
+    ]
   });
 
-  suite('Every year the last day of April (rule without BYMONTH)', function() {
-    createIterator(
-      'FREQ=YEARLY;BYMONTHDAY=-1',
-      '2014-04-30T08:00:00'
-    );
-
-    test('for 6 occurrences ', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 6;
-      var inc = 0;
-
-      var expected = [
-        new Date(2014, 3, 30, 8),
-        new Date(2015, 3, 30, 8),
-        new Date(2016, 3, 30, 8),
-        new Date(2017, 3, 30, 8),
-        new Date(2018, 3, 30, 8),
-        new Date(2019, 3, 30, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  // monthly, on the 31st, BYMONTHDAY not set
+  testRRULE('FREQ=MONTHLY', {
+    dates: [
+      '2013-01-31T08:00:00',
+      '2013-03-31T08:00:00',
+      '2013-05-31T08:00:00',
+      '2013-07-31T08:00:00',
+      '2013-08-31T08:00:00',
+      '2013-10-31T08:00:00'
+    ]
   });
 
-  suite('Yearly, every WE and FR of January and March (more BYMONTH and more BYDAY)', function() {
-    createIterator(
-      'FREQ=YEARLY;BYMONTH=1,3;BYDAY=WE,FR',
-      '2014-01-01T08:00:00'
-    );
-
-    test('for all the occurrences on January and March in the first year', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 18;
-      var inc = 0;
-
-      var expected = [
-        new Date(2014, 0, 1, 8),  new Date(2014, 0, 3, 8),
-        new Date(2014, 0, 8, 8),  new Date(2014, 0, 10, 8),
-        new Date(2014, 0, 15, 8), new Date(2014, 0, 17, 8),
-        new Date(2014, 0, 22, 8), new Date(2014, 0, 24, 8),
-        new Date(2014, 0, 29, 8), new Date(2014, 0, 31, 8),
-        new Date(2014, 2, 5, 8),  new Date(2014, 2, 7, 8),
-        new Date(2014, 2, 12, 8), new Date(2014, 2, 14, 8),
-        new Date(2014, 2, 19, 8), new Date(2014, 2, 21, 8),
-        new Date(2014, 2, 26, 8), new Date(2014, 2, 28, 8)
-      ];
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //Every year the last day of February (rule with BYMONTH)
+  testRRULE('FREQ=YEARLY;BYMONTHDAY=-1;BYMONTH=2', {
+    dates: [
+      '2014-02-28T08:00:00',
+      '2015-02-28T08:00:00',
+      '2016-02-29T08:00:00',
+      '2017-02-28T08:00:00',
+      '2018-02-28T08:00:00',
+      '2019-02-28T08:00:00'
+    ]
   });
 
-  suite('Yearly, every day of January (one BYMONTH and more BYDAY)', function() {
-    createIterator(
-      'FREQ=YEARLY;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA',
-      '2014-01-01T08:00:00'
-    );
-
-    test('for 31 occurrences on January in the first year', function() {
-      var next;
-      var date;
-      var dates = [];
-      var expected = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var max = 31;
-      var inc = 0;
-
-      while (inc < max) {
-        date = new Date(2014, 0, inc + 1, 8);
-        expected.push(date);
-        inc++;
-      }
-
-      inc = 0;
-
-      while (inc < max) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //Every year the last day of April (rule without BYMONTH)
+  testRRULE('FREQ=YEARLY;BYMONTHDAY=-1', {
+    dates: [
+      '2014-04-30T08:00:00',
+      '2015-04-30T08:00:00',
+      '2016-04-30T08:00:00',
+      '2017-04-30T08:00:00',
+      '2018-04-30T08:00:00',
+      '2019-04-30T08:00:00'
+    ]
   });
 
-  suite('Repeat Monthly every Wednesday, Friday and the third Monday', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYDAY=3MO,WE,FR',
-      '2015-01-02T08:00:00'
-    );
-
-    var expected = [
-      new Date(2015, 0, 2, 8),
-      new Date(2015, 0, 7, 8),
-      new Date(2015, 0, 9, 8),
-      new Date(2015, 0, 14, 8),
-      new Date(2015, 0, 16, 8),
-      new Date(2015, 0, 19, 8),
-      new Date(2015, 0, 21, 8),
-      new Date(2015, 0, 23, 8)
-    ];
-
-    test('for ' + expected.length + ' occurrences ', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var inc = 0;
-
-      while (inc < expected.length) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  //Yearly, every WE and FR of January and March (more BYMONTH and more BYDAY)
+  testRRULE('FREQ=YEARLY;BYMONTH=1,3;BYDAY=WE,FR', {
+    dates: [
+      '2014-01-01T08:00:00', '2014-01-03T08:00:00',
+      '2014-01-08T08:00:00', '2014-01-10T08:00:00',
+      '2014-01-15T08:00:00', '2014-01-17T08:00:00',
+      '2014-01-22T08:00:00', '2014-01-24T08:00:00',
+      '2014-01-29T08:00:00', '2014-01-31T08:00:00',
+      '2014-03-05T08:00:00', '2014-03-07T08:00:00',
+      '2014-03-12T08:00:00', '2014-03-14T08:00:00',
+      '2014-03-19T08:00:00', '2014-03-21T08:00:00',
+      '2014-03-26T08:00:00', '2014-03-28T08:00:00'
+    ]
   });
 
-  suite('Repeat Monthly, the fifth Saturday (BYDAY=5SA)', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYDAY=5SA',
-      '2015-02-04T08:00:00'
-    );
-
-    var expected = [
-      new Date(2015, 4, 30, 8),
-      new Date(2015, 7, 29, 8),
-      new Date(2015, 9, 31, 8),
-      new Date(2016, 0, 30, 8),
-      new Date(2016, 3, 30, 8),
-      new Date(2016, 6, 30, 8)
-    ];
-
-    test('for ' + expected.length + ' occurrences ', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var inc = 0;
-
-      while (inc < expected.length) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
-  });
-
-  suite('Repeat Monthly, the fifth Wednesday every two months (BYDAY=5WE)', function() {
-    createIterator(
-      'FREQ=MONTHLY;INTERVAL=2;BYDAY=5WE',
+  // Yearly, every day of January (one BYMONTH and more BYDAY
+  testRRULE('FREQ=YEARLY;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA', {
+    dates: [
+      '2014-01-01T08:00:00',
+      '2014-01-02T08:00:00',
+      '2014-01-03T08:00:00',
+      '2014-01-04T08:00:00',
+      '2014-01-05T08:00:00',
+      '2014-01-06T08:00:00',
+      '2014-01-07T08:00:00',
+      '2014-01-08T08:00:00',
+      '2014-01-09T08:00:00',
+      '2014-01-10T08:00:00',
+      '2014-01-11T08:00:00',
+      '2014-01-12T08:00:00',
+      '2014-01-13T08:00:00',
+      '2014-01-14T08:00:00',
+      '2014-01-15T08:00:00',
+      '2014-01-16T08:00:00',
+      '2014-01-17T08:00:00',
+      '2014-01-18T08:00:00',
+      '2014-01-19T08:00:00',
+      '2014-01-20T08:00:00',
+      '2014-01-21T08:00:00',
+      '2014-01-22T08:00:00',
+      '2014-01-23T08:00:00',
+      '2014-01-24T08:00:00',
+      '2014-01-25T08:00:00',
+      '2014-01-26T08:00:00',
+      '2014-01-27T08:00:00',
+      '2014-01-28T08:00:00',
+      '2014-01-29T08:00:00',
+      '2014-01-30T08:00:00',
+      '2014-01-31T08:00:00',
       '2015-01-01T08:00:00'
-    );
-
-    var expected = [
-      new Date(2015, 6, 29, 8),
-      new Date(2015, 8, 30, 8),
-      new Date(2016, 2, 30, 8),
-      new Date(2016, 10, 30, 8),
-      new Date(2017, 2, 29, 8),
-      new Date(2017, 4, 31, 8)
-    ];
-
-    test('for ' + expected.length + ' occurrences ', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var inc = 0;
-
-      while (inc < expected.length) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+    ]
   });
 
-  suite('Repeat Monthly, the 2nd Monday, 5th Wednesday and the 5th to last Saturday every month', function() {
-    createIterator(
-      'FREQ=MONTHLY;BYDAY=2MO,-5WE,5SA',
-      '2015-04-01T08:00:00'
-    );
+  //Repeat Monthly every Wednesday, Friday and the third Monday
+  testRRULE('FREQ=MONTHLY;BYDAY=3MO,WE,FR', {
+    dates: [
+      '2015-01-02T08:00:00',
+      '2015-01-07T08:00:00',
+      '2015-01-09T08:00:00',
+      '2015-01-14T08:00:00',
+      '2015-01-16T08:00:00',
+      '2015-01-19T08:00:00',
+      '2015-01-21T08:00:00',
+      '2015-01-23T08:00:00'
+    ]});
 
-    var expected = [
-      new Date(2015, 3, 1, 8),
-      new Date(2015, 3, 13, 8),
-      new Date(2015, 4, 11, 8),
-      new Date(2015, 4, 30, 8),
-      new Date(2015, 5, 8, 8),
-      new Date(2015, 6, 1, 8),
-      new Date(2015, 6, 13, 8)
-    ];
+  //Repeat Monthly, the fifth Saturday (BYDAY=5SA)
+  testRRULE('FREQ=MONTHLY;BYDAY=5SA', {
+    dtStart: '2015-02-04T08:00:00',
+    dates: [
+      '2015-05-30T08:00:00',
+      '2015-08-29T08:00:00',
+      '2015-10-31T08:00:00',
+      '2016-01-30T08:00:00',
+      '2016-04-30T08:00:00',
+      '2016-07-30T08:00:00'
+   ]
+ });
 
-    test('for ' + expected.length + ' occurrences ', function() {
-      var next;
-      var dates = [];
-
-      assert.isFalse(recur.isFinite(), 'finite');
-
-      var inc = 0;
-
-      while (inc < expected.length) {
-        var value = iterator.next().toJSDate();
-        dates.push(value);
-        inc++;
-      }
-
-      assert.deepEqual(
-        dates,
-        expected
-      );
-
-    });
+  // Repeat Monthly, the fifth Wednesday every two months (BYDAY=5WE)
+  testRRULE('FREQ=MONTHLY;INTERVAL=2;BYDAY=5WE', {
+    dtStart: '2015-01-01T08:00:00',
+    dates: [
+      '2015-07-29T08:00:00',
+      '2015-09-30T08:00:00',
+      '2016-03-30T08:00:00',
+      '2016-11-30T08:00:00',
+      '2017-03-29T08:00:00',
+      '2017-05-31T08:00:00'
+    ]
   });
 
+ //Repeat Monthly, the 2nd Monday, 5th Wednesday and the 5th to last Saturday every month
+  testRRULE('FREQ=MONTHLY;BYDAY=2MO,-5WE,5SA', {
+    dates: [
+      '2015-04-01T08:00:00',
+      '2015-04-13T08:00:00',
+      '2015-05-11T08:00:00',
+      '2015-05-30T08:00:00',
+      '2015-06-08T08:00:00',
+      '2015-07-01T08:00:00',
+      '2015-07-13T08:00:00'
+    ]
+  });
+
+  // Simple secondly
+  testRRULE('FREQ=SECONDLY;INTERVAL=3;COUNT=3', {
+    byCount: true,
+    dates: [
+      '2015-04-30T08:00:00',
+      '2015-04-30T08:00:03',
+      '2015-04-30T08:00:06'
+    ]
+  });
+
+  // Simple minutely
+  testRRULE('FREQ=MINUTELY;INTERVAL=3;COUNT=3', {
+    byCount: true,
+    dates: [
+      '2015-04-30T08:00:00',
+      '2015-04-30T08:03:00',
+      '2015-04-30T08:06:00'
+    ]
+  });
+
+  //simple hourly
+  testRRULE('FREQ=HOURLY;INTERVAL=3;COUNT=3', {
+    byCount: true,
+    dates: [
+      '2015-04-30T08:00:00',
+      '2015-04-30T11:00:00',
+      '2015-04-30T14:00:00'
+    ]
+  });
+
+  // from rfc -> the last work day of the month
+  testRRULE('FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1', {
+    dates: [
+      '2015-06-30T08:00:00',
+      '2015-07-31T08:00:00',
+      '2015-08-31T08:00:00',
+      '2015-09-30T08:00:00',
+      '2015-10-30T08:00:00',
+      '2015-11-30T08:00:00'
+    ]
+  });
+
+  //BYMONTHDAY
+  testRRULE('FREQ=MONTHLY;BYMONTHDAY=1', {
+    dates: [
+      '2015-01-01T08:00:00',
+      '2015-02-01T08:00:00',
+      '2015-03-01T08:00:00'
+    ]
+  });
+
+  // monthly, bymonthday
+  testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1', {
+    dtStart: '2015-01-01T08:00:00',
+    dates: [
+      '2015-01-31T08:00:00',
+      '2015-02-28T08:00:00',
+      '2015-03-31T08:00:00'
+    ]
+  });
+
+  // monthly + by month
+  testRRULE('FREQ=MONTHLY;BYMONTH=1,3,6,9,12', {
+    dates: [
+      '2015-01-01T08:00:00',
+      '2015-03-01T08:00:00',
+      '2015-06-01T08:00:00',
+      '2015-09-01T08:00:00',
+      '2015-12-01T08:00:00'
+    ]
+  });
+
+  //yearly, byMonth, byweekNo
+  /* TODO BYWEEKNO is not well supported
+  testRRULE('FREQ=YEARLY;BYMONTH=6,9;BYWEEKNO=23', {
+    dates: [
+      '2015-06-08T08:00:00',
+      '2016-06-06T08:00:00',
+      '2017-06-05T08:00:00',
+      '2018-06-04T08:00:00'
+    ]
+  });
+
+  //yearly, byMonth, byweekNo negative
+  testRRULE('FREQ=YEARLY;BYMONTH=6,9;BYWEEKNO=-28', {
+    dates: [
+      '2015-06-15T08:00:00',
+      '2016-06-06T08:00:00',
+      '2017-06-05T08:00:00',
+      '2018-06-04T08:00:00'
+    ]
+  });
+
+  //yearly, byweekNo, bymonthday
+  testRRULE('FREQ=YEARLY;BYMONTHDAY=4,5,6,7,8;BYWEEKNO=23', {
+    dates: [
+      '2015-06-08T08:00:00',
+      '2016-06-06T08:00:00',
+      '2016-06-07T08:00:00',
+      '2016-06-08T08:00:00',
+      '2017-06-05T08:00:00',
+      '2017-06-06T08:00:00',
+      '2017-06-07T08:00:00',
+      '2017-06-08T08:00:00',
+      '2018-06-04T08:00:00',
+      '2018-06-05T08:00:00',
+      '2018-06-06T08:00:00',
+      '2018-06-07T08:00:00',
+      '2018-06-08T08:00:00'
+    ]
+  });
+
+  //yearly, negative byweekNo, bymonthday
+  testRRULE('FREQ=YEARLY;BYMONTHDAY=4,5,6,7,8;BYWEEKNO=-28', {
+    dates: [
+      '2016-06-06T08:00:00',
+      '2016-06-07T08:00:00',
+      '2016-06-08T08:00:00',
+      '2017-06-05T08:00:00',
+      '2017-06-06T08:00:00',
+      '2017-06-07T08:00:00',
+      '2017-06-08T08:00:00',
+      '2018-06-04T08:00:00',
+      '2018-06-05T08:00:00',
+      '2018-06-06T08:00:00',
+      '2018-06-07T08:00:00',
+      '2018-06-08T08:00:00'
+    ]
+  });
+
+  //yearly, negative byweekNo, negative bymonthday
+  testRRULE('FREQ=YEARLY;BYMONTHDAY=-27,-26,-25,-24,-23;BYWEEKNO=-28', {
+    dates: [
+      '2016-06-06T08:00:00',
+      '2016-06-07T08:00:00',
+      '2016-06-08T08:00:00',
+      '2017-06-05T08:00:00',
+      '2017-06-06T08:00:00',
+      '2017-06-07T08:00:00',
+      '2017-06-08T08:00:00',
+      '2018-06-04T08:00:00',
+      '2018-06-05T08:00:00',
+      '2018-06-06T08:00:00',
+      '2018-06-07T08:00:00',
+      '2018-06-08T08:00:00'
+    ]
+  });
+  */
+
+  //yearly, byDay, byMonthday -->
+  //First Monday of a year, if it's in the first week
+  testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYWEEKNO=1', {
+    dtStart: '2015-01-01T08:00:00',
+    dates: [
+      //'2016-01-04T08:00:00', // todo should be valid?
+      '2019-01-07T08:00:00',
+      '2020-01-06T08:00:00'
+    ]
+  });
+
+  //yearly, byDay,byMonthday
+  testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYMONTHDAY=7', {
+    dtStart: '2015-01-01T08:00:00',
+    dates: [
+      '2019-01-07T08:00:00'
+    ]
+  });
 });
-
-
