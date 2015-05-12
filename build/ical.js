@@ -5060,25 +5060,30 @@ ICAL.RecurIterator = (function() {
       } else if (this.has_by_data("BYDAY")) {
         var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
         var setpos = 0;
+        var setpos_total = 0;
 
         if (this.has_by_data("BYSETPOS")) {
           var last_day = this.last.day;
           for (var day = 1; day <= daysInMonth; day++) {
             this.last.day = day;
-            if (this.is_day_in_byday(this.last) && day <= last_day) {
-              setpos++;
+            if (this.is_day_in_byday(this.last)) {
+              setpos_total++;
+              if (day <= last_day) {
+                setpos++;
+              }
             }
           }
           this.last.day = last_day;
         }
 
+        data_valid = 0;
         for (var day = this.last.day + 1; day <= daysInMonth; day++) {
           this.last.day = day;
 
           if (this.is_day_in_byday(this.last)) {
             if (!this.has_by_data("BYSETPOS") ||
                 this.check_set_position(++setpos) ||
-                this.check_set_position(setpos - this.by_data.BYSETPOS.length - 1)) {
+                this.check_set_position(setpos - setpos_total - 1)) {
 
               data_valid = 1;
               break;
