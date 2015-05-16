@@ -1,0 +1,16 @@
+[
+  { "freq": "DAILY" },
+  { "freq": "DAILY", "byday": ["MO", "TU", "WE", "TH", "FR"] },
+  { "freq": "WEEKLY" },
+  { "freq": "WEEKLY", "interval": 2 },
+  { "freq": "MONTHLY" },
+  { "freq": "YEARLY" },
+
+  { "freq": "WEEKLY", "byday": "%" },
+
+  { "freq": "MONTHLY", "bymonthday": "%" },
+  { "freq": "MONTHLY", "byday": "%" },
+
+  { "freq": "YEARLY", "bymonthday": "%", "bymonth": "%" },
+  { "freq": "YEARLY", "byday": "%", "bymonth": "%" }
+]
