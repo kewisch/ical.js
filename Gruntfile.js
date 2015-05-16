@@ -88,10 +88,21 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        jshintrc: true
+        "globalstrict": true,
+        "eqeqeq": false,
+        "-W041": false,
+        "strict": false,
+        "proto": true,
+        "shadow": true
       },
       lib: {
+        options: {
+          predef: ['ICAL']
+        },
         src: ['<%= libinfo.absfiles %>']
+      },
+      ICALTester: {
+        src: ['tools/ICALTester/**/*.js']
       }
     },
     gjslint: {
@@ -100,6 +111,9 @@ module.exports = function(grunt) {
       },
       lib: {
         src: ['<%= libinfo.absfiles %>']
+      },
+      ICALTester: {
+        src: ['tools/ICALTester/**/*.js']
       }
     }
   });

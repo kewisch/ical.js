@@ -2,6 +2,7 @@
 node_modules
 *.pyc
 tools/tzurl
+tools/libical
 zoneinfo
 coverage/
 build/benchmark/ical_upstream.js
