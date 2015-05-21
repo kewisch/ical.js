@@ -50,7 +50,13 @@ suite('timezone_service', function() {
     test('with invalid type', function() {
       assert.throws(function() {
         subject.register('zzz', 'fff');
-      }, TypeError);
+      }, "timezone must be ICAL.Timezone");
+    });
+    test('with only invalid component', function() {
+      assert.throws(function() {
+        var comp = new ICAL.Component('vtoaster');
+        subject.register(comp);
+      }, "timezone must be ICAL.Timezone");
     });
 
     test('override', function() {

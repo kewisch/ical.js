@@ -63,6 +63,13 @@ suite('design', function() {
 
         assert.equal(value, '20121010');
       });
+      test('#toICAL invalid', function() {
+        var value = subject.toICAL(
+          'wheeeeeeeeeeeeee'
+        );
+
+        assert.equal(value, 'wheeeeeeeeeeeeee');
+      });
 
       test('#(un)decorate (custom timezone)', function() {
         var value = '2012-10-10';
@@ -85,7 +92,6 @@ suite('design', function() {
       });
     });
 
-
     suite('date-time', function() {
       setup(function() {
         subject = subject.value['date-time'];
@@ -105,6 +111,13 @@ suite('design', function() {
           subject.toICAL(expected),
           value
         );
+      });
+      test('#toICAL invalid', function() {
+        var value = subject.toICAL(
+          'wheeeeeeeeeeeeee'
+        );
+
+        assert.equal(value, 'wheeeeeeeeeeeeee');
       });
 
       test('#(un)decorate (utc)', function() {
@@ -165,6 +178,42 @@ suite('design', function() {
           subject.undecorate(decorated),
           undecorated
         );
+      });
+    });
+
+    suite('time', function() {
+      setup(function() {
+        subject = subject.value.time;
+      });
+
+      test('#fromICAL', function() {
+        var value = subject.fromICAL(
+          '232050'
+        );
+
+        assert.equal(value, '23:20:50');
+      });
+      test('#fromICAL invalid', function() {
+        var value = subject.fromICAL(
+          'whoop'
+        );
+
+        assert.equal(value, 'whoop');
+      });
+
+      test('#toICAL', function() {
+        var value = subject.toICAL(
+          '23:20:50'
+        );
+
+        assert.equal(value, '232050');
+      });
+      test('#toICAL invalid', function() {
+        var value = subject.toICAL(
+          'whoop'
+        );
+
+        assert.equal(value, 'whoop');
       });
     });
 

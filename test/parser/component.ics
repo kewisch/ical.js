@@ -3,7 +3,7 @@ BEGIN:VEVENT
 SUMMARY:foo \\n
  bar
 BEGIN:VALARM
-SUMMARY:escaped\, comma and\; semicolon
+SUMMARY:escaped\, comma and\; semicolon\nnewline
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
