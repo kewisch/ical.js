@@ -108,6 +108,9 @@ module.exports = function(grunt) {
     gjslint: {
       options: {
         flags: ['--flagfile .gjslintrc'],
+        reporter: {
+          name: 'console'
+        }
       },
       lib: {
         src: ['<%= libinfo.absfiles %>']
