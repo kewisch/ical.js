@@ -38,10 +38,12 @@ module.exports = function(grunt) {
 
     mocha_istanbul: {
       coverage: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
+        src: ['<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
         options: {
           root: './lib/ical/',
-          mochaOptions: ['--ui', 'tdd']
+          require: ['<%= libinfo.test.head %>'],
+          reporter: 'dot',
+          ui: 'tdd'
         }
       }
     },
@@ -69,20 +71,21 @@ module.exports = function(grunt) {
     mochacli: {
       options: {
         ui: 'tdd',
+        require: ['<%= libinfo.test.head %>'],
         'debug-brk': grunt.option('debug'),
         reporter: grunt.option('reporter') || 'spec'
       },
       performance: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.performance %>']
+        src: ['<%= libinfo.test.performance %>']
       },
       acceptance: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.acceptance %>']
+        src: ['<%= libinfo.test.acceptance %>']
       },
       unit: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>']
+        src: ['<%= libinfo.test.unit %>']
       },
       single: {
-        src: ['<%= libinfo.test.head %>', grunt.option('test')]
+        src: [grunt.option('test')]
       }
     },
 
