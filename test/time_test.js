@@ -45,7 +45,7 @@ suite('icaltime', function() {
       });
 
       // -5
-      assert.equal((time.utcOffset() / 60) / 60, -5);
+      assert.equal(time.utcOffset() / 3600, -5);
 
       assert.equal(
         time.toUnixTime(),
