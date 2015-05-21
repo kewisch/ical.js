@@ -2189,9 +2189,11 @@ ICAL.Property = (function() {
 ICAL.UtcOffset = (function() {
 
   function UtcOffset(aData) {
-    this.hours = aData.hours;
-    this.minutes = aData.minutes;
-    this.factor = aData.factor;
+    if (aData) {
+      this.hours = aData.hours;
+      this.minutes = aData.minutes;
+      this.factor = aData.factor;
+    }
   }
 
   UtcOffset.prototype = {
@@ -2201,6 +2203,22 @@ ICAL.UtcOffset = (function() {
     factor: null,
 
     icaltype: "utc-offset",
+
+    toSeconds: function() {
+      return this.factor * (60 * this.minutes + 3600 * this.hours);
+    },
+
+    fromSeconds: function(aSeconds) {
+      var secs = Math.abs(aSeconds);
+
+      this.factor = aSeconds < 0 ? -1 : 1;
+      this.hours = ICAL.helpers.trunc(secs / 3600);
+
+      secs -= (this.hours * 3600);
+      this.minutes = ICAL.helpers.trunc(secs / 60);
+      return this;
+    },
+
 
     toString: function toString() {
       return (this.factor == 1 ? "+" : "-") +
@@ -2220,6 +2238,11 @@ ICAL.UtcOffset = (function() {
     return new ICAL.UtcOffset(options);
   };
 
+  UtcOffset.fromSeconds = function(aSeconds) {
+    var instance = new UtcOffset();
+    instance.fromSeconds(aSeconds);
+    return instance;
+  };
 
   return UtcOffset;
 
