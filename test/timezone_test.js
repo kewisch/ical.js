@@ -91,7 +91,8 @@ suite('timezone', function() {
       // just before DST
       time: { year: 1980, month: 1, day: 1, hour: 0, minute: 59 },
       offsets: {
-        'Makebelieve/RDATE_test': -4
+        'Makebelieve/RDATE_test': -4,
+        'Makebelieve/RDATE_utc_test': -5
       }
     },
 
@@ -99,7 +100,8 @@ suite('timezone', function() {
       // just after DST
       time: { year: 1980, month: 1, day: 1, hour: 1 },
       offsets: {
-        'Makebelieve/RDATE_test': -5
+        'Makebelieve/RDATE_test': -5,
+        'Makebelieve/RDATE_utc_test': -5
       }
     },
 
@@ -108,7 +110,8 @@ suite('timezone', function() {
       // just before DST
       time: { year: 1990, month: 1, day: 1, hour: 0, minute: 59 },
       offsets: {
-        'Makebelieve/RDATE_test': -4
+        'Makebelieve/RDATE_test': -4,
+        'Makebelieve/RDATE_utc_test': -4
       }
     },
 
@@ -116,7 +119,31 @@ suite('timezone', function() {
       // just after DST
       time: { year: 1990, month: 1, day: 1, hour: 2 },
       offsets: {
-        'Makebelieve/RDATE_test': -5
+        'Makebelieve/RDATE_test': -5,
+        'Makebelieve/RDATE_utc_test': -5
+      }
+    },
+
+    // Edge case timezone where an RRULE with UNTIL in UTC is specified
+    {
+      // Just before DST
+      time: { year: 1975, month: 1, day: 1, hour: 1, minute: 0, second: 0 },
+      offsets: {
+        'Makebelieve/RRULE_UNTIL_test': -5
+      }
+    },
+    {
+      // Just after DST
+      time: { year: 1975, month: 1, day: 1, hour: 3, minute: 0, second: 0 },
+      offsets: {
+        'Makebelieve/RRULE_UNTIL_test': -4
+      }
+    },
+    {
+      // After the RRULE ends
+      time: { year: 1985, month: 1, day: 1, hour: 3, minute: 0, second: 0 },
+      offsets: {
+        'Makebelieve/RRULE_UNTIL_test': -4
       }
     }
   ];
