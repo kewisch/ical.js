@@ -38,10 +38,12 @@ module.exports = function(grunt) {
 
     mocha_istanbul: {
       coverage: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
+        src: ['<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
         options: {
           root: './lib/ical/',
-          mochaOptions: ['--ui', 'tdd']
+          require: ['<%= libinfo.test.head %>'],
+          reporter: 'dot',
+          ui: 'tdd'
         }
       }
     },
@@ -69,20 +71,21 @@ module.exports = function(grunt) {
     mochacli: {
       options: {
         ui: 'tdd',
+        require: ['<%= libinfo.test.head %>'],
         'debug-brk': grunt.option('debug'),
         reporter: grunt.option('reporter') || 'spec'
       },
       performance: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.performance %>']
+        src: ['<%= libinfo.test.performance %>']
       },
       acceptance: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.acceptance %>']
+        src: ['<%= libinfo.test.acceptance %>']
       },
       unit: {
-        src: ['<%= libinfo.test.head %>', '<%= libinfo.test.unit %>']
+        src: ['<%= libinfo.test.unit %>']
       },
       single: {
-        src: ['<%= libinfo.test.head %>', grunt.option('test')]
+        src: [grunt.option('test')]
       }
     },
 
@@ -108,6 +111,9 @@ module.exports = function(grunt) {
     gjslint: {
       options: {
         flags: ['--flagfile .gjslintrc'],
+        reporter: {
+          name: 'console'
+        }
       },
       lib: {
         src: ['<%= libinfo.absfiles %>']
@@ -136,7 +142,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat']);
   grunt.registerTask('coverage', 'mocha_istanbul');
-  grunt.registerTask('linters', ['jshint', 'gjslint']);
+  grunt.registerTask('linters', ['jshint', 'gjslint', 'check-browser-build']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
   grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);

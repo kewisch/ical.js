@@ -58,7 +58,7 @@ suite('Property', function() {
     test('undecorated', function() {
       subject = new ICAL.Property(
         fixtures.textProp,
-        fixtures.component
+        new ICAL.Component(fixtures.component)
       );
 
       assert.equal(subject.jCal, fixtures.textProp);
@@ -78,7 +78,7 @@ suite('Property', function() {
     test('decorated', function() {
       subject = new ICAL.Property(
         fixtures.withParams,
-        fixtures.component
+        new ICAL.Component(fixtures.component)
       );
 
       assert.isTrue(subject.isDecorated);
@@ -113,6 +113,7 @@ suite('Property', function() {
 
       assert.ok(!subject.getFirstValue());
     });
+
     suite('#fromString', function() {
       test('x-prop with known type', function() {
         var prop = ICAL.Property.fromString("X-FOO;VALUE=BOOLEAN:TRUE");

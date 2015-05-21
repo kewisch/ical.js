@@ -85,4 +85,15 @@ suite('ICAL.helpers', function() {
       assert.equal(subject(true), "true");
     });
   });
+
+  suite('#foldline', function() {
+    var subject = ICAL.helpers.foldline;
+
+    test('empty values', function() {
+      assert.strictEqual(subject(null), "");
+      assert.strictEqual(subject(""), "");
+    });
+
+    // Most other cases are covered by other tests
+  });
 });

@@ -36,7 +36,7 @@
     "grunt-mocha-istanbul": "^2.4.0",
     "grunt-node-inspector": "^0.1.6",
     "istanbul": "^0.3.13",
-    "mocha": "~1.7",
+    "mocha": "~2.2",
     "node-static": "~0.5",
     "open": "0.0.5",
     "sync-exec": "^0.5.0",
