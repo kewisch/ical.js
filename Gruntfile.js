@@ -136,6 +136,7 @@ module.exports = function(grunt) {
       options: {
         tagName: 'v<%=version%>',
         tagMessage: 'v<%=version%>',
+        additionalFiles: ['bower.json'],
         github: {
           repo: 'mozilla-comm/ical.js',
           usernameVar: 'GITHUB_USERNAME',
