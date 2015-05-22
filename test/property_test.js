@@ -144,6 +144,18 @@ suite('Property', function() {
       assert.ok(!subject.getFirstValue());
     });
 
+    test('types change when changing design set', function() {
+      var property = new ICAL.Property('fn');
+      var component = new ICAL.Component('vcard');
+
+      assert.equal(property._designSet, ICAL.design.defaultSet);
+      assert.equal(property.type, 'unknown');
+
+      component.addProperty(property);
+      assert.equal(property._designSet, ICAL.design.vcard);
+      assert.equal(property.type, 'text');
+    });
+
     suite('#fromString', function() {
       test('x-prop with known type', function() {
         var prop = ICAL.Property.fromString("X-FOO;VALUE=BOOLEAN:TRUE");
