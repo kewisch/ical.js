@@ -320,7 +320,7 @@ suite('Property', function() {
       );
 
       var result = subject.getValues();
-      assert.length(result, 2);
+      assert.lengthOf(result, 2);
 
       // 2012-10-10
       assert.hasProperties(
@@ -351,7 +351,7 @@ suite('Property', function() {
       );
 
       var result = subject.getValues();
-      assert.length(result, 3);
+      assert.lengthOf(result, 3);
       assert.deepEqual(
         result,
         ['one', 'two', 'three']

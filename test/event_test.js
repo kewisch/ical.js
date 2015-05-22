@@ -518,7 +518,7 @@ suite('ICAL.Event', function() {
         new ICAL.Event(exception);
 
       assert.deepEqual(subject.exceptions, expected);
-      assert.length(subject.rangeExceptions, 0, 'does not add range');
+      assert.lengthOf(subject.rangeExceptions, 0, 'does not add range');
     });
 
     suite('with RANGE=THISANDFUTURE', function() {
@@ -544,7 +544,7 @@ suite('ICAL.Event', function() {
         ];
 
         list.forEach(subject.relateException.bind(subject));
-        assert.length(subject.rangeExceptions, 3);
+        assert.lengthOf(subject.rangeExceptions, 3);
       });
 
       function nthRangeException(nth) {

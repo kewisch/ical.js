@@ -59,8 +59,8 @@ suite('component_parser', function() {
       setupProcess({ parseEvent: false });
 
       test('parse result', function() {
-        assert.length(events, 0);
-        assert.length(timezones, 1);
+        assert.lengthOf(events, 0);
+        assert.lengthOf(timezones, 1);
 
         var tz = timezones[0];
         assert.instanceOf(tz, ICAL.Timezone);
@@ -94,8 +94,8 @@ suite('component_parser', function() {
       setupProcess({ parseTimezone: false });
 
       test('parse result', function() {
-        assert.length(timezones, 0);
-        assert.length(events, 3);
+        assert.lengthOf(timezones, 0);
+        assert.lengthOf(events, 3);
       });
     });
 
@@ -103,7 +103,7 @@ suite('component_parser', function() {
       test('parsing component from string', function(done) {
         var subject = new ICAL.ComponentParser();
         subject.oncomplete = function() {
-          assert.length(events, 3);
+          assert.lengthOf(events, 3);
           done();
         }
         subject.process(icsData);
@@ -111,7 +111,7 @@ suite('component_parser', function() {
       test('parsing component from component', function(done) {
         var subject = new ICAL.ComponentParser();
         subject.oncomplete = function() {
-          assert.length(events, 3);
+          assert.lengthOf(events, 3);
           done();
         }
         var comp = new ICAL.Component(ICAL.parse(icsData));

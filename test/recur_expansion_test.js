@@ -72,8 +72,8 @@ suite('recur_expansion', function() {
         ruleIterators: []
       });
 
-      assert.length(subject.ruleDates, 0);
-      assert.length(subject.exDates, 0);
+      assert.lengthOf(subject.ruleDates, 0);
+      assert.lengthOf(subject.exDates, 0);
       assert.isFalse(subject.complete);
 
       assert.deepEqual(subject.toJSON(), {
@@ -317,7 +317,7 @@ suite('recur_expansion', function() {
       }
 
       assert.deepEqual(dates[0], expected);
-      assert.length(dates, 1);
+      assert.lengthOf(dates, 1);
       assert.isTrue(subject.complete);
 
       // json check

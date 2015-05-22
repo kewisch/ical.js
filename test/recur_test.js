@@ -69,7 +69,7 @@ suite('recur', function() {
       parts: {
         BYMONTHDAY: [20]
       }
-    }, 'For WEEKLYLY recurrences neither BYMONTHDAY nor BYYEARDAY may appear');
+    }, 'For WEEKLY recurrences neither BYMONTHDAY nor BYYEARDAY may appear');
 
     checkThrow({
       freq: 'DAILY',
