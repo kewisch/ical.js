@@ -16,7 +16,7 @@ suite('design', function() {
 
   var subject;
   setup(function() {
-    subject = ICAL.design;
+    subject = ICAL.design.defaultSet;
   });
 
   suite('types', function() {
@@ -214,6 +214,147 @@ suite('design', function() {
         );
 
         assert.equal(value, 'whoop');
+      });
+    });
+
+    suite('vcard date/time types', function() {
+      function testRoundtrip(jcal, ical, props, only) {
+        function testForType(type, valuePrefix, valueSuffix, zone) {
+          var subject = ICAL.design.vcard.value[type];
+          var prefix = valuePrefix || '';
+          var suffix = valueSuffix || '';
+          var jcalvalue = prefix + jcal + suffix;
+          var icalvalue = prefix + ical + suffix.replace(':', '');
+          var zoneName = zone || valueSuffix || "floating";
+
+          test(type + ' ' + zoneName + ' fromICAL/toICAL', function() {
+            assert.equal(subject.fromICAL(icalvalue), jcalvalue);
+            assert.equal(subject.toICAL(jcalvalue), icalvalue);
+          });
+
+          test(type + ' ' + zoneName + ' decorated/undecorated', function() {
+            var prop = new ICAL.Property(['anniversary', {}, type]);
+            var decorated = subject.decorate(jcalvalue, prop);
+            var undecorated = subject.undecorate(decorated);
+
+            assert.hasProperties(decorated._time, props);
+            assert.equal(zoneName, decorated.zone.toString());
+            assert.equal(undecorated, jcalvalue);
+            assert.equal(decorated.toICALString(), icalvalue);
+          });
+        }
+        (only ? suite.only : suite)(jcal, function() {
+
+          if (props.year || props.month || props.day) {
+            testForType('date-and-or-time');
+            if (!props.hour && !props.minute && !props.second) {
+              testForType('date');
+            } else {
+              testForType('date-time');
+            }
+          } else if (props.hour || props.minute || props.second) {
+            if (!props.year && !props.month && !props.day) {
+              testForType('date-and-or-time', 'T');
+              testForType('date-and-or-time', 'T', 'Z', 'UTC');
+              testForType('date-and-or-time', 'T', '-08:00');
+              testForType('date-and-or-time', 'T', '+08:00');
+              testForType('time');
+              testForType('time', null, 'Z', 'UTC');
+              testForType('time', null, '-08:00');
+              testForType('time', null, '+08:00');
+            } else {
+              testForType('date-and-or-time', null);
+              testForType('date-and-or-time', null, 'Z', 'UTC');
+              testForType('date-and-or-time', null, '-08:00');
+              testForType('date-and-or-time', null, '+08:00');
+            }
+          }
+        });
+      }
+      testRoundtrip.only = function(jcal, ical, props) {
+        testRoundtrip(jcal, ical, props, true);
+      };
+
+      // dates
+      testRoundtrip('1985-04-12', '19850412', {
+        year: 1985, month: 4, day: 12,
+        hour: null, minute: null, second: null
+      });
+      testRoundtrip('1985-04', '1985-04', {
+        year: 1985, month: 4, day: null,
+        hour: null, minute: null, second: null
+      });
+      testRoundtrip('1985', '1985', {
+        year: 1985, month: null, day: null,
+        hour: null, minute: null, second: null
+      });
+      testRoundtrip('--04-12', '--0412', {
+        year: null, month: 4, day: 12,
+        hour: null, minute: null, second: null
+      });
+      testRoundtrip('--04', '--04', {
+        year: null, month: 4, day: null,
+        hour: null, minute: null, second: null
+      });
+      testRoundtrip('---12', '---12', {
+        year: null, month: null, day: 12,
+        hour: null, minute: null, second: null
+      });
+
+      // times
+      testRoundtrip('23:20:50', '232050', {
+        year: null, month: null, day: null,
+        hour: 23, minute: 20, second: 50,
+      });
+      testRoundtrip('23:20', '2320', {
+        year: null, month: null, day: null,
+        hour: 23, minute: 20, second: null,
+      });
+      testRoundtrip('23', '23', {
+        year: null, month: null, day: null,
+        hour: 23, minute: null, second: null,
+      });
+      testRoundtrip('-20:50', '-2050', {
+        year: null, month: null, day: null,
+        hour: null, minute: 20, second: 50,
+      });
+      testRoundtrip('-20', '-20', {
+        year: null, month: null, day: null,
+        hour: null, minute: 20, second: null,
+      });
+      testRoundtrip('--50', '--50', {
+        year: null, month: null, day: null,
+        hour: null, minute: null, second: 50,
+      });
+
+      // date-times
+      testRoundtrip('1985-04-12T23:20:50', '19850412T232050', {
+        year: 1985, month: 4, day: 12,
+        hour: 23, minute: 20, second: 50
+      });
+      testRoundtrip('1985-04-12T23:20', '19850412T2320', {
+        year: 1985, month: 4, day: 12,
+        hour: 23, minute: 20, second: null
+      });
+      testRoundtrip('1985-04-12T23', '19850412T23', {
+        year: 1985, month: 4, day: 12,
+        hour: 23, minute: null, second: null
+      });
+      testRoundtrip('--04-12T23:20', '--0412T2320', {
+        year: null, month: 4, day: 12,
+        hour: 23, minute: 20, second: null
+      });
+      testRoundtrip('--04T23:20', '--04T2320', {
+        year: null, month: 4, day: null,
+        hour: 23, minute: 20, second: null
+      });
+      testRoundtrip('---12T23:20', '---12T2320', {
+        year: null, month: null, day: 12,
+        hour: 23, minute: 20, second: null
+      });
+      testRoundtrip('--04T23', '--04T23', {
+        year: null, month: 4, day: null,
+        hour: 23, minute: null, second: null
       });
     });
 
@@ -524,18 +665,12 @@ suite('design', function() {
           var prop = new ICAL.Property("nonstandard");
           assert.equal(prop.type, "unknown");
 
-          ICAL.design.registerProperty("nonstandard", {
+          ICAL.design.defaultSet.property.nonstandard = {
             defaultType: "date-time"
-          });
+          };
 
           prop = new ICAL.Property("nonstandard");
           assert.equal(prop.type, "date-time");
-        });
-
-        test("double property registration", function() {
-          assert.throws(function() {
-            ICAL.design.registerProperty("dtstart", {});
-          }, /already registered/);
         });
 
         test("unknown value type", function() {
@@ -548,14 +683,14 @@ suite('design', function() {
         });
 
         test("newly registered value type", function() {
-          ICAL.design.registerValue("fuzzy", {
+          ICAL.design.defaultSet.value.fuzzy = {
             fromICAL: function(aValue) {
               return aValue.toLowerCase();
             },
             toICAL: function(aValue) {
               return aValue.toUpperCase();
             }
-          });
+          };
 
           var prop = ICAL.Property.fromString("X-PROP;VALUE=FUZZY:WARM");
           assert.equal(prop.name, "x-prop");
@@ -563,28 +698,16 @@ suite('design', function() {
           assert.match(prop.toICAL(), /WARM/);
         });
 
-        test("double value registration", function() {
-          assert.throws(function() {
-            ICAL.design.registerValue("text", {});
-          }, /already registered/);
-        });
-
         test("newly registered parameter", function() {
           var prop = ICAL.Property.fromString("X-PROP;VALS=a,b,c:def");
           var param = prop.getParameter("vals");
           assert.equal(param, "a,b,c");
 
-          ICAL.design.registerParameter("vals", { multiValue: "," });
+          ICAL.design.defaultSet.param.vals = { multiValue: "," };
 
           prop = ICAL.Property.fromString("X-PROP;VALS=a,b,c:def");
           param = prop.getParameter("vals");
-          assert.equal(param, ["a","b","c"]);
-        });
-
-        test("double parameter registration", function() {
-          assert.throws(function() {
-            ICAL.design.registerParameter("rsvp", {});
-          }, /already registered/);
+          assert.deepEqual(param, ["a","b","c"]);
         });
       });
     });
