@@ -125,6 +125,7 @@ module.exports = function(grunt) {
     release: {
       options: {
         tagName: 'v<%=version%>',
+        tagMessage: 'v<%=version%>',
         github: {
           repo: 'mozilla-comm/ical.js',
           usernameVar: 'GITHUB_USERNAME',
