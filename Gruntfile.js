@@ -121,6 +121,14 @@ module.exports = function(grunt) {
       ICALTester: {
         src: ['tools/ICALTester/**/*.js']
       }
+    },
+    release: {
+      options: {
+        tagName: 'v<%=version%>',
+        github: {
+          repo: 'mozilla-comm/ical.js'
+        }
+      }
     }
   });
 
@@ -136,6 +144,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-node-inspector');
+  grunt.loadNpmTasks('grunt-release');
 
   grunt.loadTasks('tasks');
 

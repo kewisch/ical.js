@@ -35,6 +35,7 @@
     "grunt-mocha-cli": "^1.13.0",
     "grunt-mocha-istanbul": "^2.4.0",
     "grunt-node-inspector": "^0.1.6",
+    "grunt-release": "^0.12.0",
     "istanbul": "^0.3.13",
     "mocha": "~2.2",
     "node-static": "~0.5",

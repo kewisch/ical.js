@@ -6,3 +6,4 @@ tools/libical
 zoneinfo
 coverage/
 build/benchmark/ical_upstream.js
+junk/
