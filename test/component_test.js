@@ -36,8 +36,8 @@ suite('Component', function() {
 
       assert.equal(newComp.jCal[0], 'vevent');
 
-      assert.length(newComp.getAllSubcomponents(), 0);
-      assert.length(newComp.getAllProperties(), 0);
+      assert.lengthOf(newComp.getAllSubcomponents(), 0);
+      assert.lengthOf(newComp.getAllProperties(), 0);
     });
 
     test("#fromString", function() {
@@ -224,7 +224,7 @@ suite('Component', function() {
       );
 
       var result = subject.getAllSubcomponents();
-      assert.length(result, comps.length);
+      assert.lengthOf(result, comps.length);
 
       for (var i = 0; i < comps.length; i++) {
         assert.instanceOf(result[i], ICAL.Component);
@@ -236,7 +236,7 @@ suite('Component', function() {
       subject = new ICAL.Component(fixtures.components);
 
       var result = subject.getAllSubcomponents('valarm');
-      assert.length(result, 2);
+      assert.lengthOf(result, 2);
 
       result.forEach(function(item) {
         assert.equal(item.name, 'valarm');
@@ -246,7 +246,7 @@ suite('Component', function() {
     test('without components', function() {
       subject = new ICAL.Component(['foo', [], []]);
       assert.equal(subject.name, 'foo');
-      assert.length(subject.getAllSubcomponents(), 0);
+      assert.lengthOf(subject.getAllSubcomponents(), 0);
     });
 
     test('with name from end', function() {
@@ -322,15 +322,15 @@ suite('Component', function() {
   suite('#removeAllSubcomponents', function() {
     test('with name', function() {
       subject.removeAllSubcomponents('valarm');
-      assert.length(subject.jCal[2], 1);
+      assert.lengthOf(subject.jCal[2], 1);
       assert.equal(subject.jCal[2][0][0], 'vtodo');
-      assert.length(subject.getAllSubcomponents(), 1);
+      assert.lengthOf(subject.getAllSubcomponents(), 1);
     });
 
     test('all', function() {
       subject.removeAllSubcomponents();
-      assert.length(subject.jCal[2], 0);
-      assert.length(subject.getAllSubcomponents(), 0);
+      assert.lengthOf(subject.jCal[2], 0);
+      assert.lengthOf(subject.getAllSubcomponents(), 0);
     });
   });
 
@@ -391,7 +391,7 @@ suite('Component', function() {
 
     test('with name', function() {
       var results = subject.getAllProperties('description');
-      assert.length(results, 2);
+      assert.lengthOf(results, 2);
 
       results.forEach(function(item, i) {
         assert.equal(
@@ -457,7 +457,7 @@ suite('Component', function() {
   test('#updatePropertyWithValue', function() {
     var subject = new ICAL.Component('vevent');
     subject.addPropertyWithValue('description', 'foo');
-    assert.length(subject.getAllProperties(), 1);
+    assert.lengthOf(subject.getAllProperties(), 1);
 
     subject.updatePropertyWithValue('description', 'xxx');
 
@@ -491,7 +491,7 @@ suite('Component', function() {
         first
       );
 
-      assert.length(subject.jCal[1], 2);
+      assert.lengthOf(subject.jCal[1], 2);
     });
 
     test('remove by name', function() {
@@ -507,7 +507,7 @@ suite('Component', function() {
         first
       );
 
-      assert.length(list, 2);
+      assert.lengthOf(list, 2);
     });
   });
 
@@ -517,11 +517,11 @@ suite('Component', function() {
         fixtures.components
       );
 
-      assert.length(subject.jCal[1], 3);
+      assert.lengthOf(subject.jCal[1], 3);
 
       subject.removeAllProperties();
 
-      assert.length(subject.jCal[1], 0);
+      assert.lengthOf(subject.jCal[1], 0);
       assert.ok(!subject.getFirstProperty());
     });
 
@@ -537,7 +537,7 @@ suite('Component', function() {
       );
 
       subject.removeAllProperties('description');
-      assert.length(subject.jCal[1], 1);
+      assert.lengthOf(subject.jCal[1], 1);
 
       var first = subject.getFirstProperty();
 

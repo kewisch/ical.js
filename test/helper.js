@@ -9,16 +9,46 @@
   // lazy defined navigator causes global leak warnings...
 
   var requireBak;
-  var specialRequires = {
-    'chai': requireChai
-  };
 
   testSupport = {
     isNode: (typeof(window) === 'undefined')
   };
 
-  /* cross require */
+  function loadChai(chai) {
+    chai.config.includeStack = true;
+    assert = chai.assert;
+    assert.hasProperties = function chai_hasProperties(given, props, msg) {
+      msg = (typeof(msg) === 'undefined') ? '' : msg + ': ';
 
+      if (props instanceof Array) {
+        props.forEach(function(prop) {
+          assert.ok(
+            (prop in given),
+            msg + 'given should have "' + prop + '" property'
+          );
+        });
+      } else {
+        for (var key in props) {
+          assert.deepEqual(
+            given[key],
+            props[key],
+            msg + ' property equality for (' + key + ') '
+          );
+        }
+      }
+    };
+  }
+
+  // Load chai, and the extra libs we include
+  if (testSupport.isNode) {
+    loadChai(require('chai'));
+  } else {
+    require('/node_modules/chai/chai.js', function() {
+      loadChai(window.chai);
+    });
+  }
+
+  /* cross require */
   testSupport.requireICAL = function() {
     var files = [
       'helpers',
@@ -59,10 +89,6 @@
   };
 
   testSupport.require = function cross_require(file, callback) {
-    if (file in specialRequires) {
-      return specialRequires[file](file, callback);
-    }
-
     if (!(/\.js$/.test(file))) {
       file += '.js';
     }
@@ -136,68 +162,6 @@
       });
     });
   };
-
-  //'chai has no backtraces in ff
-  //this patch will change the error
-  //class used to provide real .stack.
-  function setupChai(chai) {
-    function chaiAssert(expr, msg, negateMsg, expected, actual) {
-      actual = actual || this.obj;
-      var msg = (this.negate ? negateMsg : msg),
-          ok = this.negate ? !expr : expr;
-
-      if (!ok) {
-        throw new Error(
-          // include custom message if available
-          this.msg ? this.msg + ': ' + msg : msg
-        );
-      }
-    }
-    chai.Assertion.prototype.assert = chaiAssert;
-    chai.Assertion.includeStack = true;
-
-
-    assert = chai.assert;
-
-    // XXX: this is a lame way to do this
-    // in reality we need to fix the above upstream
-    // and leverage new chai 1x methods
-
-    assert.hasProperties = function chai_hasProperties(given, props, msg) {
-      msg = (typeof(msg) === 'undefined') ? '' : msg + ': ';
-
-      if (props instanceof Array) {
-        props.forEach(function(prop) {
-          assert.ok(
-            (prop in given),
-            msg + 'given should have "' + prop + '" property'
-          );
-        });
-      } else {
-        for (var key in props) {
-          assert.deepEqual(
-            given[key],
-            props[key],
-            msg + ' property equality for (' + key + ') '
-          );
-        }
-      }
-    };
-  }
-
-  function requireChai(file, callback) {
-    var path;
-    if (testSupport.isNode) {
-      setupChai(require('chai'));
-    } else {
-      require('/node_modules/chai/chai.js', function() {
-        setupChai(chai);
-      });
-    }
-  }
-
-  testSupport.require('chai');
-
 
   /**
    * @param {String} path relative to root (/) of project.
