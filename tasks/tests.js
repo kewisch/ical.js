@@ -150,16 +150,18 @@ module.exports = function(grunt) {
     server.attach(httpServer);
 
     server.expose('test-agent-server.js', function onExpose(){
-      server.use(AgentServer.Responder).
-             use(AgentServer.Broadcast).
-             use(AgentServer.MochaTestEvents).
-             use(AgentServer.BlanketCoverEvents).
-             use(AgentServer.QueueTests).
-             use(AgentServer.StartCoverages).
-             use(AgentServer.EventMirror).
-             use(AgentServer.Watcher);
-
-      server.use(AgentServer.RunnerGrowl);
+      server.use(AgentServer.Responder)
+            .use(AgentServer.Broadcast)
+            .use(AgentServer.MochaTestEvents)
+            .use(AgentServer.BlanketConsoleReporter, {
+               path: 'test-agent-coverage.json',
+               pattern: /([\S]+)/
+             })
+            .use(AgentServer.QueueTests)
+            .use(AgentServer.StartCoverages)
+            .use(AgentServer.EventMirror)
+            .use(AgentServer.Watcher)
+            .use(AgentServer.RunnerGrowl);
     });
     require('open')('http://localhost:' + port + '/test-agent/');
   });

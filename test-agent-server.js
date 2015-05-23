@@ -3,7 +3,7 @@ var Agent = require('test-agent'),
     Apps = Agent.server,
     Suite = Agent.Suite,
     suite = new Suite({
-      path: __dirname,
+      paths: [__dirname],
       testDir: 'test/',
       libDir: 'lib/ical/',
       testSuffix: '_test.js'
