@@ -2476,23 +2476,37 @@ ICAL.Property = (function() {
 ICAL.UtcOffset = (function() {
 
   function UtcOffset(aData) {
-    if (aData) {
-      this.hours = aData.hours;
-      this.minutes = aData.minutes;
-      this.factor = aData.factor;
-    }
+    this.fromData(aData);
   }
 
   UtcOffset.prototype = {
 
-    hours: null,
-    minutes: null,
-    factor: null,
+    hours: 0,
+    minutes: 0,
+    factor: 1,
 
     icaltype: "utc-offset",
 
-    toSeconds: function() {
-      return this.factor * (60 * this.minutes + 3600 * this.hours);
+    /**
+     * Internal uses to indicate that a change has been made and the next read
+     * operation must attempt to normalize the value
+     *
+     * @type {Boolean}
+     * @private
+     */
+    _pendingNormalization: false,
+
+    clone: function() {
+      return ICAL.UtcOffset.fromSeconds(this.toSeconds());
+    },
+
+    fromData: function(aData) {
+      if (aData) {
+        for (var key in aData) {
+          this[key] = aData[key];
+        }
+      }
+      this._normalize();
     },
 
     fromSeconds: function(aSeconds) {
@@ -2506,6 +2520,38 @@ ICAL.UtcOffset = (function() {
       return this;
     },
 
+    toSeconds: function() {
+      return this.factor * (60 * this.minutes + 3600 * this.hours);
+    },
+
+    compare: function icaltime_compare(other) {
+      var a = this.toSeconds();
+      var b = other.toSeconds();
+      return (a > b) - (b > a);
+    },
+
+    _normalize: function() {
+      // Range: 97200 seconds (with 1 hour inbetween)
+      var secs = this.toSeconds();
+      var factor = this.factor;
+      while (secs < -43200) { // = UTC-12:00
+        secs += 97200;
+      }
+      while (secs > 50400) { // = UTC+14:00
+        secs -= 97200;
+      }
+
+      this.fromSeconds(secs);
+
+      // Avoid changing the factor when on zero seconds
+      if (secs == 0) {
+        this.factor = factor;
+      }
+    },
+
+    toICALString: function() {
+      return ICAL.design.icalendar.value['utc-offset'].toICAL(this.toString());
+    },
 
     toString: function toString() {
       return (this.factor == 1 ? "+" : "-") +
