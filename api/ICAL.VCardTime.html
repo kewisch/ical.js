@@ -1,0 +1,5754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>VCardTime - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ICAL.Binary.html">Binary</a><ul class='methods'><li data-type='method'><a href="ICAL.Binary.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Binary.html#decodeValue">decodeValue</a></li><li data-type='method'><a href="ICAL.Binary.html#setEncodedValue">setEncodedValue</a></li><li data-type='method'><a href="ICAL.Binary.html#toString">toString</a></li></ul></li><li><a href="ICAL.Component.html">Component</a><ul class='methods'><li data-type='method'><a href="ICAL.Component.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Component.html#addProperty">addProperty</a></li><li data-type='method'><a href="ICAL.Component.html#addPropertyWithValue">addPropertyWithValue</a></li><li data-type='method'><a href="ICAL.Component.html#addSubcomponent">addSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#getAllProperties">getAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#getAllSubcomponents">getAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstProperty">getFirstProperty</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstPropertyValue">getFirstPropertyValue</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstSubcomponent">getFirstSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#hasProperty">hasProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllProperties">removeAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllSubcomponents">removeAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#removeProperty">removeProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeSubcomponent">removeSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Component.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Component.html#updatePropertyWithValue">updatePropertyWithValue</a></li></ul></li><li><a href="ICAL.ComponentParser.html">ComponentParser</a><ul class='methods'><li data-type='method'><a href="ICAL.ComponentParser.html#process">process</a></li></ul></li><li><a href="ICAL.Duration.html">Duration</a><ul class='methods'><li data-type='method'><a href="ICAL.Duration.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Duration.html#.isValueString">isValueString</a></li><li data-type='method'><a href="ICAL.Duration.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Duration.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Duration.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#normalize">normalize</a></li><li data-type='method'><a href="ICAL.Duration.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Duration.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Duration.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#toString">toString</a></li></ul></li><li><a href="ICAL.Event.html">Event</a><ul class='methods'><li data-type='method'><a href="ICAL.Event.html#findRangeException">findRangeException</a></li><li data-type='method'><a href="ICAL.Event.html#getOccurrenceDetails">getOccurrenceDetails</a></li><li data-type='method'><a href="ICAL.Event.html#getRecurrenceTypes">getRecurrenceTypes</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurrenceException">isRecurrenceException</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurring">isRecurring</a></li><li data-type='method'><a href="ICAL.Event.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Event.html#modifiesFuture">modifiesFuture</a></li><li data-type='method'><a href="ICAL.Event.html#relateException">relateException</a></li><li data-type='method'><a href="ICAL.Event.html#toString">toString</a></li></ul></li><li><a href="ICAL.parse.ParserError.html">ParserError</a></li><li><a href="ICAL.Period.html">Period</a><ul class='methods'><li data-type='method'><a href="ICAL.Period.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Period.html#.fromJSON">fromJSON</a></li><li data-type='method'><a href="ICAL.Period.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Period.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Period.html#getDuration">getDuration</a></li><li data-type='method'><a href="ICAL.Period.html#getEnd">getEnd</a></li><li data-type='method'><a href="ICAL.Period.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Period.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Period.html#toString">toString</a></li></ul></li><li><a href="ICAL.Property.html">Property</a><ul class='methods'><li data-type='method'><a href="ICAL.Property.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Property.html#getDefaultType">getDefaultType</a></li><li data-type='method'><a href="ICAL.Property.html#getFirstValue">getFirstValue</a></li><li data-type='method'><a href="ICAL.Property.html#getParameter">getParameter</a></li><li data-type='method'><a href="ICAL.Property.html#getValues">getValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeAllValues">removeAllValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeParameter">removeParameter</a></li><li data-type='method'><a href="ICAL.Property.html#resetType">resetType</a></li><li data-type='method'><a href="ICAL.Property.html#setParameter">setParameter</a></li><li data-type='method'><a href="ICAL.Property.html#setValue">setValue</a></li><li data-type='method'><a href="ICAL.Property.html#setValues">setValues</a></li><li data-type='method'><a href="ICAL.Property.html#toICAL">toICAL</a></li><li data-type='method'><a href="ICAL.Property.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Recur.html">Recur</a><ul class='methods'><li data-type='method'><a href="ICAL.Recur.html#._stringToData">_stringToData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Recur.html#.icalDayToNumericDay">icalDayToNumericDay</a></li><li data-type='method'><a href="ICAL.Recur.html#.numericDayToIcalDay">numericDayToIcalDay</a></li><li data-type='method'><a href="ICAL.Recur.html#addComponent">addComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Recur.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#getComponent">getComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#getNextOccurrence">getNextOccurrence</a></li><li data-type='method'><a href="ICAL.Recur.html#isByCount">isByCount</a></li><li data-type='method'><a href="ICAL.Recur.html#isFinite">isFinite</a></li><li data-type='method'><a href="ICAL.Recur.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Recur.html#setComponent">setComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Recur.html#toString">toString</a></li></ul></li><li><a href="ICAL.RecurExpansion.html">RecurExpansion</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurExpansion.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.RecurIterator.html">RecurIterator</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurIterator.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Time.html">Time</a><ul class='methods'><li data-type='method'><a href="ICAL.Time.html#.daysInMonth">daysInMonth</a></li><li data-type='method'><a href="ICAL.Time.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateString">fromDateString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateTimeString">fromDateTimeString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDayOfYear">fromDayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#.fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromStringv2">fromStringv2</a></li><li data-type='method'><a href="ICAL.Time.html#.isLeapYear">isLeapYear</a></li><li data-type='method'><a href="ICAL.Time.html#.now">now</a></li><li data-type='method'><a href="ICAL.Time.html#.weekOneStarts">weekOneStarts</a></li><li data-type='method'><a href="ICAL.Time.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.Time.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.Time.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Time.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Time.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.Time.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Time.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.Time.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.Time.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Time.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Time.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Time.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.Time.html#weekNumber">weekNumber</a></li></ul></li><li><a href="ICAL.Timezone.html">Timezone</a><ul class='methods'><li data-type='method'><a href="ICAL.Timezone.html#.convert_time">convert_time</a></li><li data-type='method'><a href="ICAL.Timezone.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Timezone.html#utcOffset">utcOffset</a></li></ul></li><li><a href="ICAL.UtcOffset.html">UtcOffset</a><ul class='methods'><li data-type='method'><a href="ICAL.UtcOffset.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#clone">clone</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#compare">compare</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toString">toString</a></li></ul></li><li><a href="ICAL.VCardTime.html">VCardTime</a><ul class='methods'><li data-type='method'><a href="ICAL.VCardTime.html#.fromDateAndOrTimeString">fromDateAndOrTimeString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.VCardTime.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.VCardTime.html#clone">clone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compare">compare</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#reset">reset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toString">toString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#weekNumber">weekNumber</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="ICAL.html">ICAL</a><ul class='methods'><li data-type='method'><a href="ICAL.html#.parsefunction">parse</a></li><li data-type='method'><a href="ICAL.html#.stringifyfunction">stringify</a></li></ul></li><li><a href="ICAL.design.html">design</a><ul class='methods'><li data-type='method'><a href="ICAL.design.html#.getDesignSet">getDesignSet</a></li></ul></li><li><a href="ICAL.helpers.html">helpers</a><ul class='methods'><li data-type='method'><a href="ICAL.helpers.html#.binsearchInsert">binsearchInsert</a></li><li data-type='method'><a href="ICAL.helpers.html#.clone">clone</a></li><li data-type='method'><a href="ICAL.helpers.html#.foldline">foldline</a></li><li data-type='method'><a href="ICAL.helpers.html#.formatClassType">formatClassType</a></li><li data-type='method'><a href="ICAL.helpers.html#.isStrictlyNaN">isStrictlyNaN</a></li><li data-type='method'><a href="ICAL.helpers.html#.pad2">pad2</a></li><li data-type='method'><a href="ICAL.helpers.html#.strictParseInt">strictParseInt</a></li><li data-type='method'><a href="ICAL.helpers.html#.trunc">trunc</a></li><li data-type='method'><a href="ICAL.helpers.html#.unescapedIndexOf">unescapedIndexOf</a></li></ul></li><li><a href="ICAL.parse.html">parse</a><ul class='methods'><li data-type='method'><a href="ICAL.parse.html#._rfc6868Escape">_rfc6868Escape</a></li><li data-type='method'><a href="ICAL.parse.html#.component">component</a></li><li data-type='method'><a href="ICAL.parse.html#.property">property</a></li></ul></li><li><a href="ICAL.stringify.html">stringify</a><ul class='methods'><li data-type='method'><a href="ICAL.stringify.html#.component">component</a></li><li data-type='method'><a href="ICAL.stringify.html#.multiValue">multiValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.property">property</a></li><li data-type='method'><a href="ICAL.stringify.html#.propertyValue">propertyValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.value">value</a></li></ul></li><li><a href="ICAL.TimezoneService.html">TimezoneService</a><ul class='methods'><li data-type='method'><a href="ICAL.TimezoneService.html#.get">get</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.has">has</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.register">register</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.remove">remove</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">VCardTime</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="ICAL.html">ICAL</a>.</span>
+        
+        VCardTime
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="VCardTime"><span class="type-signature"></span>new VCardTime<span class="signature">(data, zone, icaltype)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Describes a vCard time, which has slight differences to the ICAL.Time.
+Properties can be null if not specified, for example for dates with
+reduced accuracy or truncation.
+
+Note that currently not all methods are correctly re-implemented for
+VCardTime. For example, comparison will have undefined results when some
+members are null.
+
+Also, normalization is not yet implemented for this class!
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The data for the time instance
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>year</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The year for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>month</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The month for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>day</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The day for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hour</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The hour for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The minute for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>second</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The second for this date</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>zone</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+|
+
+<span class="param-type"><a href="ICAL.UtcOffset.html">ICAL.UtcOffset</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The timezone to use</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>icaltype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type for this date/time object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="ICAL.Time.html">ICAL.Time</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="icalclass"><span class="type-signature">(constant) </span>icalclass<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    The class identifier.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#icalclass">ICAL.Time#icalclass</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"vcardtime"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="icaltype"><span class="type-signature"></span>icaltype<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    The type name, to be used in the jCal object.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#icaltype">ICAL.Time#icaltype</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"date-and-or-time"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="zone"><span class="type-signature"></span>zone<span class="type-signature"> :<a href="ICAL.Timezone.html">ICAL.Timezone</a>|ICAL.UtcOFfset</span></h4>
+
+
+
+
+<div class="description">
+    The timezone. This can either be floating, UTC, or an instance of
+ICAL.UtcOffset.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+|
+
+<span class="param-type">ICAL.UtcOFfset</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#zone">ICAL.Time#zone</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fromDateAndOrTimeString"><span class="type-signature">(static) </span>fromDateAndOrTimeString<span class="signature">(aValue, aIcalType)</span><span class="type-signature"> &rarr; {<a href="ICAL.VCardTime.html">ICAL.VCardTime</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a new ICAL.VCardTime instance from a date and/or time string.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The string to create from</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aIcalType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type for this instance, e.g. date-and-or-time</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line165">line 165</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The date/time instance
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.VCardTime.html">ICAL.VCardTime</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="addDuration"><span class="type-signature"></span>addDuration<span class="signature">(aDuration)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Adds the duration to the current time. The instance is modified in
+place.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aDuration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The duration to add</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#addDuration">ICAL.Time#addDuration</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line557">line 557</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="adjust"><span class="type-signature"></span>adjust<span class="signature">(aExtraDays, aExtraHours, aExtraMinutes, aExtraSeconds, aTime<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Adjust the date/time by the given offset
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aExtraDays</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The extra amount of days</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aExtraHours</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The extra amount of hours</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aExtraMinutes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The extra amount of minutes</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aExtraSeconds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The extra amount of seconds</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The time to adjust, defaults to the
+                                   current instance.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#adjust">ICAL.Time#adjust</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line757">line 757</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.VCardTime.html">ICAL.VCardTime</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a clone of the vcard date/time object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#clone">ICAL.Time#clone</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line82">line 82</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The cloned object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.VCardTime.html">ICAL.VCardTime</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="compare"><span class="type-signature"></span>compare<span class="signature">(aOther)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Compares the ICAL.Time instance with another one.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aOther</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The instance to compare with</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#compare">ICAL.Time#compare</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line615">line 615</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    -1, 0 or 1 for less/equal/greater
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="compareDateOnlyTz"><span class="type-signature"></span>compareDateOnlyTz<span class="signature">(other, tz)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Compares only the date part of this instance with another one.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>other</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The instance to compare with</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tz</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The timezone to compare in</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#compareDateOnlyTz">ICAL.Time#compareDateOnlyTz</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line631">line 631</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    -1, 0 or 1 for less/equal/greater
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="convertToZone"><span class="type-signature"></span>convertToZone<span class="signature">(zone)</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Convert the instance into another timzone. The returned ICAL.Time
+instance is always a copy.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>zone</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The zone to convert to</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#convertToZone">ICAL.Time#convertToZone</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line653">line 653</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The copy, converted to the zone
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="dayOfWeek"><span class="type-signature"></span>dayOfWeek<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Calculate the day of week.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#dayOfWeek">ICAL.Time#dayOfWeek</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line230">line 230</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="dayOfYear"><span class="type-signature"></span>dayOfYear<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Calculate the day of year.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#dayOfYear">ICAL.Time#dayOfYear</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line259">line 259</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="endOfMonth"><span class="type-signature"></span>endOfMonth<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a copy of the current date/time, shifted to the end of the
+month.  The resulting ICAL.Time instance is of icaltype date, even if
+this is a date-time.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#endOfMonth">ICAL.Time#endOfMonth</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line329">line 329</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The end of the month (cloned)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="endOfWeek"><span class="type-signature"></span>endOfWeek<span class="signature">(aWeekStart<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a copy of the current date/time, shifted to the end of the week.
+The resulting ICAL.Time instance is of icaltype date, even if this is a
+date-time.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aWeekStart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The week start weekday, defaults to SUNDAY</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#endOfWeek">ICAL.Time#endOfWeek</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line294">line 294</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The end of the week (cloned)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="endOfYear"><span class="type-signature"></span>endOfYear<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a copy of the current date/time, shifted to the end of the
+year.  The resulting ICAL.Time instance is of icaltype date, even if
+this is a date-time.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#endOfYear">ICAL.Time#endOfYear</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line364">line 364</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The end of the year (cloned)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fromData"><span class="type-signature"></span>fromData<span class="signature">(aData, aZone<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Sets up the current instance using members from the passed data object.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Time initialization
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>year</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The year for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>month</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The month for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>day</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The day for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hour</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The hour for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The minute for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>second</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The second for this date</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If true, the instance represents a date
+                                   (as opposed to a date-time)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aZone</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Timezone this position occurs in</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#fromData">ICAL.Time#fromData</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line187">line 187</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fromJSDate"><span class="type-signature"></span>fromJSDate<span class="signature">(aDate<span class="signature-attributes">nullable</span>, useUTC)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Set up the current instance from the Javascript date value.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The Javascript Date to read, or null to reset</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>useUTC</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If true, the UTC values of the date will be used</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#fromJSDate">ICAL.Time#fromJSDate</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line147">line 147</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fromUnixTime"><span class="type-signature"></span>fromUnixTime<span class="signature">(seconds)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Sets up the current instance from unix time, the number of seconds since
+January 1st, 1970.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>seconds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The seconds to set up with</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#fromUnixTime">ICAL.Time#fromUnixTime</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line850">line 850</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="isNthWeekDay"><span class="type-signature"></span>isNthWeekDay<span class="signature">(aDayOfWeek, aPos)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Checks if current time is the nth weekday, relative to the current
+month.  Will always return false when rule resolves outside of current
+month.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aDayOfWeek</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Day of week to check</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aPos</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Relative position</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#isNthWeekDay">ICAL.Time#isNthWeekDay</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line486">line 486</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    True, if its the nth weekday
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="nthWeekDay"><span class="type-signature"></span>nthWeekDay<span class="signature">(aDayOfWeek, aPos)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Finds the nthWeekDay relative to the current month (not day).  The
+returned value is a day relative the month that this month belongs to so
+1 would indicate the first of the month and 40 would indicate a day in
+the following month.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aDayOfWeek</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Day of the week see the day name constants</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aPos</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Nth occurrence of a given week day values
+       of 1 and 0 both indicate the first weekday of that type. aPos may
+       be either positive or negative</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#nthWeekDay">ICAL.Time#nthWeekDay</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line404">line 404</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    numeric value indicating a day relative
+                  to the current month of this time object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Reset the time instance to epoch time
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#reset">ICAL.Time#reset</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line112">line 112</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="resetTo"><span class="type-signature"></span>resetTo<span class="signature">(year, month, day, hour, minute, second, timezone)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Reset the time instance to the given date/time values.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>year</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The year to set</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>month</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The month to set</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>day</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The day to set</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hour</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The hour to set</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minute</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The minute to set</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>second</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The second to set</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timezone</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The timezone to set</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#resetTo">ICAL.Time#resetTo</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line128">line 128</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="startDoyWeek"><span class="type-signature"></span>startDoyWeek<span class="signature">(aFirstDayOfWeek<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    First calculates the start of the week, then returns the day of year for
+this date.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aFirstDayOfWeek</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The week start weekday, defaults to SUNDAY</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#startDoyWeek">ICAL.Time#startDoyWeek</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line383">line 383</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The calculated day of year
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="startOfMonth"><span class="type-signature"></span>startOfMonth<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a copy of the current date/time, rewound to the start of the
+month. The resulting ICAL.Time instance is of icaltype date, even if
+this is a date-time.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#startOfMonth">ICAL.Time#startOfMonth</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line312">line 312</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The start of the month (cloned)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="startOfWeek"><span class="type-signature"></span>startOfWeek<span class="signature">(aWeekStart<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a copy of the current date/time, rewound to the start of the
+week. The resulting ICAL.Time instance is of icaltype date, even if this
+is a date-time.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aWeekStart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The week start weekday, defaults to SUNDAY</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#startOfWeek">ICAL.Time#startOfWeek</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line274">line 274</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The start of the week (cloned)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="startOfYear"><span class="type-signature"></span>startOfYear<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a copy of the current date/time, rewound to the start of the
+year. The resulting ICAL.Time instance is of icaltype date, even if
+this is a date-time.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#startOfYear">ICAL.Time#startOfYear</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line346">line 346</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The start of the year (cloned)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="subtractDate"><span class="type-signature"></span>subtractDate<span class="signature">(aDate)</span><span class="type-signature"> &rarr; {<a href="ICAL.Duration.html">ICAL.Duration</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Subtract the date details (_excluding_ timezone).  Useful for finding
+the relative difference between two time objects excluding their
+timezone differences.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The date to substract</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#subtractDate">ICAL.Time#subtractDate</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line591">line 591</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The difference as a duration
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="subtractDateTz"><span class="type-signature"></span>subtractDateTz<span class="signature">(aDate)</span><span class="type-signature"> &rarr; {<a href="ICAL.Duration.html">ICAL.Duration</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Subtract the date details, taking timezones into account.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aDate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The date to subtract</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#subtractDateTz">ICAL.Time#subtractDateTz</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line603">line 603</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The difference in duration
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toICALString"><span class="type-signature"></span>toICALString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns an RFC 6350 compliant representation of this object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#toICALString">ICAL.Time#toICALString</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line106">line 106</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    vcard date/time string
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toJSDate"><span class="type-signature"></span>toJSDate<span class="signature">()</span><span class="type-signature"> &rarr; {Date}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Converts the current instance to a Javascript date
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#toJSDate">ICAL.Time#toJSDate</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line722">line 722</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Date</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toJSON"><span class="type-signature"></span>toJSON<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Converts time to into Object which can be serialized then re-created
+using the constructor.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#toJSON">ICAL.Time#toJSON</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line906">line 906</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// toJSON will automatically be called
+var json = JSON.stringify(mytime);
+
+var deserialized = JSON.parse(json);
+
+var time = new ICAL.Time(deserialized);</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    The string representation of this date/time, in jCard form
+(including : and - separators).
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#toString">ICAL.Time#toString</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line115">line 115</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toUnixTime"><span class="type-signature"></span>toUnixTime<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Converts the current instance to seconds since January 1st 1970.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#toUnixTime">ICAL.Time#toUnixTime</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line870">line 870</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Seconds since 1970
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="utcOffset"><span class="type-signature"></span>utcOffset<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Calculates the UTC offset of the current date/time in the timezone it is
+in.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#utcOffset">ICAL.Time#utcOffset</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line671">line 671</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    UTC offset in seconds
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="weekNumber"><span class="type-signature"></span>weekNumber<span class="signature">(aWeekStart)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Calculates the ISO 8601 week number. If Monday is the week start day,
+the first week of a year is the week that contains the first Thursday.
+The year can have 53 weeks, if January 1st is a Friday.
+
+If the week start is specified as a different weekday, the calculation
+is shifted.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aWeekStart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html#.weekDay">ICAL.Time.weekDay</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The weekday the week starts with</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ICAL.Time.html#weekNumber">ICAL.Time#weekNumber</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="time.js.html">time.js</a>, <a href="time.js.html#line514">line 514</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The ISO week number
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Sun May 24 2015 23:53:52 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

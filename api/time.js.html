@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>time.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ICAL.Binary.html">Binary</a><ul class='methods'><li data-type='method'><a href="ICAL.Binary.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Binary.html#decodeValue">decodeValue</a></li><li data-type='method'><a href="ICAL.Binary.html#setEncodedValue">setEncodedValue</a></li><li data-type='method'><a href="ICAL.Binary.html#toString">toString</a></li></ul></li><li><a href="ICAL.Component.html">Component</a><ul class='methods'><li data-type='method'><a href="ICAL.Component.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Component.html#addProperty">addProperty</a></li><li data-type='method'><a href="ICAL.Component.html#addPropertyWithValue">addPropertyWithValue</a></li><li data-type='method'><a href="ICAL.Component.html#addSubcomponent">addSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#getAllProperties">getAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#getAllSubcomponents">getAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstProperty">getFirstProperty</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstPropertyValue">getFirstPropertyValue</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstSubcomponent">getFirstSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#hasProperty">hasProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllProperties">removeAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllSubcomponents">removeAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#removeProperty">removeProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeSubcomponent">removeSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Component.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Component.html#updatePropertyWithValue">updatePropertyWithValue</a></li></ul></li><li><a href="ICAL.ComponentParser.html">ComponentParser</a><ul class='methods'><li data-type='method'><a href="ICAL.ComponentParser.html#process">process</a></li></ul></li><li><a href="ICAL.Duration.html">Duration</a><ul class='methods'><li data-type='method'><a href="ICAL.Duration.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Duration.html#.isValueString">isValueString</a></li><li data-type='method'><a href="ICAL.Duration.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Duration.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Duration.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#normalize">normalize</a></li><li data-type='method'><a href="ICAL.Duration.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Duration.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Duration.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#toString">toString</a></li></ul></li><li><a href="ICAL.Event.html">Event</a><ul class='methods'><li data-type='method'><a href="ICAL.Event.html#findRangeException">findRangeException</a></li><li data-type='method'><a href="ICAL.Event.html#getOccurrenceDetails">getOccurrenceDetails</a></li><li data-type='method'><a href="ICAL.Event.html#getRecurrenceTypes">getRecurrenceTypes</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurrenceException">isRecurrenceException</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurring">isRecurring</a></li><li data-type='method'><a href="ICAL.Event.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Event.html#modifiesFuture">modifiesFuture</a></li><li data-type='method'><a href="ICAL.Event.html#relateException">relateException</a></li><li data-type='method'><a href="ICAL.Event.html#toString">toString</a></li></ul></li><li><a href="ICAL.parse.ParserError.html">ParserError</a></li><li><a href="ICAL.Period.html">Period</a><ul class='methods'><li data-type='method'><a href="ICAL.Period.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Period.html#.fromJSON">fromJSON</a></li><li data-type='method'><a href="ICAL.Period.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Period.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Period.html#getDuration">getDuration</a></li><li data-type='method'><a href="ICAL.Period.html#getEnd">getEnd</a></li><li data-type='method'><a href="ICAL.Period.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Period.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Period.html#toString">toString</a></li></ul></li><li><a href="ICAL.Property.html">Property</a><ul class='methods'><li data-type='method'><a href="ICAL.Property.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Property.html#getDefaultType">getDefaultType</a></li><li data-type='method'><a href="ICAL.Property.html#getFirstValue">getFirstValue</a></li><li data-type='method'><a href="ICAL.Property.html#getParameter">getParameter</a></li><li data-type='method'><a href="ICAL.Property.html#getValues">getValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeAllValues">removeAllValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeParameter">removeParameter</a></li><li data-type='method'><a href="ICAL.Property.html#resetType">resetType</a></li><li data-type='method'><a href="ICAL.Property.html#setParameter">setParameter</a></li><li data-type='method'><a href="ICAL.Property.html#setValue">setValue</a></li><li data-type='method'><a href="ICAL.Property.html#setValues">setValues</a></li><li data-type='method'><a href="ICAL.Property.html#toICAL">toICAL</a></li><li data-type='method'><a href="ICAL.Property.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Recur.html">Recur</a><ul class='methods'><li data-type='method'><a href="ICAL.Recur.html#._stringToData">_stringToData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Recur.html#.icalDayToNumericDay">icalDayToNumericDay</a></li><li data-type='method'><a href="ICAL.Recur.html#.numericDayToIcalDay">numericDayToIcalDay</a></li><li data-type='method'><a href="ICAL.Recur.html#addComponent">addComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Recur.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#getComponent">getComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#getNextOccurrence">getNextOccurrence</a></li><li data-type='method'><a href="ICAL.Recur.html#isByCount">isByCount</a></li><li data-type='method'><a href="ICAL.Recur.html#isFinite">isFinite</a></li><li data-type='method'><a href="ICAL.Recur.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Recur.html#setComponent">setComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Recur.html#toString">toString</a></li></ul></li><li><a href="ICAL.RecurExpansion.html">RecurExpansion</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurExpansion.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.RecurIterator.html">RecurIterator</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurIterator.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Time.html">Time</a><ul class='methods'><li data-type='method'><a href="ICAL.Time.html#.daysInMonth">daysInMonth</a></li><li data-type='method'><a href="ICAL.Time.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateString">fromDateString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateTimeString">fromDateTimeString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDayOfYear">fromDayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#.fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromStringv2">fromStringv2</a></li><li data-type='method'><a href="ICAL.Time.html#.isLeapYear">isLeapYear</a></li><li data-type='method'><a href="ICAL.Time.html#.now">now</a></li><li data-type='method'><a href="ICAL.Time.html#.weekOneStarts">weekOneStarts</a></li><li data-type='method'><a href="ICAL.Time.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.Time.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.Time.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Time.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Time.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.Time.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Time.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.Time.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.Time.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Time.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Time.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Time.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.Time.html#weekNumber">weekNumber</a></li></ul></li><li><a href="ICAL.Timezone.html">Timezone</a><ul class='methods'><li data-type='method'><a href="ICAL.Timezone.html#.convert_time">convert_time</a></li><li data-type='method'><a href="ICAL.Timezone.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Timezone.html#utcOffset">utcOffset</a></li></ul></li><li><a href="ICAL.UtcOffset.html">UtcOffset</a><ul class='methods'><li data-type='method'><a href="ICAL.UtcOffset.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#clone">clone</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#compare">compare</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toString">toString</a></li></ul></li><li><a href="ICAL.VCardTime.html">VCardTime</a><ul class='methods'><li data-type='method'><a href="ICAL.VCardTime.html#.fromDateAndOrTimeString">fromDateAndOrTimeString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.VCardTime.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.VCardTime.html#clone">clone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compare">compare</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#reset">reset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toString">toString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#weekNumber">weekNumber</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="ICAL.html">ICAL</a><ul class='methods'><li data-type='method'><a href="ICAL.html#.parsefunction">parse</a></li><li data-type='method'><a href="ICAL.html#.stringifyfunction">stringify</a></li></ul></li><li><a href="ICAL.design.html">design</a><ul class='methods'><li data-type='method'><a href="ICAL.design.html#.getDesignSet">getDesignSet</a></li></ul></li><li><a href="ICAL.helpers.html">helpers</a><ul class='methods'><li data-type='method'><a href="ICAL.helpers.html#.binsearchInsert">binsearchInsert</a></li><li data-type='method'><a href="ICAL.helpers.html#.clone">clone</a></li><li data-type='method'><a href="ICAL.helpers.html#.foldline">foldline</a></li><li data-type='method'><a href="ICAL.helpers.html#.formatClassType">formatClassType</a></li><li data-type='method'><a href="ICAL.helpers.html#.isStrictlyNaN">isStrictlyNaN</a></li><li data-type='method'><a href="ICAL.helpers.html#.pad2">pad2</a></li><li data-type='method'><a href="ICAL.helpers.html#.strictParseInt">strictParseInt</a></li><li data-type='method'><a href="ICAL.helpers.html#.trunc">trunc</a></li><li data-type='method'><a href="ICAL.helpers.html#.unescapedIndexOf">unescapedIndexOf</a></li></ul></li><li><a href="ICAL.parse.html">parse</a><ul class='methods'><li data-type='method'><a href="ICAL.parse.html#._rfc6868Escape">_rfc6868Escape</a></li><li data-type='method'><a href="ICAL.parse.html#.component">component</a></li><li data-type='method'><a href="ICAL.parse.html#.property">property</a></li></ul></li><li><a href="ICAL.stringify.html">stringify</a><ul class='methods'><li data-type='method'><a href="ICAL.stringify.html#.component">component</a></li><li data-type='method'><a href="ICAL.stringify.html#.multiValue">multiValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.property">property</a></li><li data-type='method'><a href="ICAL.stringify.html#.propertyValue">propertyValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.value">value</a></li></ul></li><li><a href="ICAL.TimezoneService.html">TimezoneService</a><ul class='methods'><li data-type='method'><a href="ICAL.TimezoneService.html#.get">get</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.has">has</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.register">register</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.remove">remove</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">time.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+"use strict";
+
+/* istanbul ignore next */
+(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
+
+(function() {
+
+  /**
+   * @classdesc
+   * iCalendar Time representation (similar to JS Date object).  Fully
+   * independent of system (OS) timezone / time.  Unlike JS Date, the month
+   * January is 1, not zero.
+   *
+   * @example
+   * var time = new ICAL.Time({
+   *   year: 2012,
+   *   month: 10,
+   *   day: 11
+   *   minute: 0,
+   *   second: 0,
+   *   isDate: false
+   * });
+   *
+   *
+   * @alias ICAL.Time
+   * @class
+   * @param {Object} data           Time initialization
+   * @param {Number=} data.year     The year for this date
+   * @param {Number=} data.month    The month for this date
+   * @param {Number=} data.day      The day for this date
+   * @param {Number=} data.hour     The hour for this date
+   * @param {Number=} data.minute   The minute for this date
+   * @param {Number=} data.second   The second for this date
+   * @param {Boolean=} data.isDate  If true, the instance represents a date (as
+   *                                  opposed to a date-time)
+   * @param {ICAL.Timezone} zone timezone this position occurs in
+   */
+  ICAL.Time = function icaltime(data, zone) {
+    this.wrappedJSObject = this;
+    var time = this._time = Object.create(null);
+
+    /* time defaults */
+    time.year = 0;
+    time.month = 1;
+    time.day = 1;
+    time.hour = 0;
+    time.minute = 0;
+    time.second = 0;
+    time.isDate = false;
+
+    this.fromData(data, zone);
+  };
+
+  ICAL.Time._dowCache = {};
+  ICAL.Time._wnCache = {};
+
+  ICAL.Time.prototype = {
+
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "icaltime"
+     */
+    icalclass: "icaltime",
+    _cachedUnixTime: null,
+
+    /**
+     * The type name, to be used in the jCal object. This value may change and
+     * is strictly defined by the {@link ICAL.Time#isDate isDate} member.
+     * @readonly
+     * @type {String}
+     * @default "date-time"
+     */
+    get icaltype() {
+      return this.isDate ? 'date' : 'date-time';
+    },
+
+    /**
+     * The timezone for this time.
+     * @type {ICAL.Timezone}
+     */
+    zone: null,
+
+    /**
+     * Internal uses to indicate that a change has been made and the next read
+     * operation must attempt to normalize the value (for example changing the
+     * day to 33).
+     *
+     * @type {Boolean}
+     * @private
+     */
+    _pendingNormalization: false,
+
+    /**
+     * Returns a clone of the time object.
+     *
+     * @return {ICAL.Duration}      The cloned object
+     */
+    clone: function() {
+      return new ICAL.Time(this._time, this.zone);
+    },
+
+    /**
+     * Reset the time instance to epoch time
+     */
+    reset: function icaltime_reset() {
+      this.fromData(ICAL.Time.epochTime);
+      this.zone = ICAL.Timezone.utcTimezone;
+    },
+
+    /**
+     * Reset the time instance to the given date/time values.
+     *
+     * @param {Number} year             The year to set
+     * @param {Number} month            The month to set
+     * @param {Number} day              The day to set
+     * @param {Number} hour             The hour to set
+     * @param {Number} minute           The minute to set
+     * @param {Number} second           The second to set
+     * @param {ICAL.Timezone} timezone  The timezone to set
+     */
+    resetTo: function icaltime_resetTo(year, month, day,
+                                       hour, minute, second, timezone) {
+      this.fromData({
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
+        second: second,
+        zone: timezone
+      });
+    },
+
+    /**
+     * Set up the current instance from the Javascript date value.
+     *
+     * @param {?Date} aDate     The Javascript Date to read, or null to reset
+     * @param {Boolean} useUTC  If true, the UTC values of the date will be used
+     */
+    fromJSDate: function icaltime_fromJSDate(aDate, useUTC) {
+      if (!aDate) {
+        this.reset();
+      } else {
+        if (useUTC) {
+          this.zone = ICAL.Timezone.utcTimezone;
+          this.year = aDate.getUTCFullYear();
+          this.month = aDate.getUTCMonth() + 1;
+          this.day = aDate.getUTCDate();
+          this.hour = aDate.getUTCHours();
+          this.minute = aDate.getUTCMinutes();
+          this.second = aDate.getUTCSeconds();
+        } else {
+          this.zone = ICAL.Timezone.localTimezone;
+          this.year = aDate.getFullYear();
+          this.month = aDate.getMonth() + 1;
+          this.day = aDate.getDate();
+          this.hour = aDate.getHours();
+          this.minute = aDate.getMinutes();
+          this.second = aDate.getSeconds();
+        }
+      }
+      this._cachedUnixTime = null;
+      return this;
+    },
+
+    /**
+     * Sets up the current instance using members from the passed data object.
+     *
+     * @param {Object} aData            Time initialization
+     * @param {Number=} aData.year      The year for this date
+     * @param {Number=} aData.month     The month for this date
+     * @param {Number=} aData.day       The day for this date
+     * @param {Number=} aData.hour      The hour for this date
+     * @param {Number=} aData.minute    The minute for this date
+     * @param {Number=} aData.second    The second for this date
+     * @param {Boolean=} aData.isDate   If true, the instance represents a date
+     *                                    (as opposed to a date-time)
+     * @param {ICAL.Timezone=} aZone    Timezone this position occurs in
+     */
+    fromData: function fromData(aData, aZone) {
+      if (aData) {
+        for (var key in aData) {
+          // ical type cannot be set
+          if (key === 'icaltype') continue;
+          this[key] = aData[key];
+        }
+      }
+
+      if (aZone) {
+        this.zone = aZone;
+      }
+
+      if (aData &amp;&amp; !("isDate" in aData)) {
+        this.isDate = !("hour" in aData);
+      } else if (aData &amp;&amp; ("isDate" in aData)) {
+        this.isDate = aData.isDate;
+      }
+
+      if (aData &amp;&amp; "timezone" in aData) {
+        var zone = ICAL.TimezoneService.get(
+          aData.timezone
+        );
+
+        this.zone = zone || ICAL.Timezone.localTimezone;
+      }
+
+      if (aData &amp;&amp; "zone" in aData) {
+        this.zone = aData.zone;
+      }
+
+      if (!this.zone) {
+        this.zone = ICAL.Timezone.localTimezone;
+      }
+
+      this._cachedUnixTime = null;
+      return this;
+    },
+
+    /**
+     * Calculate the day of week.
+     * @return {ICAL.Time.weekDay}
+     */
+    dayOfWeek: function icaltime_dayOfWeek() {
+      var dowCacheKey = (this.year &lt;&lt; 9) + (this.month &lt;&lt; 5) + this.day;
+      if (dowCacheKey in ICAL.Time._dowCache) {
+        return ICAL.Time._dowCache[dowCacheKey];
+      }
+
+      // Using Zeller's algorithm
+      var q = this.day;
+      var m = this.month + (this.month &lt; 3 ? 12 : 0);
+      var Y = this.year - (this.month &lt; 3 ? 1 : 0);
+
+      var h = (q + Y + ICAL.helpers.trunc(((m + 1) * 26) / 10) + ICAL.helpers.trunc(Y / 4));
+      /* istanbul ignore else */
+      if (true /* gregorian */) {
+        h += ICAL.helpers.trunc(Y / 100) * 6 + ICAL.helpers.trunc(Y / 400);
+      } else {
+        h += 5;
+      }
+
+      // Normalize to 1 = sunday
+      h = ((h + 6) % 7) + 1;
+      ICAL.Time._dowCache[dowCacheKey] = h;
+      return h;
+    },
+
+    /**
+     * Calculate the day of year.
+     * @return {Number}
+     */
+    dayOfYear: function dayOfYear() {
+      var is_leap = (ICAL.Time.isLeapYear(this.year) ? 1 : 0);
+      var diypm = ICAL.Time.daysInYearPassedMonth;
+      return diypm[is_leap][this.month - 1] + this.day;
+    },
+
+    /**
+     * Returns a copy of the current date/time, rewound to the start of the
+     * week. The resulting ICAL.Time instance is of icaltype date, even if this
+     * is a date-time.
+     *
+     * @param {ICAL.Time.weekDay=} aWeekStart
+     *        The week start weekday, defaults to SUNDAY
+     * @return {ICAL.Time}      The start of the week (cloned)
+     */
+    startOfWeek: function startOfWeek(aWeekStart) {
+      var firstDow = aWeekStart || ICAL.Time.SUNDAY;
+      var result = this.clone();
+      result.day -= ((this.dayOfWeek() + 7 - firstDow) % 7);
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
+      return result;
+    },
+
+    /**
+     * Returns a copy of the current date/time, shifted to the end of the week.
+     * The resulting ICAL.Time instance is of icaltype date, even if this is a
+     * date-time.
+     *
+     * @param {ICAL.Time.weekDay=} aWeekStart
+     *        The week start weekday, defaults to SUNDAY
+     * @return {ICAL.Time}      The end of the week (cloned)
+     */
+    endOfWeek: function endOfWeek(aWeekStart) {
+      var firstDow = aWeekStart || ICAL.Time.SUNDAY;
+      var result = this.clone();
+      result.day += (7 - this.dayOfWeek() + firstDow - ICAL.Time.SUNDAY) % 7;
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
+      return result;
+    },
+
+    /**
+     * Returns a copy of the current date/time, rewound to the start of the
+     * month. The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The start of the month (cloned)
+     */
+    startOfMonth: function startOfMonth() {
+      var result = this.clone();
+      result.day = 1;
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
+      return result;
+    },
+
+    /**
+     * Returns a copy of the current date/time, shifted to the end of the
+     * month.  The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The end of the month (cloned)
+     */
+    endOfMonth: function endOfMonth() {
+      var result = this.clone();
+      result.day = ICAL.Time.daysInMonth(result.month, result.year);
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
+      return result;
+    },
+
+    /**
+     * Returns a copy of the current date/time, rewound to the start of the
+     * year. The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The start of the year (cloned)
+     */
+    startOfYear: function startOfYear() {
+      var result = this.clone();
+      result.day = 1;
+      result.month = 1;
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
+      return result;
+    },
+
+    /**
+     * Returns a copy of the current date/time, shifted to the end of the
+     * year.  The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The end of the year (cloned)
+     */
+    endOfYear: function endOfYear() {
+      var result = this.clone();
+      result.day = 31;
+      result.month = 12;
+      result.isDate = true;
+      result.hour = 0;
+      result.minute = 0;
+      result.second = 0;
+      return result;
+    },
+
+    /**
+     * First calculates the start of the week, then returns the day of year for
+     * this date.
+     *
+     * @param {ICAL.Time.weekDay=} aFirstDayOfWeek
+     *        The week start weekday, defaults to SUNDAY
+     * @return {Number}     The calculated day of year
+     */
+    startDoyWeek: function startDoyWeek(aFirstDayOfWeek) {
+      var firstDow = aFirstDayOfWeek || ICAL.Time.SUNDAY;
+      var delta = this.dayOfWeek() - firstDow;
+      if (delta &lt; 0) delta += 7;
+      return this.dayOfYear() - delta;
+    },
+
+    /**
+     * Finds the nthWeekDay relative to the current month (not day).  The
+     * returned value is a day relative the month that this month belongs to so
+     * 1 would indicate the first of the month and 40 would indicate a day in
+     * the following month.
+     *
+     * @param {Number} aDayOfWeek   Day of the week see the day name constants
+     * @param {Number} aPos         Nth occurrence of a given week day values
+     *        of 1 and 0 both indicate the first weekday of that type. aPos may
+     *        be either positive or negative
+     *
+     * @return {Number} numeric value indicating a day relative
+     *                   to the current month of this time object
+     */
+    nthWeekDay: function icaltime_nthWeekDay(aDayOfWeek, aPos) {
+      var daysInMonth = ICAL.Time.daysInMonth(this.month, this.year);
+      var weekday;
+      var pos = aPos;
+
+      var start = 0;
+
+      var otherDay = this.clone();
+
+      if (pos >= 0) {
+        otherDay.day = 1;
+
+        // because 0 means no position has been given
+        // 1 and 0 indicate the same day.
+        if (pos != 0) {
+          // remove the extra numeric value
+          pos--;
+        }
+
+        // set current start offset to current day.
+        start = otherDay.day;
+
+        // find the current day of week
+        var startDow = otherDay.dayOfWeek();
+
+        // calculate the difference between current
+        // day of the week and desired day of the week
+        var offset = aDayOfWeek - startDow;
+
+
+        // if the offset goes into the past
+        // week we add 7 so its goes into the next
+        // week. We only want to go forward in time here.
+        if (offset &lt; 0)
+          // this is really important otherwise we would
+          // end up with dates from in the past.
+          offset += 7;
+
+        // add offset to start so start is the same
+        // day of the week as the desired day of week.
+        start += offset;
+
+        // because we are going to add (and multiply)
+        // the numeric value of the day we subtract it
+        // from the start position so not to add it twice.
+        start -= aDayOfWeek;
+
+        // set week day
+        weekday = aDayOfWeek;
+      } else {
+
+        // then we set it to the last day in the current month
+        otherDay.day = daysInMonth;
+
+        // find the ends weekday
+        var endDow = otherDay.dayOfWeek();
+
+        pos++;
+
+        weekday = (endDow - aDayOfWeek);
+
+        if (weekday &lt; 0) {
+          weekday += 7;
+        }
+
+        weekday = daysInMonth - weekday;
+      }
+
+      weekday += pos * 7;
+
+      return start + weekday;
+    },
+
+    /**
+     * Checks if current time is the nth weekday, relative to the current
+     * month.  Will always return false when rule resolves outside of current
+     * month.
+     *
+     * @param {ICAL.Time.weekDay} aDayOfWeek       Day of week to check
+     * @param {Number} aPos                        Relative position
+     * @return {Boolean}                           True, if its the nth weekday
+     */
+    isNthWeekDay: function(aDayOfWeek, aPos) {
+      var dow = this.dayOfWeek();
+
+      if (aPos === 0 &amp;&amp; dow === aDayOfWeek) {
+        return true;
+      }
+
+      // get pos
+      var day = this.nthWeekDay(aDayOfWeek, aPos);
+
+      if (day === this.day) {
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
+     * Calculates the ISO 8601 week number. If Monday is the week start day,
+     * the first week of a year is the week that contains the first Thursday.
+     * The year can have 53 weeks, if January 1st is a Friday.
+     *
+     * If the week start is specified as a different weekday, the calculation
+     * is shifted.
+     *
+     * @param {ICAL.Time.weekDay} aWeekStart        The weekday the week starts with
+     * @return {Number}                             The ISO week number
+     */
+    weekNumber: function weekNumber(aWeekStart) {
+      var wnCacheKey = (this.year &lt;&lt; 12) + (this.month &lt;&lt; 8) + (this.day &lt;&lt; 3) + aWeekStart;
+      if (wnCacheKey in ICAL.Time._wnCache) {
+        return ICAL.Time._wnCache[wnCacheKey];
+      }
+      // This function courtesty of Julian Bucknall, published under the MIT license
+      // http://www.boyet.com/articles/publishedarticles/calculatingtheisoweeknumb.html
+      var doy = this.dayOfYear();
+      var dow = this.dayOfWeek();
+      var year = this.year;
+      var week1;
+
+      var dt = this.clone();
+      dt.isDate = true;
+      var first_dow = dt.dayOfWeek();
+      var isoyear = this.year;
+
+      if (dt.month == 12 &amp;&amp; dt.day > 28) {
+        week1 = ICAL.Time.weekOneStarts(isoyear + 1, aWeekStart);
+        if (dt.compare(week1) &lt; 0) {
+          week1 = ICAL.Time.weekOneStarts(isoyear, aWeekStart);
+        } else {
+          isoyear++;
+        }
+      } else {
+        week1 = ICAL.Time.weekOneStarts(isoyear, aWeekStart);
+        if (dt.compare(week1) &lt; 0) {
+          week1 = ICAL.Time.weekOneStarts(--isoyear, aWeekStart);
+        }
+      }
+
+      var daysBetween = (dt.subtractDate(week1).toSeconds() / 86400);
+      var answer = ICAL.helpers.trunc(daysBetween / 7) + 1;
+      ICAL.Time._wnCache[wnCacheKey] = answer;
+      return answer;
+    },
+
+    /**
+     * Adds the duration to the current time. The instance is modified in
+     * place.
+     *
+     * @param {ICAL.Duration} aDuration         The duration to add
+     */
+    addDuration: function icaltime_add(aDuration) {
+      var mult = (aDuration.isNegative ? -1 : 1);
+
+      // because of the duration optimizations it is much
+      // more efficient to grab all the values up front
+      // then set them directly (which will avoid a normalization call).
+      // So we don't actually normalize until we need it.
+      var second = this.second;
+      var minute = this.minute;
+      var hour = this.hour;
+      var day = this.day;
+
+      second += mult * aDuration.seconds;
+      minute += mult * aDuration.minutes;
+      hour += mult * aDuration.hours;
+      day += mult * aDuration.days;
+      day += mult * 7 * aDuration.weeks;
+
+      this.second = second;
+      this.minute = minute;
+      this.hour = hour;
+      this.day = day;
+
+      this._cachedUnixTime = null;
+    },
+
+    /**
+     * Subtract the date details (_excluding_ timezone).  Useful for finding
+     * the relative difference between two time objects excluding their
+     * timezone differences.
+     *
+     * @param {ICAL.Time} aDate     The date to substract
+     * @return {ICAL.Duration}      The difference as a duration
+     */
+    subtractDate: function icaltime_subtract(aDate) {
+      var unixTime = this.toUnixTime() + this.utcOffset();
+      var other = aDate.toUnixTime() + aDate.utcOffset();
+      return ICAL.Duration.fromSeconds(unixTime - other);
+    },
+
+    /**
+     * Subtract the date details, taking timezones into account.
+     *
+     * @param {ICAL.Time} aDate  The date to subtract
+     * @return {ICAL.Duration}  The difference in duration
+     */
+    subtractDateTz: function icaltime_subtract_abs(aDate) {
+      var unixTime = this.toUnixTime();
+      var other = aDate.toUnixTime();
+      return ICAL.Duration.fromSeconds(unixTime - other);
+    },
+
+    /**
+     * Compares the ICAL.Time instance with another one.
+     *
+     * @param {ICAL.Duration} aOther        The instance to compare with
+     * @return {Number}                     -1, 0 or 1 for less/equal/greater
+     */
+    compare: function icaltime_compare(other) {
+      var a = this.toUnixTime();
+      var b = other.toUnixTime();
+
+      if (a > b) return 1;
+      if (b > a) return -1;
+      return 0;
+    },
+
+    /**
+     * Compares only the date part of this instance with another one.
+     *
+     * @param {ICAL.Duration} other         The instance to compare with
+     * @param {ICAL.Timezone} tz            The timezone to compare in
+     * @return {Number}                     -1, 0 or 1 for less/equal/greater
+     */
+    compareDateOnlyTz: function icaltime_compareDateOnlyTz(other, tz) {
+      function cmp(attr) {
+        return ICAL.Time._cmp_attr(a, b, attr);
+      }
+      var a = this.convertToZone(tz);
+      var b = other.convertToZone(tz);
+      var rc = 0;
+
+      if ((rc = cmp("year")) != 0) return rc;
+      if ((rc = cmp("month")) != 0) return rc;
+      if ((rc = cmp("day")) != 0) return rc;
+
+      return rc;
+    },
+
+    /**
+     * Convert the instance into another timzone. The returned ICAL.Time
+     * instance is always a copy.
+     *
+     * @param {ICAL.Timezone} zone      The zone to convert to
+     * @return {ICAL.Time}              The copy, converted to the zone
+     */
+    convertToZone: function convertToZone(zone) {
+      var copy = this.clone();
+      var zone_equals = (this.zone.tzid == zone.tzid);
+
+      if (!this.isDate &amp;&amp; !zone_equals) {
+        ICAL.Timezone.convert_time(copy, this.zone, zone);
+      }
+
+      copy.zone = zone;
+      return copy;
+    },
+
+    /**
+     * Calculates the UTC offset of the current date/time in the timezone it is
+     * in.
+     *
+     * @return {Number}     UTC offset in seconds
+     */
+    utcOffset: function utc_offset() {
+      if (this.zone == ICAL.Timezone.localTimezone ||
+          this.zone == ICAL.Timezone.utcTimezone) {
+        return 0;
+      } else {
+        return this.zone.utcOffset(this);
+      }
+    },
+
+    /**
+     * Returns an RFC 5545 compliant ical representation of this object.
+     *
+     * @return {String} ical date/date-time
+     */
+    toICALString: function() {
+      var string = this.toString();
+
+      if (string.length > 10) {
+        return ICAL.design.icalendar.value['date-time'].toICAL(string);
+      } else {
+        return ICAL.design.icalendar.value.date.toICAL(string);
+      }
+    },
+
+    /**
+     * The string representation of this date/time, in jCal form
+     * (including : and - separators).
+     * @return {String}
+     */
+    toString: function toString() {
+      var result = this.year + '-' +
+                   ICAL.helpers.pad2(this.month) + '-' +
+                   ICAL.helpers.pad2(this.day);
+
+      if (!this.isDate) {
+          result += 'T' + ICAL.helpers.pad2(this.hour) + ':' +
+                    ICAL.helpers.pad2(this.minute) + ':' +
+                    ICAL.helpers.pad2(this.second);
+
+        if (this.zone === ICAL.Timezone.utcTimezone) {
+          result += 'Z';
+        }
+      }
+
+      return result;
+    },
+
+    /**
+     * Converts the current instance to a Javascript date
+     * @return {Date}
+     */
+    toJSDate: function toJSDate() {
+      if (this.zone == ICAL.Timezone.localTimezone) {
+        if (this.isDate) {
+          return new Date(this.year, this.month - 1, this.day);
+        } else {
+          return new Date(this.year, this.month - 1, this.day,
+                          this.hour, this.minute, this.second, 0);
+        }
+      } else {
+        return new Date(this.toUnixTime() * 1000);
+      }
+    },
+
+    _normalize: function icaltime_normalize() {
+      var isDate = this._time.isDate;
+      if (this._time.isDate) {
+        this._time.hour = 0;
+        this._time.minute = 0;
+        this._time.second = 0;
+      }
+      this.adjust(0, 0, 0, 0);
+
+      return this;
+    },
+
+    /**
+     * Adjust the date/time by the given offset
+     *
+     * @param {Number} aExtraDays       The extra amount of days
+     * @param {Number} aExtraHours      The extra amount of hours
+     * @param {Number} aExtraMinutes    The extra amount of minutes
+     * @param {Number} aExtraSeconds    The extra amount of seconds
+     * @param {Number=} aTime           The time to adjust, defaults to the
+     *                                    current instance.
+     */
+    adjust: function icaltime_adjust(aExtraDays, aExtraHours,
+                                     aExtraMinutes, aExtraSeconds, aTime) {
+
+      var minutesOverflow, hoursOverflow,
+          daysOverflow = 0, yearsOverflow = 0;
+
+      var second, minute, hour, day;
+      var daysInMonth;
+
+      var time = aTime || this._time;
+
+      if (!time.isDate) {
+        second = time.second + aExtraSeconds;
+        time.second = second % 60;
+        minutesOverflow = ICAL.helpers.trunc(second / 60);
+        if (time.second &lt; 0) {
+          time.second += 60;
+          minutesOverflow--;
+        }
+
+        minute = time.minute + aExtraMinutes + minutesOverflow;
+        time.minute = minute % 60;
+        hoursOverflow = ICAL.helpers.trunc(minute / 60);
+        if (time.minute &lt; 0) {
+          time.minute += 60;
+          hoursOverflow--;
+        }
+
+        hour = time.hour + aExtraHours + hoursOverflow;
+
+        time.hour = hour % 24;
+        daysOverflow = ICAL.helpers.trunc(hour / 24);
+        if (time.hour &lt; 0) {
+          time.hour += 24;
+          daysOverflow--;
+        }
+      }
+
+
+      // Adjust month and year first, because we need to know what month the day
+      // is in before adjusting it.
+      if (time.month > 12) {
+        yearsOverflow = ICAL.helpers.trunc((time.month - 1) / 12);
+      } else if (time.month &lt; 1) {
+        yearsOverflow = ICAL.helpers.trunc(time.month / 12) - 1;
+      }
+
+      time.year += yearsOverflow;
+      time.month -= 12 * yearsOverflow;
+
+      // Now take care of the days (and adjust month if needed)
+      day = time.day + aExtraDays + daysOverflow;
+
+      if (day > 0) {
+        for (;;) {
+          daysInMonth = ICAL.Time.daysInMonth(time.month, time.year);
+          if (day &lt;= daysInMonth) {
+            break;
+          }
+
+          time.month++;
+          if (time.month > 12) {
+            time.year++;
+            time.month = 1;
+          }
+
+          day -= daysInMonth;
+        }
+      } else {
+        while (day &lt;= 0) {
+          if (time.month == 1) {
+            time.year--;
+            time.month = 12;
+          } else {
+            time.month--;
+          }
+
+          day += ICAL.Time.daysInMonth(time.month, time.year);
+        }
+      }
+
+      time.day = day;
+
+      this._cachedUnixTime = null;
+      return this;
+    },
+
+    /**
+     * Sets up the current instance from unix time, the number of seconds since
+     * January 1st, 1970.
+     *
+     * @param {Number} seconds      The seconds to set up with
+     */
+    fromUnixTime: function fromUnixTime(seconds) {
+      this.zone = ICAL.Timezone.utcTimezone;
+      var epoch = ICAL.Time.epochTime.clone();
+      epoch.adjust(0, 0, 0, seconds);
+
+      this.year = epoch.year;
+      this.month = epoch.month;
+      this.day = epoch.day;
+      this.hour = epoch.hour;
+      this.minute = epoch.minute;
+      this.second = Math.floor(epoch.second);
+
+      this._cachedUnixTime = null;
+    },
+
+    /**
+     * Converts the current instance to seconds since January 1st 1970.
+     *
+     * @return {Number}         Seconds since 1970
+     */
+    toUnixTime: function toUnixTime() {
+      if (this._cachedUnixTime !== null) {
+        return this._cachedUnixTime;
+      }
+      var offset = this.utcOffset();
+
+      // we use the offset trick to ensure
+      // that we are getting the actual UTC time
+      var ms = Date.UTC(
+        this.year,
+        this.month - 1,
+        this.day,
+        this.hour,
+        this.minute,
+        this.second - offset
+      );
+
+      // seconds
+      this._cachedUnixTime = ms / 1000;
+      return this._cachedUnixTime;
+    },
+
+    /**
+     * Converts time to into Object which can be serialized then re-created
+     * using the constructor.
+     *
+     * @example
+     * // toJSON will automatically be called
+     * var json = JSON.stringify(mytime);
+     *
+     * var deserialized = JSON.parse(json);
+     *
+     * var time = new ICAL.Time(deserialized);
+     *
+     * @return {Object}
+     */
+    toJSON: function() {
+      var copy = [
+        'year',
+        'month',
+        'day',
+        'hour',
+        'minute',
+        'second',
+        'isDate'
+      ];
+
+      var result = Object.create(null);
+
+      var i = 0;
+      var len = copy.length;
+      var prop;
+
+      for (; i &lt; len; i++) {
+        prop = copy[i];
+        result[prop] = this[prop];
+      }
+
+      if (this.zone) {
+        result.timezone = this.zone.tzid;
+      }
+
+      return result;
+    }
+
+  };
+
+  (function setupNormalizeAttributes() {
+    // This needs to run before any instances are created!
+    function defineAttr(attr) {
+      Object.defineProperty(ICAL.Time.prototype, attr, {
+        get: function getTimeAttr() {
+          if (this._pendingNormalization) {
+            this._normalize();
+            this._pendingNormalization = false;
+          }
+
+          return this._time[attr];
+        },
+        set: function setTimeAttr(val) {
+          this._cachedUnixTime = null;
+          this._pendingNormalization = true;
+          this._time[attr] = val;
+
+          return val;
+        }
+      });
+
+    }
+
+    /* istanbul ignore else */
+    if ("defineProperty" in Object) {
+      defineAttr("year");
+      defineAttr("month");
+      defineAttr("day");
+      defineAttr("hour");
+      defineAttr("minute");
+      defineAttr("second");
+      defineAttr("isDate");
+    }
+  })();
+
+  /**
+   * Returns the days in the given month
+   *
+   * @param {Number} month      The month to check
+   * @param {Number} year       The year to check
+   * @return {Number}           The number of days in the month
+   */
+  ICAL.Time.daysInMonth = function icaltime_daysInMonth(month, year) {
+    var _daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var days = 30;
+
+    if (month &lt; 1 || month > 12) return days;
+
+    days = _daysInMonth[month];
+
+    if (month == 2) {
+      days += ICAL.Time.isLeapYear(year);
+    }
+
+    return days;
+  };
+
+  /**
+   * Checks if the year is a leap year
+   *
+   * @param {Number} year       The year to check
+   * @return {Boolean}          True, if the year is a leap year
+   */
+  ICAL.Time.isLeapYear = function isLeapYear(year) {
+    if (year &lt;= 1752) {
+      return ((year % 4) == 0);
+    } else {
+      return (((year % 4 == 0) &amp;&amp; (year % 100 != 0)) || (year % 400 == 0));
+    }
+  };
+
+  /**
+   * Create a new ICAL.Time from the day of year and year. The date is returned
+   * in floating timezone.
+   *
+   * @param {Number} aDayOfYear     The day of year
+   * @param {Number} aYear          The year to create the instance in
+   * @return {ICAL.Time}            The created instance with the calculated date
+   */
+  ICAL.Time.fromDayOfYear = function icaltime_fromDayOfYear(aDayOfYear, aYear) {
+    var year = aYear;
+    var doy = aDayOfYear;
+    var tt = new ICAL.Time();
+    tt.auto_normalize = false;
+    var is_leap = (ICAL.Time.isLeapYear(year) ? 1 : 0);
+
+    if (doy &lt; 1) {
+      year--;
+      is_leap = (ICAL.Time.isLeapYear(year) ? 1 : 0);
+      doy += ICAL.Time.daysInYearPassedMonth[is_leap][12];
+      return ICAL.Time.fromDayOfYear(doy, year);
+    } else if (doy > ICAL.Time.daysInYearPassedMonth[is_leap][12]) {
+      is_leap = (ICAL.Time.isLeapYear(year) ? 1 : 0);
+      doy -= ICAL.Time.daysInYearPassedMonth[is_leap][12];
+      year++;
+      return ICAL.Time.fromDayOfYear(doy, year);
+    }
+
+    tt.year = year;
+    tt.isDate = true;
+
+    for (var month = 11; month >= 0; month--) {
+      if (doy > ICAL.Time.daysInYearPassedMonth[is_leap][month]) {
+        tt.month = month + 1;
+        tt.day = doy - ICAL.Time.daysInYearPassedMonth[is_leap][month];
+        break;
+      }
+    }
+
+    tt.auto_normalize = true;
+    return tt;
+  };
+
+  /**
+   * Returns a new ICAL.Time instance from a date string, e.g 2015-01-02.
+   *
+   * @deprecated                Use {@link ICAL.Time.fromDateString} instead
+   * @param {String} str        The string to create from
+   * @return {ICAL.Time}        The date/time instance
+   */
+  ICAL.Time.fromStringv2 = function fromString(str) {
+    return new ICAL.Time({
+      year: parseInt(str.substr(0, 4), 10),
+      month: parseInt(str.substr(5, 2), 10),
+      day: parseInt(str.substr(8, 2), 10),
+      isDate: true
+    });
+  };
+
+  /**
+   * Returns a new ICAL.Time instance from a date string, e.g 2015-01-02.
+   *
+   * @param {String} aValue     The string to create from
+   * @return {ICAL.Time}        The date/time instance
+   */
+  ICAL.Time.fromDateString = function(aValue) {
+    // Dates should have no timezone.
+    // Google likes to sometimes specify Z on dates
+    // we specifically ignore that to avoid issues.
+
+    // YYYY-MM-DD
+    // 2012-10-10
+    return new ICAL.Time({
+      year: ICAL.helpers.strictParseInt(aValue.substr(0, 4)),
+      month: ICAL.helpers.strictParseInt(aValue.substr(5, 2)),
+      day: ICAL.helpers.strictParseInt(aValue.substr(8, 2)),
+      isDate: true
+    });
+  };
+
+  /**
+   * Returns a new ICAL.Time instance from a date-time string, e.g
+   * 2015-01-02T03:04:05. If a property is specified, the timezone is set up
+   * from the property's TZID parameter.
+   *
+   * @param {String} aValue         The string to create from
+   * @param {ICAL.Property=} prop   The property the date belongs to
+   * @return {ICAL.Time}            The date/time instance
+   */
+  ICAL.Time.fromDateTimeString = function(aValue, prop) {
+    if (aValue.length &lt; 19) {
+      throw new Error(
+        'invalid date-time value: "' + aValue + '"'
+      );
+    }
+
+    var zone;
+
+    if (aValue[19] === 'Z') {
+      zone = 'Z';
+    } else if (prop) {
+      zone = prop.getParameter('tzid');
+    }
+
+    // 2012-10-10T10:10:10(Z)?
+    var time = new ICAL.Time({
+      year: ICAL.helpers.strictParseInt(aValue.substr(0, 4)),
+      month: ICAL.helpers.strictParseInt(aValue.substr(5, 2)),
+      day: ICAL.helpers.strictParseInt(aValue.substr(8, 2)),
+      hour: ICAL.helpers.strictParseInt(aValue.substr(11, 2)),
+      minute: ICAL.helpers.strictParseInt(aValue.substr(14, 2)),
+      second: ICAL.helpers.strictParseInt(aValue.substr(17, 2)),
+      timezone: zone
+    });
+
+    return time;
+  };
+
+  /**
+   * Returns a new ICAL.Time instance from a date or date-time string,
+   *
+   * @param {String} aValue         The string to create from
+   * @return {ICAL.Time}            The date/time instance
+   */
+  ICAL.Time.fromString = function fromString(aValue) {
+    if (aValue.length > 10) {
+      return ICAL.Time.fromDateTimeString(aValue);
+    } else {
+      return ICAL.Time.fromDateString(aValue);
+    }
+  };
+
+  /**
+   * Creates a new ICAL.Time instance from the given Javascript Date.
+   *
+   * @param {?Date} aDate     The Javascript Date to read, or null to reset
+   * @param {Boolean} useUTC  If true, the UTC values of the date will be used
+   */
+  ICAL.Time.fromJSDate = function fromJSDate(aDate, useUTC) {
+    var tt = new ICAL.Time();
+    return tt.fromJSDate(aDate, useUTC);
+  };
+
+  /**
+   * Creates a new ICAL.Time instance from the the passed data object.
+   *
+   * @param {Object} aData            Time initialization
+   * @param {Number=} aData.year      The year for this date
+   * @param {Number=} aData.month     The month for this date
+   * @param {Number=} aData.day       The day for this date
+   * @param {Number=} aData.hour      The hour for this date
+   * @param {Number=} aData.minute    The minute for this date
+   * @param {Number=} aData.second    The second for this date
+   * @param {Boolean=} aData.isDate   If true, the instance represents a date
+   *                                    (as opposed to a date-time)
+   * @param {ICAL.Timezone=} aZone    Timezone this position occurs in
+   */
+  ICAL.Time.fromData = function fromData(aData, aZone) {
+    var t = new ICAL.Time();
+    return t.fromData(aData, aZone);
+  };
+
+  /**
+   * Creates a new ICAL.Time instance from the current moment.
+   * @return {ICAL.Time}
+   */
+  ICAL.Time.now = function icaltime_now() {
+    return ICAL.Time.fromJSDate(new Date(), false);
+  };
+
+  /**
+   * Returns the date on which ISO week number 1 starts.
+   *
+   * @see ICAL.Time#weekNumber
+   * @param {Number} aYear          The year to search in
+   * @param {ICAL.Time.weekDay=}    The week start weekday, used for calculation.
+   * @return {ICAL.Time}            The date on which week number 1 starts
+   */
+  ICAL.Time.weekOneStarts = function weekOneStarts(aYear, aWeekStart) {
+    var t = ICAL.Time.fromData({
+      year: aYear,
+      month: 1,
+      day: 4,
+      isDate: true
+    });
+
+    var fourth_dow = t.dayOfWeek();
+    t.day += (1 - fourth_dow) + ((aWeekStart || ICAL.Time.SUNDAY) - 1);
+    return t;
+  };
+
+  /**
+   * January 1st, 1970 as an ICAL.Time.
+   * @type {ICAL.Time}
+   * @constant
+   * @instance
+   */
+  ICAL.Time.epochTime = ICAL.Time.fromData({
+    year: 1970,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0,
+    isDate: false,
+    timezone: "Z"
+  });
+
+  ICAL.Time._cmp_attr = function _cmp_attr(a, b, attr) {
+    if (a[attr] > b[attr]) return 1;
+    if (a[attr] &lt; b[attr]) return -1;
+    return 0;
+  };
+
+  /**
+   * The days that have passed in the year after a given month. The array has
+   * two members, one being an array of passed days for non-leap years, the
+   * other analog for leap years.
+   * @example
+   * var isLeapYear = ICAL.Time.isLeapYear(year);
+   * var passedDays = ICAL.Time.daysInYearPassedMonth[isLeapYear][month];
+   * @type {Array.&lt;Array.&lt;Number>>}
+   */
+  ICAL.Time.daysInYearPassedMonth = [
+    [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365],
+    [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366]
+  ];
+
+  /**
+   * The weekday, 1 = SUNDAY, 7 = SATURDAY. Access via
+   * ICAL.Time.MONDAY, ICAL.Time.TUESDAY, ...
+   *
+   * @typedef {Number} weekDay
+   * @memberof ICAL.Time
+   */
+
+  ICAL.Time.SUNDAY = 1;
+  ICAL.Time.MONDAY = 2;
+  ICAL.Time.TUESDAY = 3;
+  ICAL.Time.WEDNESDAY = 4;
+  ICAL.Time.THURSDAY = 5;
+  ICAL.Time.FRIDAY = 6;
+  ICAL.Time.SATURDAY = 7;
+
+  /**
+   * The default weekday for the WKST part.
+   * @constant
+   * @default ICAL.Time.MONDAY
+   */
+  ICAL.Time.DEFAULT_WEEK_START = ICAL.Time.MONDAY;
+})();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Sun May 24 2015 23:53:52 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

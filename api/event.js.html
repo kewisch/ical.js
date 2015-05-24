@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>event.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ICAL.Binary.html">Binary</a><ul class='methods'><li data-type='method'><a href="ICAL.Binary.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Binary.html#decodeValue">decodeValue</a></li><li data-type='method'><a href="ICAL.Binary.html#setEncodedValue">setEncodedValue</a></li><li data-type='method'><a href="ICAL.Binary.html#toString">toString</a></li></ul></li><li><a href="ICAL.Component.html">Component</a><ul class='methods'><li data-type='method'><a href="ICAL.Component.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Component.html#addProperty">addProperty</a></li><li data-type='method'><a href="ICAL.Component.html#addPropertyWithValue">addPropertyWithValue</a></li><li data-type='method'><a href="ICAL.Component.html#addSubcomponent">addSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#getAllProperties">getAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#getAllSubcomponents">getAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstProperty">getFirstProperty</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstPropertyValue">getFirstPropertyValue</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstSubcomponent">getFirstSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#hasProperty">hasProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllProperties">removeAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllSubcomponents">removeAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#removeProperty">removeProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeSubcomponent">removeSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Component.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Component.html#updatePropertyWithValue">updatePropertyWithValue</a></li></ul></li><li><a href="ICAL.ComponentParser.html">ComponentParser</a><ul class='methods'><li data-type='method'><a href="ICAL.ComponentParser.html#process">process</a></li></ul></li><li><a href="ICAL.Duration.html">Duration</a><ul class='methods'><li data-type='method'><a href="ICAL.Duration.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Duration.html#.isValueString">isValueString</a></li><li data-type='method'><a href="ICAL.Duration.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Duration.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Duration.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#normalize">normalize</a></li><li data-type='method'><a href="ICAL.Duration.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Duration.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Duration.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#toString">toString</a></li></ul></li><li><a href="ICAL.Event.html">Event</a><ul class='methods'><li data-type='method'><a href="ICAL.Event.html#findRangeException">findRangeException</a></li><li data-type='method'><a href="ICAL.Event.html#getOccurrenceDetails">getOccurrenceDetails</a></li><li data-type='method'><a href="ICAL.Event.html#getRecurrenceTypes">getRecurrenceTypes</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurrenceException">isRecurrenceException</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurring">isRecurring</a></li><li data-type='method'><a href="ICAL.Event.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Event.html#modifiesFuture">modifiesFuture</a></li><li data-type='method'><a href="ICAL.Event.html#relateException">relateException</a></li><li data-type='method'><a href="ICAL.Event.html#toString">toString</a></li></ul></li><li><a href="ICAL.parse.ParserError.html">ParserError</a></li><li><a href="ICAL.Period.html">Period</a><ul class='methods'><li data-type='method'><a href="ICAL.Period.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Period.html#.fromJSON">fromJSON</a></li><li data-type='method'><a href="ICAL.Period.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Period.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Period.html#getDuration">getDuration</a></li><li data-type='method'><a href="ICAL.Period.html#getEnd">getEnd</a></li><li data-type='method'><a href="ICAL.Period.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Period.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Period.html#toString">toString</a></li></ul></li><li><a href="ICAL.Property.html">Property</a><ul class='methods'><li data-type='method'><a href="ICAL.Property.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Property.html#getDefaultType">getDefaultType</a></li><li data-type='method'><a href="ICAL.Property.html#getFirstValue">getFirstValue</a></li><li data-type='method'><a href="ICAL.Property.html#getParameter">getParameter</a></li><li data-type='method'><a href="ICAL.Property.html#getValues">getValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeAllValues">removeAllValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeParameter">removeParameter</a></li><li data-type='method'><a href="ICAL.Property.html#resetType">resetType</a></li><li data-type='method'><a href="ICAL.Property.html#setParameter">setParameter</a></li><li data-type='method'><a href="ICAL.Property.html#setValue">setValue</a></li><li data-type='method'><a href="ICAL.Property.html#setValues">setValues</a></li><li data-type='method'><a href="ICAL.Property.html#toICAL">toICAL</a></li><li data-type='method'><a href="ICAL.Property.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Recur.html">Recur</a><ul class='methods'><li data-type='method'><a href="ICAL.Recur.html#._stringToData">_stringToData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Recur.html#.icalDayToNumericDay">icalDayToNumericDay</a></li><li data-type='method'><a href="ICAL.Recur.html#.numericDayToIcalDay">numericDayToIcalDay</a></li><li data-type='method'><a href="ICAL.Recur.html#addComponent">addComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Recur.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#getComponent">getComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#getNextOccurrence">getNextOccurrence</a></li><li data-type='method'><a href="ICAL.Recur.html#isByCount">isByCount</a></li><li data-type='method'><a href="ICAL.Recur.html#isFinite">isFinite</a></li><li data-type='method'><a href="ICAL.Recur.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Recur.html#setComponent">setComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Recur.html#toString">toString</a></li></ul></li><li><a href="ICAL.RecurExpansion.html">RecurExpansion</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurExpansion.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.RecurIterator.html">RecurIterator</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurIterator.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Time.html">Time</a><ul class='methods'><li data-type='method'><a href="ICAL.Time.html#.daysInMonth">daysInMonth</a></li><li data-type='method'><a href="ICAL.Time.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateString">fromDateString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateTimeString">fromDateTimeString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDayOfYear">fromDayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#.fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromStringv2">fromStringv2</a></li><li data-type='method'><a href="ICAL.Time.html#.isLeapYear">isLeapYear</a></li><li data-type='method'><a href="ICAL.Time.html#.now">now</a></li><li data-type='method'><a href="ICAL.Time.html#.weekOneStarts">weekOneStarts</a></li><li data-type='method'><a href="ICAL.Time.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.Time.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.Time.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Time.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Time.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.Time.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Time.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.Time.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.Time.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Time.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Time.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Time.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.Time.html#weekNumber">weekNumber</a></li></ul></li><li><a href="ICAL.Timezone.html">Timezone</a><ul class='methods'><li data-type='method'><a href="ICAL.Timezone.html#.convert_time">convert_time</a></li><li data-type='method'><a href="ICAL.Timezone.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Timezone.html#utcOffset">utcOffset</a></li></ul></li><li><a href="ICAL.UtcOffset.html">UtcOffset</a><ul class='methods'><li data-type='method'><a href="ICAL.UtcOffset.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#clone">clone</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#compare">compare</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toString">toString</a></li></ul></li><li><a href="ICAL.VCardTime.html">VCardTime</a><ul class='methods'><li data-type='method'><a href="ICAL.VCardTime.html#.fromDateAndOrTimeString">fromDateAndOrTimeString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.VCardTime.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.VCardTime.html#clone">clone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compare">compare</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#reset">reset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toString">toString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#weekNumber">weekNumber</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="ICAL.html">ICAL</a><ul class='methods'><li data-type='method'><a href="ICAL.html#.parsefunction">parse</a></li><li data-type='method'><a href="ICAL.html#.stringifyfunction">stringify</a></li></ul></li><li><a href="ICAL.design.html">design</a><ul class='methods'><li data-type='method'><a href="ICAL.design.html#.getDesignSet">getDesignSet</a></li></ul></li><li><a href="ICAL.helpers.html">helpers</a><ul class='methods'><li data-type='method'><a href="ICAL.helpers.html#.binsearchInsert">binsearchInsert</a></li><li data-type='method'><a href="ICAL.helpers.html#.clone">clone</a></li><li data-type='method'><a href="ICAL.helpers.html#.foldline">foldline</a></li><li data-type='method'><a href="ICAL.helpers.html#.formatClassType">formatClassType</a></li><li data-type='method'><a href="ICAL.helpers.html#.isStrictlyNaN">isStrictlyNaN</a></li><li data-type='method'><a href="ICAL.helpers.html#.pad2">pad2</a></li><li data-type='method'><a href="ICAL.helpers.html#.strictParseInt">strictParseInt</a></li><li data-type='method'><a href="ICAL.helpers.html#.trunc">trunc</a></li><li data-type='method'><a href="ICAL.helpers.html#.unescapedIndexOf">unescapedIndexOf</a></li></ul></li><li><a href="ICAL.parse.html">parse</a><ul class='methods'><li data-type='method'><a href="ICAL.parse.html#._rfc6868Escape">_rfc6868Escape</a></li><li data-type='method'><a href="ICAL.parse.html#.component">component</a></li><li data-type='method'><a href="ICAL.parse.html#.property">property</a></li></ul></li><li><a href="ICAL.stringify.html">stringify</a><ul class='methods'><li data-type='method'><a href="ICAL.stringify.html#.component">component</a></li><li data-type='method'><a href="ICAL.stringify.html#.multiValue">multiValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.property">property</a></li><li data-type='method'><a href="ICAL.stringify.html#.propertyValue">propertyValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.value">value</a></li></ul></li><li><a href="ICAL.TimezoneService.html">TimezoneService</a><ul class='methods'><li data-type='method'><a href="ICAL.TimezoneService.html#.get">get</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.has">has</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.register">register</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.remove">remove</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">event.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
+ICAL.Event = (function() {
+
+  /**
+   * @classdesc
+   * ICAL.js is organized into multiple layers. The bottom layer is a raw jCal
+   * object, followed by the component/property layer. The highest level is the
+   * event representation, which this class is part of. See the
+   * {@tutorial layers} guide for more details.
+   *
+   * @class
+   * @alias ICAL.Event
+   * @param {ICAL.Component=} component         The ICAL.Component to base this event on
+   * @param {Object} options                    Options for this event
+   * @param {Boolean} options.strictExceptions
+   *          When true, will verify exceptions are related by their UUID
+   * @param {Array&lt;ICAL.Component|ICAL.Event>} options.exceptions
+   *          Exceptions to this event, either as components or events
+   */
+  function Event(component, options) {
+    if (!(component instanceof ICAL.Component)) {
+      options = component;
+      component = null;
+    }
+
+    if (component) {
+      this.component = component;
+    } else {
+      this.component = new ICAL.Component('vevent');
+    }
+
+    this._rangeExceptionCache = Object.create(null);
+    this.exceptions = Object.create(null);
+    this.rangeExceptions = [];
+
+    if (options &amp;&amp; options.strictExceptions) {
+      this.strictExceptions = options.strictExceptions;
+    }
+
+    if (options &amp;&amp; options.exceptions) {
+      options.exceptions.forEach(this.relateException, this);
+    }
+  }
+
+  Event.prototype = {
+
+    THISANDFUTURE: 'THISANDFUTURE',
+
+    /**
+     * List of related event exceptions.
+     *
+     * @type {ICAL.Event[]}
+     */
+    exceptions: null,
+
+    /**
+     * When true, will verify exceptions are related by their UUID.
+     *
+     * @type {Boolean}
+     */
+    strictExceptions: false,
+
+    /**
+     * Relates a given event exception to this object.  If the given component
+     * does not share the UID of this event it cannot be related and will throw
+     * an exception.
+     *
+     * If this component is an exception it cannot have other exceptions
+     * related to it.
+     *
+     * @param {ICAL.Component|ICAL.Event} obj       Component or event
+     */
+    relateException: function(obj) {
+      if (this.isRecurrenceException()) {
+        throw new Error('cannot relate exception to exceptions');
+      }
+
+      if (obj instanceof ICAL.Component) {
+        obj = new ICAL.Event(obj);
+      }
+
+      if (this.strictExceptions &amp;&amp; obj.uid !== this.uid) {
+        throw new Error('attempted to relate unrelated exception');
+      }
+
+      var id = obj.recurrenceId.toString();
+
+      // we don't sort or manage exceptions directly
+      // here the recurrence expander handles that.
+      this.exceptions[id] = obj;
+
+      // index RANGE=THISANDFUTURE exceptions so we can
+      // look them up later in getOccurrenceDetails.
+      if (obj.modifiesFuture()) {
+        var item = [
+          obj.recurrenceId.toUnixTime(), id
+        ];
+
+        // we keep them sorted so we can find the nearest
+        // value later on...
+        var idx = ICAL.helpers.binsearchInsert(
+          this.rangeExceptions,
+          item,
+          compareRangeException
+        );
+
+        this.rangeExceptions.splice(idx, 0, item);
+      }
+    },
+
+    /**
+     * Checks if this record is an exception and has the RANGE=THISANDFUTURE
+     * value.
+     *
+     * @return {Boolean}        True, when exception is within range
+     */
+    modifiesFuture: function() {
+      var range = this.component.getFirstPropertyValue('range');
+      return range === this.THISANDFUTURE;
+    },
+
+    /**
+     * Finds the range exception nearest to the given date.
+     *
+     * @param {ICAL.Time} time usually an occurrence time of an event
+     * @return {?ICAL.Event} the related event/exception or null
+     */
+    findRangeException: function(time) {
+      if (!this.rangeExceptions.length) {
+        return null;
+      }
+
+      var utc = time.toUnixTime();
+      var idx = ICAL.helpers.binsearchInsert(
+        this.rangeExceptions,
+        [utc],
+        compareRangeException
+      );
+
+      idx -= 1;
+
+      // occurs before
+      if (idx &lt; 0) {
+        return null;
+      }
+
+      var rangeItem = this.rangeExceptions[idx];
+
+      /* istanbul ignore next: sanity check only */
+      if (utc &lt; rangeItem[0]) {
+        return null;
+      }
+
+      return rangeItem[1];
+    },
+
+    /**
+     * This object is returned by {@link ICAL.Event#getOccurrenceDetails getOccurrenceDetails}
+     *
+     * @typedef {Object} occurrenceDetails
+     * @memberof ICAL.Event
+     * @property {ICAL.Time} recurrenceId       The passed in recurrence id
+     * @property {ICAL.Event} item              The occurrence
+     * @property {ICAL.Time} startDate          The start of the occurrence
+     * @property {ICAL.Time} endDate            The end of the occurrence
+     */
+
+    /**
+     * Returns the occurrence details based on its start time.  If the
+     * occurrence has an exception will return the details for that exception.
+     *
+     * NOTE: this method is intend to be used in conjunction
+     *       with the {@link ICAL.Event#iterator iterator} method.
+     *
+     * @param {ICAL.Time} occurrence time occurrence
+     * @return {ICAL.Event.occurrenceDetails} Information about the occurrence
+     */
+    getOccurrenceDetails: function(occurrence) {
+      var id = occurrence.toString();
+      var utcId = occurrence.convertToZone(ICAL.Timezone.utcTimezone).toString();
+      var item;
+      var result = {
+        //XXX: Clone?
+        recurrenceId: occurrence
+      };
+
+      if (id in this.exceptions) {
+        item = result.item = this.exceptions[id];
+        result.startDate = item.startDate;
+        result.endDate = item.endDate;
+        result.item = item;
+      } else if (utcId in this.exceptions) {
+        item = this.exceptions[utcId];
+        result.startDate = item.startDate;
+        result.endDate = item.endDate;
+        result.item = item;
+      } else {
+        // range exceptions (RANGE=THISANDFUTURE) have a
+        // lower priority then direct exceptions but
+        // must be accounted for first. Their item is
+        // always the first exception with the range prop.
+        var rangeExceptionId = this.findRangeException(
+          occurrence
+        );
+        var end;
+
+        if (rangeExceptionId) {
+          var exception = this.exceptions[rangeExceptionId];
+
+          // range exception must modify standard time
+          // by the difference (if any) in start/end times.
+          result.item = exception;
+
+          var startDiff = this._rangeExceptionCache[rangeExceptionId];
+
+          if (!startDiff) {
+            var original = exception.recurrenceId.clone();
+            var newStart = exception.startDate.clone();
+
+            // zones must be same otherwise subtract may be incorrect.
+            original.zone = newStart.zone;
+            startDiff = newStart.subtractDate(original);
+
+            this._rangeExceptionCache[rangeExceptionId] = startDiff;
+          }
+
+          var start = occurrence.clone();
+          start.zone = exception.startDate.zone;
+          start.addDuration(startDiff);
+
+          end = start.clone();
+          end.addDuration(exception.duration);
+
+          result.startDate = start;
+          result.endDate = end;
+        } else {
+          // no range exception standard expansion
+          end = occurrence.clone();
+          end.addDuration(this.duration);
+
+          result.endDate = end;
+          result.startDate = occurrence;
+          result.item = this;
+        }
+      }
+
+      return result;
+    },
+
+    /**
+     * Builds a recur expansion instance for a specific point in time (defaults
+     * to startDate).
+     *
+     * @param {ICAL.Time} startTime     Starting point for expansion
+     * @return {ICAL.RecurExpansion}    Expansion object
+     */
+    iterator: function(startTime) {
+      return new ICAL.RecurExpansion({
+        component: this.component,
+        dtstart: startTime || this.startDate
+      });
+    },
+
+    /**
+     * Checks if the event is recurring
+     *
+     * @return {Boolean}        True, if event is recurring
+     */
+    isRecurring: function() {
+      var comp = this.component;
+      return comp.hasProperty('rrule') || comp.hasProperty('rdate');
+    },
+
+    /**
+     * Checks if the event describes a recurrence exception. See
+     * {@tutorial terminology} for details.
+     *
+     * @return {Boolean}    True, if the even describes a recurrence exception
+     */
+    isRecurrenceException: function() {
+      return this.component.hasProperty('recurrence-id');
+    },
+
+    /**
+     * Returns the types of recurrences this event may have.
+     *
+     * Returned as an object with the following possible keys:
+     *
+     *    - YEARLY
+     *    - MONTHLY
+     *    - WEEKLY
+     *    - DAILY
+     *    - MINUTELY
+     *    - SECONDLY
+     *
+     * @return {Object.&lt;ICAL.Recur.frequencyValues, Boolean>}
+     *          Object of recurrence flags
+     */
+    getRecurrenceTypes: function() {
+      var rules = this.component.getAllProperties('rrule');
+      var i = 0;
+      var len = rules.length;
+      var result = Object.create(null);
+
+      for (; i &lt; len; i++) {
+        var value = rules[i].getFirstValue();
+        result[value.freq] = true;
+      }
+
+      return result;
+    },
+
+    /**
+     * The uid of this event
+     * @type {String}
+     */
+    get uid() {
+      return this._firstProp('uid');
+    },
+
+    set uid(value) {
+      this._setProp('uid', value);
+    },
+
+    /**
+     * The start date
+     * @type {ICAL.Time}
+     */
+    get startDate() {
+      return this._firstProp('dtstart');
+    },
+
+    set startDate(value) {
+      this._setTime('dtstart', value);
+    },
+
+    /**
+     * The end date. This can be the result directly from the property, or the
+     * end date calculated from start date and duration.
+     * @type {ICAL.Time}
+     */
+    get endDate() {
+      var endDate = this._firstProp('dtend');
+      if (!endDate) {
+          var duration = this._firstProp('duration');
+          endDate = this.startDate.clone();
+          if (duration) {
+              endDate.addDuration(duration);
+          } else if (endDate.isDate) {
+              endDate.day += 1;
+          }
+      }
+      return endDate;
+    },
+
+    set endDate(value) {
+      this._setTime('dtend', value);
+    },
+
+    /**
+     * The duration. This can be the result directly from the property, or the
+     * duration calculated from start date and end date.
+     * @type {ICAL.Duration}
+     * @readonly
+     */
+    get duration() {
+      var duration = this._firstProp('duration');
+      if (!duration) {
+        return this.endDate.subtractDate(this.startDate);
+      }
+      return duration;
+    },
+
+    /**
+     * The location of the event.
+     * @type {String}
+     */
+    get location() {
+      return this._firstProp('location');
+    },
+
+    set location(value) {
+      return this._setProp('location', value);
+    },
+
+    /**
+     * The attendees in the event
+     * @type {ICAL.Property[]}
+     * @readonly
+     */
+    get attendees() {
+      //XXX: This is way lame we should have a better
+      //     data structure for this later.
+      return this.component.getAllProperties('attendee');
+    },
+
+
+    /**
+     * The event summary
+     * @type {String}
+     */
+    get summary() {
+      return this._firstProp('summary');
+    },
+
+    set summary(value) {
+      this._setProp('summary', value);
+    },
+
+    /**
+     * The event description.
+     * @type {String}
+     */
+    get description() {
+      return this._firstProp('description');
+    },
+
+    set description(value) {
+      this._setProp('description', value);
+    },
+
+    /**
+     * The organizer value as an uri. In most cases this is a mailto: uri, but
+     * it can also be something else, like urn:uuid:...
+     * @type {String}
+     */
+    get organizer() {
+      return this._firstProp('organizer');
+    },
+
+    set organizer(value) {
+      this._setProp('organizer', value);
+    },
+
+    /**
+     * The sequence value for this event. Used for scheduling
+     * see {@tutorial terminology}.
+     * @type {Number}
+     */
+    get sequence() {
+      return this._firstProp('sequence');
+    },
+
+    set sequence(value) {
+      this._setProp('sequence', value);
+    },
+
+    /**
+     * The recurrence id for this event. See {@tutorial terminology} for details.
+     * @type {ICAL.Time}
+     */
+    get recurrenceId() {
+      return this._firstProp('recurrence-id');
+    },
+
+    set recurrenceId(value) {
+      this._setProp('recurrence-id', value);
+    },
+
+    /**
+     * Set/update a time property's value.
+     * This will also update the TZID of the property.
+     *
+     * TODO: this method handles the case where we are switching
+     * from a known timezone to an implied timezone (one without TZID).
+     * This does _not_ handle the case of moving between a known
+     *  (by TimezoneService) timezone to an unknown timezone...
+     *
+     * We will not add/remove/update the VTIMEZONE subcomponents
+     *  leading to invalid ICAL data...
+     * @private
+     * @param {String} propName     The property name
+     * @param {ICAL.Time} time      The time to set
+     */
+    _setTime: function(propName, time) {
+      var prop = this.component.getFirstProperty(propName);
+
+      if (!prop) {
+        prop = new ICAL.Property(propName);
+        this.component.addProperty(prop);
+      }
+
+      // utc and local don't get a tzid
+      if (
+        time.zone === ICAL.Timezone.localTimezone ||
+        time.zone === ICAL.Timezone.utcTimezone
+      ) {
+        // remove the tzid
+        prop.removeParameter('tzid');
+      } else {
+        prop.setParameter('tzid', time.zone.tzid);
+      }
+
+      prop.setValue(time);
+    },
+
+    _setProp: function(name, value) {
+      this.component.updatePropertyWithValue(name, value);
+    },
+
+    _firstProp: function(name) {
+      return this.component.getFirstPropertyValue(name);
+    },
+
+    /**
+     * The string representation of this event.
+     * @return {String}
+     */
+    toString: function() {
+      return this.component.toString();
+    }
+
+  };
+
+  function compareRangeException(a, b) {
+    if (a[0] > b[0]) return 1;
+    if (b[0] > a[0]) return -1;
+    return 0;
+  }
+
+  return Event;
+}());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Sun May 24 2015 23:53:52 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

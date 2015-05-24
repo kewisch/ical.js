@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Period - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ICAL.Binary.html">Binary</a><ul class='methods'><li data-type='method'><a href="ICAL.Binary.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Binary.html#decodeValue">decodeValue</a></li><li data-type='method'><a href="ICAL.Binary.html#setEncodedValue">setEncodedValue</a></li><li data-type='method'><a href="ICAL.Binary.html#toString">toString</a></li></ul></li><li><a href="ICAL.Component.html">Component</a><ul class='methods'><li data-type='method'><a href="ICAL.Component.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Component.html#addProperty">addProperty</a></li><li data-type='method'><a href="ICAL.Component.html#addPropertyWithValue">addPropertyWithValue</a></li><li data-type='method'><a href="ICAL.Component.html#addSubcomponent">addSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#getAllProperties">getAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#getAllSubcomponents">getAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstProperty">getFirstProperty</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstPropertyValue">getFirstPropertyValue</a></li><li data-type='method'><a href="ICAL.Component.html#getFirstSubcomponent">getFirstSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#hasProperty">hasProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllProperties">removeAllProperties</a></li><li data-type='method'><a href="ICAL.Component.html#removeAllSubcomponents">removeAllSubcomponents</a></li><li data-type='method'><a href="ICAL.Component.html#removeProperty">removeProperty</a></li><li data-type='method'><a href="ICAL.Component.html#removeSubcomponent">removeSubcomponent</a></li><li data-type='method'><a href="ICAL.Component.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Component.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Component.html#updatePropertyWithValue">updatePropertyWithValue</a></li></ul></li><li><a href="ICAL.ComponentParser.html">ComponentParser</a><ul class='methods'><li data-type='method'><a href="ICAL.ComponentParser.html#process">process</a></li></ul></li><li><a href="ICAL.Duration.html">Duration</a><ul class='methods'><li data-type='method'><a href="ICAL.Duration.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Duration.html#.isValueString">isValueString</a></li><li data-type='method'><a href="ICAL.Duration.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Duration.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Duration.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Duration.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#normalize">normalize</a></li><li data-type='method'><a href="ICAL.Duration.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Duration.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Duration.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.Duration.html#toString">toString</a></li></ul></li><li><a href="ICAL.Event.html">Event</a><ul class='methods'><li data-type='method'><a href="ICAL.Event.html#findRangeException">findRangeException</a></li><li data-type='method'><a href="ICAL.Event.html#getOccurrenceDetails">getOccurrenceDetails</a></li><li data-type='method'><a href="ICAL.Event.html#getRecurrenceTypes">getRecurrenceTypes</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurrenceException">isRecurrenceException</a></li><li data-type='method'><a href="ICAL.Event.html#isRecurring">isRecurring</a></li><li data-type='method'><a href="ICAL.Event.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Event.html#modifiesFuture">modifiesFuture</a></li><li data-type='method'><a href="ICAL.Event.html#relateException">relateException</a></li><li data-type='method'><a href="ICAL.Event.html#toString">toString</a></li></ul></li><li><a href="ICAL.parse.ParserError.html">ParserError</a></li><li><a href="ICAL.Period.html">Period</a><ul class='methods'><li data-type='method'><a href="ICAL.Period.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Period.html#.fromJSON">fromJSON</a></li><li data-type='method'><a href="ICAL.Period.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Period.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Period.html#getDuration">getDuration</a></li><li data-type='method'><a href="ICAL.Period.html#getEnd">getEnd</a></li><li data-type='method'><a href="ICAL.Period.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Period.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Period.html#toString">toString</a></li></ul></li><li><a href="ICAL.Property.html">Property</a><ul class='methods'><li data-type='method'><a href="ICAL.Property.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Property.html#getDefaultType">getDefaultType</a></li><li data-type='method'><a href="ICAL.Property.html#getFirstValue">getFirstValue</a></li><li data-type='method'><a href="ICAL.Property.html#getParameter">getParameter</a></li><li data-type='method'><a href="ICAL.Property.html#getValues">getValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeAllValues">removeAllValues</a></li><li data-type='method'><a href="ICAL.Property.html#removeParameter">removeParameter</a></li><li data-type='method'><a href="ICAL.Property.html#resetType">resetType</a></li><li data-type='method'><a href="ICAL.Property.html#setParameter">setParameter</a></li><li data-type='method'><a href="ICAL.Property.html#setValue">setValue</a></li><li data-type='method'><a href="ICAL.Property.html#setValues">setValues</a></li><li data-type='method'><a href="ICAL.Property.html#toICAL">toICAL</a></li><li data-type='method'><a href="ICAL.Property.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Recur.html">Recur</a><ul class='methods'><li data-type='method'><a href="ICAL.Recur.html#._stringToData">_stringToData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Recur.html#.icalDayToNumericDay">icalDayToNumericDay</a></li><li data-type='method'><a href="ICAL.Recur.html#.numericDayToIcalDay">numericDayToIcalDay</a></li><li data-type='method'><a href="ICAL.Recur.html#addComponent">addComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Recur.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Recur.html#getComponent">getComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#getNextOccurrence">getNextOccurrence</a></li><li data-type='method'><a href="ICAL.Recur.html#isByCount">isByCount</a></li><li data-type='method'><a href="ICAL.Recur.html#isFinite">isFinite</a></li><li data-type='method'><a href="ICAL.Recur.html#iterator">iterator</a></li><li data-type='method'><a href="ICAL.Recur.html#setComponent">setComponent</a></li><li data-type='method'><a href="ICAL.Recur.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Recur.html#toString">toString</a></li></ul></li><li><a href="ICAL.RecurExpansion.html">RecurExpansion</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurExpansion.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurExpansion.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.RecurIterator.html">RecurIterator</a><ul class='methods'><li data-type='method'><a href="ICAL.RecurIterator.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#next">next</a></li><li data-type='method'><a href="ICAL.RecurIterator.html#toJSON">toJSON</a></li></ul></li><li><a href="ICAL.Time.html">Time</a><ul class='methods'><li data-type='method'><a href="ICAL.Time.html#.daysInMonth">daysInMonth</a></li><li data-type='method'><a href="ICAL.Time.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateString">fromDateString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDateTimeString">fromDateTimeString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromDayOfYear">fromDayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#.fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.Time.html#.fromStringv2">fromStringv2</a></li><li data-type='method'><a href="ICAL.Time.html#.isLeapYear">isLeapYear</a></li><li data-type='method'><a href="ICAL.Time.html#.now">now</a></li><li data-type='method'><a href="ICAL.Time.html#.weekOneStarts">weekOneStarts</a></li><li data-type='method'><a href="ICAL.Time.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.Time.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.Time.html#clone">clone</a></li><li data-type='method'><a href="ICAL.Time.html#compare">compare</a></li><li data-type='method'><a href="ICAL.Time.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.Time.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Time.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.Time.html#reset">reset</a></li><li data-type='method'><a href="ICAL.Time.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.Time.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.Time.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.Time.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.Time.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.Time.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.Time.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.Time.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.Time.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Time.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.Time.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.Time.html#weekNumber">weekNumber</a></li></ul></li><li><a href="ICAL.Timezone.html">Timezone</a><ul class='methods'><li data-type='method'><a href="ICAL.Timezone.html#.convert_time">convert_time</a></li><li data-type='method'><a href="ICAL.Timezone.html#.fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.Timezone.html#toString">toString</a></li><li data-type='method'><a href="ICAL.Timezone.html#utcOffset">utcOffset</a></li></ul></li><li><a href="ICAL.UtcOffset.html">UtcOffset</a><ul class='methods'><li data-type='method'><a href="ICAL.UtcOffset.html#.fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#.fromString">fromString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#clone">clone</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#compare">compare</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#fromSeconds">fromSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toSeconds">toSeconds</a></li><li data-type='method'><a href="ICAL.UtcOffset.html#toString">toString</a></li></ul></li><li><a href="ICAL.VCardTime.html">VCardTime</a><ul class='methods'><li data-type='method'><a href="ICAL.VCardTime.html#.fromDateAndOrTimeString">fromDateAndOrTimeString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#addDuration">addDuration</a></li><li data-type='method'><a href="ICAL.VCardTime.html#adjust">adjust</a></li><li data-type='method'><a href="ICAL.VCardTime.html#clone">clone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compare">compare</a></li><li data-type='method'><a href="ICAL.VCardTime.html#compareDateOnlyTz">compareDateOnlyTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#convertToZone">convertToZone</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfWeek">dayOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#dayOfYear">dayOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfMonth">endOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfWeek">endOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#endOfYear">endOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromData">fromData</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromJSDate">fromJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#fromUnixTime">fromUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#isNthWeekDay">isNthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#nthWeekDay">nthWeekDay</a></li><li data-type='method'><a href="ICAL.VCardTime.html#reset">reset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#resetTo">resetTo</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startDoyWeek">startDoyWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfMonth">startOfMonth</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfWeek">startOfWeek</a></li><li data-type='method'><a href="ICAL.VCardTime.html#startOfYear">startOfYear</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDate">subtractDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#subtractDateTz">subtractDateTz</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toICALString">toICALString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSDate">toJSDate</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toJSON">toJSON</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toString">toString</a></li><li data-type='method'><a href="ICAL.VCardTime.html#toUnixTime">toUnixTime</a></li><li data-type='method'><a href="ICAL.VCardTime.html#utcOffset">utcOffset</a></li><li data-type='method'><a href="ICAL.VCardTime.html#weekNumber">weekNumber</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="ICAL.html">ICAL</a><ul class='methods'><li data-type='method'><a href="ICAL.html#.parsefunction">parse</a></li><li data-type='method'><a href="ICAL.html#.stringifyfunction">stringify</a></li></ul></li><li><a href="ICAL.design.html">design</a><ul class='methods'><li data-type='method'><a href="ICAL.design.html#.getDesignSet">getDesignSet</a></li></ul></li><li><a href="ICAL.helpers.html">helpers</a><ul class='methods'><li data-type='method'><a href="ICAL.helpers.html#.binsearchInsert">binsearchInsert</a></li><li data-type='method'><a href="ICAL.helpers.html#.clone">clone</a></li><li data-type='method'><a href="ICAL.helpers.html#.foldline">foldline</a></li><li data-type='method'><a href="ICAL.helpers.html#.formatClassType">formatClassType</a></li><li data-type='method'><a href="ICAL.helpers.html#.isStrictlyNaN">isStrictlyNaN</a></li><li data-type='method'><a href="ICAL.helpers.html#.pad2">pad2</a></li><li data-type='method'><a href="ICAL.helpers.html#.strictParseInt">strictParseInt</a></li><li data-type='method'><a href="ICAL.helpers.html#.trunc">trunc</a></li><li data-type='method'><a href="ICAL.helpers.html#.unescapedIndexOf">unescapedIndexOf</a></li></ul></li><li><a href="ICAL.parse.html">parse</a><ul class='methods'><li data-type='method'><a href="ICAL.parse.html#._rfc6868Escape">_rfc6868Escape</a></li><li data-type='method'><a href="ICAL.parse.html#.component">component</a></li><li data-type='method'><a href="ICAL.parse.html#.property">property</a></li></ul></li><li><a href="ICAL.stringify.html">stringify</a><ul class='methods'><li data-type='method'><a href="ICAL.stringify.html#.component">component</a></li><li data-type='method'><a href="ICAL.stringify.html#.multiValue">multiValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.property">property</a></li><li data-type='method'><a href="ICAL.stringify.html#.propertyValue">propertyValue</a></li><li data-type='method'><a href="ICAL.stringify.html#.value">value</a></li></ul></li><li><a href="ICAL.TimezoneService.html">TimezoneService</a><ul class='methods'><li data-type='method'><a href="ICAL.TimezoneService.html#.get">get</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.has">has</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.register">register</a></li><li data-type='method'><a href="ICAL.TimezoneService.html#.remove">remove</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Period</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="ICAL.html">ICAL</a>.</span>
+        
+        Period
+        </h2>
+        
+            <div class="class-description">This class represents the "period" value type, with various calculation
+and manipulation methods.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="Period"><span class="type-signature"></span>new Period<span class="signature">(aData)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    The passed data object cannot contain both and end date and a duration.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object with members of the period
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The start of the period</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The end of the period</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The duration of the period</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="duration"><span class="type-signature"></span>duration<span class="type-signature"> :<a href="ICAL.Duration.html">ICAL.Duration</a></span></h4>
+
+
+
+
+<div class="description">
+    The duration of the period
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="end"><span class="type-signature"></span>end<span class="type-signature"> :<a href="ICAL.Time.html">ICAL.Time</a></span></h4>
+
+
+
+
+<div class="description">
+    The end of the period
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line67">line 67</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="icalclass"><span class="type-signature">(constant) </span>icalclass<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    The class identifier.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"icalperiod"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="icaltype"><span class="type-signature">(constant) </span>icaltype<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    The type name, to be used in the jCal object.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"period"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="start"><span class="type-signature"></span>start<span class="type-signature"> :<a href="ICAL.Time.html">ICAL.Time</a></span></h4>
+
+
+
+
+<div class="description">
+    The start of the period
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fromData"><span class="type-signature">(static) </span>fromData<span class="signature">(aData)</span><span class="type-signature"> &rarr; {<a href="ICAL.Period.html">ICAL.Period</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new <a href="ICAL.Period.html">ICAL.Period</a> instance from the given data object.
+The passed data object cannot contain both and end date and a duration.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object with members of the period
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The start of the period</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The end of the period</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The duration of the period</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line201">line 201</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The period instance
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Period.html">ICAL.Period</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fromJSON"><span class="type-signature">(static) </span>fromJSON<span class="signature">(aData, aProp)</span><span class="type-signature"> &rarr; {<a href="ICAL.Period.html">ICAL.Period</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a new period instance from the given jCal data array. The first
+member is always the start date string, the second member is either a
+duration or end date string.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>aData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String, String></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The jCal data array</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>aProp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Property.html">ICAL.Property</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The property this jCal data is on</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line214">line 214</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The period instance
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Period.html">ICAL.Period</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fromString"><span class="type-signature">(static) </span>fromString<span class="signature">(str, prop)</span><span class="type-signature"> &rarr; {<a href="ICAL.Period.html">ICAL.Period</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a new <a href="ICAL.Period.html">ICAL.Period</a> instance from the passed string.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>str</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The string to parse</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>prop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ICAL.Property.html">ICAL.Property</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The property this period will be on</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line167">line 167</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The created period instance
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Period.html">ICAL.Period</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Period.html">ICAL.Period</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a clone of the duration object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The cloned object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Period.html">ICAL.Period</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getDuration"><span class="type-signature"></span>getDuration<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Duration.html">ICAL.Duration</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Calculates the duration of the period, either directly or by subtracting
+start from end date.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line110">line 110</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The calculated duration
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Duration.html">ICAL.Duration</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getEnd"><span class="type-signature"></span>getEnd<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.Time.html">ICAL.Time</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Calculates the end date of the period, either directly or by adding
+duration to start date.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line124">line 124</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The calculated end date
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.Time.html">ICAL.Time</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toICALString"><span class="type-signature"></span>toICALString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    The iCalendar string representation of this period.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line154">line 154</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toJSON"><span class="type-signature"></span>toJSON<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    The jCal representation of this period type.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line146">line 146</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    The string representation of this period.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="period.js.html">period.js</a>, <a href="period.js.html#line138">line 138</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Sun May 24 2015 23:53:52 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
