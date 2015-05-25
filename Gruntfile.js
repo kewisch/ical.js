@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     libinfo: {
       cwd: 'lib/ical',
+      doc: 'api',
       files: [
         'helpers.js', 'design.js', 'stringify.js', 'parse.js', 'component.js',
         'property.js', 'utc_offset.js', 'binary.js', 'period.js', 'duration.js',
@@ -132,6 +133,16 @@ module.exports = function(grunt) {
           passwordVar: 'GITHUB_PASSWORD'
         }
       }
+    },
+    jsdoc: {
+      dist: {
+        src: ['<%= libinfo.absfiles %>', 'README.md'],
+        options: {
+          destination: '<%= libinfo.doc %>',
+          template: './node_modules/minami/',
+          private: false
+        }
+      }
     }
   });
 
@@ -144,6 +155,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-coveralls');
   grunt.loadNpmTasks('grunt-gjslint');
+  grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-node-inspector');
@@ -157,7 +169,7 @@ module.exports = function(grunt) {
   grunt.registerTask('linters', ['jshint', 'gjslint', 'check-browser-build']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
+  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'jsdoc', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
   // Additional tasks:
   //   - tests.js: performance-update, test-node, test-browser,
   //   - timezones.js: timezones

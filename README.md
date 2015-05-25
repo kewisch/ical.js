@@ -35,6 +35,13 @@ ICAL.js has no dependencies and uses fairly basic JavaScript. Therefore, it
 should work in all versions of node and modern browsers. It does use getters
 and setters, so the minimum version of Internet Explorer is 9.
 
+## Documentation
+
+For a few guides with code samples, please check out
+[the wiki](https://github.com/mozilla-comm/ical.js/wiki). If you prefer,
+full API documentation [is available here](http://mozilla-comm.github.io/ical.js/api/).
+If you are missing anything, please don't hesitate to create an issue.
+
 ## Developing
 
 To contribute to ICAL.js you need to set up the development environment. This
@@ -98,15 +105,14 @@ To make sure all ICAL.js code uses a common style, please run the linters using
 `grunt linters`. Please make sure you fix any issues shown by this command
 before sending a pull request.
 
+### Documentation
+You can generate the documentation locally, this is also helpful to ensure the
+jsdoc you have written is valid. To do so, run `grunt jsdoc`. You will find the
+output in the `api/` subdirectory.
+
 ### Packaging
 When you are done with your work, you can run `grunt package` to create the
 single-file build for use in the browser. This file needs to be checked in (in
 a separate commit) and can be found in [build/ical.js](build/ical.js). Please
 see [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
-
-## Documentation
-
-Aside from inline documentation and jsdoc in the source, there are some guides
-and descriptions in [the wiki](https://github.com/mozilla-comm/ical.js/wiki).
-If you are missing anything, please don't hesitate to create an issue.

@@ -4,6 +4,7 @@ node_modules
 tools/tzurl
 tools/libical
 zoneinfo
+api
 coverage/
 build/benchmark/ical_upstream.js
 junk/

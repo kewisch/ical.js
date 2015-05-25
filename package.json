@@ -9,7 +9,7 @@
   "main": "build/ical.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/mozilla-comm/ical.js.git"
+    "url": "https://github.com/mozilla-comm/ical.js.git"
   },
   "keywords": [
     "calendar",
@@ -32,11 +32,13 @@
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-coveralls": "^1.0.0",
     "grunt-gjslint": "^0.1.6",
+    "grunt-jsdoc": "^0.6.4",
     "grunt-mocha-cli": "^1.13.0",
     "grunt-mocha-istanbul": "^2.4.0",
     "grunt-node-inspector": "^0.2.0",
     "grunt-release": "^0.12.0",
     "istanbul": "^0.3.14",
+    "minami": "^1.1.0",
     "mocha": "~2.2",
     "node-static": "^0.7.6",
     "open": "0.0.5",
