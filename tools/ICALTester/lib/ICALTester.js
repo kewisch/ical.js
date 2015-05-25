@@ -3,6 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2015 */
 
+
+/**
+ * ICALTester Module
+ * @module ICALTester
+ */
+
 var ICAL = require('../../..');
 var async = require('async');
 
@@ -140,9 +146,23 @@ var generators = {
   }
 };
 
+
+/**
+ * gjslint complains about missing docs
+ * @ignore
+ */
 module.exports = {
+  /**
+   * The number of concurrent threads to use
+   * @type {Number}
+   */
   get CONCURRENCY() { return CONCURRENCY; },
   set CONCURRENCY(v) { return (CONCURRENCY = v); },
+
+  /**
+   * The maximum execution time
+   * @type {Number}
+   */
   get MAX_EXECUTION_TIME() { return MAX_EXECUTION_TIME; },
   set MAX_EXECUTION_TIME(v) { return (MAX_EXECUTION_TIME = v); },
 

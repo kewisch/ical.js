@@ -1,3 +1,2 @@
---disable=131,110,6
---nojsdoc
+--disable=131,110,6,233,200
 --strict
