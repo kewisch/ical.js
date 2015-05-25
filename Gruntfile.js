@@ -162,7 +162,7 @@ module.exports = function(grunt) {
           name: 'Travis CI',
           email: 'builds@travis-ci.org',
         },
-        repo: 'git@github.com:kewisch/ical.js.git',
+        repo: 'git@github.com:mozilla-comm/ical.js.git',
         message: 'Update API Documentation for <%= travis.commit %>'
       },
       src: '<%= libinfo.doc %>/**'
