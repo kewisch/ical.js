@@ -1,7 +1,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 /* istanbul ignore next */
 /* jshint ignore:start */
@@ -11,6 +11,7 @@ if (typeof ICAL === 'undefined') {
     ICAL = exports;
   } else if (typeof window !== 'undefined') {
     // Browser globals
+    /** @ignore */
     this.ICAL = {};
   } else {
     // ...?
@@ -19,28 +20,45 @@ if (typeof ICAL === 'undefined') {
 }
 /* jshint ignore:end */
 
+
+/**
+ * The number of characters before iCalendar line folding should occur
+ * @type {Number}
+ * @default 75
+ */
 ICAL.foldLength = 75;
+
+
+/**
+ * The character(s) to be used for a newline. The default value is provided by
+ * rfc5545.
+ * @type {String}
+ * @default "\r\n"
+ */
 ICAL.newLineChar = '\r\n';
 
 
 /**
  * Helper functions used in various places within ical.js
+ * @namespace
  */
 ICAL.helpers = {
   /**
-   * Checks if the given number is NaN
+   * Checks if the given type is of the number type and also NaN.
+   *
+   * @param {Number} number     The number to check
+   * @return {Boolean}          True, if the number is strictly NaN
    */
   isStrictlyNaN: function(number) {
     return typeof(number) === 'number' && isNaN(number);
   },
 
   /**
-   * Parses a string value that is expected to be an
-   * integer, when the valid is not an integer throws
-   * a decoration error.
+   * Parses a string value that is expected to be an integer, when the valid is
+   * not an integer throws a decoration error.
    *
-   * @param {String} string raw input.
-   * @return {Number} integer.
+   * @param {String} string     Raw string input
+   * @return {Number}           Parsed integer
    */
   strictParseInt: function(string) {
     var result = parseInt(string, 10);
@@ -55,31 +73,29 @@ ICAL.helpers = {
   },
 
   /**
-   * Creates or returns a class instance
-   * of a given type with the initialization
-   * data if the data is not already an instance
-   * of the given type.
+   * Creates or returns a class instance of a given type with the initialization
+   * data if the data is not already an instance of the given type.
+   *
+   * @example
+   * var time = new ICAL.Time(...);
+   * var result = ICAL.helpers.formatClassType(time, ICAL.Time);
+   *
+   * (result instanceof ICAL.Time)
+   * // => true
+   *
+   * result = ICAL.helpers.formatClassType({}, ICAL.Time);
+   * (result isntanceof ICAL.Time)
+   * // => true
    *
    *
-   * Example:
-   *
-   *    var time = new ICAL.Time(...);
-   *    var result = ICAL.helpers.formatClassType(time, ICAL.Time);
-   *
-   *    (result instanceof ICAL.Time)
-   *    // => true
-   *
-   *    result = ICAL.helpers.formatClassType({}, ICAL.Time);
-   *    (result isntanceof ICAL.Time)
-   *    // => true
-   *
-   *
-   * @param {Object} data object initialization data.
-   * @param {Object} type object type (like ICAL.Time).
+   * @param {Object} data       object initialization data
+   * @param {Object} type       object type (like ICAL.Time)
+   * @return {?}                An instance of the found type.
    */
   formatClassType: function formatClassType(data, type) {
-    if (typeof(data) === 'undefined')
+    if (typeof(data) === 'undefined') {
       return undefined;
+    }
 
     if (data instanceof type) {
       return data;
@@ -88,12 +104,13 @@ ICAL.helpers = {
   },
 
   /**
-   * Identical to index of but will only match values
-   * when they are not preceded by a backslash char \\\
+   * Identical to indexOf but will only match values when they are not preceded
+   * by a backslash character.
    *
-   * @param {String} buffer string value.
-   * @param {String} search value.
-   * @param {Numeric} pos start position.
+   * @param {String} buffer         String to search
+   * @param {String} search         Value to look for
+   * @param {Number} pos            Start position
+   * @return {Number}               The position, or -1 if not found
    */
   unescapedIndexOf: function(buffer, search, pos) {
     while ((pos = buffer.indexOf(search, pos)) !== -1) {
@@ -106,6 +123,15 @@ ICAL.helpers = {
     return -1;
   },
 
+  /**
+   * Find the index for insertion using binary search.
+   *
+   * @param {Array} list            The list to search
+   * @param {?} seekVal             The value to insert
+   * @param {function(?,?)} cmpfunc The comparison func, that can
+   *                                  compare two seekVals
+   * @return {Number}               The insert position
+   */
   binsearchInsert: function(list, seekVal, cmpfunc) {
     if (!list.length)
       return 0;
@@ -133,14 +159,18 @@ ICAL.helpers = {
       return mid;
   },
 
+  /**
+   * Convenience function for debug output
+   * @private
+   */
   dumpn: /* istanbul ignore next */ function() {
     if (!ICAL.debug) {
-      return null;
+      return;
     }
 
     if (typeof (console) !== 'undefined' && 'log' in console) {
       ICAL.helpers.dumpn = function consoleDumpn(input) {
-        return console.log(input);
+        console.log(input);
       };
     } else {
       ICAL.helpers.dumpn = function geckoDumpn(input) {
@@ -148,9 +178,17 @@ ICAL.helpers = {
       };
     }
 
-    return ICAL.helpers.dumpn(arguments[0]);
+    ICAL.helpers.dumpn(arguments[0]);
   },
 
+  /**
+   * Clone the passed object or primitive. By default a shallow clone will be
+   * executed.
+   *
+   * @param {*} aSrc            The thing to clone
+   * @param {Boolean=} aDeep    If true, a deep clone will be performed
+   * @return {*}                The copy of the thing
+   */
   clone: function(aSrc, aDeep) {
     if (!aSrc || typeof aSrc != "object") {
       return aSrc;
@@ -181,6 +219,17 @@ ICAL.helpers = {
     }
   },
 
+  /**
+   * Performs iCalendar line folding. A line ending character is inserted and
+   * the next line begins with a whitespace.
+   *
+   * @example
+   * SUMMARY:This line will be fold
+   *  ed right in the middle of a word.
+   *
+   * @param {String} aLine      The line to fold
+   * @return {String}           The folded line
+   */
   foldline: function foldline(aLine) {
     var result = "";
     var line = aLine || "";
@@ -192,6 +241,13 @@ ICAL.helpers = {
     return result.substr(ICAL.newLineChar.length + 1);
   },
 
+  /**
+   * Pads the given string or number with zeros so it will have at least two
+   * characters.
+   *
+   * @param {String|Number} data    The string or number to pad
+   * @return {String}               The number padded as a string
+   */
   pad2: function pad(data) {
     if (typeof(data) !== 'string') {
       // handle fractions.
@@ -213,6 +269,12 @@ ICAL.helpers = {
     }
   },
 
+  /**
+   * Truncates the given number, correctly handling negative numbers.
+   *
+   * @param {Number} number     The number to truncate
+   * @return {Number}           The truncated number
+   */
   trunc: function trunc(number) {
     return (number < 0 ? Math.ceil(number) : Math.floor(number));
   }
@@ -220,11 +282,18 @@ ICAL.helpers = {
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+/** @namespace ICAL */
 
 /* istanbul ignore next */
 (typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.design = (function() {
   'use strict';
 
@@ -970,27 +1039,81 @@ ICAL.design = (function() {
     "xml": DEFAULT_TYPE_TEXT
   };
 
+
+  /**
+   * iCalendar design set
+   * @type {ICAL.design.designSet}
+   */
   var icalSet = {
     value: icalValues,
     param: icalParams,
     property: icalProperties
   };
 
+  /**
+   * vCard design set
+   * @type {ICAL.design.designSet}
+   */
   var vcardSet = {
     value: vcardValues,
     param: vcardParams,
     property: vcardProperties
   };
 
+  /**
+   * The design data, used by the parser to determine types for properties and
+   * other metadata needed to produce correct jCard/jCal data.
+   *
+   * @alias ICAL.design
+   * @namespace
+   */
   var design = {
+    /**
+     * A designSet describes value, parameter and property data. It is used by
+     * ther parser and stringifier in components and properties to determine they
+     * should be represented.
+     *
+     * @typedef {Object} designSet
+     * @memberOf ICAL.design
+     * @property {Object} value       Definitions for value types, keys are type names
+     * @property {Object} param       Definitions for params, keys are param names
+     * @property {Object} property    Defintions for properties, keys are property names
+     */
+
+
+    /**
+     * The default set for new properties and components if none is specified.
+     * @type {ICAL.design.designSet}
+     */
     defaultSet: icalSet,
+
+    /**
+     * The default type for unknown properties
+     * @type {String}
+     */
     defaultType: 'unknown',
 
-    getDesignSet: function(componentName) {
-      var isInDesign = componentName && componentName in design.components;
-      return isInDesign ? design.components[componentName] : design.defaultSet;
-    },
-
+    /**
+     * Holds the design set for known top-level components
+     *
+     * @type {Object}
+     * @property {ICAL.design.designSet} vcard       vCard VCARD
+     * @property {ICAL.design.designSet} vevent      iCalendar VEVENT
+     * @property {ICAL.design.designSet} vtodo       iCalendar VTODO
+     * @property {ICAL.design.designSet} vjournal    iCalendar VJOURNAL
+     * @property {ICAL.design.designSet} valarm      iCalendar VALARM
+     * @property {ICAL.design.designSet} vtimezone   iCalendar VTIMEZONE
+     * @property {ICAL.design.designSet} daylight    iCalendar DAYLIGHT
+     * @property {ICAL.design.designSet} standard    iCalendar STANDARD
+     *
+     * @example
+     * var propertyName = 'fn';
+     * var componentDesign = ICAL.design.components.vcard;
+     * var propertyDetails = componentDesign.property[propertyName];
+     * if (propertyDetails.defaultType == 'text') {
+     *   // Yep, sure is...
+     * }
+     */
     components: {
       vcard: vcardSet,
       vevent: icalSet,
@@ -1002,12 +1125,44 @@ ICAL.design = (function() {
       standard: icalSet
     },
 
+
+    /**
+     * The design set for iCalendar (rfc5545/rfc7265) components.
+     * @type {ICAL.design.designSet}
+     */
     icalendar: icalSet,
-    vcard: vcardSet
+
+    /**
+     * The design set for vCard (rfc6350/rfc7095) components.
+     * @type {ICAL.design.designSet}
+     */
+    vcard: vcardSet,
+
+    /**
+     * Gets the design set for the given component name.
+     *
+     * @param {String} componentName        The name of the component
+     * @return {ICAL.design.designSet}      The design set for the component
+     */
+    getDesignSet: function(componentName) {
+      var isInDesign = componentName && componentName in design.components;
+      return isInDesign ? design.components[componentName] : design.defaultSet;
+    }
   };
 
   return design;
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * Contains various functions to convert jCal and jCard data back into
+ * iCalendar and vCard.
+ * @namespace
+ */
 ICAL.stringify = (function() {
   'use strict';
 
@@ -1018,10 +1173,12 @@ ICAL.stringify = (function() {
   var helpers = ICAL.helpers;
 
   /**
-   * Convert a full jCal Array into a ical document.
+   * Convert a full jCal/jCard array into a iCalendar/vCard string.
    *
-   * @param {Array} jCal document.
-   * @return {String} ical document.
+   * @function ICAL.stringify
+   * @variation function
+   * @param {Array} jCal    The jCal/jCard document
+   * @return {String}       The stringified iCalendar/vCard document
    */
   function stringify(jCal) {
     if (typeof jCal[0] == "string") {
@@ -1047,8 +1204,12 @@ ICAL.stringify = (function() {
    * Exact component/property order is not saved all
    * properties will come before subcomponents.
    *
-   * @param {Array} component   jCal fragment of a component.
-   * @param {Object} designSet  The design data to use for this component.
+   * @function ICAL.stringify.component
+   * @param {Array} component
+   *        jCal/jCard fragment of a component
+   * @param {ICAL.design.designSet} designSet
+   *        The design data to use for this component
+   * @return {String}       The iCalendar/vCard string
    */
   stringify.component = function(component, designSet) {
     var name = component[0].toUpperCase();
@@ -1076,10 +1237,14 @@ ICAL.stringify = (function() {
   };
 
   /**
-   * Converts a single property to a ICAL string.
+   * Converts a single jCal/jCard property to a iCalendar/vCard string.
    *
-   * @param {Array} property    jCal property.
-   * @param {Object} designSet  The design data to use for this property.
+   * @function ICAL.stringify.property
+   * @param {Array} property
+   *        jCal/jCard property array
+   * @param {ICAL.design.designSet} designSet
+   *        The design data to use for this property
+   * @return {String}       The iCalendar/vCard string
    */
   stringify.property = function(property, designSet) {
     var name = property[0].toUpperCase();
@@ -1186,8 +1351,9 @@ ICAL.stringify = (function() {
    * If any of the above are present the result is wrapped
    * in double quotes.
    *
-   * @param {String} value raw value.
-   * @return {String} given or escaped value when needed.
+   * @function ICAL.stringify.propertyValue
+   * @param {String} value      Raw property value
+   * @return {String}           Given or escaped value when needed
    */
   stringify.propertyValue = function(value) {
 
@@ -1205,13 +1371,17 @@ ICAL.stringify = (function() {
    * Converts an array of ical values into a single
    * string based on a type and a delimiter value (like ",").
    *
-   * @param {Array} values      list of values to convert.
-   * @param {String} delim      used to join the values usually (",", ";", ":").
-   * @param {String} type       lowecase ical value type
-   *                              (like boolean, date-time, etc..).
-   * @param {Object} designSet  The design data to use for this property.
+   * @function ICAL.stringify.multiValue
+   * @param {Array} values      List of values to convert
+   * @param {String} delim      Used to join the values (",", ";", ":")
+   * @param {String} type       Lowecase ical value type
+   *        (like boolean, date-time, etc..)
+   * @param {?String} innerMulti If set, each value will again be processed
+   *        Used for structured values
+   * @param {ICAL.design.designSet} designSet
+   *        The design data to use for this property
    *
-   * @return {String} ical string for value.
+   * @return {String}           iCalendar/vCard string for value
    */
   stringify.multiValue = function(values, delim, type, innerMulti, designSet) {
     var result = '';
@@ -1234,14 +1404,14 @@ ICAL.stringify = (function() {
   };
 
   /**
-   * Processes a single ical value runs the associated "toICAL"
-   * method from the design value type if available to convert
-   * the value.
+   * Processes a single ical value runs the associated "toICAL" method from the
+   * design value type if available to convert the value.
    *
-   * @param {String|Numeric} value some formatted value.
-   * @param {String} type lowecase ical value type
-   *  (like boolean, date-time, etc..).
-   * @return {String} ical value for single value.
+   * @function ICAL.stringify.value
+   * @param {String|Number} value       A formatted value
+   * @param {String} type               Lowercase iCalendar/vCard value type
+   *  (like boolean, date-time, etc..)
+   * @return {String}                   iCalendar/vCard value for single value
    */
   stringify.value = function(value, type, designSet) {
     if (type in designSet.value && 'toICAL' in designSet.value[type]) {
@@ -1253,6 +1423,9 @@ ICAL.stringify = (function() {
   /**
    * Internal helper for rfc6868. Exposing this on ICAL.stringify so that
    * hackers can disable the rfc6868 parsing if the really need to.
+   *
+   * @param {String} val        The value to unescape
+   * @return {String}           The escaped value
    */
   stringify._rfc6868Unescape = function(val) {
     return val.replace(/[\n^"]/g, function(x) {
@@ -1262,9 +1435,17 @@ ICAL.stringify = (function() {
   var RFC6868_REPLACE_MAP = { '"': "^'", "\n": "^n", "^": "^^" };
 
   return stringify;
-
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
+
+/**
+ * Contains various functions to parse iCalendar and vCard data.
+ * @namespace
+ */
 ICAL.parse = (function() {
   'use strict';
 
@@ -1279,6 +1460,14 @@ ICAL.parse = (function() {
   var design = ICAL.design;
   var helpers = ICAL.helpers;
 
+  /**
+   * An error that occurred during parsing.
+   *
+   * @param {String} message        The error message
+   * @memberof ICAL.parse
+   * @extends {Error}
+   * @class
+   */
   function ParserError(message) {
     this.message = message;
 
@@ -1295,6 +1484,17 @@ ICAL.parse = (function() {
     __proto__: Error.prototype
   };
 
+  /**
+   * Parses iCalendar or vCard data into a raw jCal object. Consult
+   * documentation on the {@tutorial layers|layers of parsing} for more
+   * details.
+   *
+   * @function ICAL.parse
+   * @variation function
+   * @todo Fix the API to be more clear on the return type
+   * @param {String} input      The string data to parse
+   * @return {Object|Object[]}  A single jCal object, or an array thereof
+   */
   function parser(input) {
     var state = {};
     var root = state.component = [];
@@ -1320,13 +1520,16 @@ ICAL.parse = (function() {
     return (root.length == 1 ? root[0] : root);
   }
 
-
   /**
    * Parse an iCalendar property value into the jCal for a single property
    *
-   * @param {String} str        The iCalendar property string to parse.
-   * @param {Object} designSet  (optional) The design data to use for this property.
-   * @return {Object}           The jCal Object containing the property.
+   * @function ICAL.parse.property
+   * @param {String} str
+   *   The iCalendar property string to parse
+   * @param {ICAL.design.designSet=} designSet
+   *   The design data to use for this property
+   * @return {Object}
+   *   The jCal Object containing the property
    */
   parser.property = function(str, designSet) {
     var state = {
@@ -1341,8 +1544,10 @@ ICAL.parse = (function() {
    * Convenience method to parse a component. You can use ICAL.parse() directly
    * instead.
    *
-   * @param {String} str    The iCalendar component string to parse.
-   * @return {Object}       The jCal Object containing the component.
+   * @function ICAL.parse.component
+   * @see ICAL.parse(function)
+   * @param {String} str    The iCalendar component string to parse
+   * @return {Object}       The jCal Object containing the component
    */
   parser.component = function(str) {
     return parser(str);
@@ -1351,6 +1556,26 @@ ICAL.parse = (function() {
   // classes & constants
   parser.ParserError = ParserError;
 
+  /**
+   * The state for parsing content lines from an iCalendar/vCard string.
+   *
+   * @private
+   * @memberof ICAL.parse
+   * @typedef {Object} parserState
+   * @property {ICAL.design.designSet} designSet    The design set to use for parsing
+   * @property {ICAL.Component[]} stack             The stack of components being processed
+   * @property {ICAL.Component} component           The currently active component
+   */
+
+
+  /**
+   * Handles a single line of iCalendar/vCard, updating the state.
+   *
+   * @private
+   * @function ICAL.parse._handleContentLine
+   * @param {String} line               The content line to process
+   * @param {ICAL.parse.parserState}    The current state of the line parsing
+   */
   parser._handleContentLine = function(line, state) {
     // break up the parts of the line
     var valuePos = line.indexOf(VALUE_DELIMITER);
@@ -1506,10 +1731,12 @@ ICAL.parse = (function() {
   /**
    * Parse a value from the raw value into the jCard/jCal value.
    *
-   * @param {String} value          Original value.
-   * @param {String} type           Type of value.
-   * @param {Object} designSet      The design data to use for this value.
-   * @return {Object} varies on type.
+   * @private
+   * @function ICAL.parse._parseValue
+   * @param {String} value          Original value
+   * @param {String} type           Type of value
+   * @param {Object} designSet      The design data to use for this value
+   * @return {Object} varies on type
    */
   parser._parseValue = function(value, type, designSet) {
     if (type in designSet.value && 'fromICAL' in designSet.value[type]) {
@@ -1521,10 +1748,12 @@ ICAL.parse = (function() {
   /**
    * Parse parameters from a string to object.
    *
-   * @param {String} line           A single unfolded line.
-   * @param {Numeric} start         Position to start looking for properties.
-   * @param {Object} designSet      The design data to use for this property.
-   * @return {Object} key/value pairs.
+   * @function ICAL.parse._parseParameters
+   * @private
+   * @param {String} line           A single unfolded line
+   * @param {Numeric} start         Position to start looking for properties
+   * @param {Object} designSet      The design data to use for this property
+   * @return {Object} key/value pairs
    */
   parser._parseParameters = function(line, start, designSet) {
     var lastParam = start;
@@ -1611,6 +1840,10 @@ ICAL.parse = (function() {
   /**
    * Internal helper for rfc6868. Exposing this on ICAL.parse so that
    * hackers can disable the rfc6868 parsing if the really need to.
+   *
+   * @function ICAL.parse._rfc6868Escape
+   * @param {String} val        The value to escape
+   * @return {String}           The escaped value
    */
   parser._rfc6868Escape = function(val) {
     return val.replace(/\^['n^]/g, function(x) {
@@ -1620,7 +1853,19 @@ ICAL.parse = (function() {
   var RFC6868_REPLACE_MAP = { "^'": '"', "^n": "\n", "^^": "^" };
 
   /**
-   * Parse a multi value string
+   * Parse a multi value string. This function is used either for parsing
+   * actual multi-value property's values, or for handling parameter values. It
+   * can be used for both multi-value properties and structured value properties.
+   *
+   * @private
+   * @function ICAL.parse._parseMultiValue
+   * @param {String} buffer     The buffer containing the full value
+   * @param {String} delim      The multi-value delimiter
+   * @param {String} type       The value type to be parsed
+   * @param {Array.<?>} result        The array to append results to, varies on value type
+   * @param {String} innerMulti The inner delimiter to split each value with
+   * @param {ICAL.design.designSet} designSet   The design data for this value
+   * @return {?|Array.<?>}            Either an array of results, or the first result
    */
   parser._parseMultiValue = function(buffer, delim, type, result, innerMulti, designSet) {
     var pos = 0;
@@ -1651,6 +1896,15 @@ ICAL.parse = (function() {
     return result.length == 1 ? result[0] : result;
   };
 
+  /**
+   * Process a complete buffer of iCalendar/vCard data line by line, correctly
+   * unfolding content. Each line will be processed with the given callback
+   *
+   * @private
+   * @function ICAL.parse._eachLine
+   * @param {String} buffer                         The buffer to process
+   * @param {function(?String, String)} callback    The callback for each line
+   */
   parser._eachLine = function(buffer, callback) {
     var len = buffer.length;
     var lastPos = buffer.search(CHAR);
@@ -1705,6 +1959,16 @@ ICAL.parse = (function() {
   return parser;
 
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.Component = (function() {
   'use strict';
 
@@ -1713,11 +1977,15 @@ ICAL.Component = (function() {
   var NAME_INDEX = 0;
 
   /**
-   * Create a wrapper for a jCal component.
+   * @classdesc
+   * Wraps a jCal component, adding convenience methods to add, remove and
+   * update subcomponents and properties.
    *
-   * @param {Array|String} jCal
-   *  raw jCal component data OR name of new component.
-   * @param {ICAL.Component} parent parent component to associate.
+   * @class
+   * @alias ICAL.Component
+   * @param {Array|String} jCal         Raw jCal component data OR name of new
+   *                                      component
+   * @param {ICAL.Component} parent     Parent component to associate
    */
   function Component(jCal, parent) {
     if (typeof(jCal) === 'string') {
@@ -1738,18 +2006,34 @@ ICAL.Component = (function() {
      * undefined values for unhydrdated properties. To avoid iterating the
      * array when checking if all properties have been hydrated, we save the
      * count here.
+     *
+     * @type {Number}
+     * @private
      */
     _hydratedPropertyCount: 0,
 
     /**
      * The same count as for _hydratedPropertyCount, but for subcomponents
+     *
+     * @type {Number}
+     * @private
      */
     _hydratedComponentCount: 0,
 
+    /**
+     * The name of this component
+     * @readonly
+     */
     get name() {
       return this.jCal[NAME_INDEX];
     },
 
+    /**
+     * The design set for this component, e.g. icalendar vs vcard
+     *
+     * @type {ICAL.design.designSet}
+     * @private
+     */
     get _designSet() {
       var parentDesign = this.parent && this.parent._designSet;
       return parentDesign || ICAL.design.getDesignSet(this.name);
@@ -1796,7 +2080,8 @@ ICAL.Component = (function() {
     /**
      * Finds first sub component, optionally filtered by name.
      *
-     * @param {String} [name] optional name to filter by.
+     * @param {String=} name        Optional name to filter by
+     * @return {?ICAL.Component}     The found subcomponent
      */
     getFirstSubcomponent: function(name) {
       if (name) {
@@ -1823,7 +2108,8 @@ ICAL.Component = (function() {
     /**
      * Finds all sub components, optionally filtering by name.
      *
-     * @param {String} [name] optional name to filter by.
+     * @param {String=} name            Optional name to filter by
+     * @return {ICAL.Component[]}       The found sub components
      */
     getAllSubcomponents: function(name) {
       var jCalLen = this.jCal[COMPONENT_INDEX].length;
@@ -1856,8 +2142,8 @@ ICAL.Component = (function() {
     /**
      * Returns true when a named property exists.
      *
-     * @param {String} name property name.
-     * @return {Boolean} true when property is found.
+     * @param {String} name     The property name
+     * @return {Boolean}        True, when property is found
      */
     hasProperty: function(name) {
       var props = this.jCal[PROPERTY_INDEX];
@@ -1875,10 +2161,10 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Finds first property.
+     * Finds the first property, optionally with the given name.
      *
-     * @param {String} [name] lowercase name of property.
-     * @return {ICAL.Property} found property.
+     * @param {String=} name        Lowercase property name
+     * @return {?ICAL.Property}     The found property
      */
     getFirstProperty: function(name) {
       if (name) {
@@ -1902,10 +2188,10 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Returns first properties value if available.
+     * Returns first property's value, if available.
      *
-     * @param {String} [name] (lowecase) property name.
-     * @return {String} property value.
+     * @param {String=} name    Lowercase property name
+     * @return {?String}        The found property value.
      */
     getFirstPropertyValue: function(name) {
       var prop = this.getFirstProperty(name);
@@ -1917,10 +2203,10 @@ ICAL.Component = (function() {
     },
 
     /**
-     * get all properties in the component.
+     * Get all properties in the component, optionally filtered by name.
      *
-     * @param {String} [name] (lowercase) property name.
-     * @return {Array[ICAL.Property]} list of properties.
+     * @param {String=} name        Lowercase property name
+     * @return {ICAL.Property[]}    List of properties
      */
     getAllProperties: function(name) {
       var jCalLen = this.jCal[PROPERTY_INDEX].length;
@@ -2009,7 +2295,8 @@ ICAL.Component = (function() {
     /**
      * Adds a single sub component.
      *
-     * @param {ICAL.Component} component to add.
+     * @param {ICAL.Component} component        The component to add
+     * @return {ICAL.Component}                 The passed in component
      */
     addSubcomponent: function(component) {
       if (!this._components) {
@@ -2025,14 +2312,15 @@ ICAL.Component = (function() {
       this._components[idx - 1] = component;
       this._hydratedComponentCount++;
       component.parent = this;
+      return component;
     },
 
     /**
-     * Removes a single component by name or
-     * the instance of a specific component.
+     * Removes a single component by name or the instance of a specific
+     * component.
      *
-     * @param {ICAL.Component|String} nameOrComp comp type.
-     * @return {Boolean} true when comp is removed.
+     * @param {ICAL.Component|String} nameOrComp    Name of component, or component
+     * @return {Boolean}                            True when comp is removed
      */
     removeSubcomponent: function(nameOrComp) {
       var removed = this._removeObject(COMPONENT_INDEX, '_components', nameOrComp);
@@ -2043,10 +2331,10 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Removes all components or (if given) all
-     * components by a particular name.
+     * Removes all components or (if given) all components by a particular
+     * name.
      *
-     * @param {String} [name] (lowercase) component name.
+     * @param {String=} name            Lowercase component name
      */
     removeAllSubcomponents: function(name) {
       var removed = this._removeAllObjects(COMPONENT_INDEX, '_components', name);
@@ -2055,9 +2343,10 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Adds a property to the component.
+     * Adds an {@link ICAL.Property} to the component.
      *
-     * @param {ICAL.Property} property object.
+     * @param {ICAL.Property} property      The property to add
+     * @return {ICAL.Property}              The passed in property
      */
     addProperty: function(property) {
       if (!(property instanceof ICAL.Property)) {
@@ -2069,7 +2358,6 @@ ICAL.Component = (function() {
         this._hydratedPropertyCount = 0;
       }
 
-
       if (property.parent) {
         property.parent.removeProperty(property);
       }
@@ -2078,13 +2366,15 @@ ICAL.Component = (function() {
       this._properties[idx - 1] = property;
       this._hydratedPropertyCount++;
       property.parent = this;
+      return property;
     },
 
     /**
      * Helper method to add a property with a value to the component.
      *
-     * @param {String} name property name to add.
-     * @param {Object} value property value.
+     * @param {String}               name         Property name to add
+     * @param {String|Number|Object} value        Property value
+     * @return {ICAL.Property}                    The created property
      */
     addPropertyWithValue: function(name, value) {
       var prop = new ICAL.Property(name);
@@ -2096,12 +2386,13 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Helper method that will update or create a property
-     * of the given name and sets its value.
+     * Helper method that will update or create a property of the given name
+     * and sets its value. If multiple properties with the given name exist,
+     * only the first is updated.
      *
-     * @param {String} name property name.
-     * @param {Object} value property value.
-     * @return {ICAL.Property} property.
+     * @param {String}               name         Property name to update
+     * @param {String|Number|Object} value        Property value
+     * @return {ICAL.Property}                    The created property
      */
     updatePropertyWithValue: function(name, value) {
       var prop = this.getFirstProperty(name);
@@ -2116,11 +2407,11 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Removes a single property by name or
-     * the instance of the specific property.
+     * Removes a single property by name or the instance of the specific
+     * property.
      *
-     * @param {String|ICAL.Property} nameOrProp to remove.
-     * @return {Boolean} true when deleted.
+     * @param {String|ICAL.Property} nameOrProp     Property name or instance to remove
+     * @return {Boolean}                            True, when deleted
      */
     removeProperty: function(nameOrProp) {
       var removed = this._removeObject(PROPERTY_INDEX, '_properties', nameOrProp);
@@ -2131,9 +2422,11 @@ ICAL.Component = (function() {
     },
 
     /**
-     * Removes all properties associated with this component.
+     * Removes all properties associated with this component, optionally
+     * filtered by name.
      *
-     * @param {String} [name] (lowecase) optional property name.
+     * @param {String=} name        Lowercase property name
+     * @return {Boolean}            True, when deleted
      */
     removeAllProperties: function(name) {
       var removed = this._removeAllObjects(PROPERTY_INDEX, '_properties', name);
@@ -2141,10 +2434,19 @@ ICAL.Component = (function() {
       return removed;
     },
 
+    /**
+     * Returns the Object representation of this component. The returned object
+     * is a live jCal object and should be cloned if modified.
+     * @return {Object}
+     */
     toJSON: function() {
       return this.jCal;
     },
 
+    /**
+     * The string representation of this component.
+     * @return {String}
+     */
     toString: function() {
       return ICAL.stringify.component(
         this.jCal, this._designSet
@@ -2152,13 +2454,27 @@ ICAL.Component = (function() {
     }
   };
 
+  /**
+   * Create an {@link ICAL.Component} by parsing the passed iCalendar string.
+   *
+   * @param {String} str        The iCalendar string to parse
+   */
   Component.fromString = function(str) {
     return new Component(ICAL.parse.component(str));
   };
 
   return Component;
-
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.Property = (function() {
   'use strict';
 
@@ -2170,18 +2486,23 @@ ICAL.Property = (function() {
   var design = ICAL.design;
 
   /**
-   * Provides a nicer interface to any kind of property.
+   * @classdesc
+   * Provides a layer on top of the raw jCal object for manipulating a single
+   * property, with its parameters and value.
+   *
+   * @description
    * Its important to note that mutations done in the wrapper
-   * directly effect (mutate) the jCal object used to initialize.
+   * directly mutate the jCal object used to initialize.
    *
    * Can also be used to create new properties by passing
    * the name of the property (as a String).
    *
+   * @class
+   * @alias ICAL.Property
+   * @param {Array|String} jCal         Raw jCal representation OR
+   *  the new name of the property
    *
-   * @param {Array|String} jCal raw jCal representation OR
-   *  the new name of the property (when creating).
-   *
-   * @param {ICAL.Component} [parent] parent component.
+   * @param {ICAL.Component=} parent    Parent component
    */
   function Property(jCal, parent) {
     this._parent = parent || null;
@@ -2197,14 +2518,29 @@ ICAL.Property = (function() {
   }
 
   Property.prototype = {
+
+    /**
+     * The value type for this property
+     * @readonly
+     * @type {String}
+     */
     get type() {
       return this.jCal[TYPE_INDEX];
     },
 
+    /**
+     * The name of this property, in lowercase.
+     * @readonly
+     * @type {String}
+     */
     get name() {
       return this.jCal[NAME_INDEX];
     },
 
+    /**
+     * The parent component for this property.
+     * @type {ICAL.Component}
+     */
     get parent() {
       return this._parent;
     },
@@ -2224,10 +2560,21 @@ ICAL.Property = (function() {
       return p;
     },
 
+    /**
+     * The design set for this property, e.g. icalendar vs vcard
+     *
+     * @type {ICAL.design.designSet}
+     * @private
+     */
     get _designSet() {
       return this.parent ? this.parent._designSet : design.defaultSet;
     },
 
+    /**
+     * Updates the type metadata from the current jCal type and design set.
+     *
+     * @private
+     */
     _updateType: function() {
       var designSet = this._designSet;
 
@@ -2248,7 +2595,12 @@ ICAL.Property = (function() {
     },
 
     /**
-     * Hydrate a single value.
+     * Hydrate a single value. The act of hydrating means turning the raw jCal
+     * value into a potentially wrapped object, for example {@link ICAL.Time}.
+     *
+     * @private
+     * @param {Number} index        The index of the value to hydrate
+     * @return {Object}             The decorated value.
      */
     _hydrateValue: function(index) {
       if (this._values && this._values[index]) {
@@ -2272,14 +2624,37 @@ ICAL.Property = (function() {
       }
     },
 
+    /**
+     * Decorate a single value, returning its wrapped object. This is used by
+     * the hydrate function to actually wrap the value.
+     *
+     * @private
+     * @param {?} value         The value to decorate
+     * @return {Object}         The decorated value
+     */
     _decorate: function(value) {
       return this._designSet.value[this.type].decorate(value, this);
     },
 
+    /**
+     * Undecorate a single value, returning its raw jCal data.
+     *
+     * @private
+     * @param {Object} value         The value to undecorate
+     * @return {?}                   The undecorated value
+     */
     _undecorate: function(value) {
       return this._designSet.value[this.type].undecorate(value, this);
     },
 
+    /**
+     * Sets the value at the given index while also hydrating it. The passed
+     * value can either be a decorated or undecorated value.
+     *
+     * @private
+     * @param {?} value             The value to set
+     * @param {Number} index        The index to set it at
+     */
     _setDecoratedValue: function(value, index) {
       if (!this._values) {
         this._values = [];
@@ -2297,19 +2672,20 @@ ICAL.Property = (function() {
     },
 
     /**
-     * Gets a param on the property.
+     * Gets a parameter on the property.
      *
-     * @param {String} name prop name (lowercase).
-     * @return {String} prop value.
+     * @param {String} name     Property name (lowercase)
+     * @return {String}         Property value
      */
     getParameter: function(name) {
       return this.jCal[PROP_INDEX][name];
     },
 
     /**
-     * Sets a param on the property.
+     * Sets a parameter on the property.
      *
-     * @param {String} value property value.
+     * @param {String} name     The parameter name
+     * @param {String} value    The parameter value
      */
     setParameter: function(name, value) {
       this.jCal[PROP_INDEX][name] = value;
@@ -2318,16 +2694,16 @@ ICAL.Property = (function() {
     /**
      * Removes a parameter
      *
-     * @param {String} name prop name (lowercase).
+     * @param {String} name     The parameter name
      */
     removeParameter: function(name) {
-      return delete this.jCal[PROP_INDEX][name];
+      delete this.jCal[PROP_INDEX][name];
     },
 
     /**
      * Get the default type based on this property's name.
      *
-     * @return {String} the default type for this property.
+     * @return {String}     The default type for this property
      */
     getDefaultType: function() {
       var name = this.jCal[NAME_INDEX];
@@ -2343,10 +2719,10 @@ ICAL.Property = (function() {
     },
 
     /**
-     * Sets type of property and clears out any
-     * existing values of the current type.
+     * Sets type of property and clears out any existing values of the current
+     * type.
      *
-     * @param {String} type new iCAL type (see design.*.values).
+     * @param {String} type     New iCAL type (see design.*.values)
      */
     resetType: function(type) {
       this.removeAllValues();
@@ -2355,9 +2731,9 @@ ICAL.Property = (function() {
     },
 
     /**
-     * Finds first property value.
+     * Finds the first property value.
      *
-     * @return {String} first property value.
+     * @return {String}         First property value
      */
     getFirstValue: function() {
       return this._hydrateValue(0);
@@ -2368,7 +2744,7 @@ ICAL.Property = (function() {
      *
      * NOTE: this creates an array during each call.
      *
-     * @return {Array} list of values.
+     * @return {Array}          List of values
      */
     getValues: function() {
       var len = this.jCal.length - VALUE_INDEX;
@@ -2388,6 +2764,9 @@ ICAL.Property = (function() {
       return result;
     },
 
+    /**
+     * Removes all values from this property
+     */
     removeAllValues: function() {
       if (this._values) {
         this._values.length = 0;
@@ -2396,10 +2775,10 @@ ICAL.Property = (function() {
     },
 
     /**
-     * Sets the values of the property.
-     * Will overwrite the existing values.
+     * Sets the values of the property.  Will overwrite the existing values.
+     * This can only be used for multi-value properties.
      *
-     * @param {Array} values an array of values.
+     * @param {Array} values    An array of values
      */
     setValues: function(values) {
       if (!this.isMultiValue) {
@@ -2434,7 +2813,7 @@ ICAL.Property = (function() {
      * Sets the current value of the property. If this is a multi-value
      * property, all other values will be removed.
      *
-     * @param {String|Object} value new prop value.
+     * @param {String|Object} value     New property value.
      */
     setValue: function(value) {
       this.removeAllValues();
@@ -2450,56 +2829,110 @@ ICAL.Property = (function() {
     },
 
     /**
-     * Returns the jCal representation of this property.
-     *
-     * @return {Object} jCal.
+     * Returns the Object representation of this component. The returned object
+     * is a live jCal object and should be cloned if modified.
+     * @return {Object}
      */
     toJSON: function() {
       return this.jCal;
     },
 
+    /**
+     * The string representation of this component.
+     * @return {String}
+     */
     toICAL: function() {
       return ICAL.stringify.property(
         this.jCal, this._designSet
       );
     }
-
   };
 
+  /**
+   * Create an {@link ICAL.Property} by parsing the passed iCalendar string.
+   *
+   * @param {String} str        The iCalendar string to parse
+   */
   Property.fromString = function(str) {
     return new Property(ICAL.parse.property(str));
   };
 
   return Property;
-
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.UtcOffset = (function() {
 
+  /**
+   * @classdesc
+   * This class represents the "duration" value type, with various calculation
+   * and manipulation methods.
+   *
+   * @class
+   * @alias ICAL.UtcOffset
+   * @param {Object} aData          An object with members of the utc offset
+   * @param {Number=} aData.hours   The hours for the utc offset
+   * @param {Number=} aData.minutes The minutes in the utc offset
+   * @param {Number=} aData.factor  The factor for the utc-offset, either -1 or 1
+   */
   function UtcOffset(aData) {
     this.fromData(aData);
   }
 
   UtcOffset.prototype = {
 
+    /**
+     * The hours in the utc-offset
+     * @type {Number}
+     */
     hours: 0,
+
+    /**
+     * The minutes in the utc-offset
+     * @type {Number}
+     */
     minutes: 0,
+
+    /**
+     * The sign of the utc offset, 1 for positive offset, -1 for negative
+     * offsets.
+     * @type {Number}
+     */
     factor: 1,
 
+    /**
+     * The type name, to be used in the jCal object.
+     * @constant
+     * @type {String}
+     * @default "utc-offset"
+     */
     icaltype: "utc-offset",
 
     /**
-     * Internal uses to indicate that a change has been made and the next read
-     * operation must attempt to normalize the value
+     * Returns a clone of the utc offset object.
      *
-     * @type {Boolean}
-     * @private
+     * @return {ICAL.UtcOffset}     The cloned object
      */
-    _pendingNormalization: false,
-
     clone: function() {
       return ICAL.UtcOffset.fromSeconds(this.toSeconds());
     },
 
+    /**
+     * Sets up the current instance using members from the passed data object.
+     *
+     * @param {Object} aData          An object with members of the utc offset
+     * @param {Number=} aData.hours   The hours for the utc offset
+     * @param {Number=} aData.minutes The minutes in the utc offset
+     * @param {Number=} aData.factor  The factor for the utc-offset, either -1 or 1
+     */
     fromData: function(aData) {
       if (aData) {
         for (var key in aData) {
@@ -2509,6 +2942,13 @@ ICAL.UtcOffset = (function() {
       this._normalize();
     },
 
+    /**
+     * Sets up the current instance from the given seconds value. The seconds
+     * value is truncated to the minute. Offsets are wrapped when the world
+     * ends, the hour after UTC+14:00 is UTC-12:00.
+     *
+     * @param {Number} aSeconds         The seconds to convert into an offset
+     */
     fromSeconds: function(aSeconds) {
       var secs = Math.abs(aSeconds);
 
@@ -2520,10 +2960,21 @@ ICAL.UtcOffset = (function() {
       return this;
     },
 
+    /**
+     * Convert the current offset to a value in seconds
+     *
+     * @return {Number}                 The offset in seconds
+     */
     toSeconds: function() {
       return this.factor * (60 * this.minutes + 3600 * this.hours);
     },
 
+    /**
+     * Compare this utc offset with another one.
+     *
+     * @param {ICAL.UtcOffset} other        The other offset to compare with
+     * @return {Number}                     -1, 0 or 1 for less/equal/greater
+     */
     compare: function icaltime_compare(other) {
       var a = this.toSeconds();
       var b = other.toSeconds();
@@ -2549,10 +3000,18 @@ ICAL.UtcOffset = (function() {
       }
     },
 
+    /**
+     * The iCalendar string representation of this utc-offset.
+     * @return {String}
+     */
     toICALString: function() {
       return ICAL.design.icalendar.value['utc-offset'].toICAL(this.toString());
     },
 
+    /**
+     * The string representation of this utc-offset.
+     * @return {String}
+     */
     toString: function toString() {
       return (this.factor == 1 ? "+" : "-") +
               ICAL.helpers.pad2(this.hours) + ':' +
@@ -2560,6 +3019,12 @@ ICAL.UtcOffset = (function() {
     }
   };
 
+  /**
+   * Creates a new {@link ICAL.UtcOffset} instance from the passed string.
+   *
+   * @param {String} aString    The string to parse
+   * @return {ICAL.Duration}    The created utc-offset instance
+   */
   UtcOffset.fromString = function(aString) {
     // -05:00
     var options = {};
@@ -2571,6 +3036,12 @@ ICAL.UtcOffset = (function() {
     return new ICAL.UtcOffset(options);
   };
 
+  /**
+   * Creates a new {@link ICAL.UtcOffset} instance from the passed seconds
+   * value.
+   *
+   * @param {Number} aSeconds       The number of seconds to convert
+   */
   UtcOffset.fromSeconds = function(aSeconds) {
     var instance = new UtcOffset();
     instance.fromSeconds(aSeconds);
@@ -2578,23 +3049,57 @@ ICAL.UtcOffset = (function() {
   };
 
   return UtcOffset;
-
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.Binary = (function() {
 
+  /**
+   * @classdesc
+   * Represents the BINARY value type, which contains extra methods for
+   * encoding and decoding.
+   *
+   * @class
+   * @alias ICAL.Binary
+   * @param {String} aValue     The binary data for this value
+   */
   function Binary(aValue) {
     this.value = aValue;
   }
 
   Binary.prototype = {
+    /**
+     * The type name, to be used in the jCal object.
+     * @default "binary"
+     * @constant
+     */
     icaltype: "binary",
 
+    /**
+     * Base64 decode the current value
+     *
+     * @return {String}         The base64-decoded value
+     */
     decodeValue: function decodeValue() {
       return this._b64_decode(this.value);
     },
 
-    setEncodedValue: function setEncodedValue(val) {
-      this.value = this._b64_encode(val);
+    /**
+     * Encodes the passed parameter with base64 and sets the internal
+     * value to the result.
+     *
+     * @param {String} aValue      The raw binary value to encode
+     */
+    setEncodedValue: function setEncodedValue(aValue) {
+      this.value = this._b64_encode(aValue);
     },
 
     _b64_encode: function base64_encode(data) {
@@ -2705,22 +3210,31 @@ ICAL.Binary = (function() {
       return dec;
     },
 
+    /**
+     * The string representation of this value
+     * @return {String}
+     */
     toString: function() {
       return this.value;
     }
   };
 
+  /**
+   * Creates a binary value from the given string.
+   *
+   * @param {String} aString        The binary value string
+   * @return {ICAL.Binary}          The binary value instance
+   */
   Binary.fromString = function(aString) {
     return new Binary(aString);
   };
 
   return Binary;
-
 }());
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
 
@@ -2728,6 +3242,20 @@ ICAL.Binary = (function() {
 (typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 (function() {
+  /**
+   * @classdesc
+   * This class represents the "period" value type, with various calculation
+   * and manipulation methods.
+   *
+   * @description
+   * The passed data object cannot contain both and end date and a duration.
+   *
+   * @class
+   * @param {Object} aData                  An object with members of the period
+   * @param {ICAL.Time=} aData.start        The start of the period
+   * @param {ICAL.Time=} aData.end          The end of the period
+   * @param {ICAL.Duration=} aData.duration The duration of the period
+   */
   ICAL.Period = function icalperiod(aData) {
     this.wrappedJSObject = this;
 
@@ -2759,12 +3287,45 @@ ICAL.Binary = (function() {
 
   ICAL.Period.prototype = {
 
+    /**
+     * The start of the period
+     * @type {ICAL.Time}
+     */
     start: null,
+
+    /**
+     * The end of the period
+     * @type {ICAL.Time}
+     */
     end: null,
+
+    /**
+     * The duration of the period
+     * @type {ICAL.Duration}
+     */
     duration: null,
+
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "icalperiod"
+     */
     icalclass: "icalperiod",
+
+    /**
+     * The type name, to be used in the jCal object.
+     * @constant
+     * @type {String}
+     * @default "period"
+     */
     icaltype: "period",
 
+    /**
+     * Returns a clone of the duration object.
+     *
+     * @return {ICAL.Period}      The cloned object
+     */
     clone: function() {
       return ICAL.Period.fromData({
         start: this.start ? this.start.clone() : null,
@@ -2773,6 +3334,12 @@ ICAL.Binary = (function() {
       });
     },
 
+    /**
+     * Calculates the duration of the period, either directly or by subtracting
+     * start from end date.
+     *
+     * @return {ICAL.Duration}      The calculated duration
+     */
     getDuration: function duration() {
       if (this.duration) {
         return this.duration;
@@ -2781,6 +3348,12 @@ ICAL.Binary = (function() {
       }
     },
 
+    /**
+     * Calculates the end date of the period, either directly or by adding
+     * duration to start date.
+     *
+     * @return {ICAL.Time}          The calculated end date
+     */
     getEnd: function() {
       if (this.end) {
         return this.end;
@@ -2791,20 +3364,39 @@ ICAL.Binary = (function() {
       }
     },
 
+    /**
+     * The string representation of this period.
+     * @return {String}
+     */
     toString: function toString() {
       return this.start + "/" + (this.end || this.duration);
     },
 
+    /**
+     * The jCal representation of this period type.
+     * @return {Object}
+     */
     toJSON: function() {
       return [this.start.toString(), (this.end || this.duration).toString()];
     },
 
+    /**
+     * The iCalendar string representation of this period.
+     * @return {String}
+     */
     toICALString: function() {
       return this.start.toICALString() + "/" +
              (this.end || this.duration).toICALString();
     }
   };
 
+  /**
+   * Creates a new {@link ICAL.Period} instance from the passed string.
+   *
+   * @param {String} str            The string to parse
+   * @param {ICAL.Property} prop    The property this period will be on
+   * @return {ICAL.Period}          The created period instance
+   */
   ICAL.Period.fromString = function fromString(str, prop) {
     var parts = str.split('/');
 
@@ -2829,10 +3421,29 @@ ICAL.Binary = (function() {
     return new ICAL.Period(options);
   };
 
+  /**
+   * Creates a new {@link ICAL.Period} instance from the given data object.
+   * The passed data object cannot contain both and end date and a duration.
+   *
+   * @param {Object} aData                  An object with members of the period
+   * @param {ICAL.Time=} aData.start        The start of the period
+   * @param {ICAL.Time=} aData.end          The end of the period
+   * @param {ICAL.Duration=} aData.duration The duration of the period
+   * @return {ICAL.Period}                  The period instance
+   */
   ICAL.Period.fromData = function fromData(aData) {
     return new ICAL.Period(aData);
   };
 
+  /**
+   * Returns a new period instance from the given jCal data array. The first
+   * member is always the start date string, the second member is either a
+   * duration or end date string.
+   *
+   * @param {Array<String,String>} aData    The jCal data array
+   * @param {ICAL.Property} aProp           The property this jCal data is on
+   * @return {ICAL.Period}                  The period instance
+   */
   ICAL.Period.fromJSON = function(aData, aProp) {
     if (ICAL.Duration.isValueString(aData[1])) {
       return ICAL.Period.fromData({
@@ -2850,7 +3461,7 @@ ICAL.Binary = (function() {
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
 
@@ -2860,32 +3471,113 @@ ICAL.Binary = (function() {
 (function() {
   var DURATION_LETTERS = /([PDWHMTS]{1,1})/;
 
+  /**
+   * @classdesc
+   * This class represents the "duration" value type, with various calculation
+   * and manipulation methods.
+   *
+   * @class
+   * @alias ICAL.Duration
+   * @param {Object} data               An object with members of the duration
+   * @param {Number} data.weeks         Duration in weeks
+   * @param {Number} data.days          Duration in days
+   * @param {Number} data.hours         Duration in hours
+   * @param {Number} data.minutes       Duration in minutes
+   * @param {Number} data.seconds       Duration in seconds
+   * @param {Boolean} data.isNegative   If true, the duration is negative
+   */
   ICAL.Duration = function icalduration(data) {
     this.wrappedJSObject = this;
     this.fromData(data);
   };
 
   ICAL.Duration.prototype = {
-
+    /**
+     * The weeks in this duration
+     * @type {Number}
+     * @default 0
+     */
     weeks: 0,
+
+    /**
+     * The days in this duration
+     * @type {Number}
+     * @default 0
+     */
     days: 0,
+
+    /**
+     * The days in this duration
+     * @type {Number}
+     * @default 0
+     */
     hours: 0,
+
+    /**
+     * The minutes in this duration
+     * @type {Number}
+     * @default 0
+     */
     minutes: 0,
+
+    /**
+     * The seconds in this duration
+     * @type {Number}
+     * @default 0
+     */
     seconds: 0,
+
+    /**
+     * The seconds in this duration
+     * @type {Boolean}
+     * @default false
+     */
     isNegative: false,
+
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "icalduration"
+     */
     icalclass: "icalduration",
+
+    /**
+     * The type name, to be used in the jCal object.
+     * @constant
+     * @type {String}
+     * @default "duration"
+     */
     icaltype: "duration",
 
+    /**
+     * Returns a clone of the duration object.
+     *
+     * @return {ICAL.Duration}      The cloned object
+     */
     clone: function clone() {
       return ICAL.Duration.fromData(this);
     },
 
+    /**
+     * The duration value expressed as a number of seconds.
+     *
+     * @return {Number}             The duration value in seconds
+     */
     toSeconds: function toSeconds() {
       var seconds = this.seconds + 60 * this.minutes + 3600 * this.hours +
                     86400 * this.days + 7 * 86400 * this.weeks;
       return (this.isNegative ? -seconds : seconds);
     },
 
+    /**
+     * Reads the passed seconds value into this duration object. Afterwards,
+     * members like {@link ICAL.Duration#days days} and {@link ICAL.Duration#weeks weeks} will be set up
+     * accordingly.
+     *
+     * @param {Number} aSeconds     The duration value in seconds
+     * @return {ICAL.Duration}      Returns this instance
+     */
     fromSeconds: function fromSeconds(aSeconds) {
       var secs = Math.abs(aSeconds);
 
@@ -2912,6 +3604,17 @@ ICAL.Binary = (function() {
       return this;
     },
 
+    /**
+     * Sets up the current instance using members from the passed data object.
+     *
+     * @param {Object} aData               An object with members of the duration
+     * @param {Number} aData.weeks         Duration in weeks
+     * @param {Number} aData.days          Duration in days
+     * @param {Number} aData.hours         Duration in hours
+     * @param {Number} aData.minutes       Duration in minutes
+     * @param {Number} aData.seconds       Duration in seconds
+     * @param {Boolean} aData.isNegative   If true, the duration is negative
+     */
     fromData: function fromData(aData) {
       var propsToCopy = ["weeks", "days", "hours",
                          "minutes", "seconds", "isNegative"];
@@ -2925,6 +3628,9 @@ ICAL.Binary = (function() {
       }
     },
 
+    /**
+     * Resets the duration instance to the default values, i.e. PT0S
+     */
     reset: function reset() {
       this.isNegative = false;
       this.weeks = 0;
@@ -2934,17 +3640,30 @@ ICAL.Binary = (function() {
       this.seconds = 0;
     },
 
+    /**
+     * Compares the duration instance with another one.
+     *
+     * @param {ICAL.Duration} aOther        The instance to compare with
+     * @return {Number}                     -1, 0 or 1 for less/equal/greater
+     */
     compare: function compare(aOther) {
       var thisSeconds = this.toSeconds();
       var otherSeconds = aOther.toSeconds();
       return (thisSeconds > otherSeconds) - (thisSeconds < otherSeconds);
     },
 
+    /**
+     * Normalizes the duration instance. For example, a duration with a value
+     * of 61 seconds will be normalized to 1 minute and 1 second.
+     */
     normalize: function normalize() {
       this.fromSeconds(this.toSeconds());
-      return this;
     },
 
+    /**
+     * The string representation of this duration.
+     * @return {String}
+     */
     toString: function toString() {
       if (this.toSeconds() == 0) {
         return "PT0S";
@@ -2965,11 +3684,21 @@ ICAL.Binary = (function() {
       }
     },
 
+    /**
+     * The iCalendar string representation of this duration.
+     * @return {String}
+     */
     toICALString: function() {
       return this.toString();
     }
   };
 
+  /**
+   * Returns a new ICAL.Duration instance from the passed seconds value.
+   *
+   * @param {Number} aSeconds       The seconds to create the instance from
+   * @return {ICAL.Duration}        The newly created duration instance
+   */
   ICAL.Duration.fromSeconds = function icalduration_from_seconds(aSeconds) {
     return (new ICAL.Duration()).fromSeconds(aSeconds);
   };
@@ -2977,9 +3706,9 @@ ICAL.Binary = (function() {
   /**
    * Internal helper function to handle a chunk of a duration.
    *
-   * @param {String} letter type of duration chunk.
-   * @param {String} number numeric value or -/+.
-   * @param {Object} dict target to assign values to.
+   * @param {String} letter type of duration chunk
+   * @param {String} number numeric value or -/+
+   * @param {Object} dict target to assign values to
    */
   function parseDurationChunk(letter, number, object) {
     var type;
@@ -3031,14 +3760,22 @@ ICAL.Binary = (function() {
   }
 
   /**
-   * @param {String} value raw ical value.
-   * @return {Boolean}
-   *  true when the given value is of the duration ical type.
+   * Checks if the given string is an iCalendar duration value.
+   *
+   * @param {String} value      The raw ical value
+   * @return {Boolean}          True, if the given value is of the
+   *                              duration ical type
    */
   ICAL.Duration.isValueString = function(string) {
     return (string[0] === 'P' || string[1] === 'P');
   };
 
+  /**
+   * Creates a new {@link ICAL.Duration} instance from the passed string.
+   *
+   * @param {String} aStr       The string to parse
+   * @return {ICAL.Duration}    The created duration instance
+   */
   ICAL.Duration.fromString = function icalduration_from_string(aStr) {
     var pos = 0;
     var dict = Object.create(null);
@@ -3062,6 +3799,18 @@ ICAL.Binary = (function() {
     return new ICAL.Duration(dict);
   };
 
+  /**
+   * Creates a new ICAL.Duration instance from the given data object.
+   *
+   * @param {Object} aData               An object with members of the duration
+   * @param {Number} aData.weeks         Duration in weeks
+   * @param {Number} aData.days          Duration in days
+   * @param {Number} aData.hours         Duration in hours
+   * @param {Number} aData.minutes       Duration in minutes
+   * @param {Number} aData.seconds       Duration in seconds
+   * @param {Boolean} aData.isNegative   If true, the duration is negative
+   * @return {ICAL.Duration}             The createad duration instance
+   */
   ICAL.Duration.fromData = function icalduration_from_data(aData) {
     return new ICAL.Duration(aData);
   };
@@ -3081,19 +3830,31 @@ ICAL.Binary = (function() {
                  "latitude", "longitude"];
 
   /**
+   * @classdesc
    * Timezone representation, created by passing in a tzid and component.
    *
-   *    var vcalendar;
-   *    var timezoneComp = vcalendar.getFirstSubcomponent('vtimezone');
-   *    var tzid = timezoneComp.getFirstPropertyValue('tzid');
+   * @example
+   * var vcalendar;
+   * var timezoneComp = vcalendar.getFirstSubcomponent('vtimezone');
+   * var tzid = timezoneComp.getFirstPropertyValue('tzid');
    *
-   *    var timezone = new ICAL.Timezone({
-   *      component: timezoneComp,
-   *      tzid
-   *    });
+   * var timezone = new ICAL.Timezone({
+   *   component: timezoneComp,
+   *   tzid
+   * });
    *
-   *
-   * @param {Object} data options for class (see above).
+   * @class
+   * @param {ICAL.Component|Object} data options for class
+   * @param {String|ICAL.Component} data.component
+   *        If data is a simple object, then this member can be set to either a
+   *        string containing the component data, or an already parsed
+   *        ICAL.Component
+   * @param {String} data.tzid      The timezone identifier
+   * @param {String} data.location  The timezone locationw
+   * @param {String} data.tznames   An alternative string representation of the
+   *                                  timezone
+   * @param {Number} data.latitude  The latitude of the timezone
+   * @param {Number} data.longitude The longitude of the timezone
    */
   ICAL.Timezone = function icaltimezone(data) {
     this.wrappedJSObject = this;
@@ -3102,19 +3863,74 @@ ICAL.Binary = (function() {
 
   ICAL.Timezone.prototype = {
 
+    /**
+     * Timezone identifier
+     * @type {String}
+     */
     tzid: "",
+
+    /**
+     * Timezone location
+     * @type {String}
+     */
     location: "",
+
+    /**
+     * Alternative timezone name, for the string representation
+     * @type {String}
+     */
     tznames: "",
 
+    /**
+     * The primary latitude for the timezone.
+     * @type {Number}
+     */
     latitude: 0.0,
+
+    /**
+     * The primary longitude for the timezone.
+     * @type {Number}
+     */
     longitude: 0.0,
 
+    /**
+     * The vtimezone component for this timezone.
+     * @type {ICAL.Component}
+     */
     component: null,
 
+    /**
+     * The year this timezone has been expanded to. All timezone transition
+     * dates until this year are known and can be used for calculation
+     *
+     * @private
+     * @type {Number}
+     */
     expandedUntilYear: 0,
 
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "icaltimezone"
+     */
     icalclass: "icaltimezone",
 
+    /**
+     * Sets up the current instance using members from the passed data object.
+     *
+     * @param {ICAL.Component|Object} aData options for class
+     * @param {String|ICAL.Component} aData.component
+     *        If aData is a simple object, then this member can be set to either a
+     *        string containing the component data, or an already parsed
+     *        ICAL.Component
+     * @param {String} aData.tzid      The timezone identifier
+     * @param {String} aData.location  The timezone locationw
+     * @param {String} aData.tznames   An alternative string representation of the
+     *                                  timezone
+     * @param {Number} aData.latitude  The latitude of the timezone
+     * @param {Number} aData.longitude The longitude of the timezone
+     */
     fromData: function fromData(aData) {
       this.expandedUntilYear = 0;
       this.changes = [];
@@ -3159,7 +3975,8 @@ ICAL.Binary = (function() {
     /**
      * Finds the utcOffset the given time would occur in this timezone.
      *
-     * @return {Number} utc offset in seconds.
+     * @param {ICAL.Time} tt        The time to check for
+     * @return {Number} utc offset in seconds
      */
     utcOffset: function utcOffset(tt) {
       if (this == ICAL.Timezone.utcTimezone || this == ICAL.Timezone.localTimezone) {
@@ -3402,10 +4219,13 @@ ICAL.Binary = (function() {
       return changes;
     },
 
+    /**
+     * The string representation of this timezone.
+     * @return {String}
+     */
     toString: function toString() {
       return (this.tznames ? this.tznames : this.tzid);
     }
-
   };
 
   ICAL.Timezone._compare_change_fn = function icaltimezone_compare_change_fn(a, b) {
@@ -3430,6 +4250,14 @@ ICAL.Binary = (function() {
     return 0;
   };
 
+  /**
+   * Convert the date/time from one zone to the next.
+   *
+   * @param {ICAL.Time} tt                  The time to convert
+   * @param {ICAL.Timezone} from_zone       The source zone to convert from
+   * @param {ICAL.Timezone} to_zone         The target zone to conver to
+   * @return {ICAL.Time}                    The converted date/time object
+   */
   ICAL.Timezone.convert_time = function icaltimezone_convert_time(tt, from_zone, to_zone) {
     if (tt.isDate ||
         from_zone.tzid == to_zone.tzid ||
@@ -3448,19 +4276,55 @@ ICAL.Binary = (function() {
     return null;
   };
 
+  /**
+   * Creates a new ICAL.Timezone instance from the passed data object.
+   *
+   * @param {ICAL.Component|Object} aData options for class
+   * @param {String|ICAL.Component} aData.component
+   *        If aData is a simple object, then this member can be set to either a
+   *        string containing the component data, or an already parsed
+   *        ICAL.Component
+   * @param {String} aData.tzid      The timezone identifier
+   * @param {String} aData.location  The timezone locationw
+   * @param {String} aData.tznames   An alternative string representation of the
+   *                                  timezone
+   * @param {Number} aData.latitude  The latitude of the timezone
+   * @param {Number} aData.longitude The longitude of the timezone
+   */
   ICAL.Timezone.fromData = function icaltimezone_fromData(aData) {
     var tt = new ICAL.Timezone();
     return tt.fromData(aData);
   };
 
+  /**
+   * The instance describing the UTC timezone
+   * @type {ICAL.Timezone}
+   * @constant
+   * @instance
+   */
   ICAL.Timezone.utcTimezone = ICAL.Timezone.fromData({
     tzid: "UTC"
   });
 
+  /**
+   * The instance describing the local timezone
+   * @type {ICAL.Timezone}
+   * @constant
+   * @instance
+   */
   ICAL.Timezone.localTimezone = ICAL.Timezone.fromData({
     tzid: "floating"
   });
 
+  /**
+   * Adjust a timezone change object.
+   * @private
+   * @param {Object} change     The timezone change object
+   * @param {Number} days       The extra amount of days
+   * @param {Number} hours      The extra amount of hours
+   * @param {Number} minutes    The extra amount of minutes
+   * @param {Number} seconds    The extra amount of seconds
+   */
   ICAL.Timezone.adjust_change = function icaltimezone_adjust_change(change, days, hours, minutes, seconds) {
     return ICAL.Time.prototype.adjust.call(
       change,
@@ -3476,15 +4340,28 @@ ICAL.Binary = (function() {
   ICAL.Timezone.MAX_YEAR = 2035; // TODO this is because of time_t, which we don't need. Still usefull?
   ICAL.Timezone.EXTRA_COVERAGE = 5;
 })();
-// singleton class to contain timezones.
-// Right now its all manual registry in the
-// future we may use this class to download timezone
-// information or handle loading pre-expanded timezones.
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.TimezoneService = (function() {
   var zones;
 
-  // Using var rather then return so we don't need to name the functions twice.
-  // TimezoneService#get will appear in profiler, etc...
+  /**
+   * @classdesc
+   * Singleton class to contain timezones.  Right now its all manual registry in
+   * the future we may use this class to download timezone information or handle
+   * loading pre-expanded timezones.
+   *
+   * @namespace
+   * @alias ICAL.TimezoneService
+   */
   var TimezoneService = {
     reset: function() {
       zones = Object.create(null);
@@ -3498,8 +4375,8 @@ ICAL.TimezoneService = (function() {
     /**
      * Checks if timezone id has been registered.
      *
-     * @param {String} tzid (e.g. America/Los_Angeles).
-     * @return {Boolean} false when not present.
+     * @param {String} tzid     Timezone identifier (e.g. America/Los_Angeles)
+     * @return {Boolean}        False, when not present
      */
     has: function(tzid) {
       return !!zones[tzid];
@@ -3508,8 +4385,8 @@ ICAL.TimezoneService = (function() {
     /**
      * Returns a timezone by its tzid if present.
      *
-     * @param {String} tzid name of timezone (e.g. America/Los_Angeles).
-     * @return {ICAL.Timezone|Null} zone or null.
+     * @param {String} tzid     Timezone identifier (e.g. America/Los_Angeles)
+     * @return {?ICAL.Timezone} The timezone, or null if not found
      */
     get: function(tzid) {
       return zones[tzid];
@@ -3518,8 +4395,11 @@ ICAL.TimezoneService = (function() {
     /**
      * Registers a timezone object or component.
      *
-     * @param {String} [name] optional uses timezone.tzid by default.
-     * @param {ICAL.Component|ICAL.Timezone} zone initialized zone or vtimezone.
+     * @param {String=} name
+     *        The name of the timezone. Defaults to the component's TZID if not
+     *        passed.
+     * @param {ICAL.Component|ICAL.Timezone} zone
+     *        The initialized zone or vtimezone.
      */
     register: function(name, timezone) {
       if (name instanceof ICAL.Component) {
@@ -3539,7 +4419,8 @@ ICAL.TimezoneService = (function() {
     /**
      * Removes a timezone by its tzid from the list.
      *
-     * @param {String} tzid (e.g. America/Los_Angeles).
+     * @param {String} tzid     Timezone identifier (e.g. America/Los_Angeles)
+     * @return {?ICAL.Timezone} The removed timezone, or null if not registered
      */
     remove: function(tzid) {
       return (delete zones[tzid]);
@@ -3564,23 +4445,34 @@ ICAL.TimezoneService = (function() {
 (function() {
 
   /**
-   * Time representation (similar to JS Date object).
-   * Fully independent of system (OS) timezone / time.
-   * Unlike JS Date month start at 1 (Jan) not zero.
+   * @classdesc
+   * iCalendar Time representation (similar to JS Date object).  Fully
+   * independent of system (OS) timezone / time.  Unlike JS Date, the month
+   * January is 1, not zero.
+   *
+   * @example
+   * var time = new ICAL.Time({
+   *   year: 2012,
+   *   month: 10,
+   *   day: 11
+   *   minute: 0,
+   *   second: 0,
+   *   isDate: false
+   * });
    *
    *
-   *    var time = new ICAL.Time({
-   *      year: 2012,
-   *      month: 10,
-   *      day: 11
-   *      minute: 0,
-   *      second: 0,
-   *      isDate: false
-   *    });
-   *
-   *
-   * @param {Object} data initialization time.
-   * @param {ICAL.Timezone} zone timezone this position occurs in.
+   * @alias ICAL.Time
+   * @class
+   * @param {Object} data           Time initialization
+   * @param {Number=} data.year     The year for this date
+   * @param {Number=} data.month    The month for this date
+   * @param {Number=} data.day      The day for this date
+   * @param {Number=} data.hour     The hour for this date
+   * @param {Number=} data.minute   The minute for this date
+   * @param {Number=} data.second   The second for this date
+   * @param {Boolean=} data.isDate  If true, the instance represents a date (as
+   *                                  opposed to a date-time)
+   * @param {ICAL.Timezone} zone timezone this position occurs in
    */
   ICAL.Time = function icaltime(data, zone) {
     this.wrappedJSObject = this;
@@ -3603,38 +4495,70 @@ ICAL.TimezoneService = (function() {
 
   ICAL.Time.prototype = {
 
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "icaltime"
+     */
     icalclass: "icaltime",
     _cachedUnixTime: null,
 
-    // is read only strictly defined by isDate
+    /**
+     * The type name, to be used in the jCal object. This value may change and
+     * is strictly defined by the {@link ICAL.Time#isDate isDate} member.
+     * @readonly
+     * @type {String}
+     * @default "date-time"
+     */
     get icaltype() {
       return this.isDate ? 'date' : 'date-time';
     },
 
     /**
+     * The timezone for this time.
      * @type {ICAL.Timezone}
      */
     zone: null,
 
     /**
-     * Internal uses to indicate that a change has been
-     * made and the next read operation must attempt to
-     * normalize the value (for example changing the day to 33).
+     * Internal uses to indicate that a change has been made and the next read
+     * operation must attempt to normalize the value (for example changing the
+     * day to 33).
      *
      * @type {Boolean}
      * @private
      */
     _pendingNormalization: false,
 
-    clone: function icaltime_clone() {
+    /**
+     * Returns a clone of the time object.
+     *
+     * @return {ICAL.Duration}      The cloned object
+     */
+    clone: function() {
       return new ICAL.Time(this._time, this.zone);
     },
 
+    /**
+     * Reset the time instance to epoch time
+     */
     reset: function icaltime_reset() {
       this.fromData(ICAL.Time.epochTime);
       this.zone = ICAL.Timezone.utcTimezone;
     },
 
+    /**
+     * Reset the time instance to the given date/time values.
+     *
+     * @param {Number} year             The year to set
+     * @param {Number} month            The month to set
+     * @param {Number} day              The day to set
+     * @param {Number} hour             The hour to set
+     * @param {Number} minute           The minute to set
+     * @param {Number} second           The second to set
+     * @param {ICAL.Timezone} timezone  The timezone to set
+     */
     resetTo: function icaltime_resetTo(year, month, day,
                                        hour, minute, second, timezone) {
       this.fromData({
@@ -3648,6 +4572,12 @@ ICAL.TimezoneService = (function() {
       });
     },
 
+    /**
+     * Set up the current instance from the Javascript date value.
+     *
+     * @param {?Date} aDate     The Javascript Date to read, or null to reset
+     * @param {Boolean} useUTC  If true, the UTC values of the date will be used
+     */
     fromJSDate: function icaltime_fromJSDate(aDate, useUTC) {
       if (!aDate) {
         this.reset();
@@ -3674,6 +4604,20 @@ ICAL.TimezoneService = (function() {
       return this;
     },
 
+    /**
+     * Sets up the current instance using members from the passed data object.
+     *
+     * @param {Object} aData            Time initialization
+     * @param {Number=} aData.year      The year for this date
+     * @param {Number=} aData.month     The month for this date
+     * @param {Number=} aData.day       The day for this date
+     * @param {Number=} aData.hour      The hour for this date
+     * @param {Number=} aData.minute    The minute for this date
+     * @param {Number=} aData.second    The second for this date
+     * @param {Boolean=} aData.isDate   If true, the instance represents a date
+     *                                    (as opposed to a date-time)
+     * @param {ICAL.Timezone=} aZone    Timezone this position occurs in
+     */
     fromData: function fromData(aData, aZone) {
       if (aData) {
         for (var key in aData) {
@@ -3713,6 +4657,10 @@ ICAL.TimezoneService = (function() {
       return this;
     },
 
+    /**
+     * Calculate the day of week.
+     * @return {ICAL.Time.weekDay}
+     */
     dayOfWeek: function icaltime_dayOfWeek() {
       var dowCacheKey = (this.year << 9) + (this.month << 5) + this.day;
       if (dowCacheKey in ICAL.Time._dowCache) {
@@ -3738,12 +4686,25 @@ ICAL.TimezoneService = (function() {
       return h;
     },
 
+    /**
+     * Calculate the day of year.
+     * @return {Number}
+     */
     dayOfYear: function dayOfYear() {
       var is_leap = (ICAL.Time.isLeapYear(this.year) ? 1 : 0);
-      var diypm = ICAL.Time._daysInYearPassedMontgh;
+      var diypm = ICAL.Time.daysInYearPassedMonth;
       return diypm[is_leap][this.month - 1] + this.day;
     },
 
+    /**
+     * Returns a copy of the current date/time, rewound to the start of the
+     * week. The resulting ICAL.Time instance is of icaltype date, even if this
+     * is a date-time.
+     *
+     * @param {ICAL.Time.weekDay=} aWeekStart
+     *        The week start weekday, defaults to SUNDAY
+     * @return {ICAL.Time}      The start of the week (cloned)
+     */
     startOfWeek: function startOfWeek(aWeekStart) {
       var firstDow = aWeekStart || ICAL.Time.SUNDAY;
       var result = this.clone();
@@ -3755,6 +4716,15 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * Returns a copy of the current date/time, shifted to the end of the week.
+     * The resulting ICAL.Time instance is of icaltype date, even if this is a
+     * date-time.
+     *
+     * @param {ICAL.Time.weekDay=} aWeekStart
+     *        The week start weekday, defaults to SUNDAY
+     * @return {ICAL.Time}      The end of the week (cloned)
+     */
     endOfWeek: function endOfWeek(aWeekStart) {
       var firstDow = aWeekStart || ICAL.Time.SUNDAY;
       var result = this.clone();
@@ -3766,6 +4736,13 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * Returns a copy of the current date/time, rewound to the start of the
+     * month. The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The start of the month (cloned)
+     */
     startOfMonth: function startOfMonth() {
       var result = this.clone();
       result.day = 1;
@@ -3776,6 +4753,13 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * Returns a copy of the current date/time, shifted to the end of the
+     * month.  The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The end of the month (cloned)
+     */
     endOfMonth: function endOfMonth() {
       var result = this.clone();
       result.day = ICAL.Time.daysInMonth(result.month, result.year);
@@ -3786,6 +4770,13 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * Returns a copy of the current date/time, rewound to the start of the
+     * year. The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The start of the year (cloned)
+     */
     startOfYear: function startOfYear() {
       var result = this.clone();
       result.day = 1;
@@ -3797,6 +4788,13 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * Returns a copy of the current date/time, shifted to the end of the
+     * year.  The resulting ICAL.Time instance is of icaltype date, even if
+     * this is a date-time.
+     *
+     * @return {ICAL.Time}      The end of the year (cloned)
+     */
     endOfYear: function endOfYear() {
       var result = this.clone();
       result.day = 31;
@@ -3808,6 +4806,14 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * First calculates the start of the week, then returns the day of year for
+     * this date.
+     *
+     * @param {ICAL.Time.weekDay=} aFirstDayOfWeek
+     *        The week start weekday, defaults to SUNDAY
+     * @return {Number}     The calculated day of year
+     */
     startDoyWeek: function startDoyWeek(aFirstDayOfWeek) {
       var firstDow = aFirstDayOfWeek || ICAL.Time.SUNDAY;
       var delta = this.dayOfWeek() - firstDow;
@@ -3816,19 +4822,18 @@ ICAL.TimezoneService = (function() {
     },
 
     /**
-     * Finds the nthWeekDay relative to the current month (not day).
-     * The returned value is a day relative the month that this
-     * month belongs to so 1 would indicate the first of the month
-     * and 40 would indicate a day in the following month.
+     * Finds the nthWeekDay relative to the current month (not day).  The
+     * returned value is a day relative the month that this month belongs to so
+     * 1 would indicate the first of the month and 40 would indicate a day in
+     * the following month.
      *
-     * @param {Numeric} aDayOfWeek day of the week see the day name constants.
-     * @param {Numeric} aPos nth occurrence of a given week day
-     *                       values of 1 and 0 both indicate the first
-     *                       weekday of that type. aPos may be either positive
-     *                       or negative.
+     * @param {Number} aDayOfWeek   Day of the week see the day name constants
+     * @param {Number} aPos         Nth occurrence of a given week day values
+     *        of 1 and 0 both indicate the first weekday of that type. aPos may
+     *        be either positive or negative
      *
-     * @return {Numeric} numeric value indicating a day relative
-     *                   to the current month of this time object.
+     * @return {Number} numeric value indicating a day relative
+     *                   to the current month of this time object
      */
     nthWeekDay: function icaltime_nthWeekDay(aDayOfWeek, aPos) {
       var daysInMonth = ICAL.Time.daysInMonth(this.month, this.year);
@@ -3904,15 +4909,13 @@ ICAL.TimezoneService = (function() {
     },
 
     /**
-     * Checks if current time is the nthWeekDay.
-     * Relative to the current month.
+     * Checks if current time is the nth weekday, relative to the current
+     * month.  Will always return false when rule resolves outside of current
+     * month.
      *
-     * Will always return false when rule resolves
-     * outside of current month.
-     *
-     * @param {Numeric} aDayOfWeek day of week.
-     * @param {Numeric} aPos position.
-     * @param {Numeric} aMax maximum valid day.
+     * @param {ICAL.Time.weekDay} aDayOfWeek       Day of week to check
+     * @param {Number} aPos                        Relative position
+     * @return {Boolean}                           True, if its the nth weekday
      */
     isNthWeekDay: function(aDayOfWeek, aPos) {
       var dow = this.dayOfWeek();
@@ -3931,6 +4934,17 @@ ICAL.TimezoneService = (function() {
       return false;
     },
 
+    /**
+     * Calculates the ISO 8601 week number. If Monday is the week start day,
+     * the first week of a year is the week that contains the first Thursday.
+     * The year can have 53 weeks, if January 1st is a Friday.
+     *
+     * If the week start is specified as a different weekday, the calculation
+     * is shifted.
+     *
+     * @param {ICAL.Time.weekDay} aWeekStart        The weekday the week starts with
+     * @return {Number}                             The ISO week number
+     */
     weekNumber: function weekNumber(aWeekStart) {
       var wnCacheKey = (this.year << 12) + (this.month << 8) + (this.day << 3) + aWeekStart;
       if (wnCacheKey in ICAL.Time._wnCache) {
@@ -3968,6 +4982,12 @@ ICAL.TimezoneService = (function() {
       return answer;
     },
 
+    /**
+     * Adds the duration to the current time. The instance is modified in
+     * place.
+     *
+     * @param {ICAL.Duration} aDuration         The duration to add
+     */
     addDuration: function icaltime_add(aDuration) {
       var mult = (aDuration.isNegative ? -1 : 1);
 
@@ -3995,11 +5015,12 @@ ICAL.TimezoneService = (function() {
     },
 
     /**
-     * Subtract the date details (_excluding_ timezone).
-     * Useful for finding the relative difference between
-     * two time objects excluding their timezone differences.
+     * Subtract the date details (_excluding_ timezone).  Useful for finding
+     * the relative difference between two time objects excluding their
+     * timezone differences.
      *
-     * @return {ICAL.Duration} difference in duration.
+     * @param {ICAL.Time} aDate     The date to substract
+     * @return {ICAL.Duration}      The difference as a duration
      */
     subtractDate: function icaltime_subtract(aDate) {
       var unixTime = this.toUnixTime() + this.utcOffset();
@@ -4010,8 +5031,8 @@ ICAL.TimezoneService = (function() {
     /**
      * Subtract the date details, taking timezones into account.
      *
-     * @param {ICAL.Time}  The date to subtract.
-     * @return {ICAL.Duration}  The difference in duration.
+     * @param {ICAL.Time} aDate  The date to subtract
+     * @return {ICAL.Duration}  The difference in duration
      */
     subtractDateTz: function icaltime_subtract_abs(aDate) {
       var unixTime = this.toUnixTime();
@@ -4019,6 +5040,12 @@ ICAL.TimezoneService = (function() {
       return ICAL.Duration.fromSeconds(unixTime - other);
     },
 
+    /**
+     * Compares the ICAL.Time instance with another one.
+     *
+     * @param {ICAL.Duration} aOther        The instance to compare with
+     * @return {Number}                     -1, 0 or 1 for less/equal/greater
+     */
     compare: function icaltime_compare(other) {
       var a = this.toUnixTime();
       var b = other.toUnixTime();
@@ -4028,6 +5055,13 @@ ICAL.TimezoneService = (function() {
       return 0;
     },
 
+    /**
+     * Compares only the date part of this instance with another one.
+     *
+     * @param {ICAL.Duration} other         The instance to compare with
+     * @param {ICAL.Timezone} tz            The timezone to compare in
+     * @return {Number}                     -1, 0 or 1 for less/equal/greater
+     */
     compareDateOnlyTz: function icaltime_compareDateOnlyTz(other, tz) {
       function cmp(attr) {
         return ICAL.Time._cmp_attr(a, b, attr);
@@ -4043,6 +5077,13 @@ ICAL.TimezoneService = (function() {
       return rc;
     },
 
+    /**
+     * Convert the instance into another timzone. The returned ICAL.Time
+     * instance is always a copy.
+     *
+     * @param {ICAL.Timezone} zone      The zone to convert to
+     * @return {ICAL.Time}              The copy, converted to the zone
+     */
     convertToZone: function convertToZone(zone) {
       var copy = this.clone();
       var zone_equals = (this.zone.tzid == zone.tzid);
@@ -4055,6 +5096,12 @@ ICAL.TimezoneService = (function() {
       return copy;
     },
 
+    /**
+     * Calculates the UTC offset of the current date/time in the timezone it is
+     * in.
+     *
+     * @return {Number}     UTC offset in seconds
+     */
     utcOffset: function utc_offset() {
       if (this.zone == ICAL.Timezone.localTimezone ||
           this.zone == ICAL.Timezone.utcTimezone) {
@@ -4065,9 +5112,9 @@ ICAL.TimezoneService = (function() {
     },
 
     /**
-     * Returns an RFC 5455 compliant ical representation of this object.
+     * Returns an RFC 5545 compliant ical representation of this object.
      *
-     * @return {String} ical date/date-time.
+     * @return {String} ical date/date-time
      */
     toICALString: function() {
       var string = this.toString();
@@ -4079,6 +5126,11 @@ ICAL.TimezoneService = (function() {
       }
     },
 
+    /**
+     * The string representation of this date/time, in jCal form
+     * (including : and - separators).
+     * @return {String}
+     */
     toString: function toString() {
       var result = this.year + '-' +
                    ICAL.helpers.pad2(this.month) + '-' +
@@ -4097,6 +5149,10 @@ ICAL.TimezoneService = (function() {
       return result;
     },
 
+    /**
+     * Converts the current instance to a Javascript date
+     * @return {Date}
+     */
     toJSDate: function toJSDate() {
       if (this.zone == ICAL.Timezone.localTimezone) {
         if (this.isDate) {
@@ -4122,6 +5178,16 @@ ICAL.TimezoneService = (function() {
       return this;
     },
 
+    /**
+     * Adjust the date/time by the given offset
+     *
+     * @param {Number} aExtraDays       The extra amount of days
+     * @param {Number} aExtraHours      The extra amount of hours
+     * @param {Number} aExtraMinutes    The extra amount of minutes
+     * @param {Number} aExtraSeconds    The extra amount of seconds
+     * @param {Number=} aTime           The time to adjust, defaults to the
+     *                                    current instance.
+     */
     adjust: function icaltime_adjust(aExtraDays, aExtraHours,
                                      aExtraMinutes, aExtraSeconds, aTime) {
 
@@ -4209,6 +5275,12 @@ ICAL.TimezoneService = (function() {
       return this;
     },
 
+    /**
+     * Sets up the current instance from unix time, the number of seconds since
+     * January 1st, 1970.
+     *
+     * @param {Number} seconds      The seconds to set up with
+     */
     fromUnixTime: function fromUnixTime(seconds) {
       this.zone = ICAL.Timezone.utcTimezone;
       var epoch = ICAL.Time.epochTime.clone();
@@ -4224,6 +5296,11 @@ ICAL.TimezoneService = (function() {
       this._cachedUnixTime = null;
     },
 
+    /**
+     * Converts the current instance to seconds since January 1st 1970.
+     *
+     * @return {Number}         Seconds since 1970
+     */
     toUnixTime: function toUnixTime() {
       if (this._cachedUnixTime !== null) {
         return this._cachedUnixTime;
@@ -4247,19 +5324,18 @@ ICAL.TimezoneService = (function() {
     },
 
     /**
-     * Converts time to into Object
-     * which can be serialized then re-created
+     * Converts time to into Object which can be serialized then re-created
      * using the constructor.
      *
-     * Example:
+     * @example
+     * // toJSON will automatically be called
+     * var json = JSON.stringify(mytime);
      *
-     *    // toJSON will automatically be called
-     *    var json = JSON.stringify(mytime);
+     * var deserialized = JSON.parse(json);
      *
-     *    var deserialized = JSON.parse(json);
+     * var time = new ICAL.Time(deserialized);
      *
-     *    var time = new ICAL.Time(deserialized);
-     *
+     * @return {Object}
      */
     toJSON: function() {
       var copy = [
@@ -4327,6 +5403,13 @@ ICAL.TimezoneService = (function() {
     }
   })();
 
+  /**
+   * Returns the days in the given month
+   *
+   * @param {Number} month      The month to check
+   * @param {Number} year       The year to check
+   * @return {Number}           The number of days in the month
+   */
   ICAL.Time.daysInMonth = function icaltime_daysInMonth(month, year) {
     var _daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     var days = 30;
@@ -4342,6 +5425,12 @@ ICAL.TimezoneService = (function() {
     return days;
   };
 
+  /**
+   * Checks if the year is a leap year
+   *
+   * @param {Number} year       The year to check
+   * @return {Boolean}          True, if the year is a leap year
+   */
   ICAL.Time.isLeapYear = function isLeapYear(year) {
     if (year <= 1752) {
       return ((year % 4) == 0);
@@ -4350,6 +5439,14 @@ ICAL.TimezoneService = (function() {
     }
   };
 
+  /**
+   * Create a new ICAL.Time from the day of year and year. The date is returned
+   * in floating timezone.
+   *
+   * @param {Number} aDayOfYear     The day of year
+   * @param {Number} aYear          The year to create the instance in
+   * @return {ICAL.Time}            The created instance with the calculated date
+   */
   ICAL.Time.fromDayOfYear = function icaltime_fromDayOfYear(aDayOfYear, aYear) {
     var year = aYear;
     var doy = aDayOfYear;
@@ -4360,11 +5457,11 @@ ICAL.TimezoneService = (function() {
     if (doy < 1) {
       year--;
       is_leap = (ICAL.Time.isLeapYear(year) ? 1 : 0);
-      doy += ICAL.Time._daysInYearPassedMontgh[is_leap][12];
+      doy += ICAL.Time.daysInYearPassedMonth[is_leap][12];
       return ICAL.Time.fromDayOfYear(doy, year);
-    } else if (doy > ICAL.Time._daysInYearPassedMontgh[is_leap][12]) {
+    } else if (doy > ICAL.Time.daysInYearPassedMonth[is_leap][12]) {
       is_leap = (ICAL.Time.isLeapYear(year) ? 1 : 0);
-      doy -= ICAL.Time._daysInYearPassedMontgh[is_leap][12];
+      doy -= ICAL.Time.daysInYearPassedMonth[is_leap][12];
       year++;
       return ICAL.Time.fromDayOfYear(doy, year);
     }
@@ -4373,9 +5470,9 @@ ICAL.TimezoneService = (function() {
     tt.isDate = true;
 
     for (var month = 11; month >= 0; month--) {
-      if (doy > ICAL.Time._daysInYearPassedMontgh[is_leap][month]) {
+      if (doy > ICAL.Time.daysInYearPassedMonth[is_leap][month]) {
         tt.month = month + 1;
-        tt.day = doy - ICAL.Time._daysInYearPassedMontgh[is_leap][month];
+        tt.day = doy - ICAL.Time.daysInYearPassedMonth[is_leap][month];
         break;
       }
     }
@@ -4384,6 +5481,13 @@ ICAL.TimezoneService = (function() {
     return tt;
   };
 
+  /**
+   * Returns a new ICAL.Time instance from a date string, e.g 2015-01-02.
+   *
+   * @deprecated                Use {@link ICAL.Time.fromDateString} instead
+   * @param {String} str        The string to create from
+   * @return {ICAL.Time}        The date/time instance
+   */
   ICAL.Time.fromStringv2 = function fromString(str) {
     return new ICAL.Time({
       year: parseInt(str.substr(0, 4), 10),
@@ -4393,7 +5497,13 @@ ICAL.TimezoneService = (function() {
     });
   };
 
-  ICAL.Time.fromDateString = function(aValue, aProp) {
+  /**
+   * Returns a new ICAL.Time instance from a date string, e.g 2015-01-02.
+   *
+   * @param {String} aValue     The string to create from
+   * @return {ICAL.Time}        The date/time instance
+   */
+  ICAL.Time.fromDateString = function(aValue) {
     // Dates should have no timezone.
     // Google likes to sometimes specify Z on dates
     // we specifically ignore that to avoid issues.
@@ -4408,6 +5518,15 @@ ICAL.TimezoneService = (function() {
     });
   };
 
+  /**
+   * Returns a new ICAL.Time instance from a date-time string, e.g
+   * 2015-01-02T03:04:05. If a property is specified, the timezone is set up
+   * from the property's TZID parameter.
+   *
+   * @param {String} aValue         The string to create from
+   * @param {ICAL.Property=} prop   The property the date belongs to
+   * @return {ICAL.Time}            The date/time instance
+   */
   ICAL.Time.fromDateTimeString = function(aValue, prop) {
     if (aValue.length < 19) {
       throw new Error(
@@ -4437,6 +5556,12 @@ ICAL.TimezoneService = (function() {
     return time;
   };
 
+  /**
+   * Returns a new ICAL.Time instance from a date or date-time string,
+   *
+   * @param {String} aValue         The string to create from
+   * @return {ICAL.Time}            The date/time instance
+   */
   ICAL.Time.fromString = function fromString(aValue) {
     if (aValue.length > 10) {
       return ICAL.Time.fromDateTimeString(aValue);
@@ -4445,20 +5570,52 @@ ICAL.TimezoneService = (function() {
     }
   };
 
+  /**
+   * Creates a new ICAL.Time instance from the given Javascript Date.
+   *
+   * @param {?Date} aDate     The Javascript Date to read, or null to reset
+   * @param {Boolean} useUTC  If true, the UTC values of the date will be used
+   */
   ICAL.Time.fromJSDate = function fromJSDate(aDate, useUTC) {
     var tt = new ICAL.Time();
     return tt.fromJSDate(aDate, useUTC);
   };
 
-  ICAL.Time.fromData = function fromData(aData) {
+  /**
+   * Creates a new ICAL.Time instance from the the passed data object.
+   *
+   * @param {Object} aData            Time initialization
+   * @param {Number=} aData.year      The year for this date
+   * @param {Number=} aData.month     The month for this date
+   * @param {Number=} aData.day       The day for this date
+   * @param {Number=} aData.hour      The hour for this date
+   * @param {Number=} aData.minute    The minute for this date
+   * @param {Number=} aData.second    The second for this date
+   * @param {Boolean=} aData.isDate   If true, the instance represents a date
+   *                                    (as opposed to a date-time)
+   * @param {ICAL.Timezone=} aZone    Timezone this position occurs in
+   */
+  ICAL.Time.fromData = function fromData(aData, aZone) {
     var t = new ICAL.Time();
-    return t.fromData(aData);
+    return t.fromData(aData, aZone);
   };
 
+  /**
+   * Creates a new ICAL.Time instance from the current moment.
+   * @return {ICAL.Time}
+   */
   ICAL.Time.now = function icaltime_now() {
     return ICAL.Time.fromJSDate(new Date(), false);
   };
 
+  /**
+   * Returns the date on which ISO week number 1 starts.
+   *
+   * @see ICAL.Time#weekNumber
+   * @param {Number} aYear          The year to search in
+   * @param {ICAL.Time.weekDay=}    The week start weekday, used for calculation.
+   * @return {ICAL.Time}            The date on which week number 1 starts
+   */
   ICAL.Time.weekOneStarts = function weekOneStarts(aYear, aWeekStart) {
     var t = ICAL.Time.fromData({
       year: aYear,
@@ -4472,6 +5629,12 @@ ICAL.TimezoneService = (function() {
     return t;
   };
 
+  /**
+   * January 1st, 1970 as an ICAL.Time.
+   * @type {ICAL.Time}
+   * @constant
+   * @instance
+   */
   ICAL.Time.epochTime = ICAL.Time.fromData({
     year: 1970,
     month: 1,
@@ -4489,11 +5652,27 @@ ICAL.TimezoneService = (function() {
     return 0;
   };
 
-  ICAL.Time._daysInYearPassedMontgh = [
+  /**
+   * The days that have passed in the year after a given month. The array has
+   * two members, one being an array of passed days for non-leap years, the
+   * other analog for leap years.
+   * @example
+   * var isLeapYear = ICAL.Time.isLeapYear(year);
+   * var passedDays = ICAL.Time.daysInYearPassedMonth[isLeapYear][month];
+   * @type {Array.<Array.<Number>>}
+   */
+  ICAL.Time.daysInYearPassedMonth = [
     [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365],
     [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366]
   ];
 
+  /**
+   * The weekday, 1 = SUNDAY, 7 = SATURDAY. Access via
+   * ICAL.Time.MONDAY, ICAL.Time.TUESDAY, ...
+   *
+   * @typedef {Number} weekDay
+   * @memberof ICAL.Time
+   */
 
   ICAL.Time.SUNDAY = 1;
   ICAL.Time.MONDAY = 2;
@@ -4503,6 +5682,11 @@ ICAL.TimezoneService = (function() {
   ICAL.Time.FRIDAY = 6;
   ICAL.Time.SATURDAY = 7;
 
+  /**
+   * The default weekday for the WKST part.
+   * @constant
+   * @default ICAL.Time.MONDAY
+   */
   ICAL.Time.DEFAULT_WEEK_START = ICAL.Time.MONDAY;
 })();
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -4528,9 +5712,17 @@ ICAL.TimezoneService = (function() {
    *
    * Also, normalization is not yet implemented for this class!
    *
-   * @param {Object} data                           The data for the time instance.
+   * @class
+   * @extends {ICAL.Time}
+   * @param {Object} data                           The data for the time instance
+   * @param {Number=} data.year                     The year for this date
+   * @param {Number=} data.month                    The month for this date
+   * @param {Number=} data.day                      The day for this date
+   * @param {Number=} data.hour                     The hour for this date
+   * @param {Number=} data.minute                   The minute for this date
+   * @param {Number=} data.second                   The second for this date
    * @param {ICAL.Timezone|ICAL.UtcOffset} zone     The timezone to use
-   * @param {String} icaltype                       The type for this date/time object.
+   * @param {String} icaltype                       The type for this date/time object
    */
   ICAL.VCardTime = function(data, zone, icaltype) {
     this.wrappedJSObject = this;
@@ -4551,15 +5743,33 @@ ICAL.TimezoneService = (function() {
   ICAL.VCardTime.prototype = {
     __proto__: ICAL.Time.prototype,
 
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "vcardtime"
+     */
     icalclass: "vcardtime",
+
+    /**
+     * The type name, to be used in the jCal object.
+     * @type {String}
+     * @default "date-and-or-time"
+     */
     icaltype: "date-and-or-time",
 
     /**
      * The timezone. This can either be floating, UTC, or an instance of
      * ICAL.UtcOffset.
+     * @type {ICAL.Timezone|ICAL.UtcOFfset}
      */
     zone: null,
 
+    /**
+     * Returns a clone of the vcard date/time object.
+     *
+     * @return {ICAL.VCardTime}     The cloned object
+     */
     clone: function() {
       return new ICAL.VCardTime(this._time, this.zone, this.icaltype);
     },
@@ -4568,6 +5778,9 @@ ICAL.TimezoneService = (function() {
       return this;
     },
 
+    /**
+     * @inheritdoc
+     */
     utcOffset: function() {
       if (this.zone instanceof ICAL.UtcOffset) {
         return this.zone.toSeconds();
@@ -4576,10 +5789,20 @@ ICAL.TimezoneService = (function() {
       }
     },
 
+    /**
+     * Returns an RFC 6350 compliant representation of this object.
+     *
+     * @return {String}         vcard date/time string
+     */
     toICALString: function() {
       return ICAL.design.vcard.value[this.icaltype].toICAL(this.toString());
     },
 
+    /**
+     * The string representation of this date/time, in jCard form
+     * (including : and - separators).
+     * @return {String}
+     */
     toString: function toString() {
       var p2 = ICAL.helpers.pad2;
       var y = this.year, m = this.month, d = this.day;
@@ -4623,6 +5846,13 @@ ICAL.TimezoneService = (function() {
     }
   };
 
+  /**
+   * Returns a new ICAL.VCardTime instance from a date and/or time string.
+   *
+   * @param {String} aValue     The string to create from
+   * @param {String} aIcalType  The type for this instance, e.g. date-and-or-time
+   * @return {ICAL.VCardTime}   The date/time instance
+   */
   ICAL.VCardTime.fromDateAndOrTimeString = function(aValue, aIcalType) {
     function part(v, s, e) {
       return v ? ICAL.helpers.strictParseInt(v.substr(s, e)) : null;
@@ -4663,7 +5893,7 @@ ICAL.TimezoneService = (function() {
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
 
@@ -4671,7 +5901,6 @@ ICAL.TimezoneService = (function() {
 (typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 (function() {
-
   var DOW_MAP = {
     SU: ICAL.Time.SUNDAY,
     MO: ICAL.Time.MONDAY,
@@ -4691,6 +5920,29 @@ ICAL.TimezoneService = (function() {
                     "BYMONTHDAY", "BYYEARDAY", "BYWEEKNO",
                     "BYMONTH", "BYSETPOS"];
 
+  /**
+   * @classdesc
+   * This class represents the "recur" value type, with various calculation
+   * and manipulation methods.
+   *
+   * @class
+   * @alias ICAL.Recur
+   * @param {Object} data                       An object with members of the recurrence
+   * @param {ICAL.Recur.frequencyValues} freq   The frequency value
+   * @param {Number=} data.interval             The INTERVAL value
+   * @param {ICAL.Time.weekDay=} data.wkst      The week start value
+   * @param {ICAL.Time=} data.until             The end of the recurrence set
+   * @param {Number=} data.count                The number of occurrences
+   * @param {Array.<Number>=} data.bysecond     The seconds for the BYSECOND part
+   * @param {Array.<Number>=} data.byminute     The minutes for the BYMINUTE part
+   * @param {Array.<Number>=} data.byhour       The hours for the BYHOUR part
+   * @param {Array.<String>=} data.byday        The BYDAY values
+   * @param {Array.<Number>=} data.bymonthday   The days for the BYMONTHDAY part
+   * @param {Array.<Number>=} data.byyearday    The days for the BYYEARDAY part
+   * @param {Array.<Number>=} data.byweekno     The weeks for the BYWEEKNO part
+   * @param {Array.<Number>=} data.bymonth      The month for the BYMONTH part
+   * @param {Array.<Number>=} data.bysetpos     The positionals for the BYSETPOS part
+   */
   ICAL.Recur = function icalrecur(data) {
     this.wrappedJSObject = this;
     this.parts = {};
@@ -4701,17 +5953,79 @@ ICAL.TimezoneService = (function() {
   };
 
   ICAL.Recur.prototype = {
-
+    /**
+     * An object holding the BY-parts of the recurrence rule
+     * @type {Object}
+     */
     parts: null,
 
+    /**
+     * The interval value for the recurrence rule.
+     * @type {Number}
+     */
     interval: 1,
+
+    /**
+     * The week start day
+     *
+     * @type {ICAL.Time.weekDay}
+     * @default ICAL.Time.MONDAY
+     */
     wkst: ICAL.Time.MONDAY,
+
+    /**
+     * The end of the recurrence
+     * @type {?ICAL.Time}
+     */
     until: null,
+
+    /**
+     * The maximum number of occurrences
+     * @type {?Number}
+     */
     count: null,
+
+    /**
+     * The frequency value.
+     * @type {ICAL.Recur.frequencyValues}
+     */
     freq: null,
+
+    /**
+     * The class identifier.
+     * @constant
+     * @type {String}
+     * @default "icalrecur"
+     */
     icalclass: "icalrecur",
+
+    /**
+     * The type name, to be used in the jCal object.
+     * @constant
+     * @type {String}
+     * @default "recur"
+     */
     icaltype: "recur",
 
+    /**
+     * Create a new iterator for this recurrence rule. The passed start date
+     * must be the start date of the event, not the start of the range to
+     * search in.
+     *
+     * @example
+     * var recur = comp.getFirstPropertyValue('rrule');
+     * var dtstart = comp.getFirstPropertyValue('dtstart');
+     * var iter = recur.iterator(dtstart);
+     * for (var next = iter.next(); next; next = iter.next()) {
+     *   if (next.compare(rangeStart) < 0) {
+     *     continue;
+     *   }
+     *   console.log(next.toString());
+     * }
+     *
+     * @param {ICAL.Time} aStart        The item's start date
+     * @return {ICAL.RecurIterator}     The recurrence iterator
+     */
     iterator: function(aStart) {
       return new ICAL.RecurIterator({
         rule: this,
@@ -4719,18 +6033,42 @@ ICAL.TimezoneService = (function() {
       });
     },
 
+    /**
+     * Returns a clone of the recurrence object.
+     *
+     * @return {ICAL.Recur}      The cloned object
+     */
     clone: function clone() {
       return new ICAL.Recur(this.toJSON());
     },
 
+    /**
+     * Checks if the current rule is finite, i.e. has a count or until part.
+     *
+     * @return {Boolean}        True, if the rule is finite
+     */
     isFinite: function isfinite() {
       return !!(this.count || this.until);
     },
 
+    /**
+     * Checks if the current rule has a count part, and not limited by an until
+     * part.
+     *
+     * @return {Boolean}        True, if the rule is by count
+     */
     isByCount: function isbycount() {
       return !!(this.count && !this.until);
     },
 
+    /**
+     * Adds a component (part) to the recurrence rule. This is not a component
+     * in the sense of {@link ICAL.Component}, but a part of the recurrence
+     * rule, i.e. BYMONTH.
+     *
+     * @param {String} aType            The name of the component part
+     * @param {Array|String} aValue     The component value
+     */
     addComponent: function addPart(aType, aValue) {
       var ucname = aType.toUpperCase();
       if (ucname in this.parts) {
@@ -4740,15 +6078,41 @@ ICAL.TimezoneService = (function() {
       }
     },
 
+    /**
+     * Sets the component value for the given by-part.
+     *
+     * @param {String} aType        The component part name
+     * @param {Array} aValues       The component values
+     */
     setComponent: function setComponent(aType, aValues) {
       this.parts[aType.toUpperCase()] = aValues.slice();
     },
 
+    /**
+     * Gets (a copy) of the requested component value.
+     *
+     * @param {String} aType        The component part name
+     * @return {Array}              The component part value
+     */
     getComponent: function getComponent(aType) {
       var ucname = aType.toUpperCase();
       return (ucname in this.parts ? this.parts[ucname].slice() : []);
     },
 
+    /**
+     * Retrieves the next occurrence after the given recurrence id. See the
+     * guide on {@tutorial terminology} for more details.
+     *
+     * NOTE: Currently, this method iterates all occurrences from the start
+     * date. It should not be called in a loop for performance reasons. If you
+     * would like to get more than one occurrence, you can iterate the
+     * occurrences manually, see the example on the
+     * {@link ICAL.Recur#iterator iterator} method.
+     *
+     * @param {ICAL.Time} aStartTime        The start of the event series
+     * @param {ICAL.Time} aRecurrenceId     The date of the last occurrence
+     * @return {ICAL.Time}                  The next occurrence after
+     */
     getNextOccurrence: function getNextOccurrence(aStartTime, aRecurrenceId) {
       var iter = this.iterator(aStartTime);
       var next, cdt;
@@ -4764,6 +6128,25 @@ ICAL.TimezoneService = (function() {
       return next;
     },
 
+    /**
+     * Sets up the current instance using members from the passed data object.
+     *
+     * @param {Object} data                       An object with members of the recurrence
+     * @param {ICAL.Recur.frequencyValues} freq   The frequency value
+     * @param {Number=} data.interval             The INTERVAL value
+     * @param {ICAL.Time.weekDay=} data.wkst      The week start value
+     * @param {ICAL.Time=} data.until             The end of the recurrence set
+     * @param {Number=} data.count                The number of occurrences
+     * @param {Array.<Number>=} data.bysecond     The seconds for the BYSECOND part
+     * @param {Array.<Number>=} data.byminute     The minutes for the BYMINUTE part
+     * @param {Array.<Number>=} data.byhour       The hours for the BYHOUR part
+     * @param {Array.<String>=} data.byday        The BYDAY values
+     * @param {Array.<Number>=} data.bymonthday   The days for the BYMONTHDAY part
+     * @param {Array.<Number>=} data.byyearday    The days for the BYYEARDAY part
+     * @param {Array.<Number>=} data.byweekno     The weeks for the BYWEEKNO part
+     * @param {Array.<Number>=} data.bymonth      The month for the BYMONTH part
+     * @param {Array.<Number>=} data.bysetpos     The positionals for the BYSETPOS part
+     */
     fromData: function(data) {
       for (var key in data) {
         var uckey = key.toUpperCase();
@@ -4788,6 +6171,10 @@ ICAL.TimezoneService = (function() {
       }
     },
 
+    /**
+     * The jCal representation of this recurrence type.
+     * @return {Object}
+     */
     toJSON: function() {
       var res = Object.create(null);
       res.freq = this.freq;
@@ -4818,6 +6205,10 @@ ICAL.TimezoneService = (function() {
       return res;
     },
 
+    /**
+     * The string representation of this recurrence rule.
+     * @return {String}
+     */
     toString: function icalrecur_toString() {
       // TODO retain order
       var str = "FREQ=" + this.freq;
@@ -4868,8 +6259,8 @@ ICAL.TimezoneService = (function() {
    * Convert an ical representation of a day (SU, MO, etc..)
    * into a numeric value of that day.
    *
-   * @param {String} day ical day.
-   * @return {Numeric} numeric value of given day.
+   * @param {String} string     The iCalendar day name
+   * @return {Number}           Numeric value of given day
    */
   ICAL.Recur.icalDayToNumericDay = function toNumericDay(string) {
     //XXX: this is here so we can deal
@@ -4881,8 +6272,8 @@ ICAL.TimezoneService = (function() {
   /**
    * Convert a numeric day value into its ical representation (SU, MO, etc..)
    *
-   * @param {Numeric} numeric value of given day.
-   * @return {String} day ical day.
+   * @param {Number} num        Numeric value of given day
+   * @return {String}           The ICAL day value, e.g SU,MO,...
    */
   ICAL.Recur.numericDayToIcalDay = function toIcalDay(num) {
     //XXX: this is here so we can deal with possibly invalid number values.
@@ -4893,6 +6284,15 @@ ICAL.TimezoneService = (function() {
 
   var VALID_DAY_NAMES = /^(SU|MO|TU|WE|TH|FR|SA)$/;
   var VALID_BYDAY_PART = /^([+-])?(5[0-3]|[1-4][0-9]|[1-9])?(SU|MO|TU|WE|TH|FR|SA)$/;
+
+  /**
+   * Possible frequency values for the FREQ part
+   * (YEARLY, MONTHLY, WEEKLY, DAILY, HOURLY, MINUTELY, SECONDLY)
+   *
+   * @typedef {String} frequencyValues
+   * @memberof ICAL.Recur
+   */
+
   var ALLOWED_FREQ = ['SECONDLY', 'MINUTELY', 'HOURLY',
                       'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 
@@ -4962,15 +6362,51 @@ ICAL.TimezoneService = (function() {
     BYSETPOS: parseNumericValue.bind(this, 'BYSETPOS', -366, 366)
   };
 
+
+  /**
+   * Creates a new {@link ICAL.Recur} instance from the passed string.
+   *
+   * @param {String} string         The string to parse
+   * @return {ICAL.Recur}           The created recurrence instance
+   */
   ICAL.Recur.fromString = function(string) {
     var data = ICAL.Recur._stringToData(string, false);
     return new ICAL.Recur(data);
   };
 
+  /**
+   * Creates a new {@link ICAL.Recur} instance using members from the passed
+   * data object.
+   *
+   * @param {Object} aData                      An object with members of the recurrence
+   * @param {ICAL.Recur.frequencyValues} freq   The frequency value
+   * @param {Number=} aData.interval            The INTERVAL value
+   * @param {ICAL.Time.weekDay=} aData.wkst     The week start value
+   * @param {ICAL.Time=} aData.until            The end of the recurrence set
+   * @param {Number=} aData.count               The number of occurrences
+   * @param {Array.<Number>=} aData.bysecond    The seconds for the BYSECOND part
+   * @param {Array.<Number>=} aData.byminute    The minutes for the BYMINUTE part
+   * @param {Array.<Number>=} aData.byhour      The hours for the BYHOUR part
+   * @param {Array.<String>=} aData.byday       The BYDAY values
+   * @param {Array.<Number>=} aData.bymonthday  The days for the BYMONTHDAY part
+   * @param {Array.<Number>=} aData.byyearday   The days for the BYYEARDAY part
+   * @param {Array.<Number>=} aData.byweekno    The weeks for the BYWEEKNO part
+   * @param {Array.<Number>=} aData.bymonth     The month for the BYMONTH part
+   * @param {Array.<Number>=} aData.bysetpos    The positionals for the BYSETPOS part
+   */
   ICAL.Recur.fromData = function(aData) {
     return new ICAL.Recur(aData);
   };
 
+  /**
+   * Converts a recurrence string to a data object, suitable for the fromData
+   * method.
+   *
+   * @param {String} string     The string to parse
+   * @param {Boolean} fmtIcal   If true, the string is considered to be an
+   *                              iCalendar string
+   * @return {ICAL.Recur}       The recurrence instance
+   */
   ICAL.Recur._stringToData = function(string, fmtIcal) {
     var dict = Object.create(null);
 
@@ -5005,23 +6441,40 @@ ICAL.TimezoneService = (function() {
 
     return dict;
   };
-
 })();
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.RecurIterator = (function() {
 
   /**
-   * Options:
-   *  - rule: (ICAL.Recur) instance
-   *  - dtstart: (ICAL.Time) start date of recurrence rule
-   *  - initialized: (Boolean) when true will assume options
-   *                           are from previously constructed
-   *                           iterator and will not re-initialize
-   *                           iterator but resume its state from given data.
+   * @classdesc
+   * An iterator for a single recurrence rule. This class usually doesn't have
+   * to be instanciated directly, the convenience method
+   * {@link ICAL.Recur#iterator} can be used.
    *
-   *  - by_data: (for iterator de-serialization)
-   *  - days: "
-   *  - last: "
-   *  - by_indices: "
+   * @description
+   * The options object may contain additional members when resuming iteration from a previous run
+   *
+   * @description
+   * The options object may contain additional members when resuming iteration
+   * from a previous run.
+   *
+   * @class
+   * @alias ICAL.RecurIterator
+   * @param {Object} options                The iterator options
+   * @param {ICAL.Recur} options.rule       The rule to iterate.
+   * @param {ICAL.Time} options.dtstart     The start date of the event.
+   * @param {Boolean=} options.initialized  When true, assume that options are
+   *        from a previously constructed iterator. Initialization will not be
+   *        repeated.
    */
   function icalrecur_iterator(options) {
     this.fromData(options);
@@ -5031,20 +6484,82 @@ ICAL.RecurIterator = (function() {
 
     /**
      * True when iteration is finished.
+     * @type {Boolean}
      */
     completed: false,
 
+    /**
+     * The rule that is being iterated
+     * @type {ICAL.Recur}
+     */
     rule: null,
+
+    /**
+     * The start date of the event being iterated.
+     * @type {ICAL.Time}
+     */
     dtstart: null,
+
+    /**
+     * The last occurrence that was returned from the
+     * {@link ICAL.RecurIterator#next} method.
+     * @type {ICAL.Time}
+     */
     last: null,
+
+    /**
+     * The sequence number from the occurrence
+     * @type {Number}
+     */
     occurrence_number: 0,
+
+    /**
+     * The indices used for the {@link ICAL.RecurIterator#by_data} object.
+     * @type {Object}
+     * @private
+     */
     by_indices: null,
+
+    /**
+     * If true, the iterator has already been initialized
+     * @type {Boolean}
+     * @private
+     */
     initialized: false,
+
+    /**
+     * The initializd by-data.
+     * @type {Object}
+     * @private
+     */
     by_data: null,
 
+    /**
+     * The expanded yeardays
+     * @type {Array}
+     * @private
+     */
     days: null,
+
+    /**
+     * The index in the {@link ICAL.RecurIterator#days} array.
+     * @type {Number}
+     * @private
+     */
     days_index: 0,
 
+    /**
+     * Initialize the recurrence iterator from the passed data object. This
+     * method is usually not called directly, you can initialize the iterator
+     * through the constructor.
+     *
+     * @param {Object} options                The iterator options
+     * @param {ICAL.Recur} options.rule       The rule to iterate.
+     * @param {ICAL.Time} options.dtstart     The start date of the event.
+     * @param {Boolean=} options.initialized  When true, assume that options are
+     *        from a previously constructed iterator. Initialization will not be
+     *        repeated.
+     */
     fromData: function(options) {
       this.rule = ICAL.helpers.formatClassType(options.rule, ICAL.Recur);
 
@@ -5091,6 +6606,10 @@ ICAL.RecurIterator = (function() {
       }
     },
 
+    /**
+     * Intialize the iterator
+     * @private
+     */
     init: function icalrecur_iterator_init() {
       this.initialized = true;
       this.last = this.dtstart.clone();
@@ -5232,6 +6751,10 @@ ICAL.RecurIterator = (function() {
 
     },
 
+    /**
+     * Retrieve the next occurrence from the iterator.
+     * @return {ICAL.Time}
+     */
     next: function icalrecur_iterator_next() {
       var before = (this.last ? this.last.clone() : null);
 
@@ -5379,12 +6902,13 @@ ICAL.RecurIterator = (function() {
     },
 
     /**
-     * normalize each by day rule for a given year/month.
+     * Normalize each by day rule for a given year/month.
      * Takes into account ordering and negative rules
      *
-     * @param {Numeric} year current year.
-     * @param {Numeric} month current month.
-     * @param {Array} rules array of rules.
+     * @private
+     * @param {Number} year         Current year.
+     * @param {Number} month        Current month.
+     * @param {Array}  rules        Array of rules.
      *
      * @return {Array} sorted and normalized rules.
      *                 Negative rules will be expanded to their
@@ -5438,8 +6962,9 @@ ICAL.RecurIterator = (function() {
      * Also we are given a list of days (BYDAY) (MO, 2SU, etc..) when
      * both conditions match a given date (this.last.day) iteration stops.
      *
-     * @param {Boolean} [isInit] when given true will not
-     *                           increment the current day (this.last).
+     * @private
+     * @param {Boolean=} isInit     When given true will not increment the
+     *                                current day (this.last).
      */
     _byDayAndMonthDay: function(isInit) {
       var byMonthDay; // setup in initMonth
@@ -6127,6 +7652,7 @@ ICAL.RecurIterator = (function() {
     /**
      * Checks if given value is in BYSETPOS.
      *
+     * @private
      * @param {Numeric} aPos position to check for.
      * @return {Boolean} false unless BYSETPOS rules exist
      *                   and the given value is present in rules.
@@ -6213,9 +7739,10 @@ ICAL.RecurIterator = (function() {
     },
 
     /**
-     * Convert iterator into a serialize-able object.
-     * Will preserve current iteration sequence to ensure
-     * the seamless continuation of the recurrence rule.
+     * Convert iterator into a serialize-able object.  Will preserve current
+     * iteration sequence to ensure the seamless continuation of the recurrence
+     * rule.
+     * @return {Object}
      */
     toJSON: function() {
       var result = Object.create(null);
@@ -6231,7 +7758,6 @@ ICAL.RecurIterator = (function() {
 
       return result;
     }
-
   };
 
   icalrecur_iterator._indexMap = {
@@ -6263,6 +7789,16 @@ ICAL.RecurIterator = (function() {
   return icalrecur_iterator;
 
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.RecurExpansion = (function() {
   function formatTime(item) {
     return ICAL.helpers.formatClassType(item, ICAL.Time);
@@ -6279,54 +7815,60 @@ ICAL.RecurExpansion = (function() {
   }
 
   /**
-   * Primary class for expanding recurring rules.
-   * Can take multiple rrules, rdates, exdate(s)
-   * and iterate (in order) over each next occurrence.
+   * @classdesc
+   * Primary class for expanding recurring rules.  Can take multiple rrules,
+   * rdates, exdate(s) and iterate (in order) over each next occurrence.
    *
-   * Once initialized this class can also be serialized
-   * saved and continue iteration from the last point.
+   * Once initialized this class can also be serialized saved and continue
+   * iteration from the last point.
    *
    * NOTE: it is intended that this class is to be used
    *       with ICAL.Event which handles recurrence exceptions.
    *
-   * Options:
-   *  - dtstart: (ICAL.Time) start time of event (required)
-   *  - component: (ICAL.Component) component (required unless resuming)
+   * @example
+   * // assuming event is a parsed ical component
+   * var event;
    *
-   * Examples:
+   * var expand = new ICAL.RecurExpansion({
+   *   component: event,
+   *   start: event.getFirstPropertyValue('DTSTART')
+   * });
    *
-   *    // assuming event is a parsed ical component
-   *    var event;
+   * // remember there are infinite rules
+   * // so its a good idea to limit the scope
+   * // of the iterations then resume later on.
    *
-   *    var expand = new ICAL.RecurExpansion({
-   *      component: event,
-   *      start: event.getFirstPropertyValue('DTSTART')
-   *    });
+   * // next is always an ICAL.Time or null
+   * var next;
    *
-   *    // remember there are infinite rules
-   *    // so its a good idea to limit the scope
-   *    // of the iterations then resume later on.
+   * while (someCondition && (next = expand.next())) {
+   *   // do something with next
+   * }
    *
-   *    // next is always an ICAL.Time or null
-   *    var next;
+   * // save instance for later
+   * var json = JSON.stringify(expand);
    *
-   *    while(someCondition && (next = expand.next())) {
-   *      // do something with next
-   *    }
+   * //...
    *
-   *    // save instance for later
-   *    var json = JSON.stringify(expand);
+   * // NOTE: if the component's properties have
+   * //       changed you will need to rebuild the
+   * //       class and start over. This only works
+   * //       when the component's recurrence info is the same.
+   * var expand = new ICAL.RecurExpansion(JSON.parse(json));
    *
-   *    //...
+   * @description
+   * The options object can be filled with the specified initial values. It can
+   * also contain additional members, as a result of serializing a previous
+   * expansion state, as shown in the example.
    *
-   *    // NOTE: if the component's properties have
-   *    //       changed you will need to rebuild the
-   *    //       class and start over. This only works
-   *    //       when the component's recurrence info is the same.
-   *    var expand = new ICAL.RecurExpansion(JSON.parse(json));
-   *
-   *
-   * @param {Object} options see options block.
+   * @class
+   * @alias ICAL.RecurExpansion
+   * @param {Object} options
+   *        Recurrence expansion options
+   * @param {ICAL.Time} options.dtstart
+   *        Start time of the event
+   * @param {ICAL.Component=} options.component
+   *        Component for expansion, required if not resuming.
    */
   function RecurExpansion(options) {
     this.ruleDates = [];
@@ -6335,16 +7877,16 @@ ICAL.RecurExpansion = (function() {
   }
 
   RecurExpansion.prototype = {
-
     /**
      * True when iteration is fully completed.
+     * @type {Boolean}
      */
     complete: false,
 
     /**
      * Array of rrule iterators.
      *
-     * @type {Array[ICAL.RecurIterator]}
+     * @type {ICAL.RecurIterator[]}
      * @private
      */
     ruleIterators: null,
@@ -6352,7 +7894,7 @@ ICAL.RecurExpansion = (function() {
     /**
      * Array of rdate instances.
      *
-     * @type {Array[ICAL.Time]}
+     * @type {ICAL.Time[]}
      * @private
      */
     ruleDates: null,
@@ -6360,7 +7902,7 @@ ICAL.RecurExpansion = (function() {
     /**
      * Array of exdate instances.
      *
-     * @type {Array[ICAL.Time]}
+     * @type {ICAL.Time[]}
      * @private
      */
     exDates: null,
@@ -6409,6 +7951,18 @@ ICAL.RecurExpansion = (function() {
      */
     last: null,
 
+    /**
+     * Initialize the recurrence expansion from the data object. The options
+     * object may also contain additional members, see the
+     * {@link ICAL.RecurExpansion constructor} for more details.
+     *
+     * @param {Object} options
+     *        Recurrence expansion options
+     * @param {ICAL.Time} options.dtstart
+     *        Start time of the event
+     * @param {ICAL.Component=} options.component
+     *        Component for expansion, required if not resuming.
+     */
     fromData: function(options) {
       var start = ICAL.helpers.formatClassType(options.dtstart, ICAL.Time);
 
@@ -6450,6 +8004,10 @@ ICAL.RecurExpansion = (function() {
       }
     },
 
+    /**
+     * Retrieve the next occurrence in the series.
+     * @return {ICAL.Time}
+     */
     next: function() {
       var iter;
       var ruleOfDay;
@@ -6520,7 +8078,9 @@ ICAL.RecurExpansion = (function() {
     },
 
     /**
-     * Converts object into a serialize-able format.
+     * Converts object into a serialize-able format. This format can be passed
+     * back into the expansion to resume iteration.
+     * @return {Object}
      */
     toJSON: function() {
       function toJSON(item) {
@@ -6547,8 +8107,16 @@ ICAL.RecurExpansion = (function() {
       return result;
     },
 
-
-    _extractDates: function(component, property) {
+    /**
+     * Extract all dates from the properties in the given component. The
+     * properties will be filtered by the property name.
+     *
+     * @private
+     * @param {ICAL.Component} component        The component to search in
+     * @param {String} propertyName             The property name to search for
+     * @return {ICAL.Time[]}                    The extracted dates.
+     */
+    _extractDates: function(component, propertyName) {
       function handleProp(prop) {
         idx = ICAL.helpers.binsearchInsert(
           result,
@@ -6561,7 +8129,7 @@ ICAL.RecurExpansion = (function() {
       }
 
       var result = [];
-      var props = component.getAllProperties(property);
+      var props = component.getAllProperties(propertyName);
       var len = props.length;
       var i = 0;
       var prop;
@@ -6575,6 +8143,12 @@ ICAL.RecurExpansion = (function() {
       return result;
     },
 
+    /**
+     * Initialize the recurrence expansion.
+     *
+     * @private
+     * @param {ICAL.Component} component    The component to initialize from.
+     */
     _init: function(component) {
       this.ruleIterators = [];
 
@@ -6645,19 +8219,28 @@ ICAL.RecurExpansion = (function() {
       }
     },
 
+    /**
+     * Advance to the next exdate
+     * @private
+     */
     _nextExDay: function() {
       this.exDate = this.exDates[++this.exDateInc];
     },
 
+    /**
+     * Advance to the next rule date
+     * @private
+     */
     _nextRuleDay: function() {
       this.ruleDate = this.ruleDates[++this.ruleDateInc];
     },
 
     /**
-     * Find and return the recurrence rule with the most
-     * recent event and return it.
+     * Find and return the recurrence rule with the most recent event and
+     * return it.
      *
-     * @return {Object} iterator.
+     * @private
+     * @return {?ICAL.RecurIterator}    Found iterator.
      */
     _nextRecurrenceIter: function() {
       var iters = this.ruleIterators;
@@ -6700,20 +8283,38 @@ ICAL.RecurExpansion = (function() {
       // this iterator contains the most recent event.
       return chosenIter;
     }
-
   };
 
   return RecurExpansion;
-
 }());
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
 ICAL.Event = (function() {
 
-  function compareRangeException(a, b) {
-    if (a[0] > b[0]) return 1;
-    if (b[0] > a[0]) return -1;
-    return 0;
-  }
-
+  /**
+   * @classdesc
+   * ICAL.js is organized into multiple layers. The bottom layer is a raw jCal
+   * object, followed by the component/property layer. The highest level is the
+   * event representation, which this class is part of. See the
+   * {@tutorial layers} guide for more details.
+   *
+   * @class
+   * @alias ICAL.Event
+   * @param {ICAL.Component=} component         The ICAL.Component to base this event on
+   * @param {Object} options                    Options for this event
+   * @param {Boolean} options.strictExceptions
+   *          When true, will verify exceptions are related by their UUID
+   * @param {Array<ICAL.Component|ICAL.Event>} options.exceptions
+   *          Exceptions to this event, either as components or events
+   */
   function Event(component, options) {
     if (!(component instanceof ICAL.Component)) {
       options = component;
@@ -6746,27 +8347,26 @@ ICAL.Event = (function() {
     /**
      * List of related event exceptions.
      *
-     * @type {Array[ICAL.Event]}
+     * @type {ICAL.Event[]}
      */
     exceptions: null,
 
     /**
-     * When true will verify exceptions are related by their UUID.
+     * When true, will verify exceptions are related by their UUID.
      *
      * @type {Boolean}
      */
     strictExceptions: false,
 
     /**
-     * Relates a given event exception to this object.
-     * If the given component does not share the UID of
-     * this event it cannot be related and will throw an
-     * exception.
+     * Relates a given event exception to this object.  If the given component
+     * does not share the UID of this event it cannot be related and will throw
+     * an exception.
      *
-     * If this component is an exception it cannot have other
-     * exceptions related to it.
+     * If this component is an exception it cannot have other exceptions
+     * related to it.
      *
-     * @param {ICAL.Component|ICAL.Event} obj component or event.
+     * @param {ICAL.Component|ICAL.Event} obj       Component or event
      */
     relateException: function(obj) {
       if (this.isRecurrenceException()) {
@@ -6807,9 +8407,10 @@ ICAL.Event = (function() {
     },
 
     /**
-     * If this record is an exception and has the RANGE=THISANDFUTURE value.
+     * Checks if this record is an exception and has the RANGE=THISANDFUTURE
+     * value.
      *
-     * @return {Boolean} true when is exception with range.
+     * @return {Boolean}        True, when exception is within range
      */
     modifiesFuture: function() {
       var range = this.component.getFirstPropertyValue('range');
@@ -6819,8 +8420,8 @@ ICAL.Event = (function() {
     /**
      * Finds the range exception nearest to the given date.
      *
-     * @param {ICAL.Time} time usually an occurrence time of an event.
-     * @return {ICAL.Event|Null} the related event/exception or null.
+     * @param {ICAL.Time} time usually an occurrence time of an event
+     * @return {?ICAL.Event} the related event/exception or null
      */
     findRangeException: function(time) {
       if (!this.rangeExceptions.length) {
@@ -6852,14 +8453,25 @@ ICAL.Event = (function() {
     },
 
     /**
-     * Returns the occurrence details based on its start time.
-     * If the occurrence has an exception will return the details
-     * for that exception.
+     * This object is returned by {@link ICAL.Event#getOccurrenceDetails getOccurrenceDetails}
+     *
+     * @typedef {Object} occurrenceDetails
+     * @memberof ICAL.Event
+     * @property {ICAL.Time} recurrenceId       The passed in recurrence id
+     * @property {ICAL.Event} item              The occurrence
+     * @property {ICAL.Time} startDate          The start of the occurrence
+     * @property {ICAL.Time} endDate            The end of the occurrence
+     */
+
+    /**
+     * Returns the occurrence details based on its start time.  If the
+     * occurrence has an exception will return the details for that exception.
      *
      * NOTE: this method is intend to be used in conjunction
-     *       with the #iterator method.
+     *       with the {@link ICAL.Event#iterator iterator} method.
      *
-     * @param {ICAL.Time} occurrence time occurrence.
+     * @param {ICAL.Time} occurrence time occurrence
+     * @return {ICAL.Event.occurrenceDetails} Information about the occurrence
      */
     getOccurrenceDetails: function(occurrence) {
       var id = occurrence.toString();
@@ -6934,10 +8546,11 @@ ICAL.Event = (function() {
     },
 
     /**
-     * Builds a recur expansion instance for a specific
-     * point in time (defaults to startDate).
+     * Builds a recur expansion instance for a specific point in time (defaults
+     * to startDate).
      *
-     * @return {ICAL.RecurExpansion} expander object.
+     * @param {ICAL.Time} startTime     Starting point for expansion
+     * @return {ICAL.RecurExpansion}    Expansion object
      */
     iterator: function(startTime) {
       return new ICAL.RecurExpansion({
@@ -6946,11 +8559,22 @@ ICAL.Event = (function() {
       });
     },
 
+    /**
+     * Checks if the event is recurring
+     *
+     * @return {Boolean}        True, if event is recurring
+     */
     isRecurring: function() {
       var comp = this.component;
       return comp.hasProperty('rrule') || comp.hasProperty('rdate');
     },
 
+    /**
+     * Checks if the event describes a recurrence exception. See
+     * {@tutorial terminology} for details.
+     *
+     * @return {Boolean}    True, if the even describes a recurrence exception
+     */
     isRecurrenceException: function() {
       return this.component.hasProperty('recurrence-id');
     },
@@ -6967,7 +8591,8 @@ ICAL.Event = (function() {
      *    - MINUTELY
      *    - SECONDLY
      *
-     * @return {Object} object of recurrence flags.
+     * @return {Object.<ICAL.Recur.frequencyValues, Boolean>}
+     *          Object of recurrence flags
      */
     getRecurrenceTypes: function() {
       var rules = this.component.getAllProperties('rrule');
@@ -6983,6 +8608,10 @@ ICAL.Event = (function() {
       return result;
     },
 
+    /**
+     * The uid of this event
+     * @type {String}
+     */
     get uid() {
       return this._firstProp('uid');
     },
@@ -6991,6 +8620,10 @@ ICAL.Event = (function() {
       this._setProp('uid', value);
     },
 
+    /**
+     * The start date
+     * @type {ICAL.Time}
+     */
     get startDate() {
       return this._firstProp('dtstart');
     },
@@ -6999,6 +8632,11 @@ ICAL.Event = (function() {
       this._setTime('dtstart', value);
     },
 
+    /**
+     * The end date. This can be the result directly from the property, or the
+     * end date calculated from start date and duration.
+     * @type {ICAL.Time}
+     */
     get endDate() {
       var endDate = this._firstProp('dtend');
       if (!endDate) {
@@ -7017,6 +8655,12 @@ ICAL.Event = (function() {
       this._setTime('dtend', value);
     },
 
+    /**
+     * The duration. This can be the result directly from the property, or the
+     * duration calculated from start date and end date.
+     * @type {ICAL.Duration}
+     * @readonly
+     */
     get duration() {
       var duration = this._firstProp('duration');
       if (!duration) {
@@ -7025,6 +8669,10 @@ ICAL.Event = (function() {
       return duration;
     },
 
+    /**
+     * The location of the event.
+     * @type {String}
+     */
     get location() {
       return this._firstProp('location');
     },
@@ -7033,12 +8681,22 @@ ICAL.Event = (function() {
       return this._setProp('location', value);
     },
 
+    /**
+     * The attendees in the event
+     * @type {ICAL.Property[]}
+     * @readonly
+     */
     get attendees() {
       //XXX: This is way lame we should have a better
       //     data structure for this later.
       return this.component.getAllProperties('attendee');
     },
 
+
+    /**
+     * The event summary
+     * @type {String}
+     */
     get summary() {
       return this._firstProp('summary');
     },
@@ -7047,6 +8705,10 @@ ICAL.Event = (function() {
       this._setProp('summary', value);
     },
 
+    /**
+     * The event description.
+     * @type {String}
+     */
     get description() {
       return this._firstProp('description');
     },
@@ -7055,6 +8717,11 @@ ICAL.Event = (function() {
       this._setProp('description', value);
     },
 
+    /**
+     * The organizer value as an uri. In most cases this is a mailto: uri, but
+     * it can also be something else, like urn:uuid:...
+     * @type {String}
+     */
     get organizer() {
       return this._firstProp('organizer');
     },
@@ -7063,6 +8730,11 @@ ICAL.Event = (function() {
       this._setProp('organizer', value);
     },
 
+    /**
+     * The sequence value for this event. Used for scheduling
+     * see {@tutorial terminology}.
+     * @type {Number}
+     */
     get sequence() {
       return this._firstProp('sequence');
     },
@@ -7071,6 +8743,10 @@ ICAL.Event = (function() {
       this._setProp('sequence', value);
     },
 
+    /**
+     * The recurrence id for this event. See {@tutorial terminology} for details.
+     * @type {ICAL.Time}
+     */
     get recurrenceId() {
       return this._firstProp('recurrence-id');
     },
@@ -7080,7 +8756,7 @@ ICAL.Event = (function() {
     },
 
     /**
-     * set/update a time property's value.
+     * Set/update a time property's value.
      * This will also update the TZID of the property.
      *
      * TODO: this method handles the case where we are switching
@@ -7090,6 +8766,9 @@ ICAL.Event = (function() {
      *
      * We will not add/remove/update the VTIMEZONE subcomponents
      *  leading to invalid ICAL data...
+     * @private
+     * @param {String} propName     The property name
+     * @param {ICAL.Time} time      The time to set
      */
     _setTime: function(propName, time) {
       var prop = this.component.getFirstProperty(propName);
@@ -7121,44 +8800,66 @@ ICAL.Event = (function() {
       return this.component.getFirstPropertyValue(name);
     },
 
+    /**
+     * The string representation of this event.
+     * @return {String}
+     */
     toString: function() {
       return this.component.toString();
     }
 
   };
 
+  function compareRangeException(a, b) {
+    if (a[0] > b[0]) return 1;
+    if (b[0] > a[0]) return -1;
+    return 0;
+  }
+
   return Event;
-
 }());
-ICAL.ComponentParser = (function() {
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
+
+/**
+ * This symbol is further described later on
+ * @ignore
+ */
+ICAL.ComponentParser = (function() {
   /**
-   * Component parser initializer.
+   * @classdesc
+   * The ComponentParser is used to process a String or jCal Object,
+   * firing callbacks for various found components, as well as completion.
    *
-   * Usage:
+   * @example
+   * var options = {
+   *   // when false no events will be emitted for type
+   *   parseEvent: true,
+   *   parseTimezone: true
+   * };
    *
-   *    var options = {
-   *      // when false no events will be emitted for type
-   *      parseEvent: true,
-   *      parseTimezone: true
-   *    };
+   * var parser = new ICAL.ComponentParser(options);
    *
-   *    var parser = new ICAL.ComponentParser(options);
+   * parser.onevent(eventComponent) {
+   *   //...
+   * }
    *
-   *    parser.onevent() {
-   *      //...
-   *    }
+   * // ontimezone, etc...
    *
-   *    // ontimezone, etc...
+   * parser.oncomplete = function() {
    *
-   *    parser.oncomplete = function() {
+   * };
    *
-   *    };
+   * parser.process(stringOrComponent);
    *
-   *    parser.process(string | component);
-   *
-   *
-   * @param {Object} options component parser options.
+   * @class
+   * @alias ICAL.ComponentParser
+   * @param {Object=} options        Component parser options
+   * @param {Boolean} options.parseEvent        Whether events should be parsed
+   * @param {Boolean} options.parseTimezeone    Whether timezones should be parsed
    */
   function ComponentParser(options) {
     if (typeof(options) === 'undefined') {
@@ -7177,14 +8878,14 @@ ICAL.ComponentParser = (function() {
   ComponentParser.prototype = {
 
     /**
-     * When true parse events
+     * When true, parse events
      *
      * @type {Boolean}
      */
     parseEvent: true,
 
     /**
-     * when true parse timezones
+     * When true, parse timezones
      *
      * @type {Boolean}
      */
@@ -7195,37 +8896,42 @@ ICAL.ComponentParser = (function() {
 
     /**
      * Fired when parsing is complete
+     * @callback
      */
     oncomplete: /* istanbul ignore next */ function() {},
 
     /**
      * Fired if an error occurs during parsing.
      *
-     * @param {Error} err details of error.
+     * @callback
+     * @param {Error} err details of error
      */
     onerror: /* istanbul ignore next */ function(err) {},
 
     /**
-     * Fired when a top level component (vtimezone) is found
+     * Fired when a top level component (VTIMEZONE) is found
      *
-     * @param {ICAL.Timezone} timezone object.
+     * @callback
+     * @param {ICAL.Timezone} component     Timezone object
      */
     ontimezone: /* istanbul ignore next */ function(component) {},
 
-    /*
+    /**
      * Fired when a top level component (VEVENT) is found.
-     * @param {ICAL.Event} component top level component.
+     *
+     * @callback
+     * @param {ICAL.Event} component    Top level component
      */
     onevent: /* istanbul ignore next */ function(component) {},
 
     /**
-     * Process a string or parse ical object.
-     * This function itself will return nothing but
-     * will start the parsing process.
+     * Process a string or parse ical object.  This function itself will return
+     * nothing but will start the parsing process.
      *
      * Events must be registered prior to calling this method.
      *
-     * @param {String|Object} ical string or parsed ical object.
+     * @param {ICAL.Component|String|Object} ical      The component to process,
+     *        either in its final form, as a jCal Object, or string representation
      */
     process: function(ical) {
       //TODO: this is sync now in the future we will have a incremental parser.
@@ -7274,5 +8980,4 @@ ICAL.ComponentParser = (function() {
   };
 
   return ComponentParser;
-
 }());
