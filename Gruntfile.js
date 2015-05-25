@@ -156,7 +156,6 @@ module.exports = function(grunt) {
 
     'gh-pages': {
       options: {
-        true: false,
         clone: 'jsdoc-stage',
         only: '<%= libinfo.doc %>',
         user: {

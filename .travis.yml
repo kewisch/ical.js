@@ -3,6 +3,10 @@ node_js:
   - 0.10
   - node
   - iojs
-before_install: npm install -g grunt-cli
+before_install:
+  - npm install -g grunt-cli
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - eval `ssh-agent -s`
+  - echo "$GITHUB_SSH_KEY" | base64 -d | ssh-add -
 install: npm install
 script: grunt test-ci -v
