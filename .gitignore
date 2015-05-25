@@ -5,6 +5,7 @@ tools/tzurl
 tools/libical
 zoneinfo
 api
+jsdoc-stage
 coverage/
 build/benchmark/ical_upstream.js
 junk/

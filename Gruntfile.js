@@ -23,6 +23,15 @@ module.exports = function(grunt) {
       }
     },
 
+    travis: {
+      branch: process.env.TRAVIS_BRANCH,
+      leader: (process.env.TRAVIS_JOB_NUMBER || "").substr(-2) == ".1",
+      commit: process.env.TRAVIS_COMMIT,
+      pullrequest: (process.env.TRAVIS_PULL_REQUEST || "false") == "false" ? null : process.env.TRAVIS_PULL_REQUEST,
+      secure: process.env.TRAVIS_SECURE_ENV_VARS == "true",
+      tag: process.env.TRAVIS_TAG
+    },
+
     concat: {
       options: {
         separator: '',
@@ -143,6 +152,21 @@ module.exports = function(grunt) {
           private: false
         }
       }
+    },
+
+    'gh-pages': {
+      options: {
+        true: false,
+        clone: 'jsdoc-stage',
+        only: '<%= libinfo.doc %>',
+        user: {
+          name: 'Travis CI',
+          email: 'builds@travis-ci.org',
+        },
+        repo: 'git@github.com:kewisch/ical.js.git',
+        message: 'Update API Documentation for <%= travis.commit %>'
+      },
+      src: '<%= libinfo.doc %>/**'
     }
   });
 
@@ -155,6 +179,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-coveralls');
   grunt.loadNpmTasks('grunt-gjslint');
+  grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
@@ -169,7 +194,8 @@ module.exports = function(grunt) {
   grunt.registerTask('linters', ['jshint', 'gjslint', 'check-browser-build']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'jsdoc', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls']);
+  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'jsdoc', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls', 'push-api-doc']);
+
   // Additional tasks:
   //   - tests.js: performance-update, test-node, test-browser,
   //   - timezones.js: timezones
