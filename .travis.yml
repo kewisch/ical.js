@@ -7,6 +7,6 @@ before_install:
   - npm install -g grunt-cli
   - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - eval `ssh-agent -s`
-  - echo "$GITHUB_SSH_KEY" | base64 -d | ssh-add -
+  - '[ -n "$GITHUB_SSH_KEY" ] && echo "$GITHUB_SSH_KEY" | base64 -d | ssh-add - || true'
 install: npm install
 script: grunt test-ci -v
