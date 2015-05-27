@@ -6684,10 +6684,7 @@ ICAL.RecurIterator = (function() {
           this.increment_year(this.rule.interval);
         }
 
-        var next = ICAL.Time.fromDayOfYear(this.days[0], this.last.year);
-
-        this.last.day = next.day;
-        this.last.month = next.month;
+        this._nextByYearDay();
       }
 
       if (this.rule.freq == "MONTHLY" && this.has_by_data("BYDAY")) {
@@ -7247,13 +7244,25 @@ ICAL.RecurIterator = (function() {
         } while (this.days.length == 0);
       }
 
-      var next = ICAL.Time.fromDayOfYear(this.days[this.days_index],
-                                                this.last.year);
-
-      this.last.day = next.day;
-      this.last.month = next.month;
+      this._nextByYearDay();
 
       return 1;
+    },
+
+    _nextByYearDay: function _nextByYearDay() {
+        var doy = this.days[this.days_index];
+        var year = this.last.year;
+        if (doy < 1) {
+            // Time.fromDayOfYear(doy, year) indexes relative to the
+            // start of the given year. That is different from the
+            // semantics of BYYEARDAY where negative indexes are an
+            // offset from the end of the given year.
+            doy += 1;
+            year += 1;
+        }
+        var next = ICAL.Time.fromDayOfYear(doy, year);
+        this.last.day = next.day;
+        this.last.month = next.month;
     },
 
     ruleDayOfWeek: function ruleDayOfWeek(dow) {
