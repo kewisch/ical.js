@@ -4822,6 +4822,17 @@ ICAL.TimezoneService = (function() {
     },
 
     /**
+     * Get the dominical letter for the current year. Letters range from A - G
+     * for common years, and AG to GF for leap years.
+     *
+     * @param {Number} yr           The year to retrieve the letter for
+     * @return {String}             The dominical letter.
+     */
+    getDominicalLetter: function() {
+      return ICAL.Time.getDominicalLetter(this.year);
+    },
+
+    /**
      * Finds the nthWeekDay relative to the current month (not day).  The
      * returned value is a day relative the month that this month belongs to so
      * 1 would indicate the first of the month and 40 would indicate a day in
@@ -5627,6 +5638,24 @@ ICAL.TimezoneService = (function() {
     var fourth_dow = t.dayOfWeek();
     t.day += (1 - fourth_dow) + ((aWeekStart || ICAL.Time.SUNDAY) - 1);
     return t;
+  };
+
+  /**
+   * Get the dominical letter for the given year. Letters range from A - G for
+   * common years, and AG to GF for leap years.
+   *
+   * @param {Number} yr           The year to retrieve the letter for
+   * @return {String}             The dominical letter.
+   */
+  ICAL.Time.getDominicalLetter = function(yr) {
+    var LTRS = "GFEDCBA";
+    var dom = (yr + (yr / 4 | 0) + (yr / 400 | 0) - (yr / 100 | 0) - 1) % 7;
+    var isLeap = ICAL.Time.isLeapYear(yr);
+    if (isLeap) {
+      return LTRS[(dom + 6) % 7] + LTRS[dom];
+    } else {
+      return LTRS[dom];
+    }
   };
 
   /**
