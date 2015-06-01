@@ -36,7 +36,8 @@ suite('parserv2', function() {
 
       // vcard tests
       'vcard.vcf',
-      'vcard_author.vcf'
+      'vcard_author.vcf',
+      'vcard3.vcf'
     ];
 
     list.forEach(function(path) {
