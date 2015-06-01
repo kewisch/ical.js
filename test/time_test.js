@@ -494,6 +494,48 @@ suite('icaltime', function() {
 
   });
 
+  suite('#getDominicalLetter', function() {
+    test('instance', function() {
+      var subject = function(yr) {
+        return (new ICAL.Time({ year: yr })).getDominicalLetter();
+      };
+      assert.equal(subject(1989), "A");
+      assert.equal(subject(1990), "G");
+      assert.equal(subject(1991), "F");
+      assert.equal(subject(1993), "C");
+      assert.equal(subject(1994), "B");
+      assert.equal(subject(1997), "E");
+      assert.equal(subject(1998), "D");
+
+      assert.equal(subject(2000), "BA");
+      assert.equal(subject(2004), "DC");
+      assert.equal(subject(2008), "FE");
+      assert.equal(subject(2012), "AG");
+      assert.equal(subject(2016), "CB");
+      assert.equal(subject(2020), "ED");
+      assert.equal(subject(2024), "GF");
+
+    });
+    test('static', function() {
+      var subject = ICAL.Time.getDominicalLetter;
+      assert.equal(subject(1989), "A");
+      assert.equal(subject(1990), "G");
+      assert.equal(subject(1991), "F");
+      assert.equal(subject(1993), "C");
+      assert.equal(subject(1994), "B");
+      assert.equal(subject(1997), "E");
+      assert.equal(subject(1998), "D");
+
+      assert.equal(subject(2000), "BA");
+      assert.equal(subject(2004), "DC");
+      assert.equal(subject(2008), "FE");
+      assert.equal(subject(2012), "AG");
+      assert.equal(subject(2016), "CB");
+      assert.equal(subject(2020), "ED");
+      assert.equal(subject(2024), "GF");
+    });
+  });
+
   suite('#nthWeekDay', function() {
     suite('negative', function() {
       test('last saturday in Sept 2012 (before current day)', function() {
