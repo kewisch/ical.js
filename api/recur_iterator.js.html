@@ -290,6 +290,10 @@ ICAL.RecurIterator = (function() {
 
         // Check every weekday in BYDAY with relative dow and pos.
         for (var i in this.by_data.BYDAY) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYDAY.hasOwnProperty(i)) {
+            continue;
+          }
           this.last = initLast.clone();
           var bydayParts = this.ruleDayOfWeek(this.by_data.BYDAY[i]);
           var pos = bydayParts[0];
@@ -970,9 +974,12 @@ ICAL.RecurIterator = (function() {
       var parts = {};
       var rules = ["BYDAY", "BYWEEKNO", "BYMONTHDAY", "BYMONTH", "BYYEARDAY"];
       for (var p in rules) {
-        var part = rules[p];
-        if (part in this.rule.parts) {
-          parts[part] = this.rule.parts[part];
+        /* istanbul ignore else */
+        if (rules.hasOwnProperty(p)) {
+          var part = rules[p];
+          if (part in this.rule.parts) {
+            parts[part] = this.rule.parts[part];
+          }
         }
       }
 
@@ -1018,6 +1025,10 @@ ICAL.RecurIterator = (function() {
         this.days.push(t1.dayOfYear());
       } else if (partCount == 1 &amp;&amp; "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
+            continue;
+          }
           var t2 = this.dtstart.clone();
           t2.year = aYear;
           t2.month = this.by_data.BYMONTH[monthkey];
@@ -1026,6 +1037,10 @@ ICAL.RecurIterator = (function() {
         }
       } else if (partCount == 1 &amp;&amp; "BYMONTHDAY" in parts) {
         for (var monthdaykey in this.by_data.BYMONTHDAY) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
+            continue;
+          }
           var t3 = this.dtstart.clone();
           var day_ = this.by_data.BYMONTHDAY[monthdaykey];
           if (day_ &lt; 0) {
@@ -1041,9 +1056,17 @@ ICAL.RecurIterator = (function() {
                  "BYMONTHDAY" in parts &amp;&amp;
                  "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
+            continue;
+          }
           var month_ = this.by_data.BYMONTH[monthkey];
           var daysInMonth = ICAL.Time.daysInMonth(month_, aYear);
           for (var monthdaykey in this.by_data.BYMONTHDAY) {
+            /* istanbul ignore else */
+            if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
+              continue;
+            }
             var day_ = this.by_data.BYMONTHDAY[monthdaykey];
             if (day_ &lt; 0) {
               day_ = day_ + daysInMonth + 1;
@@ -1066,6 +1089,10 @@ ICAL.RecurIterator = (function() {
         this.days = this.days.concat(this.expand_by_day(aYear));
       } else if (partCount == 2 &amp;&amp; "BYDAY" in parts &amp;&amp; "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
+            continue;
+          }
           var month = this.by_data.BYMONTH[monthkey];
           var daysInMonth = ICAL.Time.daysInMonth(month, aYear);
 
@@ -1098,6 +1125,10 @@ ICAL.RecurIterator = (function() {
             }
           } else {
             for (var daycodedkey in this.by_data.BYDAY) {
+              /* istanbul ignore else */
+              if (!this.by_data.BYDAY.hasOwnProperty(daycodedkey)) {
+                continue;
+              }
               var coded_day = this.by_data.BYDAY[daycodedkey];
               var bydayParts = this.ruleDayOfWeek(coded_day);
               var pos = bydayParts[0];
@@ -1134,6 +1165,10 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
+          /* istanbul ignore else */
+          if (!expandedDays.hasOwnProperty(daykey)) {
+            continue;
+          }
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
           if (this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
@@ -1147,6 +1182,10 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
+          /* istanbul ignore else */
+          if (!expandedDays.hasOwnProperty(daykey)) {
+            continue;
+          }
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
 
@@ -1159,6 +1198,10 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
+          /* istanbul ignore else */
+          if (!expandedDays.hasOwnProperty(daykey)) {
+            continue;
+          }
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
           var weekno = tt.weekNumber(this.rule.wkst);
@@ -1200,6 +1243,10 @@ ICAL.RecurIterator = (function() {
       var end_year_day = tmp.dayOfYear();
 
       for (var daykey in this.by_data.BYDAY) {
+        /* istanbul ignore else */
+        if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
+          continue;
+        }
         var day = this.by_data.BYDAY[daykey];
         var parts = this.ruleDayOfWeek(day);
         var pos = parts[0];
@@ -1239,6 +1286,10 @@ ICAL.RecurIterator = (function() {
 
     is_day_in_byday: function is_day_in_byday(tt) {
       for (var daykey in this.by_data.BYDAY) {
+        /* istanbul ignore else */
+        if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
+          continue;
+        }
         var day = this.by_data.BYDAY[daykey];
         var parts = this.ruleDayOfWeek(day);
         var pos = parts[0];
@@ -1301,9 +1352,12 @@ ICAL.RecurIterator = (function() {
         var ruleType = this.by_data[aRuleType];
 
         for (var bydatakey in ruleType) {
-          if (ruleType[bydatakey] == v) {
-            pass = true;
-            break;
+          /* istanbul ignore else */
+          if (ruleType.hasOwnProperty(bydatakey)) {
+            if (ruleType[bydatakey] == v) {
+              pass = true;
+              break;
+            }
           }
         }
       } else {
@@ -1406,7 +1460,7 @@ ICAL.RecurIterator = (function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Mon Jun 01 2015 08:45:56 GMT+0000 (UTC) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Mon Jun 01 2015 12:27:36 GMT+0000 (UTC) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
