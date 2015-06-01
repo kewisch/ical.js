@@ -132,6 +132,22 @@ module.exports = function(grunt) {
         src: ['tools/ICALTester/**/*.js']
       }
     },
+    uglify: {
+      options: {
+        sourceMap: true,
+        preserveComments: false,
+        screwIE8: true,
+        compress: {},
+        mangle: {
+          except: ['ICAL']
+        }
+      },
+      dist: {
+        files: {
+          'build/ical.min.js': ['build/ical.js']
+        }
+      }
+    },
     release: {
       options: {
         tagName: 'v<%=version%>',
@@ -177,6 +193,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-coveralls');
   grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-gh-pages');
@@ -189,7 +206,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   grunt.registerTask('default', ['package']);
-  grunt.registerTask('package', ['concat']);
+  grunt.registerTask('package', ['concat', 'uglify']);
   grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('linters', ['jshint', 'gjslint', 'check-browser-build']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
