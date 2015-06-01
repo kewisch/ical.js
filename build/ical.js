@@ -709,6 +709,10 @@ ICAL.design = (function() {
       toICAL: function(data) {
         var str = "";
         for (var k in data) {
+          /* istanbul ignore else */
+          if (!Object.prototype.hasOwnProperty.call(data, k)) {
+            continue;
+          }
           var val = data[k];
           if (k == "until") {
             if (val.length > 10) {
@@ -2936,7 +2940,10 @@ ICAL.UtcOffset = (function() {
     fromData: function(aData) {
       if (aData) {
         for (var key in aData) {
-          this[key] = aData[key];
+          /* istanbul ignore else */
+          if (aData.hasOwnProperty(key)) {
+            this[key] = aData[key];
+          }
         }
       }
       this._normalize();
@@ -3619,6 +3626,10 @@ ICAL.Binary = (function() {
       var propsToCopy = ["weeks", "days", "hours",
                          "minutes", "seconds", "isNegative"];
       for (var key in propsToCopy) {
+        /* istanbul ignore else */
+        if (!propsToCopy.hasOwnProperty(key)) {
+          continue;
+        }
         var prop = propsToCopy[key];
         if (aData && prop in aData) {
           this[prop] = aData[prop];
@@ -3956,9 +3967,12 @@ ICAL.Binary = (function() {
 
         // Copy remaining passed properties
         for (var key in OPTIONS) {
-          var prop = OPTIONS[key];
-          if (aData && prop in aData) {
-            this[prop] = aData[prop];
+          /* istanbul ignore else */
+          if (OPTIONS.hasOwnProperty(key)) {
+            var prop = OPTIONS[key];
+            if (aData && prop in aData) {
+              this[prop] = aData[prop];
+            }
           }
         }
       }
@@ -4150,6 +4164,10 @@ ICAL.Binary = (function() {
       } else {
         var props = aComponent.getAllProperties("rdate");
         for (var rdatekey in props) {
+          /* istanbul ignore else */
+          if (!props.hasOwnProperty(rdatekey)) {
+            continue;
+          }
           var rdate = props[rdatekey];
           var time = rdate.getFirstValue();
           change = init_changes();
@@ -4621,9 +4639,12 @@ ICAL.TimezoneService = (function() {
     fromData: function fromData(aData, aZone) {
       if (aData) {
         for (var key in aData) {
-          // ical type cannot be set
-          if (key === 'icaltype') continue;
-          this[key] = aData[key];
+          /* istanbul ignore else */
+          if (Object.prototype.hasOwnProperty.call(aData, key)) {
+            // ical type cannot be set
+            if (key === 'icaltype') continue;
+            this[key] = aData[key];
+          }
         }
       }
 
@@ -5942,7 +5963,10 @@ ICAL.TimezoneService = (function() {
 
   var REVERSE_DOW_MAP = {};
   for (var key in DOW_MAP) {
-    REVERSE_DOW_MAP[DOW_MAP[key]] = key;
+    /* istanbul ignore else */
+    if (DOW_MAP.hasOwnProperty(key)) {
+      REVERSE_DOW_MAP[DOW_MAP[key]] = key;
+    }
   }
 
   var COPY_PARTS = ["BYSECOND", "BYMINUTE", "BYHOUR", "BYDAY",
@@ -6217,6 +6241,10 @@ ICAL.TimezoneService = (function() {
       }
 
       for (var k in this.parts) {
+        /* istanbul ignore else */
+        if (!this.parts.hasOwnProperty(k)) {
+          continue;
+        }
         var kparts = this.parts[k];
         if (Array.isArray(kparts) && kparts.length == 1) {
           res[k.toLowerCase()] = kparts[0];
@@ -6248,7 +6276,10 @@ ICAL.TimezoneService = (function() {
         str += ";INTERVAL=" + this.interval;
       }
       for (var k in this.parts) {
-        str += ";" + k + "=" + this.parts[k];
+        /* istanbul ignore else */
+        if (this.parts.hasOwnProperty(k)) {
+          str += ";" + k + "=" + this.parts[k];
+        }
       }
       if (this.until) {
         str += ';UNTIL=' + this.until.toString();
@@ -6723,6 +6754,10 @@ ICAL.RecurIterator = (function() {
 
         // Check every weekday in BYDAY with relative dow and pos.
         for (var i in this.by_data.BYDAY) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYDAY.hasOwnProperty(i)) {
+            continue;
+          }
           this.last = initLast.clone();
           var bydayParts = this.ruleDayOfWeek(this.by_data.BYDAY[i]);
           var pos = bydayParts[0];
@@ -7403,9 +7438,12 @@ ICAL.RecurIterator = (function() {
       var parts = {};
       var rules = ["BYDAY", "BYWEEKNO", "BYMONTHDAY", "BYMONTH", "BYYEARDAY"];
       for (var p in rules) {
-        var part = rules[p];
-        if (part in this.rule.parts) {
-          parts[part] = this.rule.parts[part];
+        /* istanbul ignore else */
+        if (rules.hasOwnProperty(p)) {
+          var part = rules[p];
+          if (part in this.rule.parts) {
+            parts[part] = this.rule.parts[part];
+          }
         }
       }
 
@@ -7451,6 +7489,10 @@ ICAL.RecurIterator = (function() {
         this.days.push(t1.dayOfYear());
       } else if (partCount == 1 && "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
+            continue;
+          }
           var t2 = this.dtstart.clone();
           t2.year = aYear;
           t2.month = this.by_data.BYMONTH[monthkey];
@@ -7459,6 +7501,10 @@ ICAL.RecurIterator = (function() {
         }
       } else if (partCount == 1 && "BYMONTHDAY" in parts) {
         for (var monthdaykey in this.by_data.BYMONTHDAY) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
+            continue;
+          }
           var t3 = this.dtstart.clone();
           var day_ = this.by_data.BYMONTHDAY[monthdaykey];
           if (day_ < 0) {
@@ -7474,9 +7520,17 @@ ICAL.RecurIterator = (function() {
                  "BYMONTHDAY" in parts &&
                  "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
+            continue;
+          }
           var month_ = this.by_data.BYMONTH[monthkey];
           var daysInMonth = ICAL.Time.daysInMonth(month_, aYear);
           for (var monthdaykey in this.by_data.BYMONTHDAY) {
+            /* istanbul ignore else */
+            if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
+              continue;
+            }
             var day_ = this.by_data.BYMONTHDAY[monthdaykey];
             if (day_ < 0) {
               day_ = day_ + daysInMonth + 1;
@@ -7499,6 +7553,10 @@ ICAL.RecurIterator = (function() {
         this.days = this.days.concat(this.expand_by_day(aYear));
       } else if (partCount == 2 && "BYDAY" in parts && "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
+          /* istanbul ignore else */
+          if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
+            continue;
+          }
           var month = this.by_data.BYMONTH[monthkey];
           var daysInMonth = ICAL.Time.daysInMonth(month, aYear);
 
@@ -7531,6 +7589,10 @@ ICAL.RecurIterator = (function() {
             }
           } else {
             for (var daycodedkey in this.by_data.BYDAY) {
+              /* istanbul ignore else */
+              if (!this.by_data.BYDAY.hasOwnProperty(daycodedkey)) {
+                continue;
+              }
               var coded_day = this.by_data.BYDAY[daycodedkey];
               var bydayParts = this.ruleDayOfWeek(coded_day);
               var pos = bydayParts[0];
@@ -7567,6 +7629,10 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
+          /* istanbul ignore else */
+          if (!expandedDays.hasOwnProperty(daykey)) {
+            continue;
+          }
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
           if (this.by_data.BYMONTHDAY.indexOf(tt.day) >= 0) {
@@ -7580,6 +7646,10 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
+          /* istanbul ignore else */
+          if (!expandedDays.hasOwnProperty(daykey)) {
+            continue;
+          }
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
 
@@ -7592,6 +7662,10 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
+          /* istanbul ignore else */
+          if (!expandedDays.hasOwnProperty(daykey)) {
+            continue;
+          }
           var day = expandedDays[daykey];
           var tt = ICAL.Time.fromDayOfYear(day, aYear);
           var weekno = tt.weekNumber(this.rule.wkst);
@@ -7633,6 +7707,10 @@ ICAL.RecurIterator = (function() {
       var end_year_day = tmp.dayOfYear();
 
       for (var daykey in this.by_data.BYDAY) {
+        /* istanbul ignore else */
+        if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
+          continue;
+        }
         var day = this.by_data.BYDAY[daykey];
         var parts = this.ruleDayOfWeek(day);
         var pos = parts[0];
@@ -7672,6 +7750,10 @@ ICAL.RecurIterator = (function() {
 
     is_day_in_byday: function is_day_in_byday(tt) {
       for (var daykey in this.by_data.BYDAY) {
+        /* istanbul ignore else */
+        if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
+          continue;
+        }
         var day = this.by_data.BYDAY[daykey];
         var parts = this.ruleDayOfWeek(day);
         var pos = parts[0];
@@ -7734,9 +7816,12 @@ ICAL.RecurIterator = (function() {
         var ruleType = this.by_data[aRuleType];
 
         for (var bydatakey in ruleType) {
-          if (ruleType[bydatakey] == v) {
-            pass = true;
-            break;
+          /* istanbul ignore else */
+          if (ruleType.hasOwnProperty(bydatakey)) {
+            if (ruleType[bydatakey] == v) {
+              pass = true;
+              break;
+            }
           }
         }
       } else {
