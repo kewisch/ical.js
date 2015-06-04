@@ -949,6 +949,22 @@ suite('recur_iterator', function() {
           '2013-03-02',
         ]
       });
+
+      /* 
+       * New test for
+       * https://github.com/mozilla-comm/ical.js/issues/91
+       *
+       */
+      testRRULE('FREQ=YEARLY;', {
+        dtStart: '2012-02-29T12:00:00',
+        max: 7,
+        dates: [
+          '2012-02-29T12:00:00',
+          '2016-02-29T12:00:00'
+        ]
+      });
+
+
     });
   });
 });
