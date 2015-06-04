@@ -126,3 +126,6 @@ single-file build for use in the browser. This file needs to be checked in (in
 a separate commit) and can be found in [build/ical.js](build/ical.js). Please
 see [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
+Running the `package` target will also create a minified version in
+`build/ical.min.js`. This file is not pushed to the repository at the moment,
+but you can use it for front end projects.
