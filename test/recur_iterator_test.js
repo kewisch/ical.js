@@ -949,6 +949,27 @@ suite('recur_iterator', function() {
           '2013-03-02',
         ]
       });
+
+      /* 
+       * Leap-year test for February 29th 
+       *
+       * See https://github.com/mozilla-comm/ical.js/issues/91
+       * for details
+       *
+       * TODO: Uncomment when new recurrence iterator is ready
+       */
+
+      /*
+      testRRULE('FREQ=YEARLY;', {
+        dtStart: '2012-02-29T12:00:00',
+        dates: [
+          '2012-02-29T12:00:00',
+          '2016-02-29T12:00:00'
+        ]
+      });
+      */
+
+
     });
   });
 });
