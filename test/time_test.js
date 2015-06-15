@@ -353,6 +353,20 @@ suite('icaltime', function() {
         zone: Timezone.localTimezone
       });
     });
+
+    test('setting icaltype', function() {
+      var subject = Time.fromData({
+        icaltype: 'date-time',
+        year: 2012,
+        month: 1
+      });
+
+      assert.hasProperties(subject, {
+        icaltype: 'date',
+        year: 2012,
+        month: 1
+      });
+    });
   });
 
   suite('#dayOfWeek', function() {
@@ -661,6 +675,19 @@ suite('icaltime', function() {
       }
     });
 
+    test('on any weekday', function() {
+      var dt = Time.fromString('2013-01-08');
+      assert.isTrue(dt.isNthWeekDay(Time.TUESDAY, 0));
+    });
+    test('not weekday at all', function() {
+      var dt = Time.fromString('2013-01-08');
+      assert.isFalse(dt.isNthWeekDay(Time.WEDNESDAY, 0));
+    });
+    test('not nth weekday', function() {
+      var dt = Time.fromString('2013-01-08');
+      assert.isFalse(dt.isNthWeekDay(Time.TUESDAY, 3));
+    });
+
   });
 
   suite('#toUnixTime', function() {
@@ -784,6 +811,31 @@ suite('icaltime', function() {
         new Date(2012, 1, 14)
       );
     });
+
+    test('overflow years normalization  - negative', function() {
+      var time = Time.fromJSDate(date);
+
+      time.month = 0;
+      time.adjust(0, 0, 0, 0);
+
+      assert.deepEqual(
+        time.toJSDate(),
+        new Date(2011, 11, 25)
+      );
+    });
+
+    test('overflow years normalization  - positive', function() {
+      var time = Time.fromJSDate(date);
+
+      time.month = 13;
+      time.adjust(0, 0, 0, 0);
+
+      assert.deepEqual(
+        time.toJSDate(),
+        new Date(2013, 0, 25)
+      );
+    });
+
   });
 
   suite('#startDoyWeek', function() {
@@ -793,7 +845,16 @@ suite('icaltime', function() {
       var result = subject.startDoyWeek();
       assert.equal(result, 15, 'should start on sunday of that week');
     });
-
+    test('with different wkst', function() {
+      var subject = Time.fromData({ year: 2012, month: 1, day: 1 });
+      var result = subject.startDoyWeek(ICAL.Time.MONDAY);
+      assert.equal(result, -5);
+    });
+    test('falls on zero', function() {
+      var subject = Time.fromData({ year: 2013, month: 1, day: 1 });
+      var result = subject.startDoyWeek(ICAL.Time.MONDAY);
+      assert.equal(result, 0);
+    });
   });
 
   suite('#toString', function() {
@@ -1010,9 +1071,48 @@ suite('icaltime', function() {
     }
   });
 
-  test('date properties', function() {
-    var test_data = [{ /* A date where the year starts on sunday */
-      str: '2012-01-01T00:00:00',
+  suite('date properites', function() {
+    function testDateProperties(str, data, only) {
+      (only ? test.only : test)(str, function() {
+        var dt = Time.fromString(str);
+        assert.equal(data.isDate, dt.isDate);
+        assert.equal(data.year, dt.year);
+        assert.equal(data.month, dt.month);
+        assert.equal(data.day, dt.day);
+        assert.equal(data.hour, dt.hour);
+        assert.equal(data.minute, dt.minute);
+        assert.equal(data.second, dt.second);
+        assert.equal(data.leap_year, Time.isLeapYear(dt.year));
+        assert.equal(data.dayOfWeek, dt.dayOfWeek().toString());
+        assert.equal(data.dayOfYear, dt.dayOfYear().toString());
+        assert.equal(data.startOfWeek, dt.startOfWeek().toString());
+        assert.equal(data.endOfWeek, dt.endOfWeek().toString());
+        assert.equal(data.startOfMonth, dt.startOfMonth().toString());
+        assert.equal(data.endOfMonth, dt.endOfMonth().toString());
+        assert.equal(data.startOfYear, dt.startOfYear().toString());
+        assert.equal(data.endOfYear, dt.endOfYear().toString());
+        assert.equal(data.startDoyWeek, dt.startDoyWeek(Time.SUNDAY));
+        assert.equal(data.weekNumber, dt.weekNumber(Time.SUNDAY));
+        assert.equal(data.getDominicalLetter, dt.getDominicalLetter());
+        // TODO nthWeekDay
+
+        dt = new Time();
+        dt.resetTo(data.year, data.month, data.day, data.hour, data.minute,
+                   data.second, Timezone.utcTimezone);
+        assert.equal(data.year, dt.year);
+        assert.equal(data.month, dt.month);
+        assert.equal(data.day, dt.day);
+        assert.equal(data.hour, dt.hour);
+        assert.equal(data.minute, dt.minute);
+        assert.equal(data.second, dt.second);
+      });
+    }
+    testDateProperties.only = function(str, data) {
+      testDateProperties(str, data, true);
+    }
+
+    // A date where the year starts on sunday
+    testDateProperties('2012-01-01T00:00:00', {
       isDate: false,
       year: 2012,
       month: 1,
@@ -1030,29 +1130,33 @@ suite('icaltime', function() {
       startOfYear: '2012-01-01',
       endOfYear: '2012-12-31',
       startDoyWeek: 1,
-        weekNumber: 1
-    }, { /* A date in week number 53 */
-      str: '2009-01-01T00:00:00',
+      weekNumber: 1,
+      getDominicalLetter: 'AG'
+    });
+    // A date in week number 53
+    testDateProperties('2005-01-01T00:00:00', {
       isDate: false,
-      year: 2009,
+      year: 2005,
       month: 1,
       day: 1,
       hour: 0,
       minute: 0,
       second: 0,
       leap_year: false,
-      dayOfWeek: Time.THURSDAY,
+      dayOfWeek: Time.SATURDAY,
       dayOfYear: 1,
-      startOfWeek: '2008-12-28',
-      endOfWeek: '2009-01-03',
-      startOfMonth: '2009-01-01',
-      endOfMonth: '2009-01-31',
-      startOfYear: '2009-01-01',
-      endOfYear: '2009-12-31',
-      startDoyWeek: -3,
+      startOfWeek: '2004-12-26',
+      endOfWeek: '2005-01-01',
+      startOfMonth: '2005-01-01',
+      endOfMonth: '2005-01-31',
+      startOfYear: '2005-01-01',
+      endOfYear: '2005-12-31',
+      getDominicalLetter: 'B',
+      startDoyWeek: -5,
       weekNumber: 53
-    }, { /* A time in week number 27 */
-      str: '2015-07-08T01:02:03',
+    });
+    // A time in week number 28
+    testDateProperties('2015-07-08T01:02:03', {
       isDate: false,
       year: 2015,
       month: 7,
@@ -1070,42 +1174,9 @@ suite('icaltime', function() {
       startOfYear: '2015-01-01',
       endOfYear: '2015-12-31',
       startDoyWeek: 186,
-      weekNumber: 27
-    }];
-
-    for (var datakey in test_data) {
-      var data = test_data[datakey];
-      var dt = Time.fromString(data.str);
-      assert.equal(data.isDate, dt.isDate);
-      assert.equal(data.year, dt.year);
-      assert.equal(data.month, dt.month);
-      assert.equal(data.day, dt.day);
-      assert.equal(data.hour, dt.hour);
-      assert.equal(data.minute, dt.minute);
-      assert.equal(data.second, dt.second);
-      assert.equal(data.leap_year, Time.isLeapYear(dt.year));
-      assert.equal(data.dayOfWeek, dt.dayOfWeek());
-      assert.equal(data.dayOfYear, dt.dayOfYear());
-      assert.equal(data.startOfWeek, dt.startOfWeek());
-      assert.equal(data.endOfWeek, dt.endOfWeek());
-      assert.equal(data.startOfMonth, dt.startOfMonth());
-      assert.equal(data.endOfMonth, dt.endOfMonth().toString());
-      assert.equal(data.startOfYear, dt.startOfYear());
-      assert.equal(data.endOfYear, dt.endOfYear());
-      assert.equal(data.startDoyWeek, dt.startDoyWeek(Time.SUNDAY));
-      assert.equal(data.weekNumber, dt.weekNumber(Time.SUNDAY));
-      // TODO nthWeekDay
-
-      dt = new Time();
-      dt.resetTo(data.year, data.month, data.day, data.hour, data.minute,
-                 data.second, Timezone.utcTimezone);
-      assert.equal(data.year, dt.year);
-      assert.equal(data.month, dt.month);
-      assert.equal(data.day, dt.day);
-      assert.equal(data.hour, dt.hour);
-      assert.equal(data.minute, dt.minute);
-      assert.equal(data.second, dt.second);
-    }
+      getDominicalLetter: 'D',
+      weekNumber: 28
+    });
   });
 
   test('startOfWeek with different first day of week', function () {
@@ -1578,21 +1649,65 @@ suite('icaltime', function() {
       );
     });
 
-    test('weekOneStarts', function() {
-      assert.hasProperties(Time.weekOneStarts(2012), {
-        year: 2012,
-        month: 1,
-        day: 1
+    suite("weekOneStarts", function() {
+      function testWeekOne(year, dates, only) {
+        var dom = ICAL.Time.getDominicalLetter(year);
+        (only ? test.only : test)(year + " (" + dom + ")", function() {
+          for (var wkday in dates) {
+            var icalwkday = ICAL.Time[wkday];
+            var w1st = Time.weekOneStarts(year, icalwkday);
+            assert.equal(dates[wkday], w1st.toString(), wkday);
+
+            var startOfWeek = ICAL.Time.fromString(dates[wkday])
+            assert.equal(startOfWeek.weekNumber(icalwkday), 1, wkday);
+            startOfWeek.day--;
+            assert.isAbove(startOfWeek.weekNumber(icalwkday), 51, wkday);
+          }
+        });
+      }
+      testWeekOne.only = function(year, dates) {
+        testWeekOne(year, dates, true);
+      }
+
+      test('default week start', function() {
+        var w1st = Time.weekOneStarts(1989);
+        assert.equal('1989-01-02', w1st.toString());
       });
-      assert.hasProperties(Time.weekOneStarts(2012, Time.MONDAY), {
-        year: 2012,
-        month: 1,
-        day: 2
+
+      testWeekOne(1989, { // A and AG
+        SUNDAY: '1989-01-01', MONDAY: '1989-01-02', TUESDAY: '1989-01-03',
+        WEDNESDAY: '1989-01-04', THURSDAY: '1989-01-05', FRIDAY: '1988-12-30',
+        SATURDAY: '1988-12-31'
       });
-      assert.hasProperties(Time.weekOneStarts(2012, Time.SATURDAY), {
-        year: 2012,
-        month: 1,
-        day: 7
+      testWeekOne(1994, { // B and BA
+        SUNDAY: '1994-01-02', MONDAY: '1994-01-03', TUESDAY: '1994-01-04',
+        WEDNESDAY: '1994-01-05', THURSDAY: '1994-01-06', FRIDAY: '1993-12-31',
+        SATURDAY: '1994-01-01'
+      });
+      testWeekOne(1993, { // C and CB
+        SUNDAY: '1993-01-03', MONDAY: '1993-01-04', TUESDAY: '1993-01-05',
+        WEDNESDAY: '1993-01-06', THURSDAY: '1993-01-07', FRIDAY: '1993-01-01',
+        SATURDAY: '1993-01-02'
+      });
+      testWeekOne(1998, { // D and DC
+        SUNDAY: '1997-12-28', MONDAY: '1997-12-29', TUESDAY: '1997-12-30',
+        WEDNESDAY: '1997-12-31', THURSDAY: '1998-01-01', FRIDAY: '1997-12-26',
+        SATURDAY: '1997-12-27'
+      });
+      testWeekOne(1997, { // E and ED
+        SUNDAY: '1996-12-29', MONDAY: '1996-12-30', TUESDAY: '1996-12-31',
+        WEDNESDAY: '1997-01-01', THURSDAY: '1997-01-02', FRIDAY: '1996-12-27',
+        SATURDAY: '1996-12-28'
+      });
+      testWeekOne(1991, { // F and FE
+        SUNDAY: '1990-12-30', MONDAY: '1990-12-31', TUESDAY: '1991-01-01',
+        WEDNESDAY: '1991-01-02', THURSDAY: '1991-01-03', FRIDAY: '1990-12-28',
+        SATURDAY: '1990-12-29'
+      });
+      testWeekOne(1990, { // G and GF
+        SUNDAY: '1989-12-31', MONDAY: '1990-01-01', TUESDAY: '1990-01-02',
+        WEDNESDAY: '1990-01-03', THURSDAY: '1990-01-04', FRIDAY: '1989-12-29',
+        SATURDAY: '1989-12-30'
       });
     });
   });

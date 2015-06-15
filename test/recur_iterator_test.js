@@ -870,17 +870,6 @@ suite('recur_iterator', function() {
       });
       */
 
-      //yearly, byDay, byMonthday -->
-      //First Monday of a year, if it's in the first week
-      testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYWEEKNO=1', {
-        dtStart: '2015-01-01T08:00:00',
-        dates: [
-          //'2016-01-04T08:00:00', // todo should be valid?
-          '2019-01-07T08:00:00',
-          '2020-01-06T08:00:00'
-        ]
-      });
-
       //yearly, byDay,byMonthday
       testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYMONTHDAY=7', {
         dtStart: '2015-01-01T08:00:00',
