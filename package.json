@@ -23,7 +23,7 @@
   "devDependencies": {
     "benchmark": "~1.0",
     "biased-opener": "^0.2.5",
-    "chai": "~2.3.0",
+    "chai": "~3.0",
     "closure-linter-wrapper": "^0.2.11",
     "coveralls": "^2.11.2",
     "grunt": "^0.4.5",
