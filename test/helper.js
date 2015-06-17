@@ -8,10 +8,9 @@
 
   // lazy defined navigator causes global leak warnings...
 
-  var requireBak;
-
   testSupport = {
-    isNode: (typeof(window) === 'undefined')
+    isNode: (typeof(window) === 'undefined'),
+    isKarma: (typeof(window) !== 'undefined' && typeof window.__karma__ !== 'undefined')
   };
 
   function loadChai(chai) {
@@ -42,6 +41,8 @@
   // Load chai, and the extra libs we include
   if (testSupport.isNode) {
     loadChai(require('chai'));
+  } else if (window.chai) {
+    loadChai(window.chai);
   } else {
     require('/node_modules/chai/chai.js', function() {
       loadChai(window.chai);
@@ -174,8 +175,12 @@
         callback(err, contents);
       });
     } else {
+      var path = '/' + path;
+      if (testSupport.isKarma) {
+        path = '/base/' + path.replace(/^\//, '');
+      }
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/' + path, true);
+      xhr.open('GET', path, true);
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status !== 200) {
@@ -209,9 +214,12 @@
     testSupport.require('/test/support/' + lib);
   };
 
-  testSupport.require('/node_modules/benchmark/benchmark.js');
-  testSupport.require('/test/support/performance.js');
 
-  // Load it here so its pre-loaded in all suite blocks...
-  testSupport.requireICAL();
+  if (!testSupport.isKarma) {
+    testSupport.require('/node_modules/benchmark/benchmark.js');
+    testSupport.require('/test/support/performance.js');
+
+    // Load it here so its pre-loaded in all suite blocks...
+    testSupport.requireICAL();
+  }
 }());

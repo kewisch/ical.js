@@ -3,8 +3,9 @@
 var path = require('path');
 
 module.exports = function(grunt) {
+  var pkg = grunt.file.readJSON('package.json');
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: pkg,
     libinfo: {
       cwd: 'lib/ical',
       doc: 'api',
@@ -21,15 +22,6 @@ module.exports = function(grunt) {
         acceptance: ['test/acceptance/*_test.js'],
         performance: ['test/performance/*_test.js']
       }
-    },
-
-    travis: {
-      branch: process.env.TRAVIS_BRANCH,
-      leader: (process.env.TRAVIS_JOB_NUMBER || "").substr(-2) == ".1",
-      commit: process.env.TRAVIS_COMMIT,
-      pullrequest: (process.env.TRAVIS_PULL_REQUEST || "false") == "false" ? null : process.env.TRAVIS_PULL_REQUEST,
-      secure: process.env.TRAVIS_SECURE_ENV_VARS == "true",
-      tag: process.env.TRAVIS_TAG
     },
 
     concat: {
@@ -96,6 +88,46 @@ module.exports = function(grunt) {
       },
       single: {
         src: [grunt.option('test')]
+      }
+    },
+
+    karma: {
+      options: {
+        singleRun: true,
+        port: 9876,
+        colors: true,
+        basePath: '',
+        logLevel: grunt.option('verbose') ? 'DEBUG' : 'INFO',
+        autoWatch: false,
+        captureTimeout: 120000,
+        browserNoActivityTimeout: 60000,
+        frameworks: ['mocha', 'chai'],
+        client: {
+          mocha: {
+            ui: 'tdd'
+          }
+        },
+        files: [
+          { pattern: 'samples/**/*.ics', included: false },
+          { pattern: 'test/parser/*', included: false },
+          '<%= libinfo.relfiles %>',
+          '<%= libinfo.test.head %>',
+          '<%= libinfo.test.unit %>'
+        ]
+      },
+      ci: {
+        exitOnFailure: false,
+        customLaunchers: pkg.saucelabs,
+        browsers: Object.keys(pkg.saucelabs),
+        reporters: ['saucelabs', 'spec'],
+        sauceLabs: {
+          testName: 'ICAL.js',
+          startConnect: true
+        }
+      },
+      unit: {
+        reporters: ['spec'],
+        browsers: ['Chrome', 'Firefox'],
       }
     },
 
@@ -189,6 +221,9 @@ module.exports = function(grunt) {
   grunt.config.set('libinfo.absfiles', grunt.config.get('libinfo.files').map(function(f) {
     return path.join(grunt.config.get('libinfo.cwd'), f);
   }));
+  grunt.config.set('libinfo.relfiles', grunt.config.get('libinfo.files').map(function(f) {
+    return path.join("lib", "ical", f);
+  }));
 
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -198,6 +233,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-node-inspector');
@@ -211,10 +247,13 @@ module.exports = function(grunt) {
   grunt.registerTask('linters', ['jshint', 'gjslint', 'check-browser-build']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
-  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'jsdoc', 'test-node:unit', 'test-node:acceptance', 'coverage', 'coveralls', 'push-api-doc']);
+
+  grunt.registerTask('doc-ci', ['jsdoc', 'run-on-master-leader:run-with-env:GITHUB_SSH_KEY:gh-pages']);
+  grunt.registerTask('unit-ci', ['test-node:unit', 'test-node:acceptance', 'run-on-master-leader:karma:ci']);
+  grunt.registerTask('coverage-ci', ['coverage', 'coveralls']);
+  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'unit-ci', 'coverage-ci', 'doc-ci']);
 
   // Additional tasks:
   //   - tests.js: performance-update, test-node, test-browser,
   //   - timezones.js: timezones
-
 };

@@ -1,12 +1,17 @@
 language: node_js
 node_js:
-  - 0.10
-  - node
-  - iojs
+  - "0.10"
+  - "node"
+  - "iojs"
 before_install:
   - npm install -g grunt-cli
+  - npm install -g karma-cli
   - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - eval `ssh-agent -s`
   - '[ -n "$GITHUB_SSH_KEY" ] && echo "$GITHUB_SSH_KEY" | base64 -d | ssh-add - || true'
 install: npm install
 script: grunt test-ci -v
+env:
+  global:
+    - secure: a7hVKzDNI4fuvrdHaloDMuvocFCEgN1fuBclJSex7FOUQBAM3Q60XuQuL7oEAA6pP8nKuqfaVYWndXmv1J7AECxdkjvAGh4tK3vaH9DcdUrwXMlQIJIC+6f2GVBsw/uL6YwHDKq2PrKd7EzjL1/TpYF6PE6O8n7mIY1O4LNrgYg=
+    - secure: yN7Pb++l7Qdl4o0rkbeEvKpHnJlGjydnW3QkBhWRjoFhfm3y+bxblhT9qaW3lyGWQQpqKYw5Qtjw6bG6x2d+b83VpedIgIxS+Dby2t7zwkLBZWF/MFmcawghIkKgPqxMT4VVM/RueDh4UqLZBYZxc3SgGi7/ImHQ/+xAV71p56U=
