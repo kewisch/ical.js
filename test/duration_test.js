@@ -1,5 +1,3 @@
-testSupport.requireICAL();
-
 suite('ical/duration', function() {
   test('#clone', function() {
     var subject = new ICAL.Duration.fromData({

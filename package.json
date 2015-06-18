@@ -35,11 +35,19 @@
     "grunt-gh-pages": "^0.10.0",
     "grunt-gjslint": "^0.1.6",
     "grunt-jsdoc": "^0.6.4",
+    "grunt-karma": "^0.11.0",
     "grunt-mocha-cli": "^1.13.0",
     "grunt-mocha-istanbul": "^2.4.0",
     "grunt-node-inspector": "^0.2.0",
     "grunt-release": "^0.12.0",
     "istanbul": "^0.3.14",
+    "karma": "^0.12.36",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.12",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.1.10",
+    "karma-sauce-launcher": "^0.2.11",
+    "karma-spec-reporter": "0.0.19",
     "minami": "^1.1.0",
     "mocha": "~2.2",
     "node-static": "^0.7.6",
@@ -54,19 +62,19 @@
   "scripts": {
     "test": "grunt test-node"
   },
-  "testling": {
-    "files": [
-      "test/helper.js",
-      "test/*_test.js",
-      "test/acceptance/*_test.js"
-    ],
-    "browsers": [
-      "ie9",
-      "ie10",
-      "chrome25",
-      "firefox17",
-      "firefox19",
-      "safari6"
-    ]
+  "saucelabs": {
+    "SL_Chrome": {
+      "base": "SauceLabs",
+      "browserName": "internet explorer",
+      "version": 10
+    },
+    "SL_InternetExplorer": {
+      "base": "SauceLabs",
+      "browserName": "chrome"
+    },
+    "SL_Firefox": {
+      "base": "SauceLabs",
+      "browserName": "firefox"
+    }
   }
 }
