@@ -67,6 +67,11 @@
       "base": "SauceLabs",
       "browserName": "chrome"
     },
+    "SL_InternetExplorer9": {
+      "base": "SauceLabs",
+      "browserName": "internet explorer",
+      "version": 9
+    },
     "SL_Firefox": {
       "base": "SauceLabs",
       "browserName": "firefox"
