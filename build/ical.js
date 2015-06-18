@@ -277,6 +277,49 @@ ICAL.helpers = {
    */
   trunc: function trunc(number) {
     return (number < 0 ? Math.ceil(number) : Math.floor(number));
+  },
+
+  /**
+   * Poor-man's cross-browser inheritance for JavaScript. Doesn't support all
+   * the features, but enough for our usage.
+   *
+   * @param {Function} base     The base class constructor function.
+   * @param {Function} child    The child class constructor function.
+   * @param {Object} extra      Extends the prototype with extra properties
+   *                              and methods
+   */
+  inherits: function(base, child, extra) {
+    function F() {}
+    F.prototype = base.prototype;
+    child.prototype = new F();
+
+    if (extra) {
+      ICAL.helpers.extend(extra, child.prototype);
+    }
+  },
+
+  /**
+   * Poor-man's cross-browser object extension. Doesn't support all the
+   * features, but enough for our usage. Note that the target's properties are
+   * always overwritten with the source properties.
+   *
+   * @example
+   * var child = ICAL.helpers.extend(parent, {
+   *   "bar": 123
+   * });
+   *
+   * @param {Object} source     The object to extend
+   * @param {Object} target     The object to extend with
+   * @return {Object}           Returns the target.
+   */
+  extend: function(source, target) {
+    for (var key in source) {
+      var descr = Object.getOwnPropertyDescriptor(source, key);
+      if (descr) {
+        Object.defineProperty(target, key, descr);
+      }
+    }
+    return target;
   }
 };
 /* This Source Code Form is subject to the terms of the Mozilla Public
@@ -550,8 +593,7 @@ ICAL.design = (function() {
   };
 
   // When adding a value here, be sure to add it to the parameter types!
-  var icalValues = {
-    __proto__: commonValues,
+  var icalValues = ICAL.helpers.extend(commonValues, {
 
     "binary": {
       decorate: function(aString) {
@@ -779,10 +821,9 @@ ICAL.design = (function() {
         return result;
       }
     }
-  };
+  });
 
-  var icalProperties = {
-    __proto__: commonProperties,
+  var icalProperties = ICAL.helpers.extend(commonProperties, {
 
     "action": DEFAULT_TYPE_TEXT,
     "attach": { defaultType: "uri" },
@@ -841,11 +882,10 @@ ICAL.design = (function() {
     "tzurl": DEFAULT_TYPE_URI,
     "tzid": DEFAULT_TYPE_TEXT,
     "tzname": DEFAULT_TYPE_TEXT
-  };
+  });
 
   // When adding a value here, be sure to add it to the parameter types!
-  var vcardValues = {
-    __proto__: commonValues,
+  var vcardValues = ICAL.helpers.extend(commonValues, {
 
     date: {
       decorate: function(aValue) {
@@ -990,7 +1030,7 @@ ICAL.design = (function() {
     "language-tag": {
       matches: /^[a-zA-Z0-9\-]+$/ // Could go with a more strict regex here
     }
-  };
+  });
 
   var vcardParams = {
     "type": {
@@ -1007,9 +1047,7 @@ ICAL.design = (function() {
     }
   };
 
-  var vcardProperties = {
-    __proto__: commonProperties,
-
+  var vcardProperties = ICAL.helpers.extend(commonProperties, {
     "adr": DEFAULT_TYPE_TEXT_STRUCTURED,
     "anniversary": DEFAULT_TYPE_DATE_ANDOR_TIME,
     "bday": DEFAULT_TYPE_DATE_ANDOR_TIME,
@@ -1041,7 +1079,7 @@ ICAL.design = (function() {
     "title": DEFAULT_TYPE_TEXT,
     "tz": { defaultType: "text", allowedTypes: ["text", "utc-offset", "uri"] },
     "xml": DEFAULT_TYPE_TEXT
-  };
+  });
 
 
   /**
@@ -5789,9 +5827,7 @@ ICAL.TimezoneService = (function() {
 
     this.fromData(data, zone);
   };
-
-  ICAL.VCardTime.prototype = {
-    __proto__: ICAL.Time.prototype,
+  ICAL.helpers.inherits(ICAL.Time, ICAL.VCardTime, {
 
     /**
      * The class identifier.
@@ -5894,7 +5930,7 @@ ICAL.TimezoneService = (function() {
       }
       return null;
     }
-  };
+  });
 
   /**
    * Returns a new ICAL.VCardTime instance from a date and/or time string.

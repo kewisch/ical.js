@@ -99,8 +99,8 @@ module.exports = function(grunt) {
         basePath: '',
         logLevel: grunt.option('verbose') ? 'DEBUG' : 'INFO',
         autoWatch: false,
-        captureTimeout: 120000,
-        browserNoActivityTimeout: 60000,
+        captureTimeout: 240000,
+        browserNoActivityTimeout: 120000,
         frameworks: ['mocha', 'chai'],
         client: {
           mocha: {
@@ -111,8 +111,7 @@ module.exports = function(grunt) {
           { pattern: 'samples/**/*.ics', included: false },
           { pattern: 'test/parser/*', included: false },
           '<%= libinfo.relfiles %>',
-          '<%= libinfo.test.head %>',
-          '<%= libinfo.test.unit %>'
+          '<%= libinfo.test.head %>'
         ]
       },
       ci: {
@@ -123,12 +122,33 @@ module.exports = function(grunt) {
         sauceLabs: {
           testName: 'ICAL.js',
           startConnect: true
+        },
+
+        files: {
+          src: ['<%= libinfo.test.unit %>']
+        }
+      },
+      single: {
+        singleRun: !grunt.option('debug'),
+        reporters: ['spec'],
+        files: {
+          src: [grunt.option('test')]
         }
       },
       unit: {
+        singleRun: !grunt.option('debug'),
         reporters: ['spec'],
-        browsers: ['Chrome', 'Firefox'],
-      }
+        files: {
+          src: ['<%= libinfo.test.unit %>']
+        }
+      },
+      acceptance: {
+        singleRun: !grunt.option('debug'),
+        reporters: ['spec'],
+        files: {
+          src: ['<%= libinfo.test.acceptance %>']
+        }
+      },
     },
 
     jshint: {
