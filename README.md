@@ -97,7 +97,29 @@ unchanged copy of build/ical.js (from the master branch). See
 [the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests) for more
 details.
 
-#### in the browser
+#### in the browser (with karma)
+
+There are currently two ways to run the browser tests because we are currently
+experimenting with using [karma](http://karma-runner.github.io/). To run tests
+with karma, you can run the following targets:
+
+    grunt karma:unit             # run only the unit tests
+    grunt karma:acceptance       # run the acceptance tests
+
+Now you can visit [http://localhost:9876](http://localhost:9876) in your
+browser. The test output will be shown in the console you started the grunt
+task from. You can also run a single test:
+
+    grunt karma:single --test test/parse_test.js
+
+The mentioned targets all run the tests from start to finish. If you would like
+to debug the tests instead, you can add the `--debug` flag. Once you open the
+browser there will be a "debug" button. Clicking on the button opens am empty
+page, but if you open your browser's developer tools you will see the test
+output. You can reload this page as often as you want until all tests are
+running.
+
+#### in the browser (the old way)
 
 Running `grunt test-server` will start a webserver and open the page in your
 browser. You can then select and execute tests as you wish. If you want to run
