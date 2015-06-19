@@ -1516,9 +1516,11 @@ ICAL.parse = (function() {
     try {
       throw new Error();
     } catch (e) {
-      var split = e.stack.split('\n');
-      split.shift();
-      this.stack = split.join('\n');
+      if (e.stack) {
+        var split = e.stack.split('\n');
+        split.shift();
+        this.stack = split.join('\n');
+      }
     }
   }
 
