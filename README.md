@@ -119,6 +119,10 @@ page, but if you open your browser's developer tools you will see the test
 output. You can reload this page as often as you want until all tests are
 running.
 
+Last off, if you add the `--remote` option, karma will listen on all
+interfaces. This is useful if you are running the browser to test in a VM, for
+example when using [Internet Exporer VM images](https://www.modern.ie/virtualization-tools).
+
 #### in the browser (the old way)
 
 Running `grunt test-server` will start a webserver and open the page in your

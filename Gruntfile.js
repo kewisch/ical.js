@@ -94,6 +94,7 @@ module.exports = function(grunt) {
     karma: {
       options: {
         singleRun: true,
+        hostname: grunt.option('remote') ? '0.0.0.0' : 'localhost',
         port: 9876,
         colors: true,
         basePath: '',
