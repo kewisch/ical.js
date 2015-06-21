@@ -1512,6 +1512,7 @@ ICAL.parse = (function() {
    */
   function ParserError(message) {
     this.message = message;
+    this.name = 'ParserError';
 
     try {
       throw new Error();
@@ -1524,9 +1525,7 @@ ICAL.parse = (function() {
     }
   }
 
-  ParserError.prototype = {
-    __proto__: Error.prototype
-  };
+  ParserError.prototype = Error.prototype;
 
   /**
    * Parses iCalendar or vCard data into a raw jCal object. Consult
