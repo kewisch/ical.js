@@ -5688,6 +5688,8 @@ ICAL.TimezoneService = (function() {
    * @return {ICAL.Time}            The date on which week number 1 starts
    */
   ICAL.Time.weekOneStarts = function weekOneStarts(aYear, aWeekStart) {
+    // ISO 8601 defines: Week 1 contains the first Thursday of the year.
+    // Equivalent: Week one contains Janury 4th
     var t = ICAL.Time.fromData({
       year: aYear,
       month: 1,
@@ -5696,7 +5698,8 @@ ICAL.TimezoneService = (function() {
     });
 
     var fourth_dow = t.dayOfWeek();
-    t.day += (1 - fourth_dow) + ((aWeekStart || ICAL.Time.SUNDAY) - 1);
+    // ISO weeks start with Monday
+    t.day -= (fourth_dow - (aWeekStart || ICAL.Time.MONDAY) + 7) % 7;
     return t;
   };
 
