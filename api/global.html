@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>component_parser.js - Documentation</title>
+    <title>Global - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,182 +28,718 @@
 
 <div id="main">
     
-    <h1 class="page-title">component_parser.js</h1>
+    <h1 class="page-title">Global</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
+        <h2>
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
 
 
-/**
- * This symbol is further described later on
- * @ignore
- */
-ICAL.ComponentParser = (function() {
-  /**
-   * @classdesc
-   * The ComponentParser is used to process a String or jCal Object,
-   * firing callbacks for various found components, as well as completion.
-   *
-   * @example
-   * var options = {
-   *   // when false no events will be emitted for type
-   *   parseEvent: true,
-   *   parseTimezone: true
-   * };
-   *
-   * var parser = new ICAL.ComponentParser(options);
-   *
-   * parser.onevent(eventComponent) {
-   *   //...
-   * }
-   *
-   * // ontimezone, etc...
-   *
-   * parser.oncomplete = function() {
-   *
-   * };
-   *
-   * parser.process(stringOrComponent);
-   *
-   * @class
-   * @alias ICAL.ComponentParser
-   * @param {Object=} options        Component parser options
-   * @param {Boolean} options.parseEvent        Whether events should be parsed
-   * @param {Boolean} options.parseTimezeone    Whether timezones should be parsed
-   */
-  function ComponentParser(options) {
-    if (typeof(options) === 'undefined') {
-      options = {};
-    }
+<dl class="details">
 
-    var key;
-    for (key in options) {
-      /* istanbul ignore else */
-      if (options.hasOwnProperty(key)) {
-        this[key] = options[key];
-      }
-    }
-  }
+    
 
-  ComponentParser.prototype = {
+    
 
-    /**
-     * When true, parse events
-     *
-     * @type {Boolean}
-     */
-    parseEvent: true,
+    
 
-    /**
-     * When true, parse timezones
-     *
-     * @type {Boolean}
-     */
-    parseTimezone: true,
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
-    /* SAX like events here for reference */
+        
+    
+    </div>
 
-    /**
-     * Fired when parsing is complete
-     * @callback
-     */
-    oncomplete: /* istanbul ignore next */ function() {},
+    
 
-    /**
-     * Fired if an error occurs during parsing.
-     *
-     * @callback
-     * @param {Error} err details of error
-     */
-    onerror: /* istanbul ignore next */ function(err) {},
+    
 
-    /**
-     * Fired when a top level component (VTIMEZONE) is found
-     *
-     * @callback
-     * @param {ICAL.Timezone} component     Timezone object
-     */
-    ontimezone: /* istanbul ignore next */ function(component) {},
+    
 
-    /**
-     * Fired when a top level component (VEVENT) is found.
-     *
-     * @callback
-     * @param {ICAL.Event} component    Top level component
-     */
-    onevent: /* istanbul ignore next */ function(component) {},
+     
 
-    /**
-     * Process a string or parse ical object.  This function itself will return
-     * nothing but will start the parsing process.
-     *
-     * Events must be registered prior to calling this method.
-     *
-     * @param {ICAL.Component|String|Object} ical      The component to process,
-     *        either in its final form, as a jCal Object, or string representation
-     */
-    process: function(ical) {
-      //TODO: this is sync now in the future we will have a incremental parser.
-      if (typeof(ical) === 'string') {
-        ical = ICAL.parse(ical);
-      }
+    
 
-      if (!(ical instanceof ICAL.Component)) {
-        ical = new ICAL.Component(ical);
-      }
+    
+        <h3 class="subsection-title">Members</h3>
 
-      var components = ical.getAllSubcomponents();
-      var i = 0;
-      var len = components.length;
-      var component;
+        
+            
+<h4 class="name" id="icalclass"><span class="type-signature">(constant) </span>icalclass<span class="type-signature"> :String</span></h4>
 
-      for (; i &lt; len; i++) {
-        component = components[i];
 
-        switch (component.name) {
-          case 'vtimezone':
-            if (this.parseTimezone) {
-              var tzid = component.getFirstPropertyValue('tzid');
-              if (tzid) {
-                this.ontimezone(new ICAL.Timezone({
-                  tzid: tzid,
-                  component: component
-                }));
-              }
-            }
-            break;
-          case 'vevent':
-            if (this.parseEvent) {
-              this.onevent(new ICAL.Event(component));
-            }
-            break;
-          default:
-            continue;
-        }
-      }
 
-      //XXX: ideally we should do a "nextTick" here
-      //     so in all cases this is actually async.
-      this.oncomplete();
-    }
-  };
 
-  return ComponentParser;
-}());
-</code></pre>
-        </article>
-    </section>
+<div class="description">
+    The class identifier.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"vcardtime"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="icaltype"><span class="type-signature"></span>icaltype<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    The type name, to be used in the jCal object.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"date-and-or-time"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="zone"><span class="type-signature"></span>zone<span class="type-signature"> :<a href="ICAL.Timezone.html">ICAL.Timezone</a>|ICAL.UtcOFfset</span></h4>
+
+
+
+
+<div class="description">
+    The timezone. This can either be floating, UTC, or an instance of
+ICAL.UtcOffset.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ICAL.Timezone.html">ICAL.Timezone</a></span>
+|
+
+<span class="param-type">ICAL.UtcOFfset</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ICAL.VCardTime.html">ICAL.VCardTime</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns a clone of the vcard date/time object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The cloned object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ICAL.VCardTime.html">ICAL.VCardTime</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toICALString"><span class="type-signature"></span>toICALString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Returns an RFC 6350 compliant representation of this object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    vcard date/time string
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+
+
+
+<div class="description">
+    The string representation of this date/time, in jCard form
+(including : and - separators).
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line113">line 113</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="utcOffset"><span class="type-signature"></span>utcOffset<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="vcard_time.js.html">vcard_time.js</a>, <a href="vcard_time.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
