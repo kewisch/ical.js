@@ -60,7 +60,9 @@ module.exports = function(grunt) {
     },
 
     'node-inspector': {
-      test: {}
+      test: {
+        hidden: ['node_modules']
+      }
     },
 
     concurrent: {
@@ -208,8 +210,7 @@ module.exports = function(grunt) {
         additionalFiles: ['bower.json'],
         github: {
           repo: 'mozilla-comm/ical.js',
-          usernameVar: 'GITHUB_USERNAME',
-          passwordVar: 'GITHUB_PASSWORD'
+          accessTokenVar: 'GITHUB_TOKEN'
         }
       }
     },
