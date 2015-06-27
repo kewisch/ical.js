@@ -19,10 +19,14 @@ this library, please check if the fix can be upstreamed to libical.
 [![Build Status](https://secure.travis-ci.org/mozilla-comm/ical.js.png?branch=master)](http://travis-ci.org/mozilla-comm/ical.js) [![Coverage Status](https://coveralls.io/repos/mozilla-comm/ical.js/badge.svg)](https://coveralls.io/r/mozilla-comm/ical.js) [![npm version](https://badge.fury.io/js/ical.js.svg)](http://badge.fury.io/js/ical.js)  
 [![Dependency Status](https://david-dm.org/mozilla-comm/ical.js.svg)](https://david-dm.org/mozilla-comm/ical.js) [![devDependency Status](https://david-dm.org/mozilla-comm/ical.js/dev-status.svg)](https://david-dm.org/mozilla-comm/ical.js#info=devDependencies)
 
-## Validator 
+## Sandbox and Validator
 
-There is a validator that demonstrates how to use the library in a webpage in
-the [sandbox/](https://github.com/mozilla-comm/ical.js/tree/master/sandbox)
+If you want to try out ICAL.js right now, there is a
+[jsfiddle](http://jsfiddle.net/kewisch/227efboL/) set up and ready to use. Read
+on for documentation and example links.
+
+There is also a validator that demonstrates how to use the library in a webpage
+in the [sandbox/](https://github.com/mozilla-comm/ical.js/tree/master/sandbox)
 subdirectory.
 
 [Try the validator online](http://mozilla-comm.github.com/ical.js/validator.html), it always uses the latest copy of ICAL.js.
