@@ -345,16 +345,19 @@ ICAL.design = (function() {
   var FROM_VCARD_NEWLINE = /\\\\|\\,|\\[Nn]/g;
   var TO_VCARD_NEWLINE = /\\|,|\n/g;
 
-  function createTextType(fromNewline, toNewline, type) {
+  function createTextType(fromNewline, toNewline) {
     var result = {
       matches: /.*/,
 
-      fromICAL: function(aValue, aName) {
-        return replaceNewline(aValue, fromNewline);
+      fromICAL: function(aValue, structuredEscape) {
+        return replaceNewline(aValue, fromNewline, structuredEscape);
       },
 
-      toICAL: function escape(aValue, aName) {
-        return aValue.replace(toNewline, function(str) {
+      toICAL: function(aValue, structuredEscape) {
+        var regEx = toNewline;
+        if (structuredEscape)
+          regEx = new RegExp(regEx.source + '|' + structuredEscape);
+        return aValue.replace(regEx, function(str) {
           switch (str) {
           case "\\":
             return "\\\\";
@@ -371,9 +374,6 @@ ICAL.design = (function() {
         });
       }
     };
-    if (type) {
-      result.type = type;
-    }
     return result;
   }
 
@@ -406,12 +406,13 @@ ICAL.design = (function() {
     }
   }
 
-  function replaceNewline(value, newline) {
+  function replaceNewline(value, newline, structuredEscape) {
     // avoid regex when possible.
     if (value.indexOf('\\') === -1) {
       return value;
     }
-
+    if (structuredEscape)
+      newline = new RegExp(newline.source + '|\\\\' + structuredEscape);
     return value.replace(newline, replaceNewlineReplace);
   }
 
@@ -896,7 +897,6 @@ ICAL.design = (function() {
 
   // When adding a value here, be sure to add it to the parameter types!
   var vcardValues = ICAL.helpers.extend(commonValues, {
-    component: createTextType(FROM_ICAL_NEWLINE, TO_ICAL_NEWLINE, "text"),
     text: createTextType(FROM_VCARD_NEWLINE, TO_VCARD_NEWLINE),
     uri: createTextType(FROM_VCARD_NEWLINE, TO_VCARD_NEWLINE),
 
@@ -1061,7 +1061,7 @@ ICAL.design = (function() {
   };
 
   var vcardProperties = ICAL.helpers.extend(commonProperties, {
-    "adr": { defaultType: "component", structuredValue: ";", multiValue: "," },
+    "adr": { defaultType: "text", structuredValue: ";", multiValue: "," },
     "anniversary": DEFAULT_TYPE_DATE_ANDOR_TIME,
     "bday": DEFAULT_TYPE_DATE_ANDOR_TIME,
     "caladruri": DEFAULT_TYPE_URI,
@@ -1078,10 +1078,10 @@ ICAL.design = (function() {
     "lang": { defaultType: "language-tag" },
     "logo": DEFAULT_TYPE_URI,
     "member": DEFAULT_TYPE_URI,
-    "n": { defaultType: "component", structuredValue: ";", multiValue: "," },
+    "n": { defaultType: "text", structuredValue: ";", multiValue: "," },
     "nickname": DEFAULT_TYPE_TEXT_MULTI,
     "note": DEFAULT_TYPE_TEXT,
-    "org": { defaultType: "component", structuredValue: ";" },
+    "org": { defaultType: "text", structuredValue: ";" },
     "photo": DEFAULT_TYPE_URI,
     "related": DEFAULT_TYPE_URI,
     "rev": { defaultType: "timestamp" },
@@ -1470,12 +1470,6 @@ ICAL.stringify = (function() {
       }
 
       if ('defaultType' in propDetails) {
-        if (propDetails.defaultType in designSet.value) {
-          var defaultType = designSet.value[propDetails.defaultType];
-          if ('type' in defaultType && defaultType.type === valueType) {
-            valueType = propDetails.defaultType;
-          }
-        }
         if (valueType === propDetails.defaultType) {
           isDefault = true;
         }
@@ -1501,18 +1495,18 @@ ICAL.stringify = (function() {
 
     if (multiValue && structuredValue) {
       line += stringify.multiValue(
-        property[3], structuredValue, valueType, multiValue, designSet
+        property[3], structuredValue, valueType, multiValue, designSet, structuredValue
       );
     } else if (multiValue) {
       line += stringify.multiValue(
-        property.slice(3), multiValue, valueType, null, designSet
+        property.slice(3), multiValue, valueType, null, designSet, false
       );
     } else if (structuredValue) {
       line += stringify.multiValue(
-        property[3], structuredValue, valueType, null, designSet
+        property[3], structuredValue, valueType, null, designSet, structuredValue
       );
     } else {
-      line += stringify.value(property[3], valueType, designSet);
+      line += stringify.value(property[3], valueType, designSet, false);
     }
 
     return ICAL.helpers.foldline(line);
@@ -1558,16 +1552,16 @@ ICAL.stringify = (function() {
    *
    * @return {String}           iCalendar/vCard string for value
    */
-  stringify.multiValue = function(values, delim, type, innerMulti, designSet) {
+  stringify.multiValue = function(values, delim, type, innerMulti, designSet, structuredValue) {
     var result = '';
     var len = values.length;
     var i = 0;
 
     for (; i < len; i++) {
       if (innerMulti && Array.isArray(values[i])) {
-        result += stringify.multiValue(values[i], innerMulti, type, null, designSet);
+        result += stringify.multiValue(values[i], innerMulti, type, null, designSet, structuredValue);
       } else {
-        result += stringify.value(values[i], type, designSet);
+        result += stringify.value(values[i], type, designSet, structuredValue);
       }
 
       if (i !== (len - 1)) {
@@ -1588,9 +1582,9 @@ ICAL.stringify = (function() {
    *  (like boolean, date-time, etc..)
    * @return {String}                   iCalendar/vCard value for single value
    */
-  stringify.value = function(value, type, designSet) {
+  stringify.value = function(value, type, designSet, structuredValue) {
     if (type in designSet.value && 'toICAL' in designSet.value[type]) {
-      return designSet.value[type].toICAL(value);
+      return designSet.value[type].toICAL(value, structuredValue);
     }
     return value;
   };
@@ -1842,7 +1836,6 @@ ICAL.parse = (function() {
     }
 
     var valueType;
-    var valueJsonType;
     var multiValue = false;
     var structuredValue = false;
     var propertyDetails;
@@ -1877,16 +1870,6 @@ ICAL.parse = (function() {
       }
     }
 
-    if (valueType in state.designSet.value) {
-      var defaultType = state.designSet.value[valueType];
-      if ('type' in defaultType) {
-        valueJsonType = defaultType.type;
-      } else {
-        valueJsonType = valueType;
-      }
-    } else {
-      valueJsonType = valueType;
-    }
     delete params.value;
 
     /**
@@ -1899,17 +1882,17 @@ ICAL.parse = (function() {
 
     var result;
     if (multiValue && structuredValue) {
-      value = parser._parseMultiValue(value, structuredValue, valueType, [], multiValue, state.designSet);
-      result = [name, params, valueJsonType, value];
+      value = parser._parseMultiValue(value, structuredValue, valueType, [], multiValue, state.designSet, structuredValue);
+      result = [name, params, valueType, value];
     } else if (multiValue) {
-      result = [name, params, valueJsonType];
-      parser._parseMultiValue(value, multiValue, valueType, result, null, state.designSet);
+      result = [name, params, valueType];
+      parser._parseMultiValue(value, multiValue, valueType, result, null, state.designSet, false);
     } else if (structuredValue) {
-      value = parser._parseMultiValue(value, structuredValue, valueType, [], null, state.designSet);
-      result = [name, params, valueJsonType, value];
+      value = parser._parseMultiValue(value, structuredValue, valueType, [], null, state.designSet, structuredValue);
+      result = [name, params, valueType, value];
     } else {
-      value = parser._parseValue(value, valueType, state.designSet);
-      result = [name, params, valueJsonType, value];
+      value = parser._parseValue(value, valueType, state.designSet, false);
+      result = [name, params, valueType, value];
     }
     // rfc6350 requires that in vCard 4.0 the first component is the VERSION
     // component with as value 4.0, note that 3.0 does not have this requirement.
@@ -1930,9 +1913,9 @@ ICAL.parse = (function() {
    * @param {Object} designSet      The design data to use for this value
    * @return {Object} varies on type
    */
-  parser._parseValue = function(value, type, designSet) {
+  parser._parseValue = function(value, type, designSet, structuredValue) {
     if (type in designSet.value && 'fromICAL' in designSet.value[type]) {
-      return designSet.value[type].fromICAL(value);
+      return designSet.value[type].fromICAL(value, structuredValue);
     }
     return value;
   };
@@ -2059,7 +2042,7 @@ ICAL.parse = (function() {
    * @param {ICAL.design.designSet} designSet   The design data for this value
    * @return {?|Array.<?>}            Either an array of results, or the first result
    */
-  parser._parseMultiValue = function(buffer, delim, type, result, innerMulti, designSet) {
+  parser._parseMultiValue = function(buffer, delim, type, result, innerMulti, designSet, structuredValue) {
     var pos = 0;
     var lastPos = 0;
     var value;
@@ -2068,9 +2051,9 @@ ICAL.parse = (function() {
     while ((pos = helpers.unescapedIndexOf(buffer, delim, lastPos)) !== -1) {
       value = buffer.substr(lastPos, pos - lastPos);
       if (innerMulti) {
-        value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet);
+        value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet, structuredValue);
       } else {
-        value = parser._parseValue(value, type, designSet);
+        value = parser._parseValue(value, type, designSet, structuredValue);
       }
       result.push(value);
       lastPos = pos + 1;
@@ -2079,9 +2062,9 @@ ICAL.parse = (function() {
     // on the last piece take the rest of string
     value = buffer.substr(lastPos);
     if (innerMulti) {
-      value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet);
+      value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet, structuredValue);
     } else {
-      value = parser._parseValue(value, type, designSet);
+      value = parser._parseValue(value, type, designSet, structuredValue);
     }
     result.push(value);
 
