@@ -3,20 +3,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
+
 /* istanbul ignore next */
 /* jshint ignore:start */
-if (typeof ICAL === 'undefined') {
-  if (typeof exports === 'object') {
-    // CommonJS
-    ICAL = exports;
-  } else if (typeof window !== 'undefined') {
-    // Browser globals
+if (typeof module === 'object') {
+  // CommonJS, where exports may be different each time.
+  ICAL = module.exports;
+} else /* istanbul ignore next */ if (typeof window !== 'undefined') {
+  if (typeof ICAL !== 'object') {
     /** @ignore */
     this.ICAL = {};
-  } else {
-    // ...?
-    ICAL = {};
   }
+} else /* istanbul ignore next */ {
+  // ...?
+  ICAL = {};
 }
 /* jshint ignore:end */
 
@@ -328,9 +328,6 @@ ICAL.helpers = {
  * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 /** @namespace ICAL */
-
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 
 /**
@@ -3284,9 +3281,6 @@ ICAL.Binary = (function() {
 
 
 
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
-
 (function() {
   /**
    * @classdesc
@@ -3510,9 +3504,6 @@ ICAL.Binary = (function() {
  * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
-
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 (function() {
   var DURATION_LETTERS = /([PDWHMTS]{1,1})/;
@@ -3871,9 +3862,6 @@ ICAL.Binary = (function() {
  * Portions Copyright (C) Philipp Kewisch, 2011-2012 */
 
 
-
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 (function() {
   var OPTIONS = ["tzid", "location", "tznames",
@@ -4495,9 +4483,6 @@ ICAL.TimezoneService = (function() {
  * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
-
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 (function() {
 
@@ -5794,9 +5779,6 @@ ICAL.TimezoneService = (function() {
 
 
 
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
-
 (function() {
 
   /**
@@ -5992,9 +5974,6 @@ ICAL.TimezoneService = (function() {
  * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
-
-/* istanbul ignore next */
-(typeof(ICAL) === 'undefined') ? ICAL = {} : ''; // jshint ignore:line
 
 (function() {
   var DOW_MAP = {
