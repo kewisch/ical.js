@@ -60,6 +60,11 @@
   "scripts": {
     "test": "grunt test-node"
   },
+  "files": [
+    "build/ical.js",
+    "build/ical.min.js",
+    "lib/ical/*.js"
+  ],
   "saucelabs": {
     "SL_Chrome": {
       "base": "SauceLabs",
