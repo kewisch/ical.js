@@ -103,7 +103,7 @@ tt, code, kbd, samp {
 }
 
 #main {
-  float: left;
+  float: right;
   min-width: 360px;
   width: calc(100% - 250px);
 }
@@ -135,6 +135,8 @@ nav {
   width: 250px;
   background: #fff;
   overflow: auto;
+  position: fixed;
+  height: 100%;
 }
 
 nav h3 {
