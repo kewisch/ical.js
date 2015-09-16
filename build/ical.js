@@ -760,7 +760,9 @@ ICAL.design = (function() {
               val = icalValues.date.toICAL(val);
             }
           } else if (k == "wkst") {
-            val = ICAL.Recur.numericDayToIcalDay(val);
+            if (typeof val === 'number') {
+              val = ICAL.Recur.numericDayToIcalDay(val);
+            }
           } else if (Array.isArray(val)) {
             val = val.join(",");
           }
