@@ -159,3 +159,7 @@ see [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 Running the `package` target will also create a minified version in
 `build/ical.min.js`. This file is not pushed to the repository at the moment,
 but you can use it for front end projects.
+
+## License
+ical.js is licensed under the
+[Mozilla Public License](https://www.mozilla.org/MPL/2.0/), version 2.0.
