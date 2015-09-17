@@ -453,6 +453,14 @@ suite('recur', function() {
       var comp = val.getComponent("byyearday");
       assert.deepEqual(comp, [20,30,40]);
     });
+
+    test('can be saved to a property that will be serialized correctly', function () {
+      var icalString = 'FREQ=WEEKLY;UNTIL=1970-01-03T00:00:00Z;WKST=SU;BYDAY=TU,TH';
+      var recur = ICAL.Recur.fromString(icalString);
+      var prop = new ICAL.Property('rrule');
+      prop.setValue(recur);
+      assert.equal(prop.toICAL(), 'RRULE:FREQ=WEEKLY;BYDAY=TU,TH;UNTIL=19700103T000000Z;WKST=SU');
+    });
   });
 
   suite('#toString', function() {
