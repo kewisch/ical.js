@@ -38,7 +38,6 @@
     "grunt-karma": "^0.12.0",
     "grunt-mocha-cli": "^1.13.0",
     "grunt-mocha-istanbul": "^3.0.0",
-    "grunt-node-inspector": "^0.2.0",
     "grunt-release": "^0.13.0",
     "istanbul": "^0.3.14",
     "karma": "^0.13.9",
@@ -52,6 +51,9 @@
     "open": "0.0.5",
     "sync-exec": "^0.6.0",
     "test-agent": "~0.28.2"
+  },
+  "optionalDependencies": {
+    "grunt-node-inspector": "^0.2.0"
   },
   "license": "MPL-2.0",
   "engine": {
