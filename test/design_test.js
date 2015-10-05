@@ -609,6 +609,36 @@ suite('design', function() {
         );
       });
     });
+    
+    suite('utc-offset (vcard3)', function() {
+      setup(function() {
+        subject = ICAL.design.vcard3.value['utc-offset'];
+      });
+
+      test('#(to|from)ICAL', function() {
+        var original = '-05:00';
+        var fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '-05:00');
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+      });
+
+      test('#(un)decorate', function() {
+        var undecorated = '-05:00';
+        var decorated = subject.decorate(undecorated);
+
+        assert.equal(decorated.hours, 5, 'hours');
+        assert.equal(decorated.factor, -1, 'factor');
+
+        assert.equal(
+          subject.undecorate(decorated),
+          undecorated
+        );
+      });
+    });
 
     suite("unknown and default values", function() {
       test("unknown x-prop", function() {
