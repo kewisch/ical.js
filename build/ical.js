@@ -762,7 +762,7 @@ ICAL.design = (function() {
       toICAL: function(data) {
         var str = "";
         for (var k in data) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!Object.prototype.hasOwnProperty.call(data, k)) {
             continue;
           }
@@ -3797,7 +3797,7 @@ ICAL.Binary = (function() {
       var propsToCopy = ["weeks", "days", "hours",
                          "minutes", "seconds", "isNegative"];
       for (var key in propsToCopy) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!propsToCopy.hasOwnProperty(key)) {
           continue;
         }
@@ -4335,7 +4335,7 @@ ICAL.Binary = (function() {
       } else {
         var props = aComponent.getAllProperties("rdate");
         for (var rdatekey in props) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!props.hasOwnProperty(rdatekey)) {
             continue;
           }
@@ -6419,7 +6419,7 @@ ICAL.TimezoneService = (function() {
       }
 
       for (var k in this.parts) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!this.parts.hasOwnProperty(k)) {
           continue;
         }
@@ -6932,7 +6932,7 @@ ICAL.RecurIterator = (function() {
 
         // Check every weekday in BYDAY with relative dow and pos.
         for (var i in this.by_data.BYDAY) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYDAY.hasOwnProperty(i)) {
             continue;
           }
@@ -7667,7 +7667,7 @@ ICAL.RecurIterator = (function() {
         this.days.push(t1.dayOfYear());
       } else if (partCount == 1 && "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
             continue;
           }
@@ -7679,7 +7679,7 @@ ICAL.RecurIterator = (function() {
         }
       } else if (partCount == 1 && "BYMONTHDAY" in parts) {
         for (var monthdaykey in this.by_data.BYMONTHDAY) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
             continue;
           }
@@ -7698,14 +7698,14 @@ ICAL.RecurIterator = (function() {
                  "BYMONTHDAY" in parts &&
                  "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
             continue;
           }
           var month_ = this.by_data.BYMONTH[monthkey];
           var daysInMonth = ICAL.Time.daysInMonth(month_, aYear);
           for (var monthdaykey in this.by_data.BYMONTHDAY) {
-            /* istanbul ignore else */
+            /* istanbul ignore if */
             if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
               continue;
             }
@@ -7731,7 +7731,7 @@ ICAL.RecurIterator = (function() {
         this.days = this.days.concat(this.expand_by_day(aYear));
       } else if (partCount == 2 && "BYDAY" in parts && "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
             continue;
           }
@@ -7767,7 +7767,7 @@ ICAL.RecurIterator = (function() {
             }
           } else {
             for (var daycodedkey in this.by_data.BYDAY) {
-              /* istanbul ignore else */
+              /* istanbul ignore if */
               if (!this.by_data.BYDAY.hasOwnProperty(daycodedkey)) {
                 continue;
               }
@@ -7807,7 +7807,7 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!expandedDays.hasOwnProperty(daykey)) {
             continue;
           }
@@ -7824,7 +7824,7 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!expandedDays.hasOwnProperty(daykey)) {
             continue;
           }
@@ -7840,7 +7840,7 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!expandedDays.hasOwnProperty(daykey)) {
             continue;
           }
@@ -7885,7 +7885,7 @@ ICAL.RecurIterator = (function() {
       var end_year_day = tmp.dayOfYear();
 
       for (var daykey in this.by_data.BYDAY) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
           continue;
         }
@@ -7928,7 +7928,7 @@ ICAL.RecurIterator = (function() {
 
     is_day_in_byday: function is_day_in_byday(tt) {
       for (var daykey in this.by_data.BYDAY) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
           continue;
         }
