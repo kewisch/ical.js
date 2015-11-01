@@ -211,6 +211,38 @@ suite('Property', function() {
     );
   });
 
+  test('#setMultiValueParameterByString', function() {
+    subject = new ICAL.Property(
+      fixtures.withParams
+    );
+
+    subject.setParameter(
+      'member',
+      'mailto:users@example.net'
+    );
+
+    assert.equal(
+      subject.getParameter('member')[0],
+      'mailto:users@example.net'
+    );
+  });
+
+  test('#setMultiValueParameter', function() {
+    subject = new ICAL.Property(
+      fixtures.withParams
+    );
+
+    subject.setParameter(
+      'member',
+      ['mailto:users@example.net']
+    );
+
+    assert.equal(
+      subject.getParameter('member')[0],
+     'mailto:users@example.net'
+    );
+  });
+
   suite('getFirstValue', function() {
 
     test('with no value', function() {
