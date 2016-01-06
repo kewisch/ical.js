@@ -512,6 +512,12 @@ ICAL.design = (function() {
   var icalParams = {
     // Although the syntax is DQUOTE uri DQUOTE, I don't think we should
     // enfoce anything aside from it being a valid content line.
+    //
+    // At least some params require - if multi values are used - DQUOTEs
+    // for each of its values - e.g. delegated-from="uri1","uri2"
+    // To indicate this, I introduced the new k/v pair
+    // multiValueSeparateDQuote: true
+    //
     // "ALTREP": { ... },
 
     // CN just wants a param-value
@@ -525,11 +531,13 @@ ICAL.design = (function() {
 
     "delegated-from": {
       valueType: "cal-address",
-      multiValue: ","
+      multiValue: ",",
+      multiValueSeparateDQuote: true
     },
     "delegated-to": {
       valueType: "cal-address",
-      multiValue: ","
+      multiValue: ",",
+      multiValueSeparateDQuote: true
     },
     // "DIR": { ... }, // See ALTREP
     "encoding": {
@@ -544,7 +552,8 @@ ICAL.design = (function() {
     // "LANGUAGE": { ... }, // See ALTREP
     "member": {
       valueType: "cal-address",
-      multiValue: ","
+      multiValue: ",",
+      multiValueSeparateDQuote: true
     },
     "partstat": {
       // TODO These values are actually different per-component
@@ -1302,6 +1311,9 @@ ICAL.stringify = (function() {
       if (params.hasOwnProperty(paramName)) {
         var multiValue = (paramName in designSet.param) && designSet.param[paramName].multiValue;
         if (multiValue && Array.isArray(value)) {
+          if (designSet.param[paramName].multiValueSeparateDQuote) {
+            multiValue = '"' + multiValue + '"';
+          }
           value = value.map(stringify._rfc6868Unescape);
           value = stringify.multiValue(value, multiValue, "unknown", null, designSet);
         } else {
@@ -1820,10 +1832,36 @@ ICAL.parse = (function() {
       }
       lcname = name.toLowerCase();
 
+      if (lcname in designSet.param && designSet.param[lcname].valueType) {
+        type = designSet.param[lcname].valueType;
+      } else {
+        type = DEFAULT_PARAM_TYPE;
+      }
+
+      if (lcname in designSet.param) {
+        multiValue = designSet.param[lcname].multiValue;
+      }
+
       var nextChar = line[pos + 1];
       if (nextChar === '"') {
         valuePos = pos + 2;
         pos = helpers.unescapedIndexOf(line, '"', valuePos);
+        if (multiValue && pos !== -1) {
+          var mvpos = pos;
+          var extendValue = true;
+          while (extendValue) {
+            var nextMDelim = helpers.unescapedIndexOf(line, multiValue, mvpos + 1);
+            var nextPDelim = helpers.unescapedIndexOf(line, PARAM_DELIMITER, mvpos + 1);
+            var nextVDelim = helpers.unescapedIndexOf(line, VALUE_DELIMITER, mvpos + 1);
+            var nextDQuote = helpers.unescapedIndexOf(line, '"', mvpos + 1);
+            if (nextDQuote > nextMDelim && (nextPDelim > nextDQuote || nextVDelim > nextDQuote)) {
+              mvpos = helpers.unescapedIndexOf(line, '"', nextDQuote + 1);
+            } else {
+              extendValue = false;
+            }
+          }
+          pos = mvpos;
+        }
         if (pos === -1) {
           throw new ParserError(
             'invalid line (no matching double quote) "' + line + '"'
@@ -1857,16 +1895,6 @@ ICAL.parse = (function() {
         }
 
         value = line.substr(valuePos, nextPos - valuePos);
-      }
-
-      if (lcname in designSet.param && designSet.param[lcname].valueType) {
-        type = designSet.param[lcname].valueType;
-      } else {
-        type = DEFAULT_PARAM_TYPE;
-      }
-
-      if (lcname in designSet.param) {
-        multiValue = designSet.param[lcname].multiValue;
       }
 
       value = parser._rfc6868Escape(value);
@@ -1913,6 +1941,9 @@ ICAL.parse = (function() {
     var pos = 0;
     var lastPos = 0;
     var value;
+    if (delim.length === 0) {
+      return buffer;
+    }
 
     // split each piece
     while ((pos = helpers.unescapedIndexOf(buffer, delim, lastPos)) !== -1) {
@@ -1923,7 +1954,7 @@ ICAL.parse = (function() {
         value = parser._parseValue(value, type, designSet);
       }
       result.push(value);
-      lastPos = pos + 1;
+      lastPos = pos + delim.length;
     }
 
     // on the last piece take the rest of string
@@ -2716,8 +2747,8 @@ ICAL.Property = (function() {
     /**
      * Gets a parameter on the property.
      *
-     * @param {String} name     Property name (lowercase)
-     * @return {String}         Property value
+     * @param {String}        name   Property name (lowercase)
+     * @return {Array|String}        Property value
      */
     getParameter: function(name) {
       return this.jCal[PROP_INDEX][name];
@@ -2726,10 +2757,16 @@ ICAL.Property = (function() {
     /**
      * Sets a parameter on the property.
      *
-     * @param {String} name     The parameter name
-     * @param {String} value    The parameter value
+     * @param {String}       name     The parameter name
+     * @param {Array|String} value    The parameter value
      */
     setParameter: function(name, value) {
+      var lcname = name.toLowerCase();
+      if (typeof value === "string" &&
+          lcname in this._designSet.param &&
+          'multiValue' in this._designSet.param[lcname]) {
+          value = [value];
+      }
       this.jCal[PROP_INDEX][name] = value;
     },
 
