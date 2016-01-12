@@ -9,14 +9,9 @@
 if (typeof module === 'object') {
   // CommonJS, where exports may be different each time.
   ICAL = module.exports;
-} else /* istanbul ignore next */ if (typeof window !== 'undefined') {
-  if (typeof ICAL !== 'object') {
-    /** @ignore */
-    this.ICAL = {};
-  }
-} else /* istanbul ignore next */ {
-  // ...?
-  ICAL = {};
+} else if (typeof ICAL !== 'object') {/* istanbul ignore next */
+  /** @ignore */
+  this.ICAL = {};
 }
 /* jshint ignore:end */
 
@@ -670,7 +665,7 @@ ICAL.design = (function() {
                      aValue.substr(11, 2) + ':' +
                      aValue.substr(13, 2);
 
-        if (aValue[15] === 'Z') {
+        if (aValue[15] && aValue[15] === 'Z') {
           result += 'Z';
         }
 
@@ -695,7 +690,7 @@ ICAL.design = (function() {
                      // SS
                      aValue.substr(17, 2);
 
-        if (aValue[19] === 'Z') {
+        if (aValue[19] && aValue[19] === 'Z') {
           result += 'Z';
         }
 
@@ -1990,7 +1985,7 @@ ICAL.parse = (function() {
     do {
       pos = buffer.indexOf('\n', lastPos) + 1;
 
-      if (buffer[pos - 2] === '\r') {
+      if (pos > 1 && buffer[pos - 2] === '\r') {
         newlineOffset = 2;
       } else {
         newlineOffset = 1;
@@ -2751,7 +2746,11 @@ ICAL.Property = (function() {
      * @return {Array|String}        Property value
      */
     getParameter: function(name) {
-      return this.jCal[PROP_INDEX][name];
+      if (name in this.jCal[PROP_INDEX]) {
+        return this.jCal[PROP_INDEX][name];
+      } else {
+        return undefined;
+      }
     },
 
     /**
@@ -5631,7 +5630,7 @@ ICAL.TimezoneService = (function() {
 
     var zone;
 
-    if (aValue[19] === 'Z') {
+    if (aValue[19] && aValue[19] === 'Z') {
       zone = 'Z';
     } else if (prop) {
       zone = prop.getParameter('tzid');
@@ -6707,7 +6706,9 @@ ICAL.RecurIterator = (function() {
         this.occurrence_number = options.occurrence_number;
 
       this.days = options.days || [];
-      this.last = ICAL.helpers.formatClassType(options.last, ICAL.Time);
+      if (options.last) {
+        this.last = ICAL.helpers.formatClassType(options.last, ICAL.Time);
+      }
 
       this.by_indices = options.by_indices;
 
