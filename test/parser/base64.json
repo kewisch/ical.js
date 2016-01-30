@@ -1,14 +1,23 @@
-["vcalendar",
+[
+  "vcalendar",
+  [],
   [
     [
-      "attach",
-      {
-        "fmttype": "text/plain",
-        "encoding": "BASE64"
-      },
-      "binary",
-      "TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2ljaW5nIGVsaXQsIHNlZCBkbyBlaXVzbW9kIHRlbXBvciBpbmNpZGlkdW50IHV0IGxhYm9yZSBldCBkb2xvcmUgbWFnbmEgYWxpcXVhLiBVdCBlbmltIGFkIG1pbmltIHZlbmlhbSwgcXVpcyBub3N0cnVkIGV4ZXJjaXRhdGlvbiB1bGxhbWNvIGxhYm9yaXMgbmlzaSB1dCBhbGlxdWlwIGV4IGVhIGNvbW1vZG8gY29uc2VxdWF0LiBEdWlzIGF1dGUgaXJ1cmUgZG9sb3IgaW4gcmVwcmVoZW5kZXJpdCBpbiB2b2x1cHRhdGUgdmVsaXQgZXNzZSBjaWxsdW0gZG9sb3JlIGV1IGZ1Z2lhdCBudWxsYSBwYXJpYXR1ci4gRXhjZXB0ZXVyIHNpbnQgb2NjYWVjYXQgY3VwaWRhdGF0IG5vbiBwcm9pZGVudCwgc3VudCBpbiBjdWxwYSBxdWkgb2ZmaWNpYSBkZXNlcnVudCBtb2xsaXQgYW5pbSBpZCBlc3QgbGFib3J1bS4="
+      "vevent",
+      [
+        [
+          "x-apple-structured-location",
+          {
+            "x-apple-mapkit-handle": "CAEStAEaEgmySumZXs5HQBHGGFjH8aMeQCJfCgdHZXJtYW55EgJERRoSQmFkZW4tV8O8cnR0ZW1iZXJnKghMw7ZycmFjaDIITMO2cnJhY2g6BTc5NTM5UgxUZWljaHN0cmHDn2VaAjE0Yg9UZWljaHN0cmHDn2UgMTQqD1RlaWNoc3RyYcOfZSAxNDIPVGVpY2hzdHJhw59lIDE0Mg43OTUzOSBMw7ZycmFjaDIHR2VybWFueTg5QAA=",
+            "x-apple-radius": "49.9130592739986",
+            "x-apple-referenceframe": "1",
+            "x-title": "Room14, Teichstraße 14, 79539 Lörrach, Deutschland"
+          },
+          "uri",
+          "geo:47.612262,7.660102"
+        ]
+      ],
+      []
     ]
-  ],
-  []
+  ]
 ]
