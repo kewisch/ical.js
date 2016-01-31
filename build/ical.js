@@ -2019,6 +2019,7 @@ ICAL.parse = (function() {
           pos = false;
         } else {
           lastParam = nextPos;
+          pos = nextPos;
         }
 
         value = line.substr(valuePos, nextPos - valuePos);
