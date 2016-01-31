@@ -4614,7 +4614,7 @@ ICAL.TimezoneService = (function() {
     /**
      * Returns a clone of the time object.
      *
-     * @return {ICAL.Duration}      The cloned object
+     * @return {ICAL.Time}              The cloned object
      */
     clone: function() {
       return new ICAL.Time(this._time, this.zone);
@@ -5830,6 +5830,7 @@ ICAL.TimezoneService = (function() {
    *
    * Also, normalization is not yet implemented for this class!
    *
+   * @alias ICAL.VCardTime
    * @class
    * @extends {ICAL.Time}
    * @param {Object} data                           The data for the time instance
@@ -5857,7 +5858,7 @@ ICAL.TimezoneService = (function() {
 
     this.fromData(data, zone);
   };
-  ICAL.helpers.inherits(ICAL.Time, ICAL.VCardTime, {
+  ICAL.helpers.inherits(ICAL.Time, ICAL.VCardTime, /** @lends ICAL.VCardTime */ {
 
     /**
      * The class identifier.
