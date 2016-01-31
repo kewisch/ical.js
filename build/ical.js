@@ -296,7 +296,7 @@ ICAL.helpers = {
   /**
    * Poor-man's cross-browser object extension. Doesn't support all the
    * features, but enough for our usage. Note that the target's properties are
-   * always overwritten with the source properties.
+   * not overwritten with the source properties.
    *
    * @example
    * var child = ICAL.helpers.extend(parent, {
@@ -310,7 +310,7 @@ ICAL.helpers = {
   extend: function(source, target) {
     for (var key in source) {
       var descr = Object.getOwnPropertyDescriptor(source, key);
-      if (descr) {
+      if (descr && !Object.getOwnPropertyDescriptor(target, key)) {
         Object.defineProperty(target, key, descr);
       }
     }
@@ -332,7 +332,42 @@ ICAL.helpers = {
 ICAL.design = (function() {
   'use strict';
 
-  var ICAL_NEWLINE = /\\\\|\\;|\\,|\\[Nn]/g;
+  var FROM_ICAL_NEWLINE = /\\\\|\\;|\\,|\\[Nn]/g;
+  var TO_ICAL_NEWLINE = /\\|;|,|\n/g;
+  var FROM_VCARD_NEWLINE = /\\\\|\\,|\\[Nn]/g;
+  var TO_VCARD_NEWLINE = /\\|,|\n/g;
+
+  function createTextType(fromNewline, toNewline) {
+    var result = {
+      matches: /.*/,
+
+      fromICAL: function(aValue, structuredEscape) {
+        return replaceNewline(aValue, fromNewline, structuredEscape);
+      },
+
+      toICAL: function(aValue, structuredEscape) {
+        var regEx = toNewline;
+        if (structuredEscape)
+          regEx = new RegExp(regEx.source + '|' + structuredEscape);
+        return aValue.replace(regEx, function(str) {
+          switch (str) {
+          case "\\":
+            return "\\\\";
+          case ";":
+            return "\\;";
+          case ",":
+            return "\\,";
+          case "\n":
+            return "\\n";
+          /* istanbul ignore next */
+          default:
+            return str;
+          }
+        });
+      }
+    };
+    return result;
+  }
 
   // default types used multiple times
   var DEFAULT_TYPE_TEXT = { defaultType: "text" };
@@ -363,13 +398,14 @@ ICAL.design = (function() {
     }
   }
 
-  function replaceNewline(value) {
+  function replaceNewline(value, newline, structuredEscape) {
     // avoid regex when possible.
     if (value.indexOf('\\') === -1) {
       return value;
     }
-
-    return value.replace(ICAL_NEWLINE, replaceNewlineReplace);
+    if (structuredEscape)
+      newline = new RegExp(newline.source + '|\\\\' + structuredEscape);
+    return value.replace(newline, replaceNewlineReplace);
   }
 
   var commonProperties = {
@@ -432,37 +468,6 @@ ICAL.design = (function() {
         return String(aValue);
       }
     },
-    text: {
-      matches: /.*/,
-
-      fromICAL: function(aValue, aName) {
-        return replaceNewline(aValue);
-      },
-
-      toICAL: function escape(aValue, aName) {
-        return aValue.replace(/\\|;|,|\n/g, function(str) {
-          switch (str) {
-          case "\\":
-            return "\\\\";
-          case ";":
-            return "\\;";
-          case ",":
-            return "\\,";
-          case "\n":
-            return "\\n";
-          /* istanbul ignore next */
-          default:
-            return str;
-          }
-        });
-      }
-    },
-
-    uri: {
-      // TODO
-      /* ... */
-    },
-
     "utc-offset": {
       toICAL: function(aValue) {
         if (aValue.length < 7) {
@@ -595,6 +600,12 @@ ICAL.design = (function() {
 
   // When adding a value here, be sure to add it to the parameter types!
   var icalValues = ICAL.helpers.extend(commonValues, {
+    text: createTextType(FROM_ICAL_NEWLINE, TO_ICAL_NEWLINE),
+
+    uri: {
+      // TODO
+      /* ... */
+    },
 
     "binary": {
       decorate: function(aString) {
@@ -752,7 +763,7 @@ ICAL.design = (function() {
       toICAL: function(data) {
         var str = "";
         for (var k in data) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!Object.prototype.hasOwnProperty.call(data, k)) {
             continue;
           }
@@ -889,6 +900,8 @@ ICAL.design = (function() {
 
   // When adding a value here, be sure to add it to the parameter types!
   var vcardValues = ICAL.helpers.extend(commonValues, {
+    text: createTextType(FROM_VCARD_NEWLINE, TO_VCARD_NEWLINE),
+    uri: createTextType(FROM_VCARD_NEWLINE, TO_VCARD_NEWLINE),
 
     date: {
       decorate: function(aValue) {
@@ -1051,7 +1064,7 @@ ICAL.design = (function() {
   };
 
   var vcardProperties = ICAL.helpers.extend(commonProperties, {
-    "adr": DEFAULT_TYPE_TEXT_STRUCTURED,
+    "adr": { defaultType: "text", structuredValue: ";", multiValue: "," },
     "anniversary": DEFAULT_TYPE_DATE_ANDOR_TIME,
     "bday": DEFAULT_TYPE_DATE_ANDOR_TIME,
     "caladruri": DEFAULT_TYPE_URI,
@@ -1071,7 +1084,7 @@ ICAL.design = (function() {
     "n": { defaultType: "text", structuredValue: ";", multiValue: "," },
     "nickname": DEFAULT_TYPE_TEXT_MULTI,
     "note": DEFAULT_TYPE_TEXT,
-    "org": DEFAULT_TYPE_TEXT_STRUCTURED,
+    "org": { defaultType: "text", structuredValue: ";" },
     "photo": DEFAULT_TYPE_URI,
     "related": DEFAULT_TYPE_URI,
     "rev": { defaultType: "timestamp" },
@@ -1084,6 +1097,95 @@ ICAL.design = (function() {
     "xml": DEFAULT_TYPE_TEXT
   });
 
+  var vcard3Values = ICAL.helpers.extend(commonValues, {
+    binary: icalValues.binary,
+    date: vcardValues.date,
+    "date-time": vcardValues["date-time"],
+    "phone-number": {
+      // TODO
+      /* ... */
+    },
+    uri: icalValues.uri,
+    text: icalValues.text,
+    time: icalValues.time,
+    vcard: icalValues.text,
+    "utc-offset": {
+      toICAL: function(aValue) {
+        return aValue.substr(0, 7);
+      },
+
+      fromICAL: function(aValue) {
+        return aValue.substr(0, 7);
+      },
+
+      decorate: function(aValue) {
+        return ICAL.UtcOffset.fromString(aValue);
+      },
+
+      undecorate: function(aValue) {
+        return aValue.toString();
+      }
+    }
+  });
+
+  var vcard3Params = {
+    "type": {
+      valueType: "text",
+      multiValue: ","
+    },
+    "value": {
+      // since the value here is a 'type' lowercase is used.
+      values: ["text", "uri", "date", "date-time", "phone-number", "time",
+               "boolean", "integer", "float", "utc-offset", "vcard", "binary"],
+      allowXName: true,
+      allowIanaToken: true
+    }
+  };
+
+  var vcard3Properties = ICAL.helpers.extend(commonProperties, {
+    fn: DEFAULT_TYPE_TEXT,
+    n: { defaultType: "text", structuredValue: ";", multiValue: "," },
+    nickname: DEFAULT_TYPE_TEXT_MULTI,
+    photo: { defaultType: "binary", allowedTypes: ["binary", "uri"] },
+    bday: {
+      defaultType: "date-time",
+      allowedTypes: ["date-time", "date"],
+      detectType: function(string) {
+        return (string.indexOf('T') === -1) ? 'date' : 'date-time';
+      }
+    },
+
+    adr: { defaultType: "text", structuredValue: ";", multiValue: "," },
+    label: DEFAULT_TYPE_TEXT,
+
+    tel: { defaultType: "phone-number" },
+    email: DEFAULT_TYPE_TEXT,
+    mailer: DEFAULT_TYPE_TEXT,
+
+    tz: { defaultType: "utc-offset", allowedTypes: ["utc-offset", "text"] },
+    geo: { defaultType: "float", structuredValue: ";" },
+
+    title: DEFAULT_TYPE_TEXT,
+    role: DEFAULT_TYPE_TEXT,
+    logo: { defaultType: "binary", allowedTypes: ["binary", "uri"] },
+    agent: { defaultType: "vcard", allowedTypes: ["vcard", "text", "uri"] },
+    org: DEFAULT_TYPE_TEXT_STRUCTURED,
+
+    note: DEFAULT_TYPE_TEXT_MULTI,
+    prodid: DEFAULT_TYPE_TEXT,
+    rev: {
+      defaultType: "date-time",
+      allowedTypes: ["date-time", "date"],
+      detectType: function(string) {
+        return (string.indexOf('T') === -1) ? 'date' : 'date-time';
+      }
+    },
+    "sort-string": DEFAULT_TYPE_TEXT,
+    sound: { defaultType: "binary", allowedTypes: ["binary", "uri"] },
+
+    class: DEFAULT_TYPE_TEXT,
+    key: { defaultType: "binary", allowedTypes: ["binary", "text"] }
+  });
 
   /**
    * iCalendar design set
@@ -1096,13 +1198,23 @@ ICAL.design = (function() {
   };
 
   /**
-   * vCard design set
+   * vCard 4.0 design set
    * @type {ICAL.design.designSet}
    */
   var vcardSet = {
     value: vcardValues,
     param: vcardParams,
     property: vcardProperties
+  };
+
+  /**
+   * vCard 3.0 design set
+   * @type {ICAL.design.designSet}
+   */
+  var vcard3Set = {
+    value: vcard3Values,
+    param: vcard3Params,
+    property: vcard3Properties
   };
 
   /**
@@ -1161,6 +1273,7 @@ ICAL.design = (function() {
      */
     components: {
       vcard: vcardSet,
+      vcard3: vcard3Set,
       vevent: icalSet,
       vtodo: icalSet,
       vjournal: icalSet,
@@ -1182,6 +1295,12 @@ ICAL.design = (function() {
      * @type {ICAL.design.designSet}
      */
     vcard: vcardSet,
+
+    /**
+     * The design set for vCard (rfc2425/rfc2426/rfc7095) components.
+     * @type {ICAL.design.designSet}
+     */
+    vcard3: vcard3Set,
 
     /**
      * Gets the design set for the given component name.
@@ -1259,11 +1378,19 @@ ICAL.stringify = (function() {
   stringify.component = function(component, designSet) {
     var name = component[0].toUpperCase();
     var result = 'BEGIN:' + name + LINE_ENDING;
-    designSet = designSet || design.getDesignSet(component[0]);
 
     var props = component[1];
     var propIdx = 0;
     var propLen = props.length;
+
+    var designSetName = component[0];
+    // rfc6350 requires that in vCard 4.0 the first component is the VERSION
+    // component with as value 4.0, note that 3.0 does not have this requirement.
+    if (designSetName === 'vcard' && component[1].length > 0 &&
+            !(component[1][0][0] === "version" && component[1][0][3] === "4.0")) {
+      designSetName = "vcard3";
+    }
+    designSet = designSet || design.getDesignSet(designSetName);
 
     for (; propIdx < propLen; propIdx++) {
       result += stringify.property(props[propIdx], designSet) + LINE_ENDING;
@@ -1374,18 +1501,18 @@ ICAL.stringify = (function() {
 
     if (multiValue && structuredValue) {
       line += stringify.multiValue(
-        property[3], structuredValue, valueType, multiValue, designSet
+        property[3], structuredValue, valueType, multiValue, designSet, structuredValue
       );
     } else if (multiValue) {
       line += stringify.multiValue(
-        property.slice(3), multiValue, valueType, null, designSet
+        property.slice(3), multiValue, valueType, null, designSet, false
       );
     } else if (structuredValue) {
       line += stringify.multiValue(
-        property[3], structuredValue, valueType, null, designSet
+        property[3], structuredValue, valueType, null, designSet, structuredValue
       );
     } else {
-      line += stringify.value(property[3], valueType, designSet);
+      line += stringify.value(property[3], valueType, designSet, false);
     }
 
     return ICAL.helpers.foldline(line);
@@ -1431,16 +1558,16 @@ ICAL.stringify = (function() {
    *
    * @return {String}           iCalendar/vCard string for value
    */
-  stringify.multiValue = function(values, delim, type, innerMulti, designSet) {
+  stringify.multiValue = function(values, delim, type, innerMulti, designSet, structuredValue) {
     var result = '';
     var len = values.length;
     var i = 0;
 
     for (; i < len; i++) {
       if (innerMulti && Array.isArray(values[i])) {
-        result += stringify.multiValue(values[i], innerMulti, type, null, designSet);
+        result += stringify.multiValue(values[i], innerMulti, type, null, designSet, structuredValue);
       } else {
-        result += stringify.value(values[i], type, designSet);
+        result += stringify.value(values[i], type, designSet, structuredValue);
       }
 
       if (i !== (len - 1)) {
@@ -1461,9 +1588,9 @@ ICAL.stringify = (function() {
    *  (like boolean, date-time, etc..)
    * @return {String}                   iCalendar/vCard value for single value
    */
-  stringify.value = function(value, type, designSet) {
+  stringify.value = function(value, type, designSet, structuredValue) {
     if (type in designSet.value && 'toICAL' in designSet.value[type]) {
-      return designSet.value[type].toICAL(value);
+      return designSet.value[type].toICAL(value, structuredValue);
     }
     return value;
   };
@@ -1761,19 +1888,24 @@ ICAL.parse = (function() {
 
     var result;
     if (multiValue && structuredValue) {
-      value = parser._parseMultiValue(value, structuredValue, valueType, [], multiValue, state.designSet);
+      value = parser._parseMultiValue(value, structuredValue, valueType, [], multiValue, state.designSet, structuredValue);
       result = [name, params, valueType, value];
     } else if (multiValue) {
       result = [name, params, valueType];
-      parser._parseMultiValue(value, multiValue, valueType, result, null, state.designSet);
+      parser._parseMultiValue(value, multiValue, valueType, result, null, state.designSet, false);
     } else if (structuredValue) {
-      value = parser._parseMultiValue(value, structuredValue, valueType, [], null, state.designSet);
+      value = parser._parseMultiValue(value, structuredValue, valueType, [], null, state.designSet, structuredValue);
       result = [name, params, valueType, value];
     } else {
-      value = parser._parseValue(value, valueType, state.designSet);
+      value = parser._parseValue(value, valueType, state.designSet, false);
       result = [name, params, valueType, value];
     }
-
+    // rfc6350 requires that in vCard 4.0 the first component is the VERSION
+    // component with as value 4.0, note that 3.0 does not have this requirement.
+    if (state.component[0] === 'vcard' && state.component[1].length === 0 &&
+            !(name === 'version' && value === '4.0')) {
+      state.designSet = design.getDesignSet("vcard3");
+    }
     state.component[1].push(result);
   };
 
@@ -1787,9 +1919,9 @@ ICAL.parse = (function() {
    * @param {Object} designSet      The design data to use for this value
    * @return {Object} varies on type
    */
-  parser._parseValue = function(value, type, designSet) {
+  parser._parseValue = function(value, type, designSet, structuredValue) {
     if (type in designSet.value && 'fromICAL' in designSet.value[type]) {
-      return designSet.value[type].fromICAL(value);
+      return designSet.value[type].fromICAL(value, structuredValue);
     }
     return value;
   };
@@ -1932,7 +2064,7 @@ ICAL.parse = (function() {
    * @param {ICAL.design.designSet} designSet   The design data for this value
    * @return {?|Array.<?>}            Either an array of results, or the first result
    */
-  parser._parseMultiValue = function(buffer, delim, type, result, innerMulti, designSet) {
+  parser._parseMultiValue = function(buffer, delim, type, result, innerMulti, designSet, structuredValue) {
     var pos = 0;
     var lastPos = 0;
     var value;
@@ -1944,9 +2076,9 @@ ICAL.parse = (function() {
     while ((pos = helpers.unescapedIndexOf(buffer, delim, lastPos)) !== -1) {
       value = buffer.substr(lastPos, pos - lastPos);
       if (innerMulti) {
-        value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet);
+        value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet, structuredValue);
       } else {
-        value = parser._parseValue(value, type, designSet);
+        value = parser._parseValue(value, type, designSet, structuredValue);
       }
       result.push(value);
       lastPos = pos + delim.length;
@@ -1955,9 +2087,9 @@ ICAL.parse = (function() {
     // on the last piece take the rest of string
     value = buffer.substr(lastPos);
     if (innerMulti) {
-      value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet);
+      value = parser._parseMultiValue(value, innerMulti, type, [], null, designSet, structuredValue);
     } else {
-      value = parser._parseValue(value, type, designSet);
+      value = parser._parseValue(value, type, designSet, structuredValue);
     }
     result.push(value);
 
@@ -3694,7 +3826,7 @@ ICAL.Binary = (function() {
       var propsToCopy = ["weeks", "days", "hours",
                          "minutes", "seconds", "isNegative"];
       for (var key in propsToCopy) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!propsToCopy.hasOwnProperty(key)) {
           continue;
         }
@@ -4229,7 +4361,7 @@ ICAL.Binary = (function() {
       } else {
         var props = aComponent.getAllProperties("rdate");
         for (var rdatekey in props) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!props.hasOwnProperty(rdatekey)) {
             continue;
           }
@@ -6305,7 +6437,7 @@ ICAL.TimezoneService = (function() {
       }
 
       for (var k in this.parts) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!this.parts.hasOwnProperty(k)) {
           continue;
         }
@@ -6820,7 +6952,7 @@ ICAL.RecurIterator = (function() {
 
         // Check every weekday in BYDAY with relative dow and pos.
         for (var i in this.by_data.BYDAY) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYDAY.hasOwnProperty(i)) {
             continue;
           }
@@ -7555,7 +7687,7 @@ ICAL.RecurIterator = (function() {
         this.days.push(t1.dayOfYear());
       } else if (partCount == 1 && "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
             continue;
           }
@@ -7567,7 +7699,7 @@ ICAL.RecurIterator = (function() {
         }
       } else if (partCount == 1 && "BYMONTHDAY" in parts) {
         for (var monthdaykey in this.by_data.BYMONTHDAY) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
             continue;
           }
@@ -7586,14 +7718,14 @@ ICAL.RecurIterator = (function() {
                  "BYMONTHDAY" in parts &&
                  "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
             continue;
           }
           var month_ = this.by_data.BYMONTH[monthkey];
           var daysInMonth = ICAL.Time.daysInMonth(month_, aYear);
           for (var monthdaykey in this.by_data.BYMONTHDAY) {
-            /* istanbul ignore else */
+            /* istanbul ignore if */
             if (!this.by_data.BYMONTHDAY.hasOwnProperty(monthdaykey)) {
               continue;
             }
@@ -7619,7 +7751,7 @@ ICAL.RecurIterator = (function() {
         this.days = this.days.concat(this.expand_by_day(aYear));
       } else if (partCount == 2 && "BYDAY" in parts && "BYMONTH" in parts) {
         for (var monthkey in this.by_data.BYMONTH) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!this.by_data.BYMONTH.hasOwnProperty(monthkey)) {
             continue;
           }
@@ -7655,7 +7787,7 @@ ICAL.RecurIterator = (function() {
             }
           } else {
             for (var daycodedkey in this.by_data.BYDAY) {
-              /* istanbul ignore else */
+              /* istanbul ignore if */
               if (!this.by_data.BYDAY.hasOwnProperty(daycodedkey)) {
                 continue;
               }
@@ -7695,7 +7827,7 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!expandedDays.hasOwnProperty(daykey)) {
             continue;
           }
@@ -7712,7 +7844,7 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!expandedDays.hasOwnProperty(daykey)) {
             continue;
           }
@@ -7728,7 +7860,7 @@ ICAL.RecurIterator = (function() {
         var expandedDays = this.expand_by_day(aYear);
 
         for (var daykey in expandedDays) {
-          /* istanbul ignore else */
+          /* istanbul ignore if */
           if (!expandedDays.hasOwnProperty(daykey)) {
             continue;
           }
@@ -7773,7 +7905,7 @@ ICAL.RecurIterator = (function() {
       var end_year_day = tmp.dayOfYear();
 
       for (var daykey in this.by_data.BYDAY) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
           continue;
         }
@@ -7816,7 +7948,7 @@ ICAL.RecurIterator = (function() {
 
     is_day_in_byday: function is_day_in_byday(tt) {
       for (var daykey in this.by_data.BYDAY) {
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (!this.by_data.BYDAY.hasOwnProperty(daykey)) {
           continue;
         }

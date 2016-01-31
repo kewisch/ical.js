@@ -1,0 +1,54 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Mr. John Q. Public\, Esq.
+N:Public;John;Quinlan;Mr.;Esq.
+N:Stevenson;John;Philip,Paul;Dr.;Jr.,M.D.,A.C.P.
+NICKNAME:Robbie
+NICKNAME:Jim,Jimmie
+PHOTO;VALUE=uri:http://www.abc.com/pub/photos
+ /jqpublic.gif
+PHOTO;ENCODING=b;TYPE=JPEG:SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBp
+ bWFnZSBqdXN0IGEgdGVzdC4=
+BDAY:1996-04-15
+BDAY:1953-10-15T23:10:00Z
+BDAY:1987-09-27T08:30:00-06:00
+ADR;TYPE=dom,home,postal,parcel:;;123 Main
+  Street;Any Town;CA;91921-1234
+LABEL;TYPE=dom,home,postal,parcel:Mr.John Q. Public\, Esq.\n
+ Mail Drop: TNE QB\n123 Main Street\nAny Town\, CA  91921-1234
+ \nU.S.A.
+TEL;TYPE=work,voice,pref,msg:+1-213-555-1234
+EMAIL;TYPE=internet:jqpublic@xyz.dom1.com
+EMAIL;TYPE=internet:jdoe@isp.net
+EMAIL;TYPE=internet,pref:jane_doe@abc.com
+MAILER:PigeonMail 2.1
+TZ:-05:00
+TZ;VALUE=text:-05:00\; EST\; Raleigh/North America
+ \;This example has a single value\, not a structure text value.
+GEO:37.386013;-122.082932
+TITLE:Director\, Research and Development
+ROLE:Programmer
+LOGO;VALUE=uri:http://www.abc.com/pub/logos/abccorp.jpg
+LOGO;ENCODING=b;TYPE=JPEG:SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBp
+ bWFnZSBqdXN0IGEgdGVzdC4=
+AGENT;VALUE=uri:
+ CID:JQPUBLIC.part3.960129T083020.xyzMail@host3.com
+AGENT:BEGIN:VCARD\nFN:Susan Thomas\nTEL:+1-919-555-
+ 1234\nEMAIL\;INTERNET:sthomas@host.com\nEND:VCARD\n
+ORG:ABC\, Inc.;North American Division;Marketing
+CATEGORIES:TRAVEL AGENT
+CATEGORIES:INTERNET,IETF,INDUSTRY,INFORMATION TECHNOLOGY
+NOTE:This fax number is operational 0800 to 1715
+  EST\, Mon-Fri.
+PRODID:-//ONLINE DIRECTORY//NONSGML Version 1//EN
+REV:1995-10-31T22:27:10Z
+REV:1997-11-15
+SORT-STRING:Harten
+SOUND;TYPE=BASIC;VALUE=uri:CID:JOHNQPUBLIC.part8.
+ 19960229T080000.xyzMail@host1.com
+SOUND;TYPE=BASIC;ENCODING=b:VGhlcmUgaXMgbm8gc291bmQgaW4gc3BhY2U=
+CLASS:PUBLIC
+CLASS:PRIVATE
+CLASS:CONFIDENTIAL
+KEY;ENCODING=b:Tm90IHRoZSBrZXkgeW91IGFyZSBsb29raW5nIGZvcg==
+END:VCARD
