@@ -28,8 +28,8 @@
     "coveralls": "^2.11.2",
     "grunt": "^0.4.5",
     "grunt-concurrent": "^2.0.0",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-jshint": "^0.12.0",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "^0.11.0",
     "grunt-coveralls": "^1.0.0",
     "grunt-gh-pages": "^1.0.0",
@@ -44,7 +44,7 @@
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.2.0",
     "karma-sauce-launcher": "^0.3.0",
-    "karma-spec-reporter": "^0.0.23",
+    "karma-spec-reporter": "^0.0.24",
     "minami": "^1.1.0",
     "mocha": "~2.4",
     "node-static": "^0.7.6",
@@ -53,7 +53,7 @@
     "test-agent": "~0.28.2"
   },
   "optionalDependencies": {
-    "grunt-node-inspector": "^0.2.0"
+    "grunt-node-inspector": "^0.4.1"
   },
   "license": "MPL-2.0",
   "engine": {
