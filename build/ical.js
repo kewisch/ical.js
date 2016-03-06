@@ -7260,8 +7260,12 @@ ICAL.RecurIterator = (function() {
 
         // For the case of more than one occurrence in one month
         // we have to be sure to start searching after the last
-        // found date or at the last BYMONTHDAY.
-        while (byMonthDay[dateIdx] <= lastDay && dateIdx < dateLen - 1) {
+        // found date or at the last BYMONTHDAY, unless we are
+        // initializing the iterator because in this case we have
+        // to consider the last found date too.
+        while (byMonthDay[dateIdx] <= lastDay &&
+               !(isInit && byMonthDay[dateIdx] == lastDay) &&
+               dateIdx < dateLen - 1) {
           dateIdx++;
         }
       }
@@ -7282,7 +7286,12 @@ ICAL.RecurIterator = (function() {
         lastDay -= 1;
       }
 
-      while (!dataIsValid) {
+      // Use a counter to avoid an infinite loop with malformed rules.
+      // Stop checking after 4 years so we consider also a leap year.
+      var monthsCounter = 48;
+
+      while (!dataIsValid && monthsCounter) {
+        monthsCounter--;
         // increment the current date. This is really
         // important otherwise we may fall into the infinite
         // loop trap. The initial date takes care of the case
@@ -7339,6 +7348,13 @@ ICAL.RecurIterator = (function() {
           continue;
         }
       }
+
+      if (monthsCounter <= 0) {
+        // Checked 4 years without finding a Byday that matches
+        // a Bymonthday. Maybe the rule is not correct.
+        throw new Error("Malformed values in BYDAY combined with BYMONTHDAY parts");
+      }
+
 
       return dataIsValid;
     },
