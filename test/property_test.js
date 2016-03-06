@@ -403,7 +403,7 @@ suite('Property', function() {
     test('no values', function() {
       subject = new ICAL.Property(fixtures.noValue);
       assert.deepEqual(subject.getValues(), []);
-      assert.equal(subject.toICAL(), "X-FOO;PROP=prop:");
+      assert.equal(subject.toICALString(), "X-FOO;PROP=prop:");
     });
   });
 

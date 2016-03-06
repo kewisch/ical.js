@@ -69,11 +69,11 @@ suite('ICAL.stringify', function() {
       ICAL.design.defaultSet.property.custom = {};
       var subject = new ICAL.Property('custom');
       subject.setValue('unescaped, right?');
-      assert.equal(subject.toICAL(), 'CUSTOM:unescaped, right?')
+      assert.equal(subject.toICALString(), 'CUSTOM:unescaped, right?')
 
       subject.resetType('integer');
       subject.setValue(123);
-      assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
+      assert.equal(subject.toICALString(), 'CUSTOM;VALUE=INTEGER:123');
 
       delete ICAL.design.defaultSet.property.custom;
     });
@@ -83,7 +83,7 @@ suite('ICAL.stringify', function() {
       var subject = new ICAL.Property('custom');
       subject.resetType('integer');
       subject.setValue(123);
-      assert.equal(subject.toICAL(), 'CUSTOM;VALUE=INTEGER:123');
+      assert.equal(subject.toICALString(), 'CUSTOM;VALUE=INTEGER:123');
       delete ICAL.design.defaultSet.property.custom;
     });
 
@@ -93,7 +93,7 @@ suite('ICAL.stringify', function() {
       var expected = 'ATTENDEE;CN=caret ^^ dquote ^\' newline ^n end:mailto:id';
       subject.setParameter('cn', input);
       subject.setValue('mailto:id');
-      assert.equal(subject.toICAL(), expected);
+      assert.equal(subject.toICALString(), expected);
       assert.equal(ICAL.parse.property(expected)[1].cn, input);
     });
   });

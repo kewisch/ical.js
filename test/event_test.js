@@ -102,7 +102,7 @@ suite('ICAL.Event', function() {
         );
 
         assert.include(
-          property.toICAL(),
+          property.toICALString(),
           time.toICALString()
         );
       });
@@ -123,7 +123,7 @@ suite('ICAL.Event', function() {
         );
 
         assert.include(
-          property.toICAL(),
+          property.toICALString(),
           time.toICALString()
         );
       });
@@ -144,7 +144,7 @@ suite('ICAL.Event', function() {
         );
 
         assert.include(
-          property.toICAL(),
+          property.toICALString(),
           time.toICALString()
         );
       });
@@ -163,7 +163,7 @@ suite('ICAL.Event', function() {
         assert.equal(property.type, 'date');
 
         assert.include(
-          property.toICAL(),
+          property.toICALString(),
           time.toICALString()
         );
       });
@@ -183,7 +183,7 @@ suite('ICAL.Event', function() {
         assert.equal(property.type, 'date-time');
 
         assert.include(
-          property.toICAL(),
+          property.toICALString(),
           time.toICALString()
         );
       });

@@ -459,7 +459,7 @@ suite('recur', function() {
       var recur = ICAL.Recur.fromString(icalString);
       var prop = new ICAL.Property('rrule');
       prop.setValue(recur);
-      assert.equal(prop.toICAL(), 'RRULE:FREQ=WEEKLY;BYDAY=TU,TH;UNTIL=19700103T000000Z;WKST=SU');
+      assert.equal(prop.toICALString(), 'RRULE:FREQ=WEEKLY;BYDAY=TU,TH;UNTIL=19700103T000000Z;WKST=SU');
     });
   });
 

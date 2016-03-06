@@ -668,7 +668,7 @@ suite('design', function() {
       test("encoded text value roundtrip", function() {
         var prop = new ICAL.Property("description");
         prop.setValue("hello, world");
-        var propVal = prop.toICAL();
+        var propVal = prop.toICALString();
         assert.equal(propVal, "DESCRIPTION:hello\\, world");
 
         prop = ICAL.Property.fromString(propVal);
@@ -678,7 +678,7 @@ suite('design', function() {
       test("encoded unknown value roundtrip", function() {
         var prop = new ICAL.Property("x-wr-calname");
         prop.setValue("hello, world");
-        var propVal = prop.toICAL();
+        var propVal = prop.toICALString();
         assert.equal(propVal, "X-WR-CALNAME:hello, world");
 
         prop = ICAL.Property.fromString(propVal);
@@ -725,7 +725,7 @@ suite('design', function() {
           var prop = ICAL.Property.fromString("X-PROP;VALUE=FUZZY:WARM");
           assert.equal(prop.name, "x-prop");
           assert.equal(prop.getFirstValue(), "warm");
-          assert.match(prop.toICAL(), /WARM/);
+          assert.match(prop.toICALString(), /WARM/);
         });
 
         test("newly registered parameter", function() {
