@@ -1416,9 +1416,11 @@ ICAL.stringify = (function() {
    *        jCal/jCard property array
    * @param {ICAL.design.designSet} designSet
    *        The design data to use for this property
+   * @param {Boolean} noFold
+   *        If true, the line is not folded
    * @return {String}       The iCalendar/vCard string
    */
-  stringify.property = function(property, designSet) {
+  stringify.property = function(property, designSet, noFold) {
     var name = property[0].toUpperCase();
     var jsName = property[0];
     var params = property[1];
@@ -1515,7 +1517,7 @@ ICAL.stringify = (function() {
       line += stringify.value(property[3], valueType, designSet, false);
     }
 
-    return ICAL.helpers.foldline(line);
+    return noFold ? line : ICAL.helpers.foldline(line);
   };
 
   /**
@@ -3052,9 +3054,9 @@ ICAL.Property = (function() {
      * The string representation of this component.
      * @return {String}
      */
-    toICAL: function() {
+    toICALString: function() {
       return ICAL.stringify.property(
-        this.jCal, this._designSet
+        this.jCal, this._designSet, true
       );
     }
   };
@@ -3062,10 +3064,12 @@ ICAL.Property = (function() {
   /**
    * Create an {@link ICAL.Property} by parsing the passed iCalendar string.
    *
-   * @param {String} str        The iCalendar string to parse
+   * @param {String} str                        The iCalendar string to parse
+   * @param {ICAL.design.designSet=} designSet  The design data to use for this property
+   * @return {ICAL.Property}                    The created iCalendar property
    */
-  Property.fromString = function(str) {
-    return new Property(ICAL.parse.property(str));
+  Property.fromString = function(str, designSet) {
+    return new Property(ICAL.parse.property(str, designSet));
   };
 
   return Property;
