@@ -403,7 +403,18 @@ suite('Property', function() {
     test('no values', function() {
       subject = new ICAL.Property(fixtures.noValue);
       assert.deepEqual(subject.getValues(), []);
-      assert.equal(subject.toICAL(), "X-FOO;PROP=prop:");
+      assert.equal(subject.toICALString(), "X-FOO;PROP=prop:");
+    });
+
+    test('foldable value', function() {
+      subject = new ICAL.Property(fixtures.textProp);
+      assert.deepEqual(subject.getValues(), ['foo']);
+      assert.equal(subject.toICALString(), "DESCRIPTION:foo");
+      // Fold length should not fold the property here
+      var oldLength = ICAL.foldLength;
+      ICAL.foldLength = 1;
+      assert.equal(subject.toICALString(), "DESCRIPTION:foo");
+      ICAL.foldLength = oldLength;
     });
   });
 
