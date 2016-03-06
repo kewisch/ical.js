@@ -96,5 +96,24 @@ suite('ICAL.stringify', function() {
       assert.equal(subject.toICALString(), expected);
       assert.equal(ICAL.parse.property(expected)[1].cn, input);
     });
+
+    test('folding', function() {
+      var oldLength = ICAL.foldLength;
+      var subject = new ICAL.Property("description");
+      var N = ICAL.newLineChar + " ";
+      subject.setValue('foobar');
+
+      ICAL.foldLength = 19;
+      assert.equal(subject.toICALString(), "DESCRIPTION:foobar");
+      assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, false), "DESCRIPTION:foobar");
+      assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, true), "DESCRIPTION:foobar");
+
+      ICAL.foldLength = 15;
+      assert.equal(subject.toICALString(), "DESCRIPTION:foobar");
+      assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, false), "DESCRIPTION:foo" + N + "bar");
+      assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, true), "DESCRIPTION:foobar");
+
+      ICAL.foldLength = oldLength;
+    });
   });
 });
