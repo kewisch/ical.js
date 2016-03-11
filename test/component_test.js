@@ -317,6 +317,22 @@ suite('Component', function() {
         'vtodo'
       );
     });
+
+    test('remove non hydrated subcomponent should not shift hydrated property', function() {
+      var component = new ICAL.Component([
+        'vevent',
+        [],
+        [
+          ['a', [], []],
+          ['b', [], []],
+          ['c', [], []]
+        ]
+      ]);
+      component.getFirstSubcomponent('b');
+      component.removeSubcomponent('a');
+      var cValue = component.getFirstSubcomponent('c').name;
+      assert.equal(cValue, 'c');
+    });
   });
 
   suite('#removeAllSubcomponents', function() {
@@ -508,6 +524,21 @@ suite('Component', function() {
       );
 
       assert.lengthOf(list, 2);
+    });
+
+    test('remove non hydrated property should not shift hydrated property', function() {
+      var component = new ICAL.Component([
+        'vevent',
+        [
+          ['a', {}, 'text', 'a'],
+          ['b', {}, 'text', 'b'],
+          ['c', {}, 'text', 'c']
+        ],
+      ]);
+      component.getFirstPropertyValue('b');
+      component.removeProperty('a');
+      var cValue = component.getFirstPropertyValue('c');
+      assert.equal(cValue, 'c');
     });
   });
 
