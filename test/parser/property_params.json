@@ -3,6 +3,64 @@
     [
       "attendee",
       {
+        "delegated-to": [
+          "mailto:foo7@bar",
+          "mailto:foo8@bar"
+        ],
+        "cn": "Foo, Bar"
+      },
+      "cal-address",
+      "mailto:foo1@bar"
+    ],
+    [
+      "attendee",
+      {
+        "delegated-to": [
+          "mailto:foo7@bar",
+          "mailto:foo8@bar"
+        ],
+        "cn": "Foo; Bar"
+      },
+      "cal-address",
+      "mailto:foo2@bar"
+    ],
+    [
+      "attendee",
+      {
+        "cn": "Foo, Bar"
+      },
+      "cal-address",
+      "mailto:foo3@bar"
+    ],
+    [
+      "attendee",
+      {
+        "cn": "Foo; Bar"
+      },
+      "cal-address",
+      "mailto:foo4@bar"
+    ],
+    [
+      "attendee",
+      {
+        "delegated-to": "mailto:foo7@bar",
+        "cn": "Foo, Bar"
+      },
+      "cal-address",
+      "mailto:foo5@bar"
+    ],
+    [
+      "attendee",
+      {
+        "delegated-to": "mailto:foo7@bar",
+        "cn": "Foo; Bar"
+      },
+      "cal-address",
+      "mailto:foo6@bar"
+    ],
+    [
+      "attendee",
+      {
         "role": "REQ-PARTICIPANT;foo",
         "delegated-from": "mailto:bar@baz.com",
         "partstat": "ACCEPTED",
