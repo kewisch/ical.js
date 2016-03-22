@@ -8161,7 +8161,7 @@ ICAL.RecurExpansion = (function() {
    *
    * var expand = new ICAL.RecurExpansion({
    *   component: event,
-   *   start: event.getFirstPropertyValue('DTSTART')
+   *   dtstart: event.getFirstPropertyValue('dtstart')
    * });
    *
    * // remember there are infinite rules
