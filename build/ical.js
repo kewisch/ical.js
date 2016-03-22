@@ -634,15 +634,9 @@ ICAL.design = (function() {
       fromICAL: function(aValue) {
         // from: 20120901
         // to: 2012-09-01
-        var result = aValue.substr(0, 4) + '-' +
-                     aValue.substr(4, 2) + '-' +
-                     aValue.substr(6, 2);
-
-        if (aValue[8] === 'Z') {
-          result += 'Z';
-        }
-
-        return result;
+        return aValue.substr(0, 4) + '-' +
+               aValue.substr(4, 2) + '-' +
+               aValue.substr(6, 2);
       },
 
       toICAL: function(aValue) {
@@ -654,15 +648,9 @@ ICAL.design = (function() {
           return aValue;
         }
 
-        var result = aValue.substr(0, 4) +
-                     aValue.substr(5, 2) +
-                     aValue.substr(8, 2);
-
-        if (aValue[10] === 'Z') {
-          result += 'Z';
-        }
-
-        return result;
+        return aValue.substr(0, 4) +
+               aValue.substr(5, 2) +
+               aValue.substr(8, 2);
       }
     },
     "date-time": {
