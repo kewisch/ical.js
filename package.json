@@ -52,9 +52,6 @@
     "sync-exec": "^0.6.0",
     "test-agent": "~0.28.2"
   },
-  "optionalDependencies": {
-    "grunt-node-inspector": "^0.4.1"
-  },
   "license": "MPL-2.0",
   "engine": {
     "node": ">=0.4"
