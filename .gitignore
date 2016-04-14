@@ -6,7 +6,8 @@ tools/tzurl
 tools/libical
 zoneinfo
 api
-jsdoc-stage
+ghpages-stage
+/validator.html
 coverage/
 build/benchmark/ical_upstream.js
 junk/
