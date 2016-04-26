@@ -526,7 +526,7 @@ suite('recur_iterator', function() {
 
       //monthly, each month last day that is monday
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;BYDAY=MO', {
-        dtStart: '2012-01-01T09:00:00',
+        dtStart: '2012-02-01T09:00:00',
         dates: [
           '2012-04-30T09:00:00',
           '2012-12-31T09:00:00'
@@ -675,6 +675,63 @@ suite('recur_iterator', function() {
           '2015-03-31T08:00:00'
         ]
       });
+
+      // monthly, bymonthday the last day of the month with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;INTERVAL=3', {
+        dtStart: '2016-04-30T08:00:00Z',
+        dates: [
+          "2016-04-30T08:00:00Z",
+          "2016-07-31T08:00:00Z",
+          "2016-10-31T08:00:00Z",
+          "2017-01-31T08:00:00Z"
+        ]
+      })
+
+      // monthly, bymonthday the second to last day of the month with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-2;INTERVAL=2', {
+        dtStart: '2016-04-29T08:00:00Z',
+        dates: [
+          "2016-04-29T08:00:00Z",
+          "2016-06-29T08:00:00Z",
+          "2016-08-30T08:00:00Z",
+          "2016-10-30T08:00:00Z",
+          "2016-12-30T08:00:00Z",
+          "2017-02-27T08:00:00Z"
+        ]
+      })
+
+      // monthly, bymonthday the 31st to last day of the month with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-31;INTERVAL=3', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          "2016-05-01T08:00:00Z",
+          "2016-08-01T08:00:00Z",
+          "2017-05-01T08:00:00Z",
+          "2017-08-01T08:00:00Z"
+        ]
+      })
+
+      // monthly, bymonthday=31 starting from a month with less than 31 days
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          "2016-03-31T08:00:00Z",
+          "2016-05-31T08:00:00Z",
+          "2016-07-31T08:00:00Z",
+          "2016-08-31T08:00:00Z"
+        ]
+      })
+
+      // monthly, bymonthday=31 starting from a month with less than 31 days with interval=2
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31;INTERVAL=2', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          "2016-08-31T08:00:00Z",
+          "2016-10-31T08:00:00Z",
+          "2016-12-31T08:00:00Z",
+          "2017-08-31T08:00:00Z"
+        ]
+      })
 
       // monthly + by month
       testRRULE('FREQ=MONTHLY;BYMONTH=1,3,6,9,12', {
