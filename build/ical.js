@@ -9012,6 +9012,17 @@ ICAL.Event = (function() {
     },
 
     /**
+     * The attachments in the event
+     * @type {ICAL.Property[]}
+     * @readonly
+     */
+    get attachments() {
+      //XXX: This is way lame we should have a better
+      //     data structure for this later.
+      return this.component.getAllProperties('attach');
+    },
+
+    /**
      * The attendees in the event
      * @type {ICAL.Property[]}
      * @readonly
@@ -9021,7 +9032,6 @@ ICAL.Event = (function() {
       //     data structure for this later.
       return this.component.getAllProperties('attendee');
     },
-
 
     /**
      * The event summary
