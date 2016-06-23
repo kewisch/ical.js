@@ -40,7 +40,7 @@
     "grunt-mocha-istanbul": "^5.0.1",
     "grunt-release": "^0.13.0",
     "istanbul": "^0.4.2",
-    "karma": "^0.13.9",
+    "karma": "^1.0.0",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^1.0.1",
     "karma-sauce-launcher": "^1.0.0",
