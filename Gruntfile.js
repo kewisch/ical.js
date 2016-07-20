@@ -97,6 +97,10 @@ module.exports = function(grunt) {
       single: ['mochacli:single', 'node-inspector'],
     },
 
+    eslint: {
+      src: ['<%= libinfo.absfiles %>']
+    },
+
     mochacli: {
       options: {
         ui: 'tdd',
@@ -179,39 +183,6 @@ module.exports = function(grunt) {
       },
     },
 
-    jshint: {
-      options: {
-        "globalstrict": true,
-        "eqeqeq": false,
-        "-W041": false,
-        "strict": false,
-        "proto": true,
-        "shadow": true
-      },
-      lib: {
-        options: {
-          predef: ['ICAL']
-        },
-        src: ['<%= libinfo.absfiles %>']
-      },
-      ICALTester: {
-        src: ['tools/ICALTester/**/*.js']
-      }
-    },
-    gjslint: {
-      options: {
-        flags: ['--flagfile .gjslintrc'],
-        reporter: {
-          name: 'console'
-        }
-      },
-      lib: {
-        src: ['<%= libinfo.absfiles %>']
-      },
-      ICALTester: {
-        src: ['tools/ICALTester/**/*.js']
-      }
-    },
     uglify: {
       options: {
         sourceMap: true,
@@ -274,16 +245,15 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-coveralls');
-  grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-release');
+  grunt.loadNpmTasks('gruntify-eslint');
 
   loadOptionalTask('grunt-node-inspector');
 
@@ -292,7 +262,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat:dist', 'uglify']);
   grunt.registerTask('coverage', 'mocha_istanbul');
-  grunt.registerTask('linters', ['jshint', 'gjslint', 'check-browser-build']);
+  grunt.registerTask('linters', ['eslint', 'check-browser-build']);
   grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
 
