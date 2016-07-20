@@ -21,7 +21,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "benchmark": "~2.1",
+    "benchmark": "~2.1.1",
     "biased-opener": "^0.2.5",
     "chai": "~3.5",
     "closure-linter-wrapper": "^1.0.1",
