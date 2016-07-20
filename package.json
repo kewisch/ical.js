@@ -26,7 +26,7 @@
     "chai": "~3.5",
     "closure-linter-wrapper": "^1.0.1",
     "coveralls": "^2.11.11",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-concurrent": "^2.0.0",
     "grunt-contrib-concat": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
