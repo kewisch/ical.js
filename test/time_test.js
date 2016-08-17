@@ -1037,6 +1037,15 @@ suite('icaltime', function() {
       assert.equal(cp, data.expect_1w);
       cp.addDuration(ICAL.Duration.fromString('-P1W'));
       assert.equal(cp.toString(), dt.toString());
+      
+      
+      
+      cp = dt.clone();
+      cp.addDuration(ICAL.Duration.fromString('PT24H'));
+      cp.isDate = true;
+      cp.isDate;//force normalize
+      cp.isDate = false;
+      assert.equal(cp, data.expect_1d);
     }
   });
 
