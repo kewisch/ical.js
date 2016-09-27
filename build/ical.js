@@ -1384,12 +1384,16 @@ ICAL.stringify = (function() {
       result += stringify.property(props[propIdx], designSet) + LINE_ENDING;
     }
 
-    var comps = component[2];
-    var compIdx = 0;
-    var compLen = comps.length;
+    // check if the component has any subcomponents
+    // vCard does not require to have any subcomponents, related to issue #266
+    if (component.length > 2) {
+      var comps = component[2];
+      var compIdx = 0;
+      var compLen = comps.length;
 
-    for (; compIdx < compLen; compIdx++) {
-      result += stringify.component(comps[compIdx], designSet) + LINE_ENDING;
+      for (; compIdx < compLen; compIdx++) {
+        result += stringify.component(comps[compIdx], designSet) + LINE_ENDING;
+      }
     }
 
     result += 'END:' + name;
