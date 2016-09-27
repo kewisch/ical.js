@@ -116,4 +116,28 @@ suite('ICAL.stringify', function() {
       ICAL.foldLength = oldLength;
     });
   });
+
+  suite('stringify component', function() {
+    test('minimal jcal', function() {
+      var subject = ["vcalendar", [["version", {}, "text", "2.0"]], [["vevent", [], []]]];
+      var expected = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nEND:VEVENT\r\nEND:VCALENDAR";
+
+      assert.equal(ICAL.stringify.component(subject), expected);
+    });
+
+    test('minimal jcard', function() {
+      // related to issue #266
+      var subject = ["vcard", [["version", {}, "text", "4.0"]]];
+      var expected = "BEGIN:VCARD\r\nVERSION:4.0\r\nEND:VCARD";
+
+      assert.equal(ICAL.stringify.component(subject), expected);
+    });
+
+    test('minimal jcard with empty subcomponent', function() {
+      var subject = ["vcard", [["version", {}, "text", "4.0"]], []];
+      var expected = "BEGIN:VCARD\r\nVERSION:4.0\r\nEND:VCARD";
+
+      assert.equal(ICAL.stringify.component(subject), expected);
+    });
+  });
 });
