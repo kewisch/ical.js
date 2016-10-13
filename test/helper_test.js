@@ -96,4 +96,59 @@ suite('ICAL.helpers', function() {
 
     // Most other cases are covered by other tests
   });
+
+  suite('#updateTimezones', function() {
+    var subject = ICAL.helpers.updateTimezones;
+    var cal;
+
+    testSupport.defineSample('minimal.ics', function(data) {
+      cal = new ICAL.Component(ICAL.parse(data));
+    });
+    testSupport.defineSample('timezones/America/Atikokan.ics', function(data) {
+      ICAL.TimezoneService.register(
+        (new ICAL.Component(ICAL.parse(data))).getFirstSubcomponent("vtimezone")
+      );
+    });
+
+    test('timezones already correct', function() {
+      var vtimezones;
+      vtimezones = cal.getAllSubcomponents("vtimezone");
+      assert.strictEqual(vtimezones.length, 1);
+      assert.strictEqual(
+        vtimezones[0].getFirstProperty("tzid").getFirstValue(),
+        "America/Los_Angeles"
+      );
+    });
+
+    test('remove extra timezones', function() {
+      var vtimezones, atikokan;
+      cal.addSubcomponent(
+        ICAL.TimezoneService.get("America/Atikokan").component
+      );
+      vtimezones = cal.getAllSubcomponents("vtimezone");
+      assert.strictEqual(vtimezones.length, 2);
+
+      vtimezones = subject(cal).getAllSubcomponents("vtimezone");
+      assert.strictEqual(vtimezones.length, 1);
+      assert.strictEqual(
+        vtimezones[0].getFirstProperty("tzid").getFirstValue(),
+        "America/Los_Angeles"
+      );
+    });
+
+    test('add missing timezones', function() {
+      cal.getFirstSubcomponent("vevent").
+        getFirstProperty("dtend").setParameter("tzid", "America/Atikokan");
+      vtimezones = cal.getAllSubcomponents("vtimezone");
+      assert(vtimezones.length, 1);
+      
+      vtimezones = subject(cal).getAllSubcomponents("vtimezone");
+      assert.strictEqual(vtimezones.length, 2);
+    });
+
+    test('return non-vcalendar components unchanged', function() {
+      var vevent = cal.getFirstSubcomponent("vevent");
+      assert.deepEqual(subject(vevent), vevent);
+    });
+  });
 });
