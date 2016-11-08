@@ -34,7 +34,7 @@
     "grunt-gh-pages": "^2.0.0",
     "grunt-jsdoc": "^2.0.0",
     "grunt-karma": "^2.0.0",
-    "grunt-mocha-cli": "^2.0.0",
+    "grunt-mocha-cli": "^3.0.0",
     "grunt-mocha-istanbul": "^5.0.1",
     "grunt-release": "^0.14.0",
     "gruntify-eslint": "^3.1.0",
