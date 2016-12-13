@@ -8643,7 +8643,9 @@ ICAL.Event = (function() {
    * @param {Boolean} options.strictExceptions
    *          When true, will verify exceptions are related by their UUID
    * @param {Array<ICAL.Component|ICAL.Event>} options.exceptions
-   *          Exceptions to this event, either as components or events
+   *          Exceptions to this event, either as components or events. If not
+   *            specified exceptions will automatically be set in relation of
+   *            component's parent
    */
   function Event(component, options) {
     if (!(component instanceof ICAL.Component)) {
@@ -8667,6 +8669,12 @@ ICAL.Event = (function() {
 
     if (options && options.exceptions) {
       options.exceptions.forEach(this.relateException, this);
+    } else if (this.component.parent && !this.isRecurrenceException()) {
+      this.component.parent.getAllSubcomponents('vevent').forEach(function(event) {
+        if (event.hasProperty('recurrence-id')) {
+          this.relateException(event);
+        }
+      }, this);
     }
   }
 
