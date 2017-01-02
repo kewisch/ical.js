@@ -1032,7 +1032,7 @@ ICAL.design = (function() {
     },
     timestamp: icalValues['date-time'],
     "language-tag": {
-      matches: /^[a-zA-Z0-9\-]+$/ // Could go with a more strict regex here
+      matches: /^[a-zA-Z0-9-]+$/ // Could go with a more strict regex here
     }
   });
 
