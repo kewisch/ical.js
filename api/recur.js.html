@@ -75,21 +75,21 @@
    *
    * @class
    * @alias ICAL.Recur
-   * @param {Object} data                       An object with members of the recurrence
-   * @param {ICAL.Recur.frequencyValues} freq   The frequency value
-   * @param {Number=} data.interval             The INTERVAL value
-   * @param {ICAL.Time.weekDay=} data.wkst      The week start value
-   * @param {ICAL.Time=} data.until             The end of the recurrence set
-   * @param {Number=} data.count                The number of occurrences
-   * @param {Array.&lt;Number>=} data.bysecond     The seconds for the BYSECOND part
-   * @param {Array.&lt;Number>=} data.byminute     The minutes for the BYMINUTE part
-   * @param {Array.&lt;Number>=} data.byhour       The hours for the BYHOUR part
-   * @param {Array.&lt;String>=} data.byday        The BYDAY values
-   * @param {Array.&lt;Number>=} data.bymonthday   The days for the BYMONTHDAY part
-   * @param {Array.&lt;Number>=} data.byyearday    The days for the BYYEARDAY part
-   * @param {Array.&lt;Number>=} data.byweekno     The weeks for the BYWEEKNO part
-   * @param {Array.&lt;Number>=} data.bymonth      The month for the BYMONTH part
-   * @param {Array.&lt;Number>=} data.bysetpos     The positionals for the BYSETPOS part
+   * @param {Object} data                               An object with members of the recurrence
+   * @param {ICAL.Recur.frequencyValues=} data.freq     The frequency value
+   * @param {Number=} data.interval                     The INTERVAL value
+   * @param {ICAL.Time.weekDay=} data.wkst              The week start value
+   * @param {ICAL.Time=} data.until                     The end of the recurrence set
+   * @param {Number=} data.count                        The number of occurrences
+   * @param {Array.&lt;Number>=} data.bysecond             The seconds for the BYSECOND part
+   * @param {Array.&lt;Number>=} data.byminute             The minutes for the BYMINUTE part
+   * @param {Array.&lt;Number>=} data.byhour               The hours for the BYHOUR part
+   * @param {Array.&lt;String>=} data.byday                The BYDAY values
+   * @param {Array.&lt;Number>=} data.bymonthday           The days for the BYMONTHDAY part
+   * @param {Array.&lt;Number>=} data.byyearday            The days for the BYYEARDAY part
+   * @param {Array.&lt;Number>=} data.byweekno             The weeks for the BYWEEKNO part
+   * @param {Array.&lt;Number>=} data.bymonth              The month for the BYMONTH part
+   * @param {Array.&lt;Number>=} data.bysetpos             The positionals for the BYSETPOS part
    */
   ICAL.Recur = function icalrecur(data) {
     this.wrappedJSObject = this;
@@ -279,21 +279,21 @@
     /**
      * Sets up the current instance using members from the passed data object.
      *
-     * @param {Object} data                       An object with members of the recurrence
-     * @param {ICAL.Recur.frequencyValues} freq   The frequency value
-     * @param {Number=} data.interval             The INTERVAL value
-     * @param {ICAL.Time.weekDay=} data.wkst      The week start value
-     * @param {ICAL.Time=} data.until             The end of the recurrence set
-     * @param {Number=} data.count                The number of occurrences
-     * @param {Array.&lt;Number>=} data.bysecond     The seconds for the BYSECOND part
-     * @param {Array.&lt;Number>=} data.byminute     The minutes for the BYMINUTE part
-     * @param {Array.&lt;Number>=} data.byhour       The hours for the BYHOUR part
-     * @param {Array.&lt;String>=} data.byday        The BYDAY values
-     * @param {Array.&lt;Number>=} data.bymonthday   The days for the BYMONTHDAY part
-     * @param {Array.&lt;Number>=} data.byyearday    The days for the BYYEARDAY part
-     * @param {Array.&lt;Number>=} data.byweekno     The weeks for the BYWEEKNO part
-     * @param {Array.&lt;Number>=} data.bymonth      The month for the BYMONTH part
-     * @param {Array.&lt;Number>=} data.bysetpos     The positionals for the BYSETPOS part
+     * @param {Object} data                               An object with members of the recurrence
+     * @param {ICAL.Recur.frequencyValues=} data.freq     The frequency value
+     * @param {Number=} data.interval                     The INTERVAL value
+     * @param {ICAL.Time.weekDay=} data.wkst              The week start value
+     * @param {ICAL.Time=} data.until                     The end of the recurrence set
+     * @param {Number=} data.count                        The number of occurrences
+     * @param {Array.&lt;Number>=} data.bysecond             The seconds for the BYSECOND part
+     * @param {Array.&lt;Number>=} data.byminute             The minutes for the BYMINUTE part
+     * @param {Array.&lt;Number>=} data.byhour               The hours for the BYHOUR part
+     * @param {Array.&lt;String>=} data.byday                The BYDAY values
+     * @param {Array.&lt;Number>=} data.bymonthday           The days for the BYMONTHDAY part
+     * @param {Array.&lt;Number>=} data.byyearday            The days for the BYYEARDAY part
+     * @param {Array.&lt;Number>=} data.byweekno             The weeks for the BYWEEKNO part
+     * @param {Array.&lt;Number>=} data.bymonth              The month for the BYMONTH part
+     * @param {Array.&lt;Number>=} data.bysetpos             The positionals for the BYSETPOS part
      */
     fromData: function(data) {
       for (var key in data) {
@@ -533,21 +533,21 @@
    * Creates a new {@link ICAL.Recur} instance using members from the passed
    * data object.
    *
-   * @param {Object} aData                      An object with members of the recurrence
-   * @param {ICAL.Recur.frequencyValues} freq   The frequency value
-   * @param {Number=} aData.interval            The INTERVAL value
-   * @param {ICAL.Time.weekDay=} aData.wkst     The week start value
-   * @param {ICAL.Time=} aData.until            The end of the recurrence set
-   * @param {Number=} aData.count               The number of occurrences
-   * @param {Array.&lt;Number>=} aData.bysecond    The seconds for the BYSECOND part
-   * @param {Array.&lt;Number>=} aData.byminute    The minutes for the BYMINUTE part
-   * @param {Array.&lt;Number>=} aData.byhour      The hours for the BYHOUR part
-   * @param {Array.&lt;String>=} aData.byday       The BYDAY values
-   * @param {Array.&lt;Number>=} aData.bymonthday  The days for the BYMONTHDAY part
-   * @param {Array.&lt;Number>=} aData.byyearday   The days for the BYYEARDAY part
-   * @param {Array.&lt;Number>=} aData.byweekno    The weeks for the BYWEEKNO part
-   * @param {Array.&lt;Number>=} aData.bymonth     The month for the BYMONTH part
-   * @param {Array.&lt;Number>=} aData.bysetpos    The positionals for the BYSETPOS part
+   * @param {Object} aData                              An object with members of the recurrence
+   * @param {ICAL.Recur.frequencyValues=} aData.freq    The frequency value
+   * @param {Number=} aData.interval                    The INTERVAL value
+   * @param {ICAL.Time.weekDay=} aData.wkst             The week start value
+   * @param {ICAL.Time=} aData.until                    The end of the recurrence set
+   * @param {Number=} aData.count                       The number of occurrences
+   * @param {Array.&lt;Number>=} aData.bysecond            The seconds for the BYSECOND part
+   * @param {Array.&lt;Number>=} aData.byminute            The minutes for the BYMINUTE part
+   * @param {Array.&lt;Number>=} aData.byhour              The hours for the BYHOUR part
+   * @param {Array.&lt;String>=} aData.byday               The BYDAY values
+   * @param {Array.&lt;Number>=} aData.bymonthday          The days for the BYMONTHDAY part
+   * @param {Array.&lt;Number>=} aData.byyearday           The days for the BYYEARDAY part
+   * @param {Array.&lt;Number>=} aData.byweekno            The weeks for the BYWEEKNO part
+   * @param {Array.&lt;Number>=} aData.bymonth             The month for the BYMONTH part
+   * @param {Array.&lt;Number>=} aData.bysetpos            The positionals for the BYSETPOS part
    */
   ICAL.Recur.fromData = function(aData) {
     return new ICAL.Recur(aData);
@@ -609,7 +609,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Jan 02 2017 13:19:09 GMT+0000 (UTC) using the Minami theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Jan 02 2017 15:06:32 GMT+0000 (UTC) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
