@@ -8964,7 +8964,8 @@ ICAL.Event = (function() {
 
     /**
      * The end date. This can be the result directly from the property, or the
-     * end date calculated from start date and duration.
+     * end date calculated from start date and duration. Setting the property
+     * will remove any duration properties.
      * @type {ICAL.Time}
      */
     get endDate() {
@@ -8982,14 +8983,17 @@ ICAL.Event = (function() {
     },
 
     set endDate(value) {
+      if (this.component.hasProperty('duration')) {
+        this.component.removeProperty('duration');
+      }
       this._setTime('dtend', value);
     },
 
     /**
      * The duration. This can be the result directly from the property, or the
-     * duration calculated from start date and end date.
+     * duration calculated from start date and end date. Setting the property
+     * will remove any `dtend` properties.
      * @type {ICAL.Duration}
-     * @readonly
      */
     get duration() {
       var duration = this._firstProp('duration');
@@ -8997,6 +9001,14 @@ ICAL.Event = (function() {
         return this.endDate.subtractDate(this.startDate);
       }
       return duration;
+    },
+
+    set duration(value) {
+      if (this.component.hasProperty('dtend')) {
+        this.component.removeProperty('dtend');
+      }
+
+      this._setProp('duration', value);
     },
 
     /**

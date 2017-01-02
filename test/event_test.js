@@ -821,14 +821,44 @@ suite('ICAL.Event', function() {
 
       assert.equal(subject.endDate.toString(), new ICAL.Time({
           year: 2012,
-          month: 6,
-          day: 31,
+          month: 7,
+          day: 1,
           hour: 6,
           isDate: false,
           timezone: testTzid
       }).toString());
 
       assert.equal(subject.duration.toString(), 'P1D');
+    });
+
+    test('set', function() {
+      var subject = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+
+      assert.include(subject.toString(), "DURATION");
+      assert.notInclude(subject.toString(), "DTEND");
+
+      subject.endDate = new ICAL.Time({
+          year: 2012,
+          month: 7,
+          day: 2,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      });
+
+      assert.equal(subject.duration.toString(), 'P2D');
+      assert.equal(subject.endDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 7,
+          day: 2,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      }).toString());
+
+      assert.notInclude(subject.toString(), "DURATION");
+      assert.include(subject.toString(), "DTEND");
     });
   });
 
@@ -853,8 +883,8 @@ suite('ICAL.Event', function() {
 
       assert.equal(subject.endDate.toString(), new ICAL.Time({
           year: 2012,
-          month: 6,
-          day: 31,
+          month: 7,
+          day: 1,
           hour: 6,
           isDate: true,
           timezone: testTzid
@@ -893,6 +923,37 @@ suite('ICAL.Event', function() {
       }).toString());
 
       assert.equal(subject.duration.toString(), 'PT0S');
+    });
+  });
+
+  suite('dtend instead of duration', function() {
+    var icsData;
+
+    testSupport.defineSample('minimal.ics', function(data) {
+      icsData = data;
+    });
+
+    test('set', function() {
+      var subject = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+
+      assert.notInclude(subject.toString(), "DURATION");
+      assert.include(subject.toString(), "DTEND");
+
+      subject.duration = ICAL.Duration.fromString("P2D");
+
+      assert.equal(subject.duration.toString(), 'P2D');
+      assert.equal(subject.endDate.toString(), new ICAL.Time({
+          year: 2012,
+          month: 7,
+          day: 2,
+          hour: 6,
+          isDate: false,
+          timezone: testTzid
+      }).toString());
+
+      assert.include(subject.toString(), "DURATION");
+      assert.notInclude(subject.toString(), "DTEND");
     });
   });
 });
