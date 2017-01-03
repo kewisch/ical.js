@@ -204,19 +204,28 @@ suite('ICAL.Event', function() {
       assert.instanceOf(subject.rangeExceptions, Array);
     });
 
-    test('with exceptions', function() {
-      subject = new ICAL.Event(primaryItem, {
-        exceptions: exceptions
+    test('with exceptions from the component\'s parent if not specified in options', function() {
+      subject = new ICAL.Event(primaryItem);
+
+      var expected = Object.create(null);
+      exceptions.forEach(function(exception) {
+        expected[exception.getFirstPropertyValue('recurrence-id').toString()] = new ICAL.Event(exception);
       });
 
-      exceptions.forEach(function(item) {
-        var id = item.getFirstPropertyValue('recurrence-id').toString();
-        assert.ok(subject.exceptions[id], 'has: ' + id + ' exception');
-        assert.deepEqual(
-          subject.exceptions[id].component.toJSON(),
-          item.toJSON()
-        );
+      assert.deepEqual(subject.exceptions, expected);
+    });
+
+    test('with exceptions specified in options if any', function() {
+      subject = new ICAL.Event(primaryItem, {
+        exceptions: exceptions.slice(1)
       });
+
+      var expected = Object.create(null);
+      exceptions.slice(1).forEach(function(exception) {
+        expected[exception.getFirstPropertyValue('recurrence-id').toString()] = new ICAL.Event(exception);
+      });
+
+      assert.deepEqual(subject.exceptions, expected);
     });
 
     test('with strict exceptions', function() {
@@ -510,12 +519,12 @@ suite('ICAL.Event', function() {
     });
 
     test('from ical component', function() {
+      subject = new ICAL.Event(primaryItem, { exceptions: [] });
       var exception = exceptions[0];
       subject.relateException(exception);
 
       var expected = Object.create(null);
-      expected[exception.getFirstPropertyValue('recurrence-id').toString()] =
-        new ICAL.Event(exception);
+      expected[exception.getFirstPropertyValue('recurrence-id').toString()] = new ICAL.Event(exception);
 
       assert.deepEqual(subject.exceptions, expected);
       assert.lengthOf(subject.rangeExceptions, 0, 'does not add range');
