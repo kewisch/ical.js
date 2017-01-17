@@ -1444,7 +1444,8 @@ ICAL.stringify = (function() {
       result += stringify.property(props[propIdx], designSet) + LINE_ENDING;
     }
 
-    var comps = component[2];
+    // Ignore subcomponents if none exist, e.g. in vCard.
+    var comps = component[2] || [];
     var compIdx = 0;
     var compLen = comps.length;
 
