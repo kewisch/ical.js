@@ -6537,7 +6537,7 @@ ICAL.TimezoneService = (function() {
         }
       }
       if (this.until) {
-        str += ';UNTIL=' + this.until.toString();
+        str += ';UNTIL=' + this.until.toICALString();
       }
       if ('wkst' in this && this.wkst !== ICAL.Time.DEFAULT_WEEK_START) {
         str += ';WKST=' + ICAL.Recur.numericDayToIcalDay(this.wkst);
@@ -6639,14 +6639,13 @@ ICAL.TimezoneService = (function() {
     },
 
     UNTIL: function(value, dict, fmtIcal) {
-      if (fmtIcal) {
-        if (value.length > 10) {
-          dict.until = ICAL.design.icalendar.value['date-time'].fromICAL(value);
-        } else {
-          dict.until = ICAL.design.icalendar.value.date.fromICAL(value);
-        }
+      if (value.length > 10) {
+        dict.until = ICAL.design.icalendar.value['date-time'].fromICAL(value);
       } else {
-        dict.until = ICAL.Time.fromString(value);
+        dict.until = ICAL.design.icalendar.value.date.fromICAL(value);
+      }
+      if (!fmtIcal) {
+        dict.until = ICAL.Time.fromString(dict.until);
       }
     },
 

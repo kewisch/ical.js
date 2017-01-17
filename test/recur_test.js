@@ -204,7 +204,7 @@ suite('recur', function() {
 
     test('round-trip', function() {
       var recur = ICAL.Recur.fromString(
-        'FREQ=MONTHLY;BYDAY=1SU,2MO;BYSETPOS=1;COUNT=10;UNTIL=2012-10-01T09:00:00'
+        'FREQ=MONTHLY;BYDAY=1SU,2MO;BYSETPOS=1;COUNT=10;UNTIL=20121001T090000'
       );
 
       var props = {
@@ -330,7 +330,7 @@ suite('recur', function() {
 
     verifyFail('BYDAY=ZA,FO1', /invalid BYDAY/);
 
-    verify('UNTIL=2012-10-12T10:15:07', {
+    verify('UNTIL=20121012T101507', {
       until: {
         year: 2012,
         month: 10,
@@ -377,7 +377,7 @@ suite('recur', function() {
     });
 
     test('no next occurrence', function() {
-      var rec = ICAL.Recur.fromString('FREQ=DAILY;INTERVAL=2;UNTIL=1970-01-03T00:00:00Z');
+      var rec = ICAL.Recur.fromString('FREQ=DAILY;INTERVAL=2;UNTIL=19700103T000000Z');
       var dtstart = ICAL.Time.epochTime.clone();
       var recId = dtstart.clone();
       recId.day += 20;
@@ -455,7 +455,7 @@ suite('recur', function() {
     });
 
     test('can be saved to a property that will be serialized correctly', function () {
-      var icalString = 'FREQ=WEEKLY;UNTIL=1970-01-03T00:00:00Z;WKST=SU;BYDAY=TU,TH';
+      var icalString = 'FREQ=WEEKLY;UNTIL=19700103T000000Z;WKST=SU;BYDAY=TU,TH';
       var recur = ICAL.Recur.fromString(icalString);
       var prop = new ICAL.Property('rrule');
       prop.setValue(recur);
@@ -484,7 +484,7 @@ suite('recur', function() {
 
       assert.ok(a.toString(), 'outputs');
 
-      assert.include(output, ';UNTIL=' + until.toString());
+      assert.include(output, ';UNTIL=19700101T000000Z');
       // wkst 3 == TU see DOW_MAP
       assert.include(output, 'WKST=TU');
       assert.include(output, 'COUNT=5');

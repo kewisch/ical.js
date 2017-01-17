@@ -329,7 +329,7 @@ suite('recur_iterator', function() {
 
     suite('WEEKLY', function() {
       // weekly until
-      testRRULE('FREQ=WEEKLY;UNTIL=2012-04-24T06:59:59Z;BYDAY=TU', {
+      testRRULE('FREQ=WEEKLY;UNTIL=20120424T065959Z;BYDAY=TU', {
         until: true,
         dates: [
           '2012-04-10T09:00:00',
@@ -354,7 +354,7 @@ suite('recur_iterator', function() {
       });
 
       //Weekly until December 24, 2012'
-      testRRULE('FREQ=WEEKLY;UNTIL=2012-12-24T00:00:00Z', {
+      testRRULE('FREQ=WEEKLY;UNTIL=20121224T000000Z', {
         until: true,
         dates: [
           '2012-11-15T00:00:00',
@@ -388,7 +388,7 @@ suite('recur_iterator', function() {
       });
 
       //every other week on mo,we,fi until dec 24th 1997
-      testRRULE('FREQ=WEEKLY;INTERVAL=2;UNTIL=1997-12-24T09:00:00Z;WKST=SU;BYDAY=MO,WE,FR', {
+      testRRULE('FREQ=WEEKLY;INTERVAL=2;UNTIL=19971224T090000Z;WKST=SU;BYDAY=MO,WE,FR', {
         until: true,
         dates: [
           '1997-09-01T09:00:00', '1997-09-03T09:00:00', '1997-09-05T09:00:00',
@@ -744,7 +744,7 @@ suite('recur_iterator', function() {
       });
 
       //every monday in January, for 3 years
-      testRRULE('FREQ=YEARLY;UNTIL=2015-01-31T09:00:00Z;BYMONTH=1;BYDAY=MO', {
+      testRRULE('FREQ=YEARLY;UNTIL=20150131T090000Z;BYMONTH=1;BYDAY=MO', {
         dtStart: '2012-05-01T09:00:00',
         until: true,
         dates: [
