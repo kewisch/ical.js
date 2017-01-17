@@ -39,6 +39,66 @@ ICAL.newLineChar = '\r\n';
  */
 ICAL.helpers = {
   /**
+   * Compiles a list of all referenced TZIDs in all subcomponents and
+   * removes any extra VTIMEZONE subcomponents. In addition, if any TZIDs
+   * are referenced by a component, but a VTIMEZONE does not exist,
+   * an attempt will be made to generate a VTIMEZONE using ICAL.TimezoneService.
+   *
+   * @param {ICAL.Component} vcal     The top-level VCALENDAR component.
+   * @return {ICAL.Component}         The ICAL.Component that was passed in.
+   */
+  updateTimezones: function(vcal) {
+    var allsubs, properties, vtimezones, reqTzid, i, tzid;
+
+    if (!vcal || vcal.name !== "vcalendar") {
+      //not a top-level vcalendar component
+      return vcal;
+    }
+
+    //Store vtimezone subcomponents in an object reference by tzid.
+    //Store properties from everything else in another array
+    allsubs = vcal.getAllSubcomponents();
+    properties = [];
+    vtimezones = {};
+    for (i = 0; i < allsubs.length; i++) {
+      if (allsubs[i].name === "vtimezone") {
+        tzid = allsubs[i].getFirstProperty("tzid").getFirstValue();
+        vtimezones[tzid] = allsubs[i];
+      } else {
+        properties = properties.concat(allsubs[i].getAllProperties());
+      }
+    }
+
+    //create an object with one entry for each required tz
+    reqTzid = {};
+    for (i = 0; i < properties.length; i++) {
+      if ((tzid = properties[i].getParameter("tzid"))) {
+        reqTzid[tzid] = true;
+      }
+    }
+
+    //delete any vtimezones that are not on the reqTzid list.
+    for (i in vtimezones) {
+      if (vtimezones.hasOwnProperty(i) && !reqTzid[i]) {
+        vcal.removeSubcomponent(vtimezones[i]);
+      }
+    }
+
+    //create any missing, but registered timezones
+    for (i in reqTzid) {
+      if (
+        reqTzid.hasOwnProperty(i) &&
+        !vtimezones[i] &&
+        ICAL.TimezoneService.has(i)
+      ) {
+        vcal.addSubcomponent(ICAL.TimezoneService.get(i).component);
+      }
+    }
+
+    return vcal;
+  },
+
+  /**
    * Checks if the given type is of the number type and also NaN.
    *
    * @param {Number} number     The number to check
