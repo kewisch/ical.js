@@ -22,15 +22,13 @@ suite('ICAL.Event', function() {
 
     newEvent.uid = subject.uid;
 
-    newEvent.component.addPropertyWithValue(
-      'recurrence-id',
-      last
-    );
-
-    newEvent.component.addPropertyWithValue(
-      'range',
-      subject.THISANDFUTURE
-    );
+    newEvent.component
+      .addPropertyWithValue(
+        'recurrence-id',
+        last
+      ).setParameter(
+        'range',
+        subject.THISANDFUTURE);
 
     return newEvent;
   }
@@ -637,10 +635,13 @@ suite('ICAL.Event', function() {
     });
 
     test('with range and exception', function() {
-      subject.component.addPropertyWithValue(
-        'range',
-        subject.THISANDFUTURE
-      );
+      subject.component
+        .addPropertyWithValue(
+          'recurrence-id',
+          ICAL.Time.fromJSDate(new Date()))
+        .setParameter(
+          'range',
+          subject.THISANDFUTURE);
 
       assert.isTrue(subject.modifiesFuture());
     });
