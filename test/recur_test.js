@@ -356,6 +356,31 @@ suite('recur', function() {
     });
   });
 
+  suite('#fromData', function() {
+
+    function verify(data, options) {
+      test('parse: "' + JSON.stringify(data) + '"', function() {
+        assert.hasProperties(ICAL.Recur.fromData(data), options);
+      });
+    }
+
+    function verifyFail(data) {
+      test('invalid input "' + JSON.stringify(data) + '"', function() {
+        assert.throws(function() {
+          ICAL.Recur.fromString(string);
+        });
+      });
+    }
+
+    verify({}, {});
+
+    // INTERVAL checks
+    verify({ interval: 1 }, { interval: 1 });
+    verify({ count: 1 }, { count: 1 });
+    verify({ interval: '1' }, { interval: 1 });
+    verifyFail({ interval: 'NaN' });
+  });
+
   suite('#getNextOccurrence', function() {
     test('basic test', function() {
       var rec = ICAL.Recur.fromString('FREQ=DAILY;INTERVAL=2');
