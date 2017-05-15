@@ -6466,6 +6466,8 @@ ICAL.TimezoneService = (function() {
           } else {
             this.parts[uckey] = [data[key]];
           }
+        } else if (uckey in optionDesign) {
+          optionDesign[uckey](data[key], this);
         } else {
           this[key] = data[key];
         }
