@@ -6471,6 +6471,10 @@ ICAL.TimezoneService = (function() {
         }
       }
 
+      if (this.interval && typeof this.interval != "number") {
+        optionDesign.INTERVAL(this.interval, this);
+      }
+
       if (this.wkst && typeof this.wkst != "number") {
         this.wkst = ICAL.Recur.icalDayToNumericDay(this.wkst);
       }
