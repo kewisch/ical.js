@@ -1,5 +1,7 @@
 # jsical - Javascript parser for rfc5545
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mozilla-comm/ical.js.svg)](https://greenkeeper.io/)
+
 This is a library to parse the iCalendar format defined in
 [rfc5545](http://tools.ietf.org/html/rfc5545), as well as similar formats like
 vCard.
