@@ -186,11 +186,9 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         sourceMap: true,
-        preserveComments: false,
-        screwIE8: true,
         compress: {},
         mangle: {
-          except: ['ICAL']
+          reserved: ['ICAL']
         }
       },
       dist: {
