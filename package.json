@@ -45,7 +45,7 @@
     "karma-sauce-launcher": "^1.0.0",
     "karma-spec-reporter": "^0.0.30",
     "minami": "^1.1.0",
-    "mocha": "~3.2.0",
+    "mocha": "~3.4.1",
     "node-static": "^0.7.6",
     "open": "0.0.5",
     "sync-exec": "^0.6.0",
