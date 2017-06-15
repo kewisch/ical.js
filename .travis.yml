@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "node"
-  - "5"
+  - "6"
   - "4"
 addons:
   apt:
