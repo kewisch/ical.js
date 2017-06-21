@@ -3,7 +3,6 @@ node_js:
   - "node"
   - "6"
   - "4"
-cache: yarn
 addons:
   apt:
     sources:
