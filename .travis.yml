@@ -12,8 +12,8 @@ addons:
     - gcc-4.8
     - g++-4.8
 before_install:
-  - yarn add grunt-cli
-  - yarn add karma-cli
+  - yarn global add grunt-cli
+  - yarn global add karma-cli
   - echo -e "Host *\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - eval `ssh-agent -s`
   - '[ -n "$GITHUB_SSH_KEY" ] && echo "$GITHUB_SSH_KEY" | base64 -d | ssh-add - || true'
