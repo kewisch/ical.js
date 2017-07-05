@@ -1187,6 +1187,333 @@ suite('recur_iterator', function() {
         ]
       });
 
+      testRRULE('FREQ=DAILY;INTERVAL=2;COUNT=3', {
+        dtStart: '2013-01-01',
+        byCount: true,
+        dates: [
+          '2013-01-01',
+          '2013-01-03',
+          '2013-01-05'
+        ]
+      });
+
+      testRRULE('FREQ=DAILY;INTERVAL=321;COUNT=3', {
+        dtStart: '2013-01-01',
+        byCount: true,
+        dates: [
+          '2013-01-01',
+          '2013-11-18',
+          '2014-10-05'
+        ]
+      });
+
+      testRRULE('FREQ=DAILY;INTERVAL=366', {
+        dtStart: '2013-01-01',
+        dates: [
+          '2013-01-01',
+          '2014-01-02',
+          '2015-01-03',
+          '2016-01-04'
+        ]
+      });
+
+      testRRULE('FREQ=DAILY;INTERVAL=366;UNTIL=20160104', {
+        dtStart: '2013-01-01',
+        until: true,
+        dates: [
+          '2013-01-01',
+          '2014-01-02',
+          '2015-01-03',
+          '2016-01-04'
+        ]
+      });
+
+      testRRULE('FREQ=DAILY;INTERVAL=1;UNTIL=20160101', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-01'
+        ]
+      });
+
+      testRRULE('FREQ=DAILY;INTERVAL=1;UNTIL=20160102', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-02'
+        ]
+      });
+
+      testRRULE('FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;UNTIL=20160301', {
+        dtStart: '2016-01-03',
+        until: true,
+        dates: [
+          '2016-01-03',
+          '2016-01-17',
+          '2016-01-31',
+          "2016-02-14",
+          "2016-02-28"
+        ]
+      });
+
+
+      testRRULE('FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;UNTIL=20160103', {
+        dtStart: '2016-01-03',
+        until: true,
+        dates: [
+          '2016-01-03'
+        ]
+      });
+
+      testRRULE('FREQ=WEEKLY;INTERVAL=2;BYDAY=FR;COUNT=2', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-15',
+        ]
+      });
+
+      testRRULE('FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,TU,WE,TH,FR,SA;UNTIL=20160107', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-02',
+          '2016-01-03',
+          '2016-01-04',
+          '2016-01-05',
+          '2016-01-06',
+          '2016-01-07'
+        ]
+      });
+
+      testRRULE('FREQ=WEEKLY;INTERVAL=2;BYDAY=FR,SA;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-02',
+          '2016-01-15'
+        ]
+      });
+
+      testRRULE('FREQ=WEEKLY;INTERVAL=53;BYDAY=FR,SA;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-02',
+          '2017-01-06'
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,2,3;INTERVAL=1;COUNT=7', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-02',
+          '2016-01-03',
+          '2016-02-01',
+          '2016-02-02',
+          '2016-02-03',
+          '2016-03-01',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;INTERVAL=1;BYDAY=SU;BYSETPOS=3;COUNT=3', {
+        dtStart: '2017-07-15',
+        byCount: true,
+        dates: [
+          '2017-07-16',
+          "2017-08-20",
+          '2017-09-17',
+        ]
+      });
+
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,3;INTERVAL=2;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-03',
+          '2016-03-01',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=3,4;INTERVAL=2;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-03',
+          '2016-01-04',
+          '2016-03-03',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=3,4;INTERVAL=2;UNTIL=20160303', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-03',
+          '2016-01-04',
+          '2016-03-03',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31;INTERVAL=1;UNTIL=20161231', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-31',
+          '2016-03-31',
+          '2016-05-31',
+          '2016-07-31',
+          '2016-08-31',
+          '2016-10-31',
+          '2016-12-31',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=29;INTERVAL=1;UNTIL=20160630', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-29',
+          '2016-02-29',
+          '2016-03-29',
+          '2016-04-29',
+          '2016-05-29',
+          '2016-06-29',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYSETPOS=-1;BYDAY=SU,MO,TU,WE,TH,FR,SA;INTERVAL=1;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-31',
+          '2016-02-29',
+          '2016-03-31',
+          ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYSETPOS=2;BYDAY=SU,MO,TU,WE,TH,FR,SA;INTERVAL=1;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-02',
+          '2016-02-02',
+          '2016-03-02',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYSETPOS=1;BYDAY=SU;INTERVAL=1;COUNT=3', {
+        byCount: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-01-03',
+          '2016-02-07',
+          '2016-03-06',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYSETPOS=1;BYDAY=SU;INTERVAL=1;UNTIL=20160306', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-03',
+          '2016-02-07',
+          '2016-03-06',
+        ]
+      });
+
+      //YEARLY TESTS
+
+      testRRULE('FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=21;COUNT=3', {
+        byCount: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-02-21',
+          '2017-02-21',
+          '2018-02-21',
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=21;UNTIL=20180220', {
+        until: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-02-21',
+          '2017-02-21',
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=21;UNTIL=20180221', {
+        until: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-02-21',
+          '2017-02-21',
+          '2018-02-21'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYDAY=SU;BYSETPOS=1;BYMONTH=1;COUNT=3', {
+        byCount: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-01-03',
+          '2017-01-01',
+          '2018-01-07'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYDAY=SA;BYSETPOS=-1;BYMONTH=3;COUNT=3', {
+        byCount: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-03-26',
+          '2017-03-25',
+          '2018-03-31'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYDAY=SA;BYSETPOS=-1;BYMONTH=3;COUNT=3;INTERVAL=2', {
+        byCount: true,
+        dtStart: '2016-01-01',
+        dates: [
+          '2016-03-26',
+          '2018-03-31',
+          '2020-03-28',
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYDAY=SU;BYSETPOS=-1;BYMONTH=3;COUNT=3;INTERVAL=2', {
+        byCount: true,
+        dtStart: '2016-03-27',
+        dates: [
+          '2016-03-27',
+          '2018-03-25',
+          '2020-03-29',
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYDAY=SU;BYSETPOS=-1;BYMONTH=3;INTERVAL=2;UNTIL=20200329', {
+        until: true,
+        dtStart: '2016-03-27',
+        dates: [
+          '2016-03-27',
+          '2018-03-25',
+          '2020-03-29',
+        ]
+      });
+
       /*
        * Leap-year test for February 29th
        *
