@@ -180,7 +180,7 @@ module.exports = function(grunt) {
         files: {
           src: ['<%= libinfo.test.acceptance %>']
         }
-      },
+      }
     },
 
     uglify: {
@@ -261,7 +261,7 @@ module.exports = function(grunt) {
   grunt.registerTask('package', ['concat:dist', 'uglify']);
   grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('linters', ['eslint', 'check-browser-build']);
-  grunt.registerTask('test-server', ['test-agent-config', 'run-test-server']);
+  grunt.registerTask('test-browser', ['karma:unit', 'karma:acceptance']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
 
   grunt.registerTask('ghpages-ci', ['jsdoc', 'concat:validator', 'run-on-master-leader:run-with-env:GITHUB_SSH_KEY:gh-pages']);
@@ -270,6 +270,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'unit-ci', 'coverage-ci', 'ghpages-ci']);
 
   // Additional tasks:
-  //   - tests.js: performance-update, test-node, test-browser,
+  //   - tests.js: check-browser-build, performance-update, test-node
   //   - timezones.js: timezones
 };

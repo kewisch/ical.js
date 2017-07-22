@@ -34,7 +34,7 @@ subdirectory.
 ## Installing
 
 You can install ICAL.js via [npm](https://www.npmjs.com/), if you would like to
-use it in node:
+use it in Node.js:
 ```
 npm install ical.js
 ```
@@ -46,7 +46,7 @@ bower install ical.js
 ```
 
 ICAL.js has no dependencies and uses fairly basic JavaScript. Therefore, it
-should work in all versions of node and modern browsers. It does use getters
+should work in all versions of Node.js and modern browsers. It does use getters
 and setters, so the minimum version of Internet Explorer is 9.
 
 ## Documentation
@@ -59,7 +59,7 @@ If you are missing anything, please don't hesitate to create an issue.
 ## Developing
 
 To contribute to ICAL.js you need to set up the development environment. This
-requires node 0.10.x or later and grunt. Run the following steps to get
+requires Node.js 4.x or later and grunt. Run the following steps to get
 started.
 
     npm install -g grunt-cli  # Might need to run with sudo
@@ -69,14 +69,14 @@ You can now dive into the code, run the tests and check coverage.
 
 ### Tests
 
-Tests can either be run via node or in the browser, but setting up the testing
-infrastructure requires [node](https://github.com/joyent/node). More
+Tests can either be run via Node.js or in the browser, but setting up the testing
+infrastructure requires [node](https://github.com/nodejs/node). More
 information on how to set up and run tests can be found on
 [the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests).
 
-#### in node js
+#### in Node.js
 
-The quickest way to execute tests is using node. Running the following command
+The quickest way to execute tests is using Node.js. Running the following command
 will run all test suites: performance, acceptance and unit tests.
 
     grunt test-node
@@ -101,14 +101,14 @@ unchanged copy of build/ical.js (from the master branch). See
 [the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests) for more
 details.
 
-#### in the browser (with karma)
+#### in the browser
 
-There are currently two ways to run the browser tests because we are currently
-experimenting with using [karma](http://karma-runner.github.io/). To run tests
-with karma, you can run the following targets:
+To run the browser tests, we are currently using [karma](http://karma-runner.github.io/).
+To run tests with karma, you can run the following targets:
 
+    grunt test-browser           # run all tests
     grunt karma:unit             # run only the unit tests
-    grunt karma:acceptance       # run the acceptance tests
+    grunt karma:acceptance       # run only the acceptance tests
 
 Now you can visit [http://localhost:9876](http://localhost:9876) in your
 browser. The test output will be shown in the console you started the grunt
@@ -126,12 +126,6 @@ running.
 Last off, if you add the `--remote` option, karma will listen on all
 interfaces. This is useful if you are running the browser to test in a VM, for
 example when using [Internet Exporer VM images](https://www.modern.ie/virtualization-tools).
-
-#### in the browser (the old way)
-
-Running `grunt test-server` will start a webserver and open the page in your
-browser. You can then select and execute tests as you wish. If you want to run
-all tests you can also open a second terminal and run `grunt test-browser`
 
 ### Code Coverage
 ICAL.js is set up to calculate code coverage. You can
