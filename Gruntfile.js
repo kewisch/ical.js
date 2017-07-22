@@ -91,10 +91,10 @@ module.exports = function(grunt) {
     },
 
     concurrent: {
-      all: ['mochacli', 'node-inspector'],
+      all: ['mochacli:performance', 'mochacli:acceptance', 'mochacli:unit', 'node-inspector'],
       unit: ['mochacli:unit', 'node-inspector'],
       acceptance: ['mochacli:acceptance', 'node-inspector'],
-      single: ['mochacli:single', 'node-inspector'],
+      single: ['mochacli:single', 'node-inspector']
     },
 
     eslint: {
@@ -142,7 +142,7 @@ module.exports = function(grunt) {
         files: [
           { pattern: 'samples/**/*.ics', included: false },
           { pattern: 'test/parser/*', included: false },
-          '<%= libinfo.relfiles %>',
+          'build/ical.js',
           '<%= libinfo.test.head %>'
         ]
       },
@@ -225,20 +225,33 @@ module.exports = function(grunt) {
         only: '<%= libinfo.doc %>',
         user: {
           name: 'Travis CI',
-          email: 'builds@travis-ci.org',
+          email: 'builds@travis-ci.org'
         },
         repo: 'git@github.com:mozilla-comm/ical.js.git',
         message: 'Update API documentation and validator for <%= travis.commit %>'
       },
       src: ['<%= libinfo.doc %>/**', '<%= libinfo.validator.dest %>']
+    },
+
+    umd: {
+      dist: {
+        options: {
+          src: 'build/ical.js',
+          //dest: 'build/ical.js',
+          // optional, a template from templates subdir
+          // can be specified by name (e.g. 'umd'); if missing, the templates/umd.hbs
+          // file will be used from [libumd](https://github.com/bebraw/libumd)
+          //template: 'path/to/template.hbs',
+          objectToExport: 'ICAL',
+          amdModuleId: 'ICAL',
+          globalAlias: 'ICAL'
+        }
+      }
     }
   });
 
   grunt.config.set('libinfo.absfiles', grunt.config.get('libinfo.files').map(function(f) {
     return path.join(grunt.config.get('libinfo.cwd'), f);
-  }));
-  grunt.config.set('libinfo.relfiles', grunt.config.get('libinfo.files').map(function(f) {
-    return path.join("lib", "ical", f);
   }));
 
   grunt.loadNpmTasks('grunt-concurrent');
@@ -251,6 +264,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-release');
+  grunt.loadNpmTasks('grunt-umd');
   grunt.loadNpmTasks('gruntify-eslint');
 
   loadOptionalTask('grunt-node-inspector');
@@ -258,7 +272,7 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   grunt.registerTask('default', ['package']);
-  grunt.registerTask('package', ['concat:dist', 'uglify']);
+  grunt.registerTask('package', ['concat:dist', 'umd:dist', 'uglify']);
   grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('linters', ['eslint', 'check-browser-build']);
   grunt.registerTask('test-browser', ['karma:unit', 'karma:acceptance']);

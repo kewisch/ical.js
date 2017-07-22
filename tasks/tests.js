@@ -33,8 +33,7 @@ module.exports = function(grunt) {
     }
 
     var filepath = 'build/benchmark/ical_' + version + '.js';
-    var header = "var ICAL_" + version + " = (function() { var ICAL = {};\n" +
-                 "if (typeof global !== 'undefined') global.ICAL_" + version + " = ICAL;\n";
+    var header = "var ICAL_" + version + " = (function() { var ICAL = {};\n";
     var footer = "\nreturn ICAL; }());";
 
     if (!version) {
@@ -75,10 +74,13 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('test-node', 'internal', function(arg) {
+  grunt.registerTask('test-node', function(arg) {
+    grunt.task.run('package');
+
     if (!arg || arg == 'performance') {
       grunt.task.run('performance-update:upstream');
     }
+
     if (grunt.option('debug')) {
       var done = this.async();
       var open = require('biased-opener');
@@ -93,8 +95,12 @@ module.exports = function(grunt) {
           done();
       });
       grunt.task.run('concurrent:' + (arg || "all"));
+    } else if (arg) {
+      grunt.task.run('mochacli:' + arg);
     } else {
-      grunt.task.run('mochacli' + (arg ? ":" + arg : ""));
+      grunt.task.run('mochacli:performance');
+      grunt.task.run('mochacli:acceptance');
+      grunt.task.run('mochacli:unit');
     }
   });
 };

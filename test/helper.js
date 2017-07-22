@@ -49,35 +49,6 @@
     });
   }
 
-  /* cross require */
-  testSupport.requireICAL = function() {
-    var files = [
-      'helpers',
-      'recur_expansion',
-      'event',
-      'component_parser',
-      'design',
-      'parse',
-      'stringify',
-      'component',
-      'property',
-      'utc_offset',
-      'binary',
-      'period',
-      'duration',
-      'timezone',
-      'timezone_service',
-      'time',
-      'vcard_time',
-      'recur',
-      'recur_iterator'
-    ];
-
-    files.forEach(function(file) {
-      testSupport.require('/lib/ical/' + file + '.js');
-    });
-  };
-
   /**
    * Requires a benchmark build.
    *
@@ -85,8 +56,7 @@
    * @param {Function} optional callback called on completion
    */
   testSupport.requireBenchmarkBuild = function(version, callback) {
-    var path = '/build/benchmark/ical_' + version + '.js';
-    testSupport.require(path, callback);
+    testSupport.require('/build/benchmark/ical_' + version + '.js', callback);
   };
 
   testSupport.require = function cross_require(file, callback) {
@@ -94,7 +64,7 @@
       file += '.js';
     }
 
-    if (typeof(window) === 'undefined') {
+    if (testSupport.isNode) {
       var lib = require(__dirname + '/../' + file);
       if (typeof(callback) !== 'undefined') {
         callback(lib);
@@ -214,12 +184,12 @@
     testSupport.require('/test/support/' + lib);
   };
 
-
   if (!testSupport.isKarma) {
     testSupport.require('/node_modules/benchmark/benchmark.js');
     testSupport.require('/test/support/performance.js');
-
-    // Load it here so its pre-loaded in all suite blocks...
-    testSupport.requireICAL();
+    testSupport.require('/build/ical.js', function(lib) {
+      ICAL = lib;
+    });
   }
+
 }());

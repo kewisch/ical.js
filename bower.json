@@ -10,6 +10,7 @@
   "main": "build/ical.js",
   "moduleType": [
     "globals",
+    "amd",
     "node"
   ],
   "keywords": [
