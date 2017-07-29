@@ -839,6 +839,29 @@ suite('recur_iterator', function() {
           '2015-01-01T08:00:00'
         ]
       });
+
+      testRRULE('FREQ=WEEKLY;COUNT=3;BYDAY=MO,SU,TU', {
+              dtStart: '2017-07-30',
+              byCount: true,
+              dates: [
+                '2017-07-30',
+                '2017-07-31',
+                '2017-08-01'
+              ]
+      });
+
+      testRRULE('FREQ=WEEKLY;COUNT=5;BYDAY=SU,WE', {
+              dtStart: '2017-04-23',
+              byCount: true,
+              dates: [
+                '2017-04-23',
+                '2017-04-26',
+                '2017-04-30',
+                '2017-05-03',
+                '2017-05-07'
+              ]
+      });
+
       //yearly, byMonth, byweekNo
       /* TODO BYWEEKNO is not well supported
       testRRULE('FREQ=YEARLY;BYMONTH=6,9;BYWEEKNO=23', {

@@ -4928,10 +4928,13 @@ ICAL.TimezoneService = (function() {
 
     /**
      * Calculate the day of week.
+     * @param {ICAL.Time.weekDay=} aWeekStart
+     *        The week start weekday, defaults to SUNDAY
      * @return {ICAL.Time.weekDay}
      */
-    dayOfWeek: function icaltime_dayOfWeek() {
-      var dowCacheKey = (this.year << 9) + (this.month << 5) + this.day;
+    dayOfWeek: function icaltime_dayOfWeek(aFirstDayOfWeek) {
+      var firstDow = aFirstDayOfWeek || ICAL.Time.SUNDAY;
+      var dowCacheKey = (this.year << 12) + (this.month << 8) + (this.day << 3) + firstDow;
       if (dowCacheKey in ICAL.Time._dowCache) {
         return ICAL.Time._dowCache[dowCacheKey];
       }
@@ -4949,8 +4952,13 @@ ICAL.TimezoneService = (function() {
         h += 5;
       }
 
-      // Normalize to 1 = sunday
+      // Normalize to 1 = wkst
       h = ((h + 6) % 7) + 1;
+      var offset = firstDow - ICAL.Time.SUNDAY;
+      h = (h - offset);
+      if (h < 1) {
+        h += 7;
+      }
       ICAL.Time._dowCache[dowCacheKey] = h;
       return h;
     },
@@ -6580,26 +6588,43 @@ ICAL.TimezoneService = (function() {
    * into a numeric value of that day.
    *
    * @param {String} string     The iCalendar day name
+   * @param {ICAL.Time.weekDay=} aWeekStart
+   *        The week start weekday, defaults to SUNDAY
    * @return {Number}           Numeric value of given day
    */
-  ICAL.Recur.icalDayToNumericDay = function toNumericDay(string) {
+  ICAL.Recur.icalDayToNumericDay = function toNumericDay(string, aFirstDayOfWeek) {
     //XXX: this is here so we can deal
     //     with possibly invalid string values.
-
-    return DOW_MAP[string];
+    var firstDow = aFirstDayOfWeek || ICAL.Time.SUNDAY;
+    var dow = DOW_MAP[string];
+    var offset = firstDow - ICAL.Time.SUNDAY;
+    dow = (dow - offset);
+    if (dow < 1) {
+      dow += 7;
+    }
+    return dow;
   };
 
   /**
    * Convert a numeric day value into its ical representation (SU, MO, etc..)
    *
    * @param {Number} num        Numeric value of given day
+   * @param {ICAL.Time.weekDay=} aWeekStart
+   *        The week start weekday, defaults to SUNDAY
    * @return {String}           The ICAL day value, e.g SU,MO,...
    */
-  ICAL.Recur.numericDayToIcalDay = function toIcalDay(num) {
+  ICAL.Recur.numericDayToIcalDay = function toIcalDay(num, aFirstDayOfWeek) {
     //XXX: this is here so we can deal with possibly invalid number values.
     //     Also, this allows consistent mapping between day numbers and day
     //     names for external users.
-    return REVERSE_DOW_MAP[num];
+    var firstDow = aFirstDayOfWeek || ICAL.Time.SUNDAY;
+    var dow = num;
+    var offset = firstDow - ICAL.Time.SUNDAY;
+    dow = (dow - offset);
+    if (dow < 1) {
+      dow += 7;
+    }
+    return REVERSE_DOW_MAP[dow];
   };
 
   var VALID_DAY_NAMES = /^(SU|MO|TU|WE|TH|FR|SA)$/;
@@ -6939,7 +6964,7 @@ ICAL.RecurIterator = (function() {
       if ("BYDAY" in parts) {
         // libical does this earlier when the rule is loaded, but we postpone to
         // now so we can preserve the original order.
-        this.sort_byday_rules(parts.BYDAY, this.rule.wkst);
+        this.sort_byday_rules(parts.BYDAY);
       }
 
       // If the BYYEARDAY appares, no other date rule part may appear
@@ -6982,11 +7007,11 @@ ICAL.RecurIterator = (function() {
 
       if (this.rule.freq == "WEEKLY") {
         if ("BYDAY" in parts) {
-          var bydayParts = this.ruleDayOfWeek(parts.BYDAY[0]);
+          var bydayParts = this.ruleDayOfWeek(parts.BYDAY[0], this.rule.wkst);
           var pos = bydayParts[0];
           var dow = bydayParts[1];
-          var wkdy = dow - this.last.dayOfWeek();
-          if ((this.last.dayOfWeek() < dow && wkdy >= 0) || wkdy < 0) {
+          var wkdy = dow - this.last.dayOfWeek(this.rule.wkst);
+          if ((this.last.dayOfWeek(this.rule.wkst) < dow && wkdy >= 0) || wkdy < 0) {
             // Initial time is after first day of BYDAY data
             this.last.day += wkdy;
           }
@@ -7606,11 +7631,11 @@ ICAL.RecurIterator = (function() {
         this.last.month = next.month;
     },
 
-    ruleDayOfWeek: function ruleDayOfWeek(dow) {
+    ruleDayOfWeek: function ruleDayOfWeek(dow, aFirstDayOfWeek) {
       var matches = dow.match(/([+-]?[0-9])?(MO|TU|WE|TH|FR|SA|SU)/);
       if (matches) {
         var pos = parseInt(matches[1] || 0, 10);
-        dow = ICAL.Recur.icalDayToNumericDay(matches[2]);
+        dow = ICAL.Recur.icalDayToNumericDay(matches[2], aFirstDayOfWeek);
         return [pos, dow];
       } else {
         return [0, 0];
@@ -8063,15 +8088,11 @@ ICAL.RecurIterator = (function() {
       return false;
     },
 
-    sort_byday_rules: function icalrecur_sort_byday_rules(aRules, aWeekStart) {
+    sort_byday_rules: function icalrecur_sort_byday_rules(aRules) {
       for (var i = 0; i < aRules.length; i++) {
         for (var j = 0; j < i; j++) {
-          var one = this.ruleDayOfWeek(aRules[j])[1];
-          var two = this.ruleDayOfWeek(aRules[i])[1];
-          one -= aWeekStart;
-          two -= aWeekStart;
-          if (one < 0) one += 7;
-          if (two < 0) two += 7;
+          var one = this.ruleDayOfWeek(aRules[j], this.rule.wkst)[1];
+          var two = this.ruleDayOfWeek(aRules[i], this.rule.wkst)[1];
 
           if (one > two) {
             var tmp = aRules[i];
