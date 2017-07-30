@@ -1,13 +1,6 @@
 'use strict';
 
-var path = require('path');
-var Agent = require('test-agent'),
-    AgentServer = Agent.server,
-    WebsocketServer = Agent.WebsocketServer,
-    StaticServer = require('node-static').Server;
-
 module.exports = function(grunt) {
-
   grunt.registerTask('check-browser-build', function(task) {
     if (!task) {
       grunt.task.run('package', 'check-browser-build:verify');
@@ -103,75 +96,5 @@ module.exports = function(grunt) {
     } else {
       grunt.task.run('mochacli' + (arg ? ":" + arg : ""));
     }
-  });
-
-  grunt.registerTask('test-browser', 'Test browser agent', function() {
-    var done = this.async();
-    var Client = require('test-agent/lib/node/client');
-
-    var client = new Client({ retry: true });
-    var port = grunt.option('port') || 8789;
-    var reporter = grunt.config.get('mochacli.options.reporter') || 'spec';
-    console.log("REPORTER: " + reporter);
-    client.url = 'ws://localhost:' + port;
-    client.use(AgentServer.MochaTestEvents, {
-      reporterClass: require('mocha').reporters[reporter]
-    });
-
-    client.on('open', function(socket) {
-      var file = grunt.option('test');
-      var files = file ? [file] : [];
-      client.mirrorServerEvents(['set test envs', 'error', 'test data', 'coverage data'], true);
-      client.send('queue tests', {files: files});
-    });
-
-    client.on('test runner end', function(runner){
-      var reporter = runner.getMochaReporter();
-      client.send('close');
-      done(reporter.failures == 0);
-    });
-
-    client.start();
-  });
-
-  grunt.registerTask('run-test-server', 'Start browser test server', function() {
-    var done = this.async();
-
-    var server = new WebsocketServer();
-    var path = process.env.PWD;
-    var port = grunt.option('port') || 8789;
-
-    var staticMiddleware = new StaticServer(path, { cache: 0 });
-    var httpServer = require('http').createServer(function (request, response) {
-      staticMiddleware.serve(request, response);
-    });
-    httpServer.listen(port);
-    grunt.log.ok("HTTP Server running on port: %s, serving: %s", port, path);
-    server.attach(httpServer);
-
-    server.expose('test-agent-server.js', function onExpose(){
-      server.use(AgentServer.Responder)
-            .use(AgentServer.Broadcast)
-            .use(AgentServer.MochaTestEvents)
-            .use(AgentServer.BlanketConsoleReporter, {
-               path: 'test-agent-coverage.json',
-               pattern: /([\S]+)/
-             })
-            .use(AgentServer.QueueTests)
-            .use(AgentServer.StartCoverages)
-            .use(AgentServer.EventMirror)
-            .use(AgentServer.Watcher)
-            .use(AgentServer.RunnerGrowl);
-    });
-    require('open')('http://localhost:' + port + '/test-agent/');
-  });
-
-  grunt.registerTask('test-agent-config', 'Create configuration for test-agent', function() {
-    var files = grunt.file.expand('test/**/*_test.js');
-    var jsonData = {
-      tests: files.map(function(f) { return "/" + f; })
-    };
-    grunt.file.write(path.join('test-agent', 'config.json'),
-                     JSON.stringify(jsonData));
   });
 };

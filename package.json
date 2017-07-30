@@ -44,11 +44,7 @@
     "karma-sauce-launcher": "^1.1.0",
     "karma-spec-reporter": "^0.0.31",
     "minami": "^1.2.3",
-    "mocha": "~3.4.2",
-    "node-static": "^0.7.9",
-    "open": "0.0.5",
-    "test-agent": "~0.28.2",
-    "websocket.io": "git+https://github.com/kewisch/websocket.io.git#require-events"
+    "mocha": "~3.4.2"
   },
   "license": "MPL-2.0",
   "engine": {
