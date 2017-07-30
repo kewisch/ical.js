@@ -87,7 +87,7 @@ You can also select a single suite, or run a single test.
     grunt test-node:acceptance
     grunt test-node:unit
 
-    grunt test-node:single --test test/parse_test.js
+    grunt test-node:single --test=test/parse_test.js
 
 Appending the `--debug` option to any of the above commands will run the
 test(s) with node-inspector. It will start the debugging server and open it in
@@ -114,7 +114,7 @@ Now you can visit [http://localhost:9876](http://localhost:9876) in your
 browser. The test output will be shown in the console you started the grunt
 task from. You can also run a single test:
 
-    grunt karma:single --test test/parse_test.js
+    grunt karma:single --test=test/parse_test.js
 
 The mentioned targets all run the tests from start to finish. If you would like
 to debug the tests instead, you can add the `--debug` flag. Once you open the
