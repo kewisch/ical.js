@@ -1,19 +1,27 @@
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define('ICAL', [], function () {
+      return (root['ICAL'] = factory());
+    });
+  } else if (typeof module === 'object' && module.exports) {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    root['ICAL'] = factory();
+  }
+}(this, function () {
+
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2011-2015 */
 
 
-/* istanbul ignore next */
-/* jshint ignore:start */
-if (typeof module === 'object') {
-  // CommonJS, where exports may be different each time.
-  ICAL = module.exports;
-} else if (typeof ICAL !== 'object') {/* istanbul ignore next */
-  /** @ignore */
-  this.ICAL = {};
-}
-/* jshint ignore:end */
+/** @ignore */
+var ICAL = {};
 
 
 /**
@@ -9405,3 +9413,7 @@ ICAL.ComponentParser = (function() {
 
   return ComponentParser;
 }());
+
+return ICAL;
+
+}));
