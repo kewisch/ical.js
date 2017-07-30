@@ -61,7 +61,7 @@ enables you to do all sorts of cool experiments with calendar data and the web.
 I am also aiming for a caldav.js when this is done. Most algorithms here were
 taken from <a href="https://github.com/libical/libical">libical</a>. If you are bugfixing
 this library, please check if the fix can be upstreamed to libical.</p>
-<p><a href="http://travis-ci.org/mozilla-comm/ical.js"><img src="https://secure.travis-ci.org/mozilla-comm/ical.js.png?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/r/mozilla-comm/ical.js"><img src="https://coveralls.io/repos/mozilla-comm/ical.js/badge.svg" alt="Coverage Status"></a> <a href="http://badge.fury.io/js/ical.js"><img src="https://badge.fury.io/js/ical.js.svg" alt="npm version"></a> <a href="https://cdnjs.com/libraries/ical.js"><img src="https://img.shields.io/cdnjs/v/ical.js.svg" alt="CDNJS"></a><br><a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/mozilla-comm/ical.js.svg" alt="Greenkeeper badge"></a> <a href="https://david-dm.org/mozilla-comm/ical.js"><img src="https://david-dm.org/mozilla-comm/ical.js.svg" alt="Dependency Status"></a> <a href="https://david-dm.org/mozilla-comm/ical.js#info=devDependencies"><img src="https://david-dm.org/mozilla-comm/ical.js/dev-status.svg" alt="devDependency Status"></a></p>
+<p><a href="http://travis-ci.org/mozilla-comm/ical.js"><img src="https://secure.travis-ci.org/mozilla-comm/ical.js.png?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/r/mozilla-comm/ical.js"><img src="https://coveralls.io/repos/mozilla-comm/ical.js/badge.svg" alt="Coverage Status"></a> <a href="http://badge.fury.io/js/ical.js"><img src="https://badge.fury.io/js/ical.js.svg" alt="npm version"></a> <a href="https://cdnjs.com/libraries/ical.js"><img src="https://img.shields.io/cdnjs/v/ical.js.svg" alt="CDNJS"></a><br><a href="https://greenkeeper.io/"><img src="https://badges.greenkeeper.io/mozilla-comm/ical.js.svg" alt="Greenkeeper badge"></a> <a href="https://david-dm.org/mozilla-comm/ical.js"><img src="https://david-dm.org/mozilla-comm/ical.js.svg" alt="Dependency Status"></a> <a href="https://david-dm.org/mozilla-comm/ical.js?type=dev"><img src="https://david-dm.org/mozilla-comm/ical.js/dev-status.svg" alt="devDependency Status"></a></p>
 <h2>Sandbox and Validator</h2><p>If you want to try out ICAL.js right now, there is a
 <a href="http://jsfiddle.net/kewisch/227efboL/">jsfiddle</a> set up and ready to use. Read
 on for documentation and example links.</p>
@@ -70,26 +70,26 @@ in the <a href="https://github.com/mozilla-comm/ical.js/tree/master/sandbox">san
 subdirectory.</p>
 <p><a href="http://mozilla-comm.github.com/ical.js/validator.html">Try the validator online</a>, it always uses the latest copy of ICAL.js.</p>
 <h2>Installing</h2><p>You can install ICAL.js via <a href="https://www.npmjs.com/">npm</a>, if you would like to
-use it in node:</p>
+use it in Node.js:</p>
 <pre class="prettyprint source"><code>npm install ical.js</code></pre><p>Alternatively, it is also available via <a href="http://bower.io/">bower</a> for front-end
 development:</p>
 <pre class="prettyprint source"><code>bower install ical.js</code></pre><p>ICAL.js has no dependencies and uses fairly basic JavaScript. Therefore, it
-should work in all versions of node and modern browsers. It does use getters
+should work in all versions of Node.js and modern browsers. It does use getters
 and setters, so the minimum version of Internet Explorer is 9.</p>
 <h2>Documentation</h2><p>For a few guides with code samples, please check out
 <a href="https://github.com/mozilla-comm/ical.js/wiki">the wiki</a>. If you prefer,
 full API documentation <a href="http://mozilla-comm.github.io/ical.js/api/">is available here</a>.
 If you are missing anything, please don't hesitate to create an issue.</p>
 <h2>Developing</h2><p>To contribute to ICAL.js you need to set up the development environment. This
-requires node 0.10.x or later and grunt. Run the following steps to get
+requires Node.js 4.x or later and grunt. Run the following steps to get
 started.</p>
 <pre class="prettyprint source"><code>npm install -g grunt-cli  # Might need to run with sudo
 npm install .</code></pre><p>You can now dive into the code, run the tests and check coverage.</p>
-<h3>Tests</h3><p>Tests can either be run via node or in the browser, but setting up the testing
-infrastructure requires <a href="https://github.com/joyent/node">node</a>. More
+<h3>Tests</h3><p>Tests can either be run via Node.js or in the browser, but setting up the testing
+infrastructure requires <a href="https://github.com/nodejs/node">node</a>. More
 information on how to set up and run tests can be found on
 <a href="https://github.com/mozilla-comm/ical.js/wiki/Running-Tests">the wiki</a>.</p>
-<h4>in node js</h4><p>The quickest way to execute tests is using node. Running the following command
+<h4>in Node.js</h4><p>The quickest way to execute tests is using Node.js. Running the following command
 will run all test suites: performance, acceptance and unit tests.</p>
 <pre class="prettyprint source"><code>grunt test-node</code></pre><p>You can also select a single suite, or run a single test.</p>
 <pre class="prettyprint source"><code>grunt test-node:performance
@@ -106,11 +106,11 @@ working version (latest), a previous build of ICAL.js (previous) and the
 unchanged copy of build/ical.js (from the master branch). See
 <a href="https://github.com/mozilla-comm/ical.js/wiki/Running-Tests">the wiki</a> for more
 details.</p>
-<h4>in the browser (with karma)</h4><p>There are currently two ways to run the browser tests because we are currently
-experimenting with using <a href="http://karma-runner.github.io/">karma</a>. To run tests
-with karma, you can run the following targets:</p>
-<pre class="prettyprint source"><code>grunt karma:unit             # run only the unit tests
-grunt karma:acceptance       # run the acceptance tests</code></pre><p>Now you can visit <a href="http://localhost:9876">http://localhost:9876</a> in your
+<h4>in the browser</h4><p>To run the browser tests, we are currently using <a href="http://karma-runner.github.io/">karma</a>.
+To run tests with karma, you can run the following targets:</p>
+<pre class="prettyprint source"><code>grunt test-browser           # run all tests
+grunt karma:unit             # run only the unit tests
+grunt karma:acceptance       # run only the acceptance tests</code></pre><p>Now you can visit <a href="http://localhost:9876">http://localhost:9876</a> in your
 browser. The test output will be shown in the console you started the grunt
 task from. You can also run a single test:</p>
 <pre class="prettyprint source"><code>grunt karma:single --test test/parse_test.js</code></pre><p>The mentioned targets all run the tests from start to finish. If you would like
@@ -122,9 +122,6 @@ running.</p>
 <p>Last off, if you add the <code>--remote</code> option, karma will listen on all
 interfaces. This is useful if you are running the browser to test in a VM, for
 example when using <a href="https://www.modern.ie/virtualization-tools">Internet Exporer VM images</a>.</p>
-<h4>in the browser (the old way)</h4><p>Running <code>grunt test-server</code> will start a webserver and open the page in your
-browser. You can then select and execute tests as you wish. If you want to run
-all tests you can also open a second terminal and run <code>grunt test-browser</code></p>
 <h3>Code Coverage</h3><p>ICAL.js is set up to calculate code coverage. You can
 <a href="https://coveralls.io/r/mozilla-comm/ical.js">view the coverage results</a>
 online, or run them locally to make sure new code is covered. Running <code>grunt
@@ -157,7 +154,7 @@ and can be found in <a href="build/ical.js">build/ical.js</a>,
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Jun 22 2017 17:31:25 GMT+0000 (UTC) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sun Jul 30 2017 10:46:10 GMT+0000 (UTC) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
