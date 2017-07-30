@@ -55,7 +55,7 @@ suite('recur', function() {
         BYWEEKNO: [3],
         BYMONTHDAY: [2]
       }
-   }, 'BYWEEKNO does not fit to BYMONTHDAY');
+    }, 'BYWEEKNO does not fit to BYMONTHDAY');
 
     checkThrow({
       freq: 'MONTHLY',
@@ -84,6 +84,14 @@ suite('recur', function() {
         BYDAY: ['-6TH']
       }
     }, 'Malformed values in BYDAY part', '1970-02-01T00:00:00Z');
+
+    checkThrow({
+      freq: 'MONTHLY',
+      parts: {
+        BYMONTHDAY: [30, 31],
+        BYMONTH: [2]
+      }
+    }, 'Wrong combination of numeric values in BYMONTHDAY and BYMONTH', '1970-02-01T00:00:00Z');
 
     checkDate({
       freq: 'SECONDLY',
@@ -296,6 +304,9 @@ suite('recur', function() {
     verifyFail('BYYEARDAY=367', /BYYEARDAY/);
     verifyFail('BYYEARDAY=-367', /BYYEARDAY/);
 
+    verifyFail('BYMONTHDAY=32', /BYMONTHDAY/);
+    verifyFail('BYMONTHDAY=-32', /BYMONTHDAY/);
+
     verify('FREQ=MONTHLY;BYMONTHDAY=+3', {
       freq: 'MONTHLY',
       parts: { BYMONTHDAY: [3] }
@@ -440,6 +451,26 @@ suite('recur', function() {
       assert.throws(function() {
         var rec = ICAL.Recur.fromString("FREQ=WEEKLY;BYDAY=1,2,3");
       }, /invalid BYDAY value/);
+    });
+
+    test('invalid numeric bymonthday > 31', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=MONTHLY;BYMONTHDAY=32");
+      }, /BYMONTHDAY: invalid value "32" must be <= 31/);
+    });
+
+    test('invalid numeric bymonthday < -31', function() {
+      assert.throws(function() {
+        var rec = ICAL.Recur.fromString("FREQ=MONTHLY;BYMONTHDAY=-33");
+      }, /BYMONTHDAY: invalid value "-33" must be >= -31/);
+    });
+
+    test('invalid combination BYMONTH with BYMONTHDAY', function() {
+      var rec = ICAL.Recur.fromString("FREQ=MONTHLY;BYMONTHDAY=31;BYMONTH=4,6");
+      var dtstart = ICAL.Time.fromString("2017-02-11T08:00:00");
+      assert.throws(function() {
+        var iter = rec.iterator(dtstart);
+      }, /Wrong combination of numeric values in BYMONTHDAY and BYMONTH/);
     });
 
     test('extra structured recur values', function() {
