@@ -151,7 +151,7 @@ and the source map. These files need to be checked in (in a separate commit)
 and can be found in [build/ical.js](build/ical.js),
 [build/ical.min.js](build/ical.min.js) and
 [build/ical.min.js.map](build/ical.min.js.map). Please see
-[CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+[CONTRIBUTING](CONTRIBUTING) for more details.
 
 ## License
 ical.js is licensed under the
