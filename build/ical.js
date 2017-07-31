@@ -6562,13 +6562,13 @@ ICAL.TimezoneService = (function() {
 
     if (min !== undefined && value < min) {
       throw new Error(
-        type + ': invalid value "' + value + '" must be > ' + min
+        type + ': invalid value "' + value + '" must be >= ' + min
       );
     }
 
     if (max !== undefined && value > max) {
       throw new Error(
-        type + ': invalid value "' + value + '" must be < ' + min
+        type + ': invalid value "' + value + '" must be <= ' + max
       );
     }
 
@@ -6977,8 +6977,25 @@ ICAL.RecurIterator = (function() {
       this.last.second = this.setup_defaults("BYSECOND", "SECONDLY", this.dtstart.second);
       this.last.minute = this.setup_defaults("BYMINUTE", "MINUTELY", this.dtstart.minute);
       this.last.hour = this.setup_defaults("BYHOUR", "HOURLY", this.dtstart.hour);
-      this.last.day = this.setup_defaults("BYMONTHDAY", "DAILY", this.dtstart.day);
+      var day = this.setup_defaults("BYMONTHDAY", "DAILY", this.dtstart.day);
+      // In case of BYMONTHDAY, the day must be set on the correct month otherwise
+      // the automatic normalization might cause a wrong "last" date.
       this.last.month = this.setup_defaults("BYMONTH", "MONTHLY", this.dtstart.month);
+      var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
+      var monthCounter = 12;
+      while (Math.abs(day) > daysInMonth && monthCounter--) {
+        this.increment_month();
+        daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
+      }
+      if (monthCounter < 0) {
+        // A combination of numeric values in BYMONTHDAY and BYMONTH makes
+        // impossible to find a day that matches the rule.
+        throw new Error("Wrong combination of numeric values in BYMONTHDAY and BYMONTH");
+      }
+      if (day < 0) {
+        day += daysInMonth + 1;
+      }
+      this.last.day = day;
 
       if (this.rule.freq == "WEEKLY") {
         if ("BYDAY" in parts) {
@@ -7011,7 +7028,7 @@ ICAL.RecurIterator = (function() {
       if (this.rule.freq == "MONTHLY" && this.has_by_data("BYDAY")) {
         var tempLast = null;
         var initLast = this.last.clone();
-        var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
+        daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
 
         // Check every weekday in BYDAY with relative dow and pos.
         for (var i in this.by_data.BYDAY) {
@@ -7058,6 +7075,7 @@ ICAL.RecurIterator = (function() {
         //     would be missed.
         if (this.has_by_data('BYMONTHDAY')) {
           this._byDayAndMonthDay(true);
+          daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
         }
 
         if (this.last.day > daysInMonth || this.last.day == 0) {
@@ -7066,8 +7084,8 @@ ICAL.RecurIterator = (function() {
 
       } else if (this.has_by_data("BYMONTHDAY")) {
         if (this.last.day < 0) {
-          var daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
-          this.last.day = daysInMonth + this.last.day + 1;
+          daysInMonth = ICAL.Time.daysInMonth(this.last.month, this.last.year);
+          this.last.day += daysInMonth + 1;
         }
       }
 
@@ -7489,14 +7507,16 @@ ICAL.RecurIterator = (function() {
         var day = this.by_data.BYMONTHDAY[this.by_indices.BYMONTHDAY];
 
         if (day < 0) {
-          day = daysInMonth + day + 1;
+          day += daysInMonth + 1;
         }
 
         if (day > daysInMonth) {
           this.last.day = 1;
           data_valid = this.is_day_in_byday(this.last);
-        } else {
+        } else if (day > 0) {
           this.last.day = day;
+        } else {
+          data_valid = 0;
         }
 
       } else {
