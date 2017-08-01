@@ -21,7 +21,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "benchmark": "~2.1.4",
+    "benchmark": "^2.1.4",
     "biased-opener": "^0.2.8",
     "chai": "^4.1.0",
     "coveralls": "^2.13.1",
@@ -44,7 +44,7 @@
     "karma-sauce-launcher": "^1.1.0",
     "karma-spec-reporter": "^0.0.31",
     "minami": "^1.2.3",
-    "mocha": "~3.5.0"
+    "mocha": "^3.5.0"
   },
   "license": "MPL-2.0",
   "engine": {
