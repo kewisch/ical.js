@@ -840,6 +840,7 @@ suite('recur_iterator', function() {
         ]
       });
 
+      //Weekly Sunday, Monday, Tuesday with count=3
       testRRULE('FREQ=WEEKLY;COUNT=3;BYDAY=MO,SU,TU', {
               dtStart: '2017-07-30',
               byCount: true,
@@ -850,6 +851,7 @@ suite('recur_iterator', function() {
               ]
       });
 
+      //Weekly Sunday, Wednesday with count=5
       testRRULE('FREQ=WEEKLY;COUNT=5;BYDAY=SU,WE', {
               dtStart: '2017-04-23',
               byCount: true,
