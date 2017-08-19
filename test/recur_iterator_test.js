@@ -243,6 +243,17 @@ suite('recur_iterator', function() {
         ]
       });
 
+      //secondly + unsorted bysecond
+      testRRULE('FREQ=SECONDLY;BYSECOND=3,2,1;UNTIL=20130101T000003Z', {
+        dtStart: '2013-01-01T00:00:01',
+        until: true,
+        dates: [
+          '2013-01-01T00:00:01',
+          '2013-01-01T00:00:02',
+          '2013-01-01T00:00:03'
+        ]
+      });
+
       // Simple minutely
       testRRULE('FREQ=MINUTELY;INTERVAL=3;COUNT=3', {
         byCount: true,
@@ -253,6 +264,16 @@ suite('recur_iterator', function() {
         ]
       });
 
+      //minutely + unsorted byminute
+      testRRULE('FREQ=MINUTELY;BYMINUTE=3,2,1;UNTIL=20130101T000200Z', {
+        dtStart: '2013-01-01T00:01:00',
+        until: true,
+        dates: [
+          '2013-01-01T00:01:00',
+          '2013-01-01T00:02:00'
+        ]
+      });
+
       //simple hourly
       testRRULE('FREQ=HOURLY;INTERVAL=3;COUNT=3', {
         byCount: true,
@@ -260,6 +281,16 @@ suite('recur_iterator', function() {
           '2015-04-30T08:00:00',
           '2015-04-30T11:00:00',
           '2015-04-30T14:00:00'
+        ]
+      });
+
+      //hourly + unsorted byhour
+      testRRULE('FREQ=HOURLY;BYHOUR=3,2,1;UNTIL=20130101T020000Z', {
+        dtStart: '2013-01-01T01:00:00',
+        until: true,
+        dates: [
+          '2013-01-01T01:00:00',
+          '2013-01-01T02:00:00'
         ]
       });
     });
@@ -687,6 +718,27 @@ suite('recur_iterator', function() {
         ]
       });
 
+      //monthly + unsorted bymonthday
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=3,2,1;UNTIL=20130102T000000Z', {
+        dtStart: '2013-01-01',
+        until: true,
+        dates: [
+          '2013-01-01',
+          '2013-01-02'
+        ]
+      });
+
+      //monthly + unsorted bymonth
+      testRRULE('FREQ=MONTHLY;BYMONTH=3,2,1;UNTIL=20130301T000000Z', {
+        dtStart: '2013-01-01',
+        until: true,
+        dates: [
+          '2013-01-01',
+          '2013-02-01',
+          '2013-03-01'
+        ]
+      });
+
       testRRULE('FREQ=MONTHLY;BYDAY=MO,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-03-01T08:00:00Z',
         byCount: true,
@@ -732,6 +784,37 @@ suite('recur_iterator', function() {
           "2015-04-19T08:00:00Z"
         ]
       })
+
+      //monthly + unsorted positive, negative bymonthday
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1,1;UNTIL=20130201T000000Z', {
+        dtStart: '2013-01-01',
+        until: true,
+        dates: [
+          '2013-01-01',
+          '2013-01-31',
+          '2013-02-01'
+        ]
+      });
+
+      //monthly + unsorted positive, negative bymonthday
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=28,-2;UNTIL=20130227T000000Z', {
+        dtStart: '2013-02-25',
+        until: true,
+        dates: [
+          '2013-02-27'
+        ]
+      });
+
+      //monthly + unsorted positive, negative bymonthday
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31,-2;UNTIL=20130427T000000Z', {
+        dtStart: '2013-02-25',
+        until: true,
+        dates: [
+          '2013-02-27',
+          '2013-03-30',
+          '2013-03-31',
+        ]
+      });
     });
 
     suite('YEARLY', function() {
@@ -981,6 +1064,36 @@ suite('recur_iterator', function() {
           '2013-02-28',
           '2013-03-01',
           '2013-03-02',
+        ]
+      });
+
+      //yearly + unsorted bymonth
+      testRRULE('FREQ=YEARLY;BYMONTH=3,2,1;UNTIL=20130201T000000Z', {
+        dtStart: '2013-01-01',
+        until: true,
+        dates: [
+          '2013-01-01',
+          '2013-02-01'
+        ]
+      });
+
+      //yearly + unsorted byyearday
+      testRRULE('FREQ=YEARLY;BYYEARDAY=3,2,1;UNTIL=20130102T000000Z', {
+        dtStart: '2013-01-01',
+        until: true,
+        dates: [
+          '2013-01-01',
+          '2013-01-02'
+        ]
+      });
+
+      //yearly + unsorted positive, negative bymonthday
+      testRRULE('FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=-2,28;UNTIL=20130330T000000Z', {
+        dtStart: '2013-02-25',
+        until: true,
+        dates: [
+          '2013-03-28',
+          '2013-03-30',
         ]
       });
 
