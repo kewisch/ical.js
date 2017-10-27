@@ -24,7 +24,7 @@
     "benchmark": "^2.1.4",
     "biased-opener": "^0.2.8",
     "chai": "^4.1.0",
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.0",
     "grunt": "^1.0.1",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-concat": "^1.0.1",
