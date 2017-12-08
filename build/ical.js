@@ -5815,6 +5815,18 @@ ICAL.TimezoneService = (function() {
    */
   ICAL.Time.fromDateTimeString = function(aValue, prop) {
     if (aValue.length < 19) {
+      if(aValue.length == 13){ // No time "2017-01-01T::"
+          var time = new ICAL.Time({
+              year: ICAL.helpers.strictParseInt(aValue.substr(0, 4)),
+              month: ICAL.helpers.strictParseInt(aValue.substr(5, 2)),
+              day: ICAL.helpers.strictParseInt(aValue.substr(8, 2)),
+              hour: 0,
+              minute: 0,
+              second: 0,
+              timezone: "Z"
+          });
+          return time;
+      }
       throw new Error(
         'invalid date-time value: "' + aValue + '"'
       );
