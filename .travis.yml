@@ -4,13 +4,6 @@ node_js:
   - "8"
   - "6"
   - "4"
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
-    - g++-4.8
 before_install:
   - yarn global add grunt-cli
   - yarn global add karma-cli
@@ -21,7 +14,5 @@ script: grunt test-ci -v
 sudo: false
 env:
   global:
-    - CXX=g++-4.8
-    - CC=gcc-4.8
     - secure: MUB0jpyCJiYqrXQS6cwtLv1jyaDR30naRyHDBu+tLoyZNBTRWvlwrW75SvKEVwFI0JWqgUKRcwixsQFKRnKhZe+nD5zC56hxTtZc7Zw7m+mwpLHFJg5tfw8OAimd1Bvku9g0mig2kvjipxSsOMQsqXC7WfqESrTD2NMVdymp/ik=
     - secure: 0nJbWUF7NqGrDzX2de7SUx0YyHd0n2IXNmKIYRktEQiKe1omqeXi5SfIMzCHSmUGX3Ez2F2L5cVDbwob3pydFcK7KxpHp4JhW71JXis1sFvvaNR9lRglL7IFYRsqZz25esJlzS44B+Qr3mQCZLz77liDSX3mnmLmy14XECgB+DE=
