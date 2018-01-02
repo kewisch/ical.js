@@ -1,9 +1,7 @@
 testSupport.requireICAL();
 
 suite('ics - blank description', function() {
-
   var icsData;
-  var stringified;
 
   testSupport.defineSample('daily_recur.ics', function(data) {
     icsData = data;
@@ -25,8 +23,6 @@ suite('ics - blank description', function() {
       'dtstart'
     );
 
-    var key;
-
     var iter = recur.iterator(start);
     var limit = 10;
     while (limit) {
@@ -35,4 +31,3 @@ suite('ics - blank description', function() {
     }
   });
 });
-

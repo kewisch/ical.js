@@ -91,10 +91,10 @@ module.exports = function(grunt) {
     },
 
     concurrent: {
-      all: ['mochacli', 'node-inspector'],
+      all: ['mochacli:performance', 'mochacli:acceptance', 'mochacli:unit', 'node-inspector'],
       unit: ['mochacli:unit', 'node-inspector'],
       acceptance: ['mochacli:acceptance', 'node-inspector'],
-      single: ['mochacli:single', 'node-inspector'],
+      single: ['mochacli:single', 'node-inspector']
     },
 
     eslint: {
@@ -225,7 +225,7 @@ module.exports = function(grunt) {
         only: '<%= libinfo.doc %>',
         user: {
           name: 'Travis CI',
-          email: 'builds@travis-ci.org',
+          email: 'builds@travis-ci.org'
         },
         repo: 'git@github.com:mozilla-comm/ical.js.git',
         message: 'Update API documentation and validator for <%= travis.commit %>'

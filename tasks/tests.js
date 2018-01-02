@@ -75,10 +75,11 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('test-node', 'internal', function(arg) {
+  grunt.registerTask('test-node', function(arg) {
     if (!arg || arg == 'performance') {
       grunt.task.run('performance-update:upstream');
     }
+
     if (grunt.option('debug')) {
       var done = this.async();
       var open = require('biased-opener');
@@ -93,8 +94,12 @@ module.exports = function(grunt) {
           done();
       });
       grunt.task.run('concurrent:' + (arg || "all"));
+    } else if (arg) {
+      grunt.task.run('mochacli:' + arg);
     } else {
-      grunt.task.run('mochacli' + (arg ? ":" + arg : ""));
+      grunt.task.run('mochacli:performance');
+      grunt.task.run('mochacli:acceptance');
+      grunt.task.run('mochacli:unit');
     }
   });
 };

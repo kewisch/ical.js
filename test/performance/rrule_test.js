@@ -1,4 +1,5 @@
 perfCompareSuite('rrule', function(perf, ICAL) {
+
   var start;
   var occurrences;
 
@@ -53,4 +54,5 @@ perfCompareSuite('rrule', function(perf, ICAL) {
       }
     });
   });
+
 });

@@ -1,9 +1,7 @@
 testSupport.requireICAL();
 
 suite('ics - negative zero', function() {
-
   var icsData;
-  var stringified;
 
   testSupport.defineSample('utc_negative_zero.ics', function(data) {
     icsData = data;
@@ -30,5 +28,3 @@ suite('ics - negative zero', function() {
     );
   });
 });
-
-
