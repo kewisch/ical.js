@@ -1,7 +1,5 @@
 suite('google birthday events', function() {
-
   var icsData;
-  var stringified;
 
   testSupport.defineSample('google_birthday.ics', function(data) {
     icsData = data;
@@ -25,7 +23,7 @@ suite('google birthday events', function() {
       } else {
         primary = event;
       }
-    }
+    };
 
     parser.oncomplete = function() {
       exceptions.forEach(function(item) {
@@ -45,7 +43,7 @@ suite('google birthday events', function() {
       );
 
       done();
-    }
+    };
 
     parser.process(icsData);
   });

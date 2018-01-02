@@ -85,8 +85,7 @@
    * @param {Function} optional callback called on completion
    */
   testSupport.requireBenchmarkBuild = function(version, callback) {
-    var path = '/build/benchmark/ical_' + version + '.js';
-    testSupport.require(path, callback);
+    testSupport.require('/build/benchmark/ical_' + version + '.js', callback);
   };
 
   testSupport.require = function cross_require(file, callback) {
@@ -94,7 +93,7 @@
       file += '.js';
     }
 
-    if (typeof(window) === 'undefined') {
+    if (testSupport.isNode) {
       var lib = require(__dirname + '/../' + file);
       if (typeof(callback) !== 'undefined') {
         callback(lib);
@@ -214,7 +213,6 @@
     testSupport.require('/test/support/' + lib);
   };
 
-
   if (!testSupport.isKarma) {
     testSupport.require('/node_modules/benchmark/benchmark.js');
     testSupport.require('/test/support/performance.js');
@@ -222,4 +220,5 @@
     // Load it here so its pre-loaded in all suite blocks...
     testSupport.requireICAL();
   }
+
 }());

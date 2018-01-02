@@ -30,8 +30,8 @@
         } else {
           try {
             var self = this;
-            testSupport.requireBenchmarkBuild(this.icalVersion, function() {
-              self.icalObject = globals['ICAL_' + self.icalVersion];
+            testSupport.requireBenchmarkBuild(this.icalVersion, function(lib) {
+              self.icalObject = lib;
               if (!self.icalObject) {
                 console.log('Version ICAL_' + self.icalVersion + ' not found, skipping');
               }

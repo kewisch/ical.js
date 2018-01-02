@@ -1,9 +1,7 @@
 testSupport.requireICAL();
 
 suite('ics test', function() {
-
   var icsData;
-  var stringified;
 
   testSupport.defineSample('forced_types.ics', function(data) {
     icsData = data;
@@ -22,5 +20,3 @@ suite('ics test', function() {
     assert.isTrue(start.isDate, 'is date type');
   });
 });
-
-
