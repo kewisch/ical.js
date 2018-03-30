@@ -181,6 +181,14 @@ suite('Property', function() {
     assert.equal(subject.getParameter('wtf'), undefined);
   });
 
+  test('#getFirstParameter', function() {
+    subject = new ICAL.Property('categories');
+
+    subject.setParameter('categories', ['Home', 'Work']);
+
+    assert.equal(subject.getFirstParameter('categories'), 'Home');
+  });
+
   test('#removeParameter', function() {
     subject = new ICAL.Property(
       fixtures.withParams
