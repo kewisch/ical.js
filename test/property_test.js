@@ -181,12 +181,22 @@ suite('Property', function() {
     assert.equal(subject.getParameter('wtf'), undefined);
   });
 
-  test('#getFirstParameter', function() {
-    subject = new ICAL.Property('categories');
+  suite('#getFirstParameter', function() {
+    test('with multivalue parameter', function() {
+      subject = new ICAL.Property('categories');
 
-    subject.setParameter('categories', ['Home', 'Work']);
+      subject.setParameter('categories', ['Home', 'Work']);
 
-    assert.equal(subject.getFirstParameter('categories'), 'Home');
+      assert.equal(subject.getFirstParameter('categories'), 'Home');
+    });
+
+    test('with string parameter', function() {
+      subject = new ICAL.Property(
+        fixtures.withParams
+      );
+
+      assert.equal(subject.getFirstParameter('rsvp'), 'TRUE');
+    });
   });
 
   test('#removeParameter', function() {
