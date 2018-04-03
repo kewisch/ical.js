@@ -69,8 +69,10 @@ yarn --frozen-lockfile
 ```
 
 Alternative way:
-    npm install -g grunt-cli  # Might need to run with sudo
-    npm install .
+```
+npm install -g grunt-cli  # Might need to run with sudo
+npm install .
+```
 
 You can now dive into the code, run the tests and check coverage.
 
