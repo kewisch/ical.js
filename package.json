@@ -36,7 +36,7 @@
     "grunt-mocha-cli": "^4.0.0",
     "grunt-mocha-istanbul": "^5.0.2",
     "grunt-release": "^0.14.0",
-    "gruntify-eslint": "^4.0.0",
+    "gruntify-eslint": "^5.0.0",
     "istanbul": "^0.4.5",
     "karma": "^2.0.2",
     "karma-chai": "^0.1.0",
