@@ -6884,6 +6884,14 @@ ICAL.RecurIterator = (function() {
     days_index: 0,
 
     /**
+     * The number of times that a recurrance has been is duplicated
+     * This is to let us escape if we're in a recursion loop
+     * @type {Number}
+     * @private
+     */
+    repeated_recurrance: 0,
+
+    /**
      * Initialize the recurrence iterator from the passed data object. This
      * method is usually not called directly, you can initialize the iterator
      * through the constructor.
@@ -7000,11 +7008,18 @@ ICAL.RecurIterator = (function() {
         if ("BYDAY" in parts) {
           var bydayParts = this.ruleDayOfWeek(parts.BYDAY[0]);
           var pos = bydayParts[0];
-          var dow = bydayParts[1];
-          var wkdy = dow - this.last.dayOfWeek();
-          if ((this.last.dayOfWeek() < dow && wkdy >= 0) || wkdy < 0) {
-            // Initial time is after first day of BYDAY data
-            this.last.day += wkdy;
+
+          // If there's a position to the byDay, it should really be a monthly rule
+          // instead of a weekly rule. So lets change it here and quit processing weekly.
+          if (pos) {
+            this.rule.freq = 'MONTHLY';
+          } else {
+            var dow = bydayParts[1];
+            var wkdy = dow - this.last.dayOfWeek();
+            if ((this.last.dayOfWeek() < dow && wkdy >= 0) || wkdy < 0) {
+              // Initial time is after first day of BYDAY data
+              this.last.day += wkdy;
+            }
           }
         } else {
           var dayName = ICAL.Recur.numericDayToIcalDay(this.dtstart.dayOfWeek());
@@ -7147,10 +7162,14 @@ ICAL.RecurIterator = (function() {
                this.last.compare(this.dtstart) < 0 ||
                !valid);
 
-      // TODO is this valid?
-      if (this.last.compare(before) == 0) {
-        throw new Error("Same occurrence found twice, protecting " +
+      if (this.repeated_recurrance >= 4) {
+        throw new Error("Same occurrence found five times, protecting " +
                         "you from death by recursion");
+      }
+
+      if (this.last.compare(before) == 0) {
+        this.repeated_recurrance++;
+        return null;
       }
 
       if (this.rule.until && this.last.compare(this.rule.until) > 0) {
