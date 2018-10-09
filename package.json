@@ -30,7 +30,7 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-coveralls": "^2.0.0",
-    "grunt-gh-pages": "^2.0.0",
+    "grunt-gh-pages": "^3.0.0",
     "grunt-jsdoc": "^2.2.1",
     "grunt-karma": "^2.0.0",
     "grunt-mocha-cli": "^4.0.0",
