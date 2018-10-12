@@ -243,8 +243,8 @@ export class ComponentParser {
    *
    * Events must be registered prior to calling this method.
    *
-   * @param ical      The component to process,
-   *        either in its final form, as a jCal Object, or string representation
+   * @param ical The component to process, either in its final form, as a jCal
+   *   Object, or string representation
    */
   process(ical: Component | string | object): void
 
@@ -318,7 +318,6 @@ export class Duration {
 
   /**
    * The minutes in this duration
-   * @type {Number}
    * @default 0
    */
   minutes: number
@@ -337,17 +336,15 @@ export class Duration {
 
   /**
    * The class identifier.
-   * @constant
    * @default "icalduration"
    */
-  icalclass: "icalduration"
+  readonly icalclass: "icalduration"
 
   /**
    * The type name, to be used in the jCal object.
-   * @constant
    * @default "duration"
    */
-  icaltype: "duration"
+  readonly icaltype: "duration"
 
   /**
    * Creates a new ICAL.Duration instance from the given data object.
@@ -1012,7 +1009,6 @@ export class Recur {
    */
   static _stringToData(string: string, fmtIcal: boolean): Recur
 
-
   /**
    * Creates a new {@link ICAL.Recur} instance using members from the passed
    * data object.
@@ -1085,8 +1081,7 @@ export class Recur {
 
   /**
    * Returns a clone of the recurrence object.
-   *
-   * @return {ICAL.Recur}      The cloned object
+   * @return The cloned object
    */
   clone(): Recur
 
@@ -1152,7 +1147,7 @@ export class Recur {
    * Checks if the current rule has a count part, and not limited by an until
    * part.
    *
-   * @return {Boolean}        True, if the rule is by count
+   * @return True, if the rule is by count
    */
   isByCount(): boolean
 
@@ -1523,8 +1518,8 @@ export class Time {
    * Create a new ICAL.Time from the day of year and year. The date is returned
    * in floating timezone.
    *
-   * @param {Number} aDayOfYear     The day of year
-   * @param {Number} aYear          The year to create the instance in
+   * @param aDayOfYear     The day of year
+   * @param aYear          The year to create the instance in
    * @return The created instance with the calculated date
    */
   static fromDayOfYear(aDayOfYear: number, aYear: number): Time
@@ -1573,7 +1568,6 @@ export class Time {
 
   /**
    * Creates a new ICAL.Time instance from the current moment.
-   * @return {ICAL.Time}
    */
   static now(): Time
 
@@ -1895,9 +1889,6 @@ export namespace Time {
   /**
    * The weekday, 1 = SUNDAY, 7 = SATURDAY. Access via
    * ICAL.Time.MONDAY, ICAL.Time.TUESDAY, ...
-   *
-   * @typedef {Number} weekDay
-   * @memberof ICAL.Time
    */
   export const enum weekDay {
     SUNDAY = 1,
@@ -2105,7 +2096,7 @@ export class UtcOffset {
    * Creates a new {@link ICAL.UtcOffset} instance from the passed seconds
    * value.
    *
-   * @param {Number} aSeconds       The number of seconds to convert
+   * @param aSeconds       The number of seconds to convert
    */
   static fromSeconds(aSeconds: number): UtcOffset
 
@@ -2120,15 +2111,15 @@ export class UtcOffset {
   /**
    * Returns a clone of the utc offset object.
    *
-   * @return {ICAL.UtcOffset}     The cloned object
+   * @return The cloned object
    */
   clone(): UtcOffset
 
   /**
    * Compare this utc offset with another one.
    *
-   * @param {ICAL.UtcOffset} other        The other offset to compare with
-   * @return {Number}                     -1, 0 or 1 for less/equal/greater
+   * @param other The other offset to compare with
+   * @return -1, 0 or 1 for less/equal/greater
    */
   compare(other: UtcOffset): -1 | 0 | 1
 
@@ -2150,26 +2141,24 @@ export class UtcOffset {
    * value is truncated to the minute. Offsets are wrapped when the world
    * ends, the hour after UTC+14:00 is UTC-12:00.
    *
-   * @param {Number} aSeconds         The seconds to convert into an offset
+   * @param aSeconds The seconds to convert into an offset
    */
   fromSeconds(aSeconds: number): UtcOffset
 
   /**
    * The iCalendar string representation of this utc-offset.
-   * @return {String}
    */
   toICALString(): string
 
   /**
    * Convert the current offset to a value in seconds
    *
-   * @return {Number}                 The offset in seconds
+   * @return The offset in seconds
    */
   toSeconds(): number
 
   /**
    * The string representation of this utc-offset.
-   * @return {String}
    */
   toString(): string
 }
@@ -2297,9 +2286,9 @@ export class VCardTime extends Time {
   /**
    * Compares only the date part of this instance with another one.
    *
-   * @param {ICAL.Duration} other         The instance to compare with
-   * @param {ICAL.Timezone} tz            The timezone to compare in
-   * @return {Number}                     -1, 0 or 1 for less/equal/greater
+   * @param other         The instance to compare with
+   * @param tz            The timezone to compare in
+   * @return              -1, 0 or 1 for less/equal/greater
    */
   compareDateOnlyTz(other: Duration, tz: Timezone): -1 | 0 | 1
   
@@ -2307,8 +2296,8 @@ export class VCardTime extends Time {
    * Convert the instance into another timzone. The returned ICAL.Time
    * instance is always a copy.
    *
-   * @param {ICAL.Timezone} zone      The zone to convert to
-   * @return {ICAL.Time}              The copy, converted to the zone
+   * @param zone      The zone to convert to
+   * @return The copy, converted to the zone
    */
   convertToZone(zone: Timezone): Time
 
@@ -2327,7 +2316,7 @@ export class VCardTime extends Time {
    * month.  The resulting ICAL.Time instance is of icaltype date, even if
    * this is a date-time.
    *
-   * @return {ICAL.Time}      The end of the month (cloned)
+   * @return The end of the month (cloned)
    */
   endOfMonth(): Time
 
@@ -2336,9 +2325,8 @@ export class VCardTime extends Time {
    * The resulting ICAL.Time instance is of icaltype date, even if this is a
    * date-time.
    *
-   * @param {ICAL.Time.weekDay=} aWeekStart
-   *        The week start weekday, defaults to SUNDAY
-   * @return {ICAL.Time} The end of the week (cloned)
+   * @param aWeekStart The week start weekday, defaults to SUNDAY
+   * @return The end of the week (cloned)
    */
   endOfWeek(aWeekStart?: Time.weekDay): Time
 
@@ -2347,7 +2335,7 @@ export class VCardTime extends Time {
    * year.  The resulting ICAL.Time instance is of icaltype date, even if
    * this is a date-time.
    *
-   * @return {ICAL.Time}      The end of the year (cloned)
+   * @return The end of the year (cloned)
    */
   endOfYear(): Time
 
@@ -2385,7 +2373,7 @@ export class VCardTime extends Time {
    * Sets up the current instance from unix time, the number of seconds since
    * January 1st, 1970.
    *
-   * @param {Number} seconds      The seconds to set up with
+   * @param seconds      The seconds to set up with
    */
   fromUnixTime(seconds: number): void
 
@@ -2393,8 +2381,8 @@ export class VCardTime extends Time {
    * Get the dominical letter for the current year. Letters range from A - G
    * for common years, and AG to GF for leap years.
    *
-   * @param {Number} yr           The year to retrieve the letter for
-   * @return {String}             The dominical letter.
+   * @param yr The year to retrieve the letter for
+   * @return The dominical letter.
    */
   getDominicalLetter(): string
 
@@ -2403,9 +2391,9 @@ export class VCardTime extends Time {
    * month.  Will always return false when rule resolves outside of current
    * month.
    *
-   * @param {ICAL.Time.weekDay} aDayOfWeek       Day of week to check
-   * @param {Number} aPos                        Relative position
-   * @return {Boolean}                           True, if its the nth weekday
+   * @param aDayOfWeek Day of week to check
+   * @param aPos       Relative position
+   * @return True, if its the nth weekday
    */
   isNthWeekDay(aDayOfWeek: Time.weekDay, aPos: number): boolean
 
@@ -2415,13 +2403,13 @@ export class VCardTime extends Time {
    * 1 would indicate the first of the month and 40 would indicate a day in
    * the following month.
    *
-   * @param {Number} aDayOfWeek   Day of the week see the day name constants
-   * @param {Number} aPos         Nth occurrence of a given week day values
+   * @param aDayOfWeek   Day of the week see the day name constants
+   * @param aPos         Nth occurrence of a given week day values
    *        of 1 and 0 both indicate the first weekday of that type. aPos may
    *        be either positive or negative
    *
-   * @return {Number} numeric value indicating a day relative
-   *                   to the current month of this time object
+   * @return numeric value indicating a day relative to the current month of
+   *   this time object
    */
   nthWeekDay(aDayOfWeek: number, aPos: number): number
 
@@ -2433,13 +2421,13 @@ export class VCardTime extends Time {
   /**
    * Reset the time instance to the given date/time values.
    *
-   * @param {Number} year             The year to set
-   * @param {Number} month            The month to set
-   * @param {Number} day              The day to set
-   * @param {Number} hour             The hour to set
-   * @param {Number} minute           The minute to set
-   * @param {Number} second           The second to set
-   * @param {ICAL.Timezone} timezone  The timezone to set
+   * @param year      The year to set
+   * @param month     The month to set
+   * @param day       The day to set
+   * @param hour      The hour to set
+   * @param minute    The minute to set
+   * @param second    The second to set
+   * @param timezone  The timezone to set
    */
   resetTo(year: number, month: number, day: number,
     hour: number, minute: number, second: number, timezone: Timezone)
@@ -2448,9 +2436,8 @@ export class VCardTime extends Time {
    * First calculates the start of the week, then returns the day of year for
    * this date. If the day falls into the previous year, the day is zero or negative.
    *
-   * @param {ICAL.Time.weekDay=} aFirstDayOfWeek
-   *        The week start weekday, defaults to SUNDAY
-   * @return {Number}     The calculated day of year
+   * @param aFirstDayOfWeek The week start weekday, defaults to SUNDAY
+   * @return The calculated day of year
    */
   startDoyWeek(aFirstDayOfWeek?: Time.weekDay): number
 
@@ -2459,7 +2446,7 @@ export class VCardTime extends Time {
    * month. The resulting ICAL.Time instance is of icaltype date, even if
    * this is a date-time.
    *
-   * @return {ICAL.Time}      The start of the month (cloned)
+   * @return The start of the month (cloned)
    */
   startOfMonth(): Time
 
@@ -2487,29 +2474,28 @@ export class VCardTime extends Time {
    * the relative difference between two time objects excluding their
    * timezone differences.
    *
-   * @param {ICAL.Time} aDate     The date to substract
-   * @return {ICAL.Duration}      The difference as a duration
+   * @param aDate     The date to substract
+   * @return The difference as a duration
    */
   subtractDate(aDate: Time): Duration
 
   /**
    * Subtract the date details, taking timezones into account.
    *
-   * @param {ICAL.Time} aDate  The date to subtract
-   * @return {ICAL.Duration}  The difference in duration
+   * @param aDate  The date to subtract
+   * @return The difference in duration
    */
   subtractDateTz(aDaqte: Time): Duration
 
   /**
    * Returns an RFC 5545 compliant ical representation of this object.
    *
-   * @return {String} ical date/date-time
+   * @return ical date/date-time
    */
   toICALString(): string
 
   /**
    * Converts the current instance to a Javascript date
-   * @return {Date}
    */
   toJSDate(): Date
 
@@ -2536,7 +2522,7 @@ export class VCardTime extends Time {
   /**
    * Converts the current instance to seconds since January 1st 1970.
    *
-   * @return {Number}         Seconds since 1970
+   * @return Seconds since 1970
    */
   toUnixTime(): number
 
@@ -2544,7 +2530,7 @@ export class VCardTime extends Time {
    * Calculates the UTC offset of the current date/time in the timezone it is
    * in.
    *
-   * @return {Number}     UTC offset in seconds
+   * @return UTC offset in seconds
    */
   utcOffset(): number
 
@@ -2840,7 +2826,7 @@ export const parse: {
    * @param input The string data to parse
    * @return A single jCal object, or an array thereof
    */
-  (input: string): object | object[]
+  (input: string): any | any[]
 
   /**
    * Internal helper for rfc6868. Exposing this on ICAL.parse so that
@@ -2868,7 +2854,7 @@ export const parse: {
    * @param designSet The design data to use for this property
    * @return The jCal Object containing the property
    */
-  property(str: string, designSet?: design.designSet): object
+  property(str: string, designSet?: design.designSet): any
 }
 
 /**
