@@ -59,7 +59,7 @@ If you are missing anything, please don't hesitate to create an issue.
 ## Developing
 
 To contribute to ICAL.js you need to set up the development environment. This
-requires Node.js 4.x or later and grunt. Run the following steps to get
+requires Node.js 6.x or later and grunt. Run the following steps to get
 started.
 
 Preferred way (to match building and packaging with official process):
