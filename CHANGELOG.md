@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.2.2] - 2018-11-09
+
 ## [1.2.2] - 2016-07-20
 
 ## [1.2.1] - 2016-04-14
@@ -34,7 +36,8 @@
 
 ## 0.0.1 - 2014-05-23
 
-[Unreleased]: https://github.com/mozilla-comm/ical.js/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/mozilla-comm/ical.js/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/mozilla-comm/ical.js/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/mozilla-comm/ical.js/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/mozilla-comm/ical.js/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/mozilla-comm/ical.js/compare/v1.1.2...v1.2.0
