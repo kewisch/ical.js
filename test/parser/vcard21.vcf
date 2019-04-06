@@ -13,21 +13,23 @@ PHOTO;BASE64;JPEG:SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBp
 BDAY:1996-04-15
 ADR;TYPE=HOME:;;123 Main
   Street;Any Town;CA;91921-1234
-LABEL;TYPE=HOME:Mr.John Q. Public\, Esq.\n
- Mail Drop: TNE QB\n123 Main Street\nAny Town\, CA  91921-1234
- \nU.S.A.
+LABEL;TYPE=HOME;ENCODING=QUOTED-PRINTABLE:Mr.John Q. Public, Esq.=0D=0A=
+ Mail Drop: TNE QB=0D=0A=
+ 123 Main Street=0D=0A=
+ Any Town, CA  91921-1234=0D=0A=
+ U.S.A.
 TEL;TYPE=WORK:+1-213-555-1234
 TEL;WORK:+1-213-555-1234
 EMAIL;TYPE=INTERNET:jqpublic@xyz.dom1.com
 EMAIL;INTERNET:jqpublic@xyz.dom1.com
 EMAIL;TYPE=INTERNET:jdoe@isp.net
 EMAIL;INTERNET:jdoe@isp.net
-EMAIL;TYPE=INTERNET,pref:jane_doe@abc.com
-EMAIL;INTERNET,pref:jane_doe@abc.com
+EMAIL;TYPE=INTERNET:jane_doe@abc.com
+EMAIL;INTERNET:jane_doe@abc.com
 MAILER:PigeonMail 2.1
 TZ:-05:00
 TZ;VALUE=text:-05:00\; EST\; Raleigh/North America
- \;This example has a single value\, not a structure text value.
+ \;This example has a single value, not a structure text value.
 GEO:37.386013,-122.082932
 TITLE:Director, Research and Development
 ROLE:Programmer
@@ -37,13 +39,7 @@ LOGO;ENCODING=BASE64;TYPE=JPEG:SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBp
 LOGO;BASE64;JPEG:SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBp
  bWFnZSBqdXN0IGEgdGVzdC4=
 AGENT;VALUE=CONTENT-ID:<JQPUBLIC.part3.960129T083020.xyzMail@host3.com
-AGENT:
-BEGIN:VCARD
-FN:Susan Thomas
-TEL:+1-919-555-1234
-EMAIL;INTERNET:sthomas@host.com
-END:VCARD
-
+AGENT:BEGIN:VCARD\nFN:Susan Thomas\nTEL:+1-919-555-1234\nEMAIL;INTERNET:sthomas@host.com\nEND:VCARD\n
 ORG:ABC, Inc.;North American Division;Marketing
 NOTE:This fax number is operational 0800 to 1715
   EST, Mon-Fri.

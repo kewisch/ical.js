@@ -34,7 +34,7 @@ suite('parserv2', function() {
       'tzid_with_gmt.ics',
       'multiple_root_components.ics',
 
-      // vcard tests
+      //// vcard tests
       'vcard.vcf',
       'vcard_author.vcf',
       'vcard3.vcf',
