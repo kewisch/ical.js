@@ -159,6 +159,41 @@ ICAL.helpers = {
   },
 
   /**
+   *
+   * @param {Array<Number>} haystack  String to search
+   * @param {Array<String>} needles   Values to look for
+   * @param {Number} pos              Start position
+   * @return {Number}                 The position of the first value, or -1 if none found
+   */
+  nextUnescapedIndexOf: function(haystack, needles, pos) {
+    var self = this;
+
+    var positions = needles.map(function(needle) {
+      return self.unescapedIndexOf(haystack, needle, pos);
+    });
+
+    return this.getMinimalIndex(positions);
+  },
+
+  /**
+   * Finds the minimal index that is not -1, or -1 if all indices are -1.
+   *
+   * @param {Array<Number>} positions
+   * @return {Number}
+   */
+  getMinimalIndex: function(positions) {
+    return positions.reduce(function(acc, pos) {
+      if (acc === -1) {
+        return pos;
+      } else if (pos === -1) {
+        return acc;
+      } else {
+        return Math.min(acc, pos);
+      }
+    }, -1);
+  },
+
+  /**
    * Identical to indexOf but will only match values when they are not preceded
    * by a backslash character.
    *
@@ -1235,6 +1270,195 @@ ICAL.design = (function() {
     key: { defaultType: "binary", allowedTypes: ["binary", "text"] }
   });
 
+  // For simplicity, we define vCard 2.1 in relation to vCard 3.0.
+  var vcard21TextType = {
+    matches: /.*/,
+    fromICAL: function(aValue, structuredEscape) {
+      // avoid regex when possible.
+      if (aValue.indexOf('\\') === -1) {
+        return aValue;
+      }
+      var regEx = /\\\\|\\;|\\,/g;
+      if (structuredEscape)
+        regEx = new RegExp(regEx.source + '|\\\\' + structuredEscape);
+      return aValue.replace(regEx, function(string) {
+        switch (string) {
+          case "\\\\":
+            return "\\";
+          case "\\;":
+            return ";";
+          /* istanbul ignore next */
+          default:
+            return string;
+        }
+      });
+    },
+
+    toICAL: function(aValue, structuredEscape) {
+      var regEx = /\\|;/g;
+      if (structuredEscape)
+        regEx = new RegExp(regEx.source + '|' + structuredEscape);
+      return aValue.replace(regEx, function(str) {
+        switch (str) {
+        case "\\":
+          return "\\\\";
+        case ";":
+          return "\\;";
+        /* istanbul ignore next */
+        default:
+          return str;
+        }
+      });
+    }
+  };
+  var vcard21Values = ICAL.helpers.extend(commonValues, {
+    binary: vcard3Values.binary,
+    charset: {
+      matches: /^(US-ASCII|ISO-8859-\d+)$/
+    },
+    date: vcard3Values.date,
+    "date-time": vcard3Values["date-time"],
+    "phone-number": vcard3Values["phone-number"],
+    // vCard 2.1 does not escape COMMA.
+    text: vcard21TextType,
+    // vCard 2.1 does not escape COMMA.
+    uri: vcard21TextType,
+    time: vcard3Values.time,
+    vcard: vcard3Values.vcard,
+    "utc-offset": vcard3Values["utc-offset"]
+  });
+
+  var vcard21Params = {
+    "type": {
+      values: [
+        "dom", "intl", "postal", "parcel", "home", "work", "pref", "voice",
+        "fax", "msg", "cell", "pager", "bbs", "modem", "car", "isdn", "video",
+        "aol", "applelink", "attmail", "cis", "eworld", "internet", "ibmmail",
+        "mcimail", "powershare", "prodigy", "tlx", "x400", "gif", "cgm", "wmf",
+        "bmp", "met", "pmb", "dib", "pict", "tiff", "pdf", "ps", "jpeg",
+        "qtime", "mpeg", "mpeg2", "avi", "wave", "aiff", "pcm", "x509", "pgp"
+      ],
+      allowXName: true
+    },
+    "value": {
+      values: ["text", "url", "content-id", "cid"],
+      allowXName: true
+    },
+    "encoding": {
+      values: ["7bit", "8bit", "quoted-printable", "base64", "mime"],
+      allowXName: true
+    },
+    "charset": {
+      // A character set string as defined in Section 7.1 of RFC 1521.
+      valueType: "charset",
+    },
+    "language": {
+      // A language string as defined in RFC 1766.
+      valueType: "language-tag"
+    },
+  };
+
+  var vcard21Properties = {
+    url: commonProperties.url,
+    version: commonProperties.version,
+    uid: commonProperties.uid,
+
+    fn: vcard3Properties.fn,
+    // vCard 2.1 does not support multi-values.
+    n: { defaultType: "text", structuredValue: ";" },
+    photo: vcard3Properties.photo,
+    // vCard 2.1 only allows date.
+    bday: { defaultType: "date" },
+
+    // vCard 2.1 does not support multi-values.
+    adr: { defaultType: "text", structuredValue: ";" },
+    label: vcard3Properties.label,
+
+    tel: vcard3Properties.tel,
+    email: vcard3Properties.email,
+    mailer: vcard3Properties.mailer,
+
+    tz: vcard3Properties.tz,
+    // vCard 2.1 uses COMMA to separate the values.
+    geo: { defaultType: "float", structuredValue: "," },
+
+    title: vcard3Properties.title,
+    role: vcard3Properties.role,
+    logo: vcard3Properties.logo,
+    agent: vcard3Properties.agent,
+    org: vcard3Properties.org,
+
+    // vCard 2.1 does not support multi-values.
+    note: DEFAULT_TYPE_TEXT,
+    // vCard 2.1 only allows date-time.
+    rev: { defaultType: "date-time" },
+    sound: vcard3Properties.sound,
+
+    key: vcard3Properties.key
+  };
+
+  var vcard21ValuesToParam = {
+    "7bit": "encoding",
+    "8bit": "encoding",
+    "aiff": "type",
+    "aol": "type",
+    "applelink": "type",
+    "attmail": "type",
+    "avi": "type",
+    "base64": "encoding",
+    "bbs": "type",
+    "bmp": "type",
+    "car": "type",
+    "cell": "type",
+    "cgm": "type",
+    "cid": "value",
+    "cis": "type",
+    "content-id": "value",
+    "dib": "type",
+    "dom": "type",
+    "eworld": "type",
+    "fax": "type",
+    "gif": "type",
+    "home": "type",
+    "ibmmail": "type",
+    "internet": "type",
+    "intl": "type",
+    "isdn": "type",
+    "jpeg": "type",
+    "mcimail": "type",
+    "met": "type",
+    "mime": "encoding",
+    "modem": "type",
+    "mpeg": "type",
+    "mpeg2": "type",
+    "msg": "type",
+    "pager": "type",
+    "parcel": "type",
+    "pcm": "type",
+    "pdf": "type",
+    "pgp": "type",
+    "pict": "type",
+    "pmb": "type",
+    "postal": "type",
+    "powershare": "type",
+    "pref": "type",
+    "prodigy": "type",
+    "ps": "type",
+    "qtime": "type",
+    "quoted-printable": "encoding",
+    "text": "value",
+    "tiff": "type",
+    "tlx": "type",
+    "url": "value",
+    "video": "type",
+    "voice": "type",
+    "wave": "type",
+    "wmf": "type",
+    "work": "type",
+    "x400": "type",
+    "x509": "type",
+  };
+
   /**
    * iCalendar design set
    * @type {ICAL.design.designSet}
@@ -1242,7 +1466,8 @@ ICAL.design = (function() {
   var icalSet = {
     value: icalValues,
     param: icalParams,
-    property: icalProperties
+    property: icalProperties,
+    valuesToParam: {}
   };
 
   /**
@@ -1252,7 +1477,8 @@ ICAL.design = (function() {
   var vcardSet = {
     value: vcardValues,
     param: vcardParams,
-    property: vcardProperties
+    property: vcardProperties,
+    valuesToParam: {}
   };
 
   /**
@@ -1262,7 +1488,19 @@ ICAL.design = (function() {
   var vcard3Set = {
     value: vcard3Values,
     param: vcard3Params,
-    property: vcard3Properties
+    property: vcard3Properties,
+    valuesToParam: {}
+  };
+
+  /**
+   * vCard 2.1 design set
+   * @type {ICAL.design.designSet}
+   */
+  var vcard21Set = {
+    value: vcard21Values,
+    param: vcard21Params,
+    property: vcard21Properties,
+    valuesToParam: vcard21ValuesToParam
   };
 
   /**
@@ -1283,6 +1521,7 @@ ICAL.design = (function() {
      * @property {Object} value       Definitions for value types, keys are type names
      * @property {Object} param       Definitions for params, keys are param names
      * @property {Object} property    Defintions for properties, keys are property names
+     * @property {Object} valuesToParam Mapping of unambiguous param values to param name
      */
 
 
@@ -1322,6 +1561,7 @@ ICAL.design = (function() {
     components: {
       vcard: vcardSet,
       vcard3: vcard3Set,
+      vcard21: vcard21Set,
       vevent: icalSet,
       vtodo: icalSet,
       vjournal: icalSet,
@@ -1349,6 +1589,12 @@ ICAL.design = (function() {
      * @type {ICAL.design.designSet}
      */
     vcard3: vcard3Set,
+
+    /**
+     * The design set for vCard 2.1 components.
+     * @type {ICAL.design.designSet}
+     */
+    vcard21: vcard21Set,
 
     /**
      * Gets the design set for the given component name.
@@ -1432,11 +1678,32 @@ ICAL.stringify = (function() {
     var propLen = props.length;
 
     var designSetName = component[0];
-    // rfc6350 requires that in vCard 4.0 the first component is the VERSION
-    // component with as value 4.0, note that 3.0 does not have this requirement.
-    if (designSetName === 'vcard' && component[1].length > 0 &&
-            !(component[1][0][0] === "version" && component[1][0][3] === "4.0")) {
-      designSetName = "vcard3";
+
+    if (designSetName === 'vcard' && props.length > 0) {
+      // vCard 4.0 (RFC6350) requires VERSION to be first component.
+      if (!(props[0][0] === "version" && props[0][3] == "4.0")) {
+        // vCard 2.1 and 3.0 do not have this requirement.
+        for (; propIdx < propLen; propIdx++) {
+          if (props[propIdx][0] === "version") {
+            switch (props[propIdx][3]) {
+              case "3.0":
+                designSetName = "vcard3";
+                break;
+
+              case "2.1":
+                designSetName = "vcard21";
+                break;
+
+              default:
+                // Fallback.
+                designSetName = "vcard3";
+                break;
+            }
+            break;
+          }
+        }
+        propIdx = 0;
+      }
     }
     designSet = designSet || design.getDesignSet(designSetName);
 
@@ -1828,6 +2095,9 @@ ICAL.parse = (function() {
      *
      * 2. ATTENDEE;ROLE=REQ-PARTICIPANT;
      *    // ROLE= is a param because : has not happened yet
+     *
+     * 3. PHOTO;URL:
+     *    // URL is a shorthand for TYPE=URL in vCard 2.0
      */
       // when the parameter delimiter is after the
       // value delimiter then its not a parameter.
@@ -1849,8 +2119,8 @@ ICAL.parse = (function() {
       }
       params = parsedParams[0];
       lastParamIndex = parsedParams[1].length + parsedParams[2] + paramPos;
-      if ((lastValuePos =
-        line.substring(lastParamIndex).indexOf(VALUE_DELIMITER)) !== -1) {
+      lastValuePos = line.substring(lastParamIndex).indexOf(VALUE_DELIMITER);
+      if (lastValuePos !== -1) {
         value = line.substring(lastParamIndex + lastValuePos + 1);
       } else {
         throw new ParserError("Missing parameter value in '" + line + "'");
@@ -1891,6 +2161,8 @@ ICAL.parse = (function() {
         'invalid line (no token ";" or ":") "' + line + '"'
       );
     }
+
+    var debug = line.includes("37.386013");
 
     var valueType;
     var multiValue = false;
@@ -1955,7 +2227,16 @@ ICAL.parse = (function() {
     // component with as value 4.0, note that 3.0 does not have this requirement.
     if (state.component[0] === 'vcard' && state.component[1].length === 0 &&
             !(name === 'version' && value === '4.0')) {
-      state.designSet = design.getDesignSet("vcard3");
+      switch (value) {
+        case '3.0':
+          state.designSet = design.getDesignSet("vcard3");
+          break;
+        case '2.1':
+          state.designSet = design.getDesignSet("vcard21");
+          break;
+        default:
+          throw new ParserError("Unsupported vCard version.");
+      }
     }
     state.component[1].push(result);
   };
@@ -1988,89 +2269,155 @@ ICAL.parse = (function() {
    * @return {Object} key/value pairs
    */
   parser._parseParameters = function(line, start, designSet) {
-    var lastParam = start;
+    var prevLimit = start;
     var pos = 0;
-    var delim = PARAM_NAME_DELIMITER;
+    var nextLimit = 0;
+    var nextLimitChar;
     var result = {};
     var name, lcname;
     var value, valuePos = -1;
     var type, multiValue, mvdelim;
+    var stop = false;
 
-    // find the next '=' sign
-    // use lastParam and pos to find name
-    // check if " is used if so get value from "->"
-    // then increment pos to find next ;
+    while (!stop) {
+      nextLimit = helpers.nextUnescapedIndexOf(
+        line,
+        [PARAM_NAME_DELIMITER, PARAM_DELIMITER, VALUE_DELIMITER],
+        pos + 1
+      );
 
-    while ((pos !== false) &&
-           (pos = helpers.unescapedIndexOf(line, delim, pos + 1)) !== -1) {
-
-      name = line.substr(lastParam + 1, pos - lastParam - 1);
-      if (name.length == 0) {
-        throw new ParserError("Empty parameter name in '" + line + "'");
+      if (nextLimit === -1) {
+        throw new ParserError("Invalid parameters in '" + line + "'");
       }
-      lcname = name.toLowerCase();
 
+      nextLimitChar = line[nextLimit];
+
+      switch (nextLimitChar) {
+        case PARAM_NAME_DELIMITER:
+          // NAME=VALUE or NAME="VALUE".
+          // ----^-----    ----^-------
+          pos = nextLimit;
+
+          // Extract NAME.
+          name = line.substr(prevLimit + 1, pos - prevLimit - 1);
+
+          if (name.length === 0) {
+            throw new ParserError("Empty parameter name in '" + line + "'");
+          }
+
+          lcname = name.toLowerCase();
+
+          if (lcname in designSet.param) {
+            multiValue = designSet.param[lcname].multiValue;
+            if (designSet.param[lcname].multiValueSeparateDQuote) {
+              mvdelim = parser._rfc6868Escape('"' + multiValue + '"');
+            }
+          }
+
+          var nextChar = line[pos + 1];
+
+          if (nextChar === '"') {
+            // NAME="VALUE".
+            // ------^-----
+            valuePos = pos + 2;
+
+            // NAME="VALUE"
+            // -----------^
+            pos = helpers.unescapedIndexOf(line, '"', valuePos);
+
+
+            if (multiValue && pos != -1) {
+              var extendedValue = true;
+              while (extendedValue) {
+                if (line[pos + 1] == multiValue && line[pos + 2] == '"') {
+                  // NAME="VALUE","VALUE"
+                  // -------------------^
+                  pos = helpers.unescapedIndexOf(line, '"', pos + 3);
+                } else {
+                  extendedValue = false;
+                }
+              }
+            }
+
+            if (pos === -1) {
+              throw new ParserError(
+                'invalid line (no matching double quote) "' + line + '"'
+              );
+            }
+
+            value = line.substr(valuePos, pos - valuePos);
+            prevLimit = helpers.unescapedIndexOf(line, PARAM_DELIMITER, pos);
+            if (prevLimit === -1) {
+              stop = true;
+            }
+          } else {
+            // NAME=VALUE
+            // -----^----
+            valuePos = pos + 1;
+
+            nextLimit = helpers.nextUnescapedIndexOf(
+              line,
+              [PARAM_DELIMITER, VALUE_DELIMITER],
+              valuePos
+            );
+
+            if (nextLimit === -1) {
+              // NAME=VALUE
+              stop = true;
+              value = line.substr(valuePos);
+            } else {
+              // NAME=VALUE: or NAME=VALUE;
+              nextLimitChar = line[nextLimit];
+
+              if (nextLimitChar === VALUE_DELIMITER) {
+                stop = true;
+              } else {
+                prevLimit = nextLimit;
+                pos = nextLimit;
+              }
+
+              value = line.substr(valuePos, nextLimit - valuePos);
+            }
+          }
+
+          break;
+
+        case VALUE_DELIMITER:
+          // VALUE:
+          stop = true;
+          // fall through
+
+        case PARAM_DELIMITER:
+          // VALUE;
+          // -----^
+          pos = nextLimit;
+
+          name = line.substr(prevLimit + 1, pos - prevLimit - 1);
+          lcname = name.toLowerCase();
+
+          if (name.length == 0) {
+            // ;;
+            continue;
+          }
+
+          if (typeof designSet.valuesToParam[lcname] !== "string") {
+            throw new ParserError("Empty parameter name in '" + line + "'");
+          }
+
+          valuePos = prevLimit + 1;
+          value = name;
+          lcname = designSet.valuesToParam[lcname];
+
+          prevLimit = nextLimit;
+
+          break;
+      }
+
+      // Determine type.
       if (lcname in designSet.param && designSet.param[lcname].valueType) {
         type = designSet.param[lcname].valueType;
       } else {
         type = DEFAULT_PARAM_TYPE;
-      }
-
-      if (lcname in designSet.param) {
-        multiValue = designSet.param[lcname].multiValue;
-        if (designSet.param[lcname].multiValueSeparateDQuote) {
-          mvdelim = parser._rfc6868Escape('"' + multiValue + '"');
-        }
-      }
-
-      var nextChar = line[pos + 1];
-      if (nextChar === '"') {
-        valuePos = pos + 2;
-        pos = helpers.unescapedIndexOf(line, '"', valuePos);
-        if (multiValue && pos != -1) {
-            var extendedValue = true;
-            while (extendedValue) {
-              if (line[pos + 1] == multiValue && line[pos + 2] == '"') {
-                pos = helpers.unescapedIndexOf(line, '"', pos + 3);
-              } else {
-                extendedValue = false;
-              }
-            }
-          }
-        if (pos === -1) {
-          throw new ParserError(
-            'invalid line (no matching double quote) "' + line + '"'
-          );
-        }
-        value = line.substr(valuePos, pos - valuePos);
-        lastParam = helpers.unescapedIndexOf(line, PARAM_DELIMITER, pos);
-        if (lastParam === -1) {
-          pos = false;
-        }
-      } else {
-        valuePos = pos + 1;
-
-        // move to next ";"
-        var nextPos = helpers.unescapedIndexOf(line, PARAM_DELIMITER, valuePos);
-        var propValuePos = helpers.unescapedIndexOf(line, VALUE_DELIMITER, valuePos);
-        if (propValuePos !== -1 && nextPos > propValuePos) {
-          // this is a delimiter in the property value, let's stop here
-          nextPos = propValuePos;
-          pos = false;
-        } else if (nextPos === -1) {
-          // no ";"
-          if (propValuePos === -1) {
-            nextPos = line.length;
-          } else {
-            nextPos = propValuePos;
-          }
-          pos = false;
-        } else {
-          lastParam = nextPos;
-          pos = nextPos;
-        }
-
-        value = line.substr(valuePos, nextPos - valuePos);
       }
 
       value = parser._rfc6868Escape(value);
@@ -2081,6 +2428,7 @@ ICAL.parse = (function() {
         result[lcname] = parser._parseValue(value, type, designSet);
       }
     }
+
     return [result, value, valuePos];
   };
 
