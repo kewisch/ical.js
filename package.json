@@ -48,7 +48,7 @@
   },
   "license": "MPL-2.0",
   "engine": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "scripts": {
     "test": "grunt test-node"
