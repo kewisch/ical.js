@@ -44,7 +44,7 @@
     "karma-sauce-launcher": "^1.2.0",
     "karma-spec-reporter": "^0.0.32",
     "minami": "^1.2.3",
-    "mocha": "^5.2.0"
+    "mocha": "^6.1.4"
   },
   "license": "MPL-2.0",
   "engine": {
