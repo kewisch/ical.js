@@ -59,7 +59,7 @@ If you are missing anything, please don't hesitate to create an issue.
 ## Developing
 
 To contribute to ICAL.js you need to set up the development environment. This
-requires Node.js 6.x or later and grunt. Run the following steps to get
+requires Node.js 8.x or later and grunt. Run the following steps to get
 started.
 
 Preferred way (to match building and packaging with official process):
@@ -134,7 +134,7 @@ running.
 
 Last off, if you add the `--remote` option, karma will listen on all
 interfaces. This is useful if you are running the browser to test in a VM, for
-example when using [Internet Exporer VM images](https://www.modern.ie/virtualization-tools).
+example when using [Internet Exporer VM images](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
 
 ### Code Coverage
 ICAL.js is set up to calculate code coverage. You can

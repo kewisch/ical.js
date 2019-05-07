@@ -1,8 +1,8 @@
 language: node_js
 node_js:
   - "node"
+  - "10"
   - "8"
-  - "6"
 before_install:
   - yarn global add grunt-cli
   - yarn global add karma-cli
