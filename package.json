@@ -28,7 +28,7 @@
     "grunt": "^1.0.4",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-uglify": "^4.0.0",
+    "grunt-contrib-uglify": "^4.0.1",
     "grunt-coveralls": "^2.0.0",
     "grunt-gh-pages": "^3.1.0",
     "grunt-jsdoc": "^2.4.0",
