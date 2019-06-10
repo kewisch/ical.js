@@ -251,7 +251,6 @@ module.exports = function(grunt) {
       dist: {
         options: {
           src: 'build/ical.js',
-          //dest: 'build/ical.js',
           objectToExport: 'ICAL',
           amdModuleId: 'ICAL',
           globalAlias: 'ICAL'
