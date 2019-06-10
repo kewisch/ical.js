@@ -68,7 +68,7 @@ module.exports = function(grunt) {
       coverage: {
         src: ['<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
         options: {
-          root: './lib/ical/',
+          root: './build/',
           require: ['<%= libinfo.test.head %>'],
           reporter: 'dot',
           ui: 'tdd'
@@ -239,10 +239,6 @@ module.exports = function(grunt) {
         options: {
           src: 'build/ical.js',
           //dest: 'build/ical.js',
-          // optional, a template from templates subdir
-          // can be specified by name (e.g. 'umd'); if missing, the templates/umd.hbs
-          // file will be used from [libumd](https://github.com/bebraw/libumd)
-          //template: 'path/to/template.hbs',
           objectToExport: 'ICAL',
           amdModuleId: 'ICAL',
           globalAlias: 'ICAL'
