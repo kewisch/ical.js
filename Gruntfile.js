@@ -76,12 +76,25 @@ module.exports = function(grunt) {
       }
     },
 
+    remapIstanbul: {
+      build: {
+        src: './coverage/coverage.json',
+        options: {
+          reports: {
+            'lcovonly': './coverage/mapped/lcov.info',
+            'json': './coverage/mapped/coverage.json',
+            'html': './coverage/mapped/lcov-report'
+          }
+        }
+      }
+    },
+
     coveralls: {
       options: {
         force: true
       },
       unit: {
-        src: './coverage/lcov.info'
+        src: './coverage/mapped/lcov.info'
       }
     },
 
@@ -260,6 +273,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('remap-istanbul');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadNpmTasks('grunt-umd');
   grunt.loadNpmTasks('gruntify-eslint');
@@ -270,7 +284,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat:dist', 'umd:dist', 'uglify']);
-  grunt.registerTask('coverage', 'mocha_istanbul');
+  grunt.registerTask('coverage', ['mocha_istanbul', 'remapIstanbul']);
   grunt.registerTask('linters', ['eslint', 'check-browser-build']);
   grunt.registerTask('test-browser', ['karma:unit', 'karma:acceptance']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
