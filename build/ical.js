@@ -2946,6 +2946,22 @@ ICAL.Property = (function() {
     },
 
     /**
+     * Gets first parameter on the property.
+     *
+     * @param {String}        name   Property name (lowercase)
+     * @return {String}        Property value
+     */
+    getFirstParameter: function(name) {
+      var parameters = this.getParameter(name);
+
+      if (Array.isArray(parameters)) {
+        return parameters[0];
+      }
+
+      return parameters;
+    },
+
+    /**
      * Sets a parameter on the property.
      *
      * @param {String}       name     The parameter name

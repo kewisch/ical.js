@@ -59,11 +59,20 @@ If you are missing anything, please don't hesitate to create an issue.
 ## Developing
 
 To contribute to ICAL.js you need to set up the development environment. This
-requires Node.js 4.x or later and grunt. Run the following steps to get
+requires Node.js 8.x or later and grunt. Run the following steps to get
 started.
 
-    npm install -g grunt-cli  # Might need to run with sudo
-    npm install .
+Preferred way (to match building and packaging with official process):
+```
+yarn global add grunt-cli  # Might need to run with sudo
+yarn --frozen-lockfile
+```
+
+Alternative way:
+```
+npm install -g grunt-cli  # Might need to run with sudo
+npm install .
+```
 
 You can now dive into the code, run the tests and check coverage.
 
@@ -125,7 +134,7 @@ running.
 
 Last off, if you add the `--remote` option, karma will listen on all
 interfaces. This is useful if you are running the browser to test in a VM, for
-example when using [Internet Exporer VM images](https://www.modern.ie/virtualization-tools).
+example when using [Internet Exporer VM images](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
 
 ### Code Coverage
 ICAL.js is set up to calculate code coverage. You can
