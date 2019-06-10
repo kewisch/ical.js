@@ -9431,6 +9431,7 @@ ICAL.ComponentParser = (function() {
   return ComponentParser;
 }());
 
+//# sourceMappingURL=ical.js.map
 return ICAL;
 
 }));
