@@ -260,16 +260,16 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['package']);
   grunt.registerTask('package', ['concat:dist', 'uglify']);
   grunt.registerTask('coverage', 'mocha_istanbul');
-  grunt.registerTask('linters', ['eslint', 'check-browser-build']);
+  grunt.registerTask('linters', ['eslint']);
   grunt.registerTask('test-browser', ['karma:unit', 'karma:acceptance']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
 
   grunt.registerTask('ghpages-ci', ['jsdoc', 'concat:validator', 'run-on-master-leader:run-with-env:GITHUB_SSH_KEY:gh-pages']);
   grunt.registerTask('unit-ci', ['test-node:unit', 'test-node:acceptance', 'run-on-master-leader:karma:ci']);
   grunt.registerTask('coverage-ci', ['coverage', 'coveralls']);
-  grunt.registerTask('test-ci', ['check-browser-build', 'linters', 'unit-ci', 'coverage-ci', 'ghpages-ci']);
+  grunt.registerTask('test-ci', ['linters', 'unit-ci', 'coverage-ci', 'ghpages-ci']);
 
   // Additional tasks:
-  //   - tests.js: check-browser-build, performance-update, test-node
+  //   - tests.js: performance-update, test-node
   //   - timezones.js: timezones
 };

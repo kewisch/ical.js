@@ -1,26 +1,6 @@
 'use strict';
 
 module.exports = function(grunt) {
-  grunt.registerTask('check-browser-build', function(task) {
-    if (!task) {
-      grunt.task.run('package', 'check-browser-build:verify');
-      return;
-    }
-
-    var done = this.async();
-    grunt.util.spawn({
-      cmd: 'git',
-      args: ['diff', '--shortstat', 'build/ical.js', 'build/ical.min.js', 'build/ical.min.js.map'],
-    }, function(error, result, code) {
-      if (result.stdout.length) {
-        grunt.fail.fatal('Browser build is not up to date, please run `grunt package`');
-      } else {
-        grunt.log.ok('Browser build is up to date, good job!');
-      }
-      done();
-    });
-  });
-
   grunt.registerTask('performance-update', function(version) {
     function copyMaster(callback) {
       grunt.util.spawn({
