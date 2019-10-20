@@ -7,7 +7,7 @@ To give you a feeling about what you are dealing with, ical.js was originally
 created as a replacement for [libical], meant to be used in [Lightning], the
 calendaring extension to Thunderbird. Using binary components in Mozilla
 extensions often leads to compatibility issues so a pure JavaScript
-implementation was needed. It is now also used in the Firefox OS calendaring
+implementation was needed. It was also used in the Firefox OS calendaring
 application.
 
 Work on the library prompted creating some standards around it. One of them is
@@ -17,14 +17,10 @@ other document is jCard ([rfc7095]), which is the counterpart for vCard data.
 Pull Requests
 -------------
 In general we are happy about any form of contribution to ical.js. Note however
-that since the library is used in at least two larger projects, drastic changes
+that since the library is used in at least one larger projects, drastic changes
 to the API should be discussed in an issue beforehand. If you have a bug fix
 that doesn't affect the API or just adds methods and you don't want to waste
 time discussing it, feel free to just send a pull request and we'll see.
-
-When you send a pull request, don't forget to call `grunt package` to ensure the
-browser build in `build/ical.js`, its minified counterpart and the source map
-is updated. These files should be put into a separate commit.
 
 Also, you should check for linter errors and run the tests using `grunt
 linters` and `grunt test-node`. See the next section for details on tests. As
