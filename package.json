@@ -46,6 +46,9 @@
     "minami": "^1.2.3",
     "mocha": "^6.1.4"
   },
+  "resolutions": {
+    "karma-sauce-launcher/selenium-webdriver": "4.0.0-alpha.1"
+  },
   "license": "MPL-2.0",
   "engine": {
     "node": ">=8"
