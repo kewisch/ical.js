@@ -110,6 +110,10 @@ suite('ICAL.helpers', function() {
       );
     });
 
+    suiteTeardown(function() {
+      ICAL.TimezoneService.reset();
+    });
+
     test('timezones already correct', function() {
       var vtimezones;
       vtimezones = cal.getAllSubcomponents("vtimezone");

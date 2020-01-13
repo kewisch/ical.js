@@ -51,6 +51,8 @@ suite('icaltime', function() {
         time.toUnixTime(),
         Date.UTC(2012, 0, 1, 15) / 1000
       );
+
+      ICAL.TimezoneService.reset();
     });
   });
 

@@ -145,20 +145,36 @@
   };
 
   /**
-   * Registers a timezones for a given suite of tests.
-   * Uses suiteSetup to stage and will use suiteTeardown
-   * to purge all timezones for clean tests...
+   * Registers a timezones for a given suite of tests. Uses suiteSetup to stage
+   * and will use suiteTeardown to purge all timezones for clean tests...
    *
+   * Please note that you should only call this once per suite, otherwise the
+   * teardown function will reset the service while the parent suite will still
+   * need them.
    */
   testSupport.useTimezones = function(zones) {
+    let allZones = Array.prototype.slice.call(arguments);
+
     suiteTeardown(function() {
       // to ensure clean tests
       ICAL.TimezoneService.reset();
     });
 
-    Array.prototype.slice.call(arguments).forEach(function(zone) {
-      suiteSetup(function(done) {
-        testSupport.registerTimezone(zone, done);
+    suiteSetup(function(done) {
+      function zoneDone() {
+        if (--remaining == 0) {
+          done();
+        }
+      }
+
+      // By default, Z/UTC/GMT are already registered
+      if (ICAL.TimezoneService.count > 3) {
+        throw new Error("Can only register zones once" + ICAL.TimezoneService.count + ICAL.TimezoneService._zones.join("\n"));
+      }
+
+      var remaining = allZones.length;
+      allZones.forEach(function(zone) {
+        testSupport.registerTimezone(zone, zoneDone);
       });
     });
   };
