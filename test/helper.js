@@ -169,7 +169,7 @@
 
       // By default, Z/UTC/GMT are already registered
       if (ICAL.TimezoneService.count > 3) {
-        throw new Error("Can only register zones once" + ICAL.TimezoneService.count + ICAL.TimezoneService._zones.join("\n"));
+        throw new Error("Can only register zones once");
       }
 
       var remaining = allZones.length;
