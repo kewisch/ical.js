@@ -44,7 +44,7 @@
     "karma-sauce-launcher": "^2.0.2",
     "karma-spec-reporter": "^0.0.32",
     "minami": "^1.2.3",
-    "mocha": "^6.1.4"
+    "mocha": "^7.0.1"
   },
   "resolutions": {
     "karma-sauce-launcher/selenium-webdriver": "4.0.0-alpha.1"
