@@ -186,6 +186,56 @@ suite('parserv2', function() {
         expected
       );
     });
+
+    test('with multiple vCard TYPE parameters', function() {
+      var input = ';TYPE=work;TYPE=voice';
+      var expected = {
+        'type': ['work', 'voice']
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.components.vcard)[0],
+        expected
+      );
+    });
+
+    test('with multiple iCalendar MEMBER parameters', function() {
+      var input = ';MEMBER="urn:one","urn:two";MEMBER="urn:three"';
+      var expected = {
+        'member': ['urn:one', 'urn:two', 'urn:three']
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.components.vevent)[0],
+        expected
+      );
+    });
+
+    test('with comma in singleValue parameter', function() {
+      var input = ';LABEL="A, B"';
+      var expected = {
+        'label': 'A, B'
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.components.vcard)[0],
+        expected
+      );
+    });
+
+    test('with comma in singleValue parameter after multiValue parameter', function() {
+      // TYPE allows multiple values, whereas LABEL doesn't.
+      var input = ';TYPE=home;LABEL="A, B"';
+      var expected = {
+        'type': 'home',
+        'label': 'A, B'
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.components.vcard)[0],
+        expected
+      );
+    });
   });
 
   test('#_parseMultiValue', function() {

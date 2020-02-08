@@ -29,6 +29,8 @@ suite('timezone_service', function() {
 
     subject.reset();
     assert.isFalse(subject.has(name), 'removes ' + name + ' after reset');
+
+    assert.equal(subject.count, 3);
   });
 
   suite('register zones', function() {
@@ -36,7 +38,9 @@ suite('timezone_service', function() {
       var name = 'test';
       assert.isFalse(subject.has(name));
 
+      assert.equal(subject.count, 3);
       subject.register(name, ICAL.Timezone.localTimezone);
+      assert.equal(subject.count, 4);
       assert.isTrue(subject.has(name), 'is present after set');
       assert.equal(
         subject.get(name),
@@ -62,12 +66,14 @@ suite('timezone_service', function() {
     test('override', function() {
       // don't do this but you can if you want to shoot
       // yourself in the foot.
+      assert.equal(subject.count, 3);
       subject.register('Z', ICAL.Timezone.localTimezone);
 
       assert.equal(
         subject.get('Z'),
         ICAL.Timezone.localTimezone
       );
+      assert.equal(subject.count, 3);
     });
 
     test('using a component', function() {
@@ -76,7 +82,9 @@ suite('timezone_service', function() {
       var vtimezone = comp.getFirstSubcomponent('vtimezone');
       var tzid = vtimezone.getFirstPropertyValue('tzid');
 
+      assert.equal(subject.count, 3);
       subject.register(vtimezone);
+      assert.equal(subject.count, 4);
 
       assert.isTrue(subject.has(tzid), 'successfully registed with component');
 
@@ -86,5 +94,4 @@ suite('timezone_service', function() {
       assert.equal(zone.tzid, tzid);
     });
   });
-
 });

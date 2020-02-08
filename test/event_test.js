@@ -2,7 +2,7 @@ suite('ICAL.Event', function() {
 
 
   var testTzid = 'America/New_York';
-  testSupport.useTimezones(testTzid);
+  testSupport.useTimezones(testTzid, 'America/Denver', 'America/Los_Angeles');
 
   var icsData;
 
@@ -670,7 +670,6 @@ suite('ICAL.Event', function() {
 
       suite('#' + prop, function() {
         var tzid = 'America/Denver';
-        testSupport.useTimezones(tzid);
 
         setup(function() {
           timeProp = primaryItem.getFirstProperty(ical);
@@ -783,6 +782,20 @@ suite('ICAL.Event', function() {
 
       subject.recurrenceId = changeval;
       assert.deepEqual(subject.component.getFirstPropertyValue('recurrence-id'), changeval);
+
+      var tzid = 'America/New_York';
+      var changeval2 = new ICAL.Time({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 12,
+        minute: 13,
+        second: 14,
+        timezone: tzid
+      });
+
+      subject.recurrenceId = changeval2;
+      assert.deepEqual(subject.component.getFirstProperty('recurrence-id').getParameter("tzid"), tzid);
     });
   });
 
@@ -854,7 +867,7 @@ suite('ICAL.Event', function() {
           day: 2,
           hour: 6,
           isDate: false,
-          timezone: testTzid
+          timezone: subject.startDate.zone
       });
 
       assert.equal(subject.duration.toString(), 'P2D');
@@ -942,6 +955,49 @@ suite('ICAL.Event', function() {
     testSupport.defineSample('minimal.ics', function(data) {
       icsData = data;
     });
+
+    test('result with different timezones', function() {
+      var subject = (new ICAL.Component(ICAL.parse(icsData)))
+        .getFirstSubcomponent('vevent');
+      // 3 hours ahead of L.A.
+      subject.updatePropertyWithValue('dtstart', ICAL.Time.fromData({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 10,
+        minute: 20,
+        timezone: 'America/New_York'
+      }));
+      subject.updatePropertyWithValue('dtend', ICAL.Time.fromData({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 12,
+        minute: 50,
+        timezone: 'America/Los_Angeles'
+      }));
+
+      subject = new ICAL.Event(subject);
+      assert.equal(subject.startDate.toString(), ICAL.Time.fromData({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 10,
+        minute: 20,
+        timezone: 'America/New_York',
+      }).toString());
+
+      assert.equal(subject.endDate.toString(), ICAL.Time.fromData({
+        year: 2012,
+        month: 1,
+        day: 1,
+        hour: 12,
+        minute: 50,
+        timezone: 'America/Los_Angeles'
+      }).toString());
+
+      assert.equal(subject.duration.toString(), 'PT5H30M');
+    })
 
     test('set', function() {
       var subject = new ICAL.Component(ICAL.parse(icsData));

@@ -63,12 +63,64 @@ suite('design', function() {
 
         assert.equal(value, '20121010');
       });
+
+      test('#to/fromICAL (lenient)', function() {
+        var value = '20120901T130000';
+        var expected = '2012-09-01T13:00:00';
+
+        ICAL.design.strict = false;
+        assert.equal(
+          subject.fromICAL(value),
+          expected
+        );
+
+        assert.equal(
+          subject.toICAL(expected),
+          value
+        );
+        ICAL.design.strict = true;
+      });
+
       test('#toICAL invalid', function() {
         var value = subject.toICAL(
           'wheeeeeeeeeeeeee'
         );
 
         assert.equal(value, 'wheeeeeeeeeeeeee');
+      });
+
+
+      test('#fromICAL somewhat invalid', function() {
+        // Strict mode is not completely strict, it takes a lot of shortcuts in the name of
+        // performance. The functions in ICAL.design don't actually throw errors, given there is no
+        // error collector. With a working error collector we should make lenient mode the default
+        // and have strict mode be more pedantic.
+        var value = subject.fromICAL('20131210Z');
+        assert.equal(value, '2013-12-10');
+      });
+
+      test('#(un)decorate (lenient)', function() {
+        var value = '2012-10-10T11:12:13';
+        var prop = new ICAL.Property(['date', { tzid: 'test' }]);
+
+        ICAL.design.strict = false;
+
+        var time = subject.decorate(
+          value,
+          prop
+        );
+
+        assert.hasProperties(
+          time,
+          { year: 2012, month: 10, day: 10, hour: 11, minute: 12, second: 13, isDate: false }
+        );
+
+        assert.equal(
+          subject.undecorate(time),
+          value
+        );
+        ICAL.design.strict = true;
+
       });
 
       test('#(un)decorate (custom timezone)', function() {
@@ -118,6 +170,46 @@ suite('design', function() {
         );
 
         assert.equal(value, 'wheeeeeeeeeeeeee');
+      });
+
+      test('#from/toICAL (lenient)', function() {
+        var value = '20190102';
+        var expected = '2019-01-02';
+
+        ICAL.design.strict = false;
+        assert.equal(
+          subject.fromICAL(value),
+          expected
+        );
+
+        assert.equal(
+          subject.toICAL(expected),
+          value
+        );
+        ICAL.design.strict = true;
+      });
+      test('#(un)decorate (lenient)', function() {
+        ICAL.design.strict = false;
+        var undecorated = '2012-09-01';
+        var prop = new ICAL.Property(['date-time', {}]);
+
+        var decorated = subject.decorate(undecorated, prop);
+
+        assert.hasProperties(
+          decorated,
+          {
+            year: 2012,
+            month: 9,
+            day: 1,
+            isDate: true
+          }
+        );
+
+        assert.equal(
+          subject.undecorate(decorated),
+          undecorated
+        );
+        ICAL.design.strict = true;
       });
 
       test('#(un)decorate (utc)', function() {
@@ -402,6 +494,24 @@ suite('design', function() {
       setup(function() {
         subject = subject.value.period;
       });
+      test('#(to|from)ICAL date/date (lenient)', function() {
+        var original = '19970101/19970102';
+        ICAL.design.strict = false;
+
+        var fromICAL = subject.fromICAL(original);
+
+        assert.deepEqual(
+          fromICAL,
+          ['1997-01-01', '1997-01-02']
+        );
+
+        assert.equal(
+          subject.toICAL(fromICAL),
+          original
+        );
+
+        ICAL.design.strict = true;
+      });
 
       test('#(to|from)ICAL date/date', function() {
         var original = '19970101T180000Z/19970102T070000Z';
@@ -484,6 +594,42 @@ suite('design', function() {
         assert.equal(decorated.end.zone, timezone);
 
         assert.deepEqual(subject.undecorate(decorated), undecorated);
+      });
+
+      test('#(un)decorate (lenient, date/date)', function() {
+        ICAL.design.strict = false;
+
+        var prop = new ICAL.Property(['date', { tzid: 'test' }]);
+
+        var undecorated = ['1997-01-01', '1998-01-01'];
+        var decorated = subject.decorate(
+          undecorated,
+          prop
+        );
+
+        assert.hasProperties(
+          decorated.start,
+          {
+            year: 1997,
+            day: 1,
+            month: 1,
+            isDate: true
+          }
+        );
+
+        assert.hasProperties(
+          decorated.end,
+          {
+            year: 1998,
+            day: 1,
+            month: 1,
+            isDate: true
+          }
+        );
+
+        assert.deepEqual(subject.undecorate(decorated), undecorated);
+
+        ICAL.design.strict = true;
       });
 
       test('#(un)decorate (date-time/duration)', function() {

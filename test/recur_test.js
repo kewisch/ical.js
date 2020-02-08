@@ -583,6 +583,70 @@ suite('recur', function() {
         });
       }(map));
     }
+
+    var expectedWithWkst = [
+      //day, wkst, expected
+      ['SU', Time.SUNDAY, 1],
+      ['MO', Time.SUNDAY, 2],
+      ['TU', Time.SUNDAY, 3],
+      ['WE', Time.SUNDAY, 4],
+      ['TH', Time.SUNDAY, 5],
+      ['FR', Time.SUNDAY, 6],
+      ['SA', Time.SUNDAY, 7],
+      ['SU', Time.MONDAY, 7],
+      ['MO', Time.MONDAY, 1],
+      ['TU', Time.MONDAY, 2],
+      ['WE', Time.MONDAY, 3],
+      ['TH', Time.MONDAY, 4],
+      ['FR', Time.MONDAY, 5],
+      ['SA', Time.MONDAY, 6],
+      ['SU', Time.TUESDAY, 6],
+      ['MO', Time.TUESDAY, 7],
+      ['TU', Time.TUESDAY, 1],
+      ['WE', Time.TUESDAY, 2],
+      ['TH', Time.TUESDAY, 3],
+      ['FR', Time.TUESDAY, 4],
+      ['SA', Time.TUESDAY, 5],
+      ['SU', Time.WEDNESDAY, 5],
+      ['MO', Time.WEDNESDAY, 6],
+      ['TU', Time.WEDNESDAY, 7],
+      ['WE', Time.WEDNESDAY, 1],
+      ['TH', Time.WEDNESDAY, 2],
+      ['FR', Time.WEDNESDAY, 3],
+      ['SA', Time.WEDNESDAY, 4],
+      ['SU', Time.THURSDAY, 4],
+      ['MO', Time.THURSDAY, 5],
+      ['TU', Time.THURSDAY, 6],
+      ['WE', Time.THURSDAY, 7],
+      ['TH', Time.THURSDAY, 1],
+      ['FR', Time.THURSDAY, 2],
+      ['SA', Time.THURSDAY, 3],
+      ['SU', Time.FRIDAY, 3],
+      ['MO', Time.FRIDAY, 4],
+      ['TU', Time.FRIDAY, 5],
+      ['WE', Time.FRIDAY, 6],
+      ['TH', Time.FRIDAY, 7],
+      ['FR', Time.FRIDAY, 1],
+      ['SA', Time.FRIDAY, 2],
+      ['SU', Time.SATURDAY, 2],
+      ['MO', Time.SATURDAY, 3],
+      ['TU', Time.SATURDAY, 4],
+      ['WE', Time.SATURDAY, 5],
+      ['TH', Time.SATURDAY, 6],
+      ['FR', Time.SATURDAY, 7],
+      ['SA', Time.SATURDAY, 1]
+    ];
+
+    for (var i = 0; i< expectedWithWkst.length; i++) {
+      (function(list) {
+        test(list[0] + ' to constant, wkst = ' + list[1], function() {
+          assert.equal(
+            ICAL.Recur.icalDayToNumericDay(list[0], list[1]),
+            list[2]
+          );
+        });
+      }(expectedWithWkst[i]));
+    }
   });
 
   suite('ICAL.Recur#numericDayToIcalDay', function() {
@@ -599,7 +663,7 @@ suite('recur', function() {
       (function(map) {
         test(map + ' to ' + expected[map], function() {
           assert.equal(
-            ICAL.Recur.numericDayToIcalDay(map),
+            ICAL.Recur.numericDayToIcalDay(+map),
             expected[map]
           );
         });
@@ -607,4 +671,67 @@ suite('recur', function() {
     }
   });
 
+  var expectedWithWkst = [
+    //expectedDay, wkst, numericDay
+    ['SU', Time.SUNDAY, 1],
+    ['MO', Time.SUNDAY, 2],
+    ['TU', Time.SUNDAY, 3],
+    ['WE', Time.SUNDAY, 4],
+    ['TH', Time.SUNDAY, 5],
+    ['FR', Time.SUNDAY, 6],
+    ['SA', Time.SUNDAY, 7],
+    ['SU', Time.MONDAY, 7],
+    ['MO', Time.MONDAY, 1],
+    ['TU', Time.MONDAY, 2],
+    ['WE', Time.MONDAY, 3],
+    ['TH', Time.MONDAY, 4],
+    ['FR', Time.MONDAY, 5],
+    ['SA', Time.MONDAY, 6],
+    ['SU', Time.TUESDAY, 6],
+    ['MO', Time.TUESDAY, 7],
+    ['TU', Time.TUESDAY, 1],
+    ['WE', Time.TUESDAY, 2],
+    ['TH', Time.TUESDAY, 3],
+    ['FR', Time.TUESDAY, 4],
+    ['SA', Time.TUESDAY, 5],
+    ['SU', Time.WEDNESDAY, 5],
+    ['MO', Time.WEDNESDAY, 6],
+    ['TU', Time.WEDNESDAY, 7],
+    ['WE', Time.WEDNESDAY, 1],
+    ['TH', Time.WEDNESDAY, 2],
+    ['FR', Time.WEDNESDAY, 3],
+    ['SA', Time.WEDNESDAY, 4],
+    ['SU', Time.THURSDAY, 4],
+    ['MO', Time.THURSDAY, 5],
+    ['TU', Time.THURSDAY, 6],
+    ['WE', Time.THURSDAY, 7],
+    ['TH', Time.THURSDAY, 1],
+    ['FR', Time.THURSDAY, 2],
+    ['SA', Time.THURSDAY, 3],
+    ['SU', Time.FRIDAY, 3],
+    ['MO', Time.FRIDAY, 4],
+    ['TU', Time.FRIDAY, 5],
+    ['WE', Time.FRIDAY, 6],
+    ['TH', Time.FRIDAY, 7],
+    ['FR', Time.FRIDAY, 1],
+    ['SA', Time.FRIDAY, 2],
+    ['SU', Time.SATURDAY, 2],
+    ['MO', Time.SATURDAY, 3],
+    ['TU', Time.SATURDAY, 4],
+    ['WE', Time.SATURDAY, 5],
+    ['TH', Time.SATURDAY, 6],
+    ['FR', Time.SATURDAY, 7],
+    ['SA', Time.SATURDAY, 1]
+  ];
+
+  for (var i = 0; i< expectedWithWkst.length; i++) {
+    (function(list) {
+      test(list[2] + ' to string, wkst = ' + list[1], function() {
+        assert.equal(
+          ICAL.Recur.numericDayToIcalDay(list[2], list[1]),
+          list[0]
+        );
+      });
+    }(expectedWithWkst[i]));
+  }
 });

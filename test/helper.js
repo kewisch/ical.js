@@ -85,8 +85,7 @@
    * @param {Function} optional callback called on completion
    */
   testSupport.requireBenchmarkBuild = function(version, callback) {
-    var path = '/build/benchmark/ical_' + version + '.js';
-    testSupport.require(path, callback);
+    testSupport.require('/build/benchmark/ical_' + version + '.js', callback);
   };
 
   testSupport.require = function cross_require(file, callback) {
@@ -94,7 +93,7 @@
       file += '.js';
     }
 
-    if (typeof(window) === 'undefined') {
+    if (testSupport.isNode) {
       var lib = require(__dirname + '/../' + file);
       if (typeof(callback) !== 'undefined') {
         callback(lib);
@@ -146,20 +145,36 @@
   };
 
   /**
-   * Registers a timezones for a given suite of tests.
-   * Uses suiteSetup to stage and will use suiteTeardown
-   * to purge all timezones for clean tests...
+   * Registers a timezones for a given suite of tests. Uses suiteSetup to stage
+   * and will use suiteTeardown to purge all timezones for clean tests...
    *
+   * Please note that you should only call this once per suite, otherwise the
+   * teardown function will reset the service while the parent suite will still
+   * need them.
    */
   testSupport.useTimezones = function(zones) {
+    let allZones = Array.prototype.slice.call(arguments);
+
     suiteTeardown(function() {
       // to ensure clean tests
       ICAL.TimezoneService.reset();
     });
 
-    Array.prototype.slice.call(arguments).forEach(function(zone) {
-      suiteSetup(function(done) {
-        testSupport.registerTimezone(zone, done);
+    suiteSetup(function(done) {
+      function zoneDone() {
+        if (--remaining == 0) {
+          done();
+        }
+      }
+
+      // By default, Z/UTC/GMT are already registered
+      if (ICAL.TimezoneService.count > 3) {
+        throw new Error("Can only register zones once");
+      }
+
+      var remaining = allZones.length;
+      allZones.forEach(function(zone) {
+        testSupport.registerTimezone(zone, zoneDone);
       });
     });
   };
@@ -214,7 +229,6 @@
     testSupport.require('/test/support/' + lib);
   };
 
-
   if (!testSupport.isKarma) {
     testSupport.require('/node_modules/benchmark/benchmark.js');
     testSupport.require('/test/support/performance.js');
@@ -222,4 +236,5 @@
     // Load it here so its pre-loaded in all suite blocks...
     testSupport.requireICAL();
   }
+
 }());

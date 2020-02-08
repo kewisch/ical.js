@@ -51,6 +51,8 @@ suite('icaltime', function() {
         time.toUnixTime(),
         Date.UTC(2012, 0, 1, 15) / 1000
       );
+
+      ICAL.TimezoneService.reset();
     });
   });
 
@@ -405,6 +407,77 @@ suite('icaltime', function() {
       });
     });
 
+    var assertionsWithWkst = [
+      //wkst, expectedDayofWeek, date
+      [Time.SUNDAY, 1, new Date(2012, 0, 1)],
+      [Time.SUNDAY, 2, new Date(2012, 0, 2)],
+      [Time.SUNDAY, 3, new Date(2012, 0, 3)],
+      [Time.SUNDAY, 4, new Date(2012, 0, 4)],
+      [Time.SUNDAY, 5, new Date(2012, 0, 5)],
+      [Time.SUNDAY, 6, new Date(2012, 0, 6)],
+      [Time.SUNDAY, 7, new Date(2012, 0, 7)],
+      [Time.MONDAY, 7, new Date(2012, 0, 1)],
+      [Time.MONDAY, 1, new Date(2012, 0, 2)],
+      [Time.MONDAY, 2, new Date(2012, 0, 3)],
+      [Time.MONDAY, 3, new Date(2012, 0, 4)],
+      [Time.MONDAY, 4, new Date(2012, 0, 5)],
+      [Time.MONDAY, 5, new Date(2012, 0, 6)],
+      [Time.MONDAY, 6, new Date(2012, 0, 7)],
+      [Time.TUESDAY, 6, new Date(2012, 0, 1)],
+      [Time.TUESDAY, 7, new Date(2012, 0, 2)],
+      [Time.TUESDAY, 1, new Date(2012, 0, 3)],
+      [Time.TUESDAY, 2, new Date(2012, 0, 4)],
+      [Time.TUESDAY, 3, new Date(2012, 0, 5)],
+      [Time.TUESDAY, 4, new Date(2012, 0, 6)],
+      [Time.TUESDAY, 5, new Date(2012, 0, 7)],
+      [Time.WEDNESDAY, 5, new Date(2012, 0, 1)],
+      [Time.WEDNESDAY, 6, new Date(2012, 0, 2)],
+      [Time.WEDNESDAY, 7, new Date(2012, 0, 3)],
+      [Time.WEDNESDAY, 1, new Date(2012, 0, 4)],
+      [Time.WEDNESDAY, 2, new Date(2012, 0, 5)],
+      [Time.WEDNESDAY, 3, new Date(2012, 0, 6)],
+      [Time.WEDNESDAY, 4, new Date(2012, 0, 7)],
+      [Time.THURSDAY, 4, new Date(2012, 0, 1)],
+      [Time.THURSDAY, 5, new Date(2012, 0, 2)],
+      [Time.THURSDAY, 6, new Date(2012, 0, 3)],
+      [Time.THURSDAY, 7, new Date(2012, 0, 4)],
+      [Time.THURSDAY, 1, new Date(2012, 0, 5)],
+      [Time.THURSDAY, 2, new Date(2012, 0, 6)],
+      [Time.THURSDAY, 3, new Date(2012, 0, 7)],
+      [Time.FRIDAY, 3, new Date(2012, 0, 1)],
+      [Time.FRIDAY, 4, new Date(2012, 0, 2)],
+      [Time.FRIDAY, 5, new Date(2012, 0, 3)],
+      [Time.FRIDAY, 6, new Date(2012, 0, 4)],
+      [Time.FRIDAY, 7, new Date(2012, 0, 5)],
+      [Time.FRIDAY, 1, new Date(2012, 0, 6)],
+      [Time.FRIDAY, 2, new Date(2012, 0, 7)],
+      [Time.SATURDAY, 2, new Date(2012, 0, 1)],
+      [Time.SATURDAY, 3, new Date(2012, 0, 2)],
+      [Time.SATURDAY, 4, new Date(2012, 0, 3)],
+      [Time.SATURDAY, 5, new Date(2012, 0, 4)],
+      [Time.SATURDAY, 6, new Date(2012, 0, 5)],
+      [Time.SATURDAY, 7, new Date(2012, 0, 6)],
+      [Time.SATURDAY, 1, new Date(2012, 0, 7)]
+    ];
+
+    assertionsWithWkst.forEach(function(item) {
+      var wkst = item[0];
+      var dayOfWeek = item[1];
+      var date = item[2];
+      var human = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+      var msg = human + ' should be #' + dayOfWeek + ' day';
+
+      test(msg, function() {
+        var subject = new ICAL.Time.fromJSDate(
+          date
+        );
+
+        assert.equal(
+          subject.dayOfWeek(wkst),
+          dayOfWeek
+        );
+      });
+    });
   });
 
   suite('#dayOfYear', function() {
