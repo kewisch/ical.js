@@ -1,11 +1,17 @@
 suite('timezone', function() {
-  var icsData;
-  var timezone;
+  var icsData, icsDataTwo;
+  var timezone, timezoneTwo;
 
   function timezoneTest(tzid, name, testCb) {
     if (typeof(name) === 'function') {
       testCb = name;
       name = 'parse';
+    }
+
+    var tzidTwo;
+    if (Array.isArray(tzid)) {
+      tzidTwo = tzid[1]
+      tzid = tzid[0]
     }
 
     suite(tzid, function() {
@@ -18,9 +24,16 @@ suite('timezone', function() {
           timezone = ICAL.Timezone.localTimezone;
         });
       } else {
+        icsData = null;
+        icsDataTwo = null;
         testSupport.defineSample('timezones/' + tzid + '.ics', function(data) {
           icsData = data;
         });
+        if (tzidTwo) {
+          testSupport.defineSample('timezones/' + tzidTwo + '.ics', function(data) {
+            icsDataTwo = data;
+          });
+        }
 
         setup(function() {
           var parsed = ICAL.parse(icsData);
@@ -28,6 +41,13 @@ suite('timezone', function() {
           var comp = vcalendar.getFirstSubcomponent('vtimezone');
 
           timezone = new ICAL.Timezone(comp);
+          if (icsDataTwo !== null) {
+            var parsed = ICAL.parse(icsDataTwo);
+            var vcalendar = new ICAL.Component(parsed);
+            var comp = vcalendar.getFirstSubcomponent('vtimezone');
+  
+            timezoneTwo = new ICAL.Timezone(comp);
+          }
         });
       }
 
@@ -236,6 +256,22 @@ suite('timezone', function() {
       var subject3 = subject2.convertToZone(ICAL.Timezone.localTimezone);
       assert.equal(subject3.toString(), '2012-03-11T01:59:00');
     });
+    timezoneTest(['Europe/Vienna', 'Europe/Berlin'], 'convert from Europe/Berlin', function() {
+      var subject = new ICAL.Time.fromString('2019-10-25T17:02:00Z');
+      subject.zone = timezoneTwo;
+      var subject2 = subject.convertToZone(timezone);
+
+      assert.equal(subject2.zone.tzid, timezone.tzid);
+      assert.equal(subject2.toString(), '2019-10-25T17:02:00');
+    })
+    timezoneTest(['Europe/Vienna', 'Europe/Berlin2'], 'convert from Europe/Berlin2', function() {
+      var subject = new ICAL.Time.fromString('2019-10-25T15:30:00Z');
+      subject.zone = timezone;
+      var subject2 = subject.convertToZone(timezoneTwo);
+
+      assert.equal(subject2.zone.tzid, timezoneTwo.tzid);
+      assert.equal(subject2.toString(), '2019-10-25T15:30:00');
+    })
   });
 
   suite('#fromData', function() {
