@@ -113,6 +113,12 @@ suite('ICAL.stringify', function() {
       assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, false), "DESCRIPTION:foo" + N + "bar");
       assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, true), "DESCRIPTION:foobar");
 
+      var utf16_muscle = '\uD83D\uDCAA'; //in UTF-8 this is F0 DF 92 AA.  If space/new line is inserted between the surrogates, then the JS Engine substitutes each stand-alone surrogate with REPLACEMENT CHARACTER 0xEF 0xBF 0xBD
+      subject.setValue(utf16_muscle);
+      assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, false), "DESCRIPTION:" + N + utf16_muscle);//verify new line is after ':', as otherwise the whole line is longer than ICAL.foldLength
+      subject.setValue('aa' + utf16_muscle + utf16_muscle + 'a' + utf16_muscle + utf16_muscle);
+      assert.equal(ICAL.stringify.property(subject.toJSON(), ICAL.design.icalendar, false), "DESCRIPTION:aa" + N + utf16_muscle + utf16_muscle + 'a' + utf16_muscle + N + utf16_muscle);//verify that the utf16_muscle is moved as whole to a new line as it is 4 UTF-8 bytes
+
       ICAL.foldLength = oldLength;
     });
   });
