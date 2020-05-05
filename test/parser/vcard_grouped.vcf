@@ -1,0 +1,5 @@
+BEGIN:VCARD
+VERSION:4.0
+ADR;TYPE=work:pobox;apt;street;city;state;zipcode;country
+ITEM1.ADR;TYPE=home:pobox1;apt1;street1;city1;state1;zipcode1;country1
+END:VCARD
