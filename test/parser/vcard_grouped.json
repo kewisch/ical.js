@@ -3,7 +3,7 @@
   [
     [ "version", {}, "text", "4.0" ],
     [ "adr", { "type": "work" }, "text", [ "pobox", "apt", "street", "city", "state", "zipcode", "country" ] ],
-    [ "item1.adr", { "type": "home" }, "text", [ "pobox1", "apt1", "street1", "city1", "state1", "zipcode1", "country1" ] ]
+      [ "adr", { "type": "home", "group": "item1" }, "text", [ "pobox1", "apt1", "street1", "city1", "state1", "zipcode1", "country1" ] ]
   ],
   []
 ]
