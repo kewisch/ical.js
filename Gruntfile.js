@@ -31,8 +31,8 @@ module.exports = function(grunt) {
         performance: ['test/performance/*_test.js']
       },
       validator: {
-        dev: 'https://rawgit.com/mozilla-comm/ical.js/master/build/ical.js',
-        prod: 'https://cdn.rawgit.com/mozilla-comm/ical.js/<%= travis.commit %>/build/ical.js',
+        dev: 'https://unpkg.com/ical.js', // master builds don't currently have ical.js committed. See #405
+        prod: 'https://unpkg.com/ical.js@<%= pkg.version %>/build/ical.js',
         dest: 'validator.html'
       }
     },
