@@ -54,7 +54,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "test": "grunt test-node"
+    "test": "grunt test-node",
+    "prepare": "grunt"
   },
   "files": [
     "build/ical.js",
