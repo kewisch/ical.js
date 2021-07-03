@@ -29,7 +29,7 @@ There is also a validator that demonstrates how to use the library in a webpage
 in the [sandbox/](https://github.com/mozilla-comm/ical.js/tree/master/sandbox)
 subdirectory.
 
-[Try the validator online](http://mozilla-comm.github.com/ical.js/validator.html), it always uses the latest copy of ICAL.js.
+[Try the validator online](http://mozilla-comm.github.io/ical.js/validator.html), it always uses the latest copy of ICAL.js.
 
 ## Installing
 
