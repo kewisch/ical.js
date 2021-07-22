@@ -757,6 +757,7 @@ suite('ICAL.Event', function() {
     testProperty('organizer', 'other');
     testProperty('uid', 'other');
     testProperty('sequence', 123);
+    testProperty('color', 'turquoise');
 
     test('#duration', function() {
       var end = subject.endDate;
