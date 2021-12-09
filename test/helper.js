@@ -51,6 +51,9 @@
 
   /* cross require */
   testSupport.requireICAL = function() {
+    if (typeof global !== "undefined") {
+      global.ICAL = {};
+    }
     var files = [
       'helpers',
       'recur_expansion',
