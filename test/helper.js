@@ -51,10 +51,17 @@
 
   /* cross require */
   testSupport.requireICAL = function() {
-    if (typeof global !== "undefined") {
-      global.ICAL = {};
+    let crossGlobal = typeof global == "undefined" ? window : global;
+
+    if (typeof crossGlobal !== "undefined") {
+      if (typeof crossGlobal.ICAL != "undefined") {
+        return;
+      }
+      crossGlobal.ICAL = {};
     }
+
     var files = [
+      'module',
       'helpers',
       'recur_expansion',
       'event',
