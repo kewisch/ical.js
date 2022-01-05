@@ -1,0 +1,86 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+name: "Checkin"
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: "Build & Test"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['16', '17']
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Setup node"
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Linters"
+        run: grunt linters
+
+      - name: "Node Unit Tests"
+        run: grunt unit-node-ci
+
+#      Disabled for the moment, I can't get sauce labs to work
+#      - name: "Browser Unit Tests"
+#        env:
+#          SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+#          SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+#        run: grunt unit-browser-ci
+
+      - name: "Coverage Prepare"
+        run: grunt coverage
+
+      - name: "Coverage Push"
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: unit-${{ matrix.node }}
+          parallel: true
+
+  ghpages:
+    name: "GH Pages"
+    if: github.ref == 'refs/head/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Setup node"
+        uses: actions/setup-node@v1
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "GH Pages Prepare"
+        run: grunt ghpages-prepare
+
+      - name: "GH Pages Push"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: grunt ghpages-push
+
+
+  finish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
+

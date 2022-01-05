@@ -36,8 +36,8 @@ one or more reminders via email or comment.
 Tests
 -----
 To make sure there are no regressions, we use unit testing and continuous
-integration via Travis. Sending a pull request with a unit test for the bug you
-are fixing or feature you are adding will greatly improve the speed of
+integration via Github Actions. Sending a pull request with a unit test for the
+bug you are fixing or feature you are adding will greatly improve the speed of
 reviewing and the pull request being merged. Please read the page on [running
 tests] in the wiki to set these up and make sure everything passes.
 
@@ -49,13 +49,13 @@ Last words
 ----------
 If you have any questions please don't hesitate to get in touch. You can leave
 a comment on an issue, send [@kewisch] an email, or for ad-hoc questions contact
-`Fallen` on [irc.mozilla.org].
+`Fallen` on [chat.mozilla.org].
 
 [libical]: https://github.com/libical/libical/
 [Lightning]: http://www.mozilla.org/projects/calendar/
 [rfc7095]: https://tools.ietf.org/html/rfc7095
 [rfc7265]: https://tools.ietf.org/html/rfc7265
 [running tests]: https://github.com/mozilla-comm/ical.js/wiki/Running-Tests
-[irc.mozilla.org]: irc://irc.mozilla.org/#calendar
+[chat.mozilla.org]: https://chat.mozilla.org/
 [@kewisch]: https://github.com/kewisch/
 [Mozilla Public License]: https://www.mozilla.org/MPL/2.0/

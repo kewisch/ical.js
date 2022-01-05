@@ -35,6 +35,11 @@ module.exports = function(grunt) {
         dest: 'validator.html'
       }
     },
+    github: {
+      actor: process.env.GITHUB_ACTOR,
+      sha: process.env.GITHUB_SHA,
+      token: process.env.GITHUB_TOKEN
+    },
 
     concat: {
       options: {
@@ -223,11 +228,11 @@ module.exports = function(grunt) {
         clone: 'ghpages-stage',
         only: '<%= libinfo.doc %>',
         user: {
-          name: 'Travis CI',
-          email: 'builds@travis-ci.org'
+          name: '<%= github.actor %>',
+          email: '<%= github.actor %>@users.noreply.github.com'
         },
-        repo: 'git@github.com:mozilla-comm/ical.js.git',
-        message: 'Update API documentation and validator for <%= travis.commit %>'
+        repo: 'https://x-access-token:<%= github.token %>@github.com/mozilla-comm/ical.js.git',
+        message: 'Update API documentation and validator for <%= github.sha %>'
       },
       src: ['<%= libinfo.doc %>/**', '<%= libinfo.validator.dest %>']
     }
@@ -263,8 +268,10 @@ module.exports = function(grunt) {
   grunt.registerTask('test-browser', ['karma:unit', 'karma:acceptance']);
   grunt.registerTask('test', ['test-browser', 'test-node']);
 
-  grunt.registerTask('ghpages-ci', ['jsdoc', 'concat:validator', 'run-on-master-leader:run-with-env:GITHUB_SSH_KEY:gh-pages']);
-  grunt.registerTask('unit-ci', ['test-node:unit', 'test-node:acceptance', 'run-on-master-leader:karma:ci']);
+  grunt.registerTask('ghpages-prepare', ['jsdoc', 'concat:validator']);
+  grunt.registerTask('ghpages-push', ['gh-pages']);
+  grunt.registerTask('unit-node-ci', ['test-node:unit', 'test-node:acceptance']);
+  grunt.registerTask('unit-browser-ci', ['karma:ci']);
   grunt.registerTask('coverage-ci', ['coverage', 'coveralls']);
   grunt.registerTask('test-ci', ['linters', 'unit-ci', 'coverage-ci', 'ghpages-ci']);
 
