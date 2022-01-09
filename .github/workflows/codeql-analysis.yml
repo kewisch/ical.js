@@ -19,7 +19,7 @@ on:
     paths:
       - '**/*.js'
   schedule:
-    - cron: '21 18 * * 6'
+    - cron: '22 18 * * 6'
 
 jobs:
   analyze:
