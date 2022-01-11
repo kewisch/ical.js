@@ -17,7 +17,6 @@ taken from [libical](https://github.com/libical/libical). If you are bugfixing
 this library, please check if the fix can be upstreamed to libical.
 
 ![Build Status](https://github.com/mozilla-comm/ical.js/workflows/Checkin/badge.svg) [![Coverage Status](https://coveralls.io/repos/mozilla-comm/ical.js/badge.svg)](https://coveralls.io/r/mozilla-comm/ical.js) [![npm version](https://badge.fury.io/js/ical.js.svg)](http://badge.fury.io/js/ical.js) [![CDNJS](https://img.shields.io/cdnjs/v/ical.js.svg)](https://cdnjs.com/libraries/ical.js)  
-[![Dependency Status](https://david-dm.org/mozilla-comm/ical.js.svg)](https://david-dm.org/mozilla-comm/ical.js) [![devDependency Status](https://david-dm.org/mozilla-comm/ical.js/dev-status.svg)](https://david-dm.org/mozilla-comm/ical.js?type=dev)
 
 ## Sandbox and Validator
 
