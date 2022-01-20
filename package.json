@@ -56,6 +56,8 @@
   "files": [
     "build/ical.js",
     "build/ical.min.js",
+    "build/ical.timezones.js",
+    "build/ical.timezones.min.js",
     "lib/ical/*.js"
   ],
   "saucelabs": {

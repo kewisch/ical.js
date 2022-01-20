@@ -1,7 +1,8 @@
 node_modules
 bower_components
 *.pyc
-tools/tzurl
+tools/vzic
+tools/tzdb
 tools/libical
 zoneinfo
 api
