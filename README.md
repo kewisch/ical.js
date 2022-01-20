@@ -48,6 +48,12 @@ ICAL.js has no dependencies and uses fairly basic JavaScript. Therefore, it
 should work in all versions of Node.js and modern browsers. It does use getters
 and setters, so the minimum version of Internet Explorer is 9.
 
+## Timezones
+The stock ical.js does not register any timezones, due to the additional size it
+brings. If you'd like to do timezone conversion, and the timezone definitions
+are not included in the respective ics files, you'll need to use
+`ical.timezones.js` or its minified counterpart.
+
 ## Documentation
 
 For a few guides with code samples, please check out
@@ -155,7 +161,8 @@ output in the `api/` subdirectory.
 ### Packaging
 When you are done with your work, you can run `grunt package` to create the
 single-file build for use in the browser, including its minified counterpart
-and the source map.
+and the source map. Use `grunt package-zones` to also create a version of
+ical.js that includes the latest timezone definitions.
 
 ## License
 ical.js is licensed under the

@@ -31,6 +31,9 @@ jobs:
       - name: "Linters"
         run: grunt linters
 
+      - name: "grunt package-zones"
+        run: grunt package-zones
+
       - name: "Node Unit Tests"
         run: grunt unit-node-ci
 

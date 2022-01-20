@@ -55,6 +55,10 @@ module.exports = function(grunt) {
         src: ['<%= libinfo.absfiles %>'],
         dest: 'build/ical.js'
       },
+      zones: {
+        src: ['build/ical.js', 'build/timezones.js'],
+        dest: 'build/ical.timezones.js'
+      },
 
       validator: {
         options: {
@@ -199,6 +203,11 @@ module.exports = function(grunt) {
         files: {
           'build/ical.min.js': ['build/ical.js']
         }
+      },
+      zones: {
+        files: {
+          'build/ical.timezones.min.js': ['build/ical.timezones.js']
+        }
       }
     },
     release: {
@@ -261,8 +270,10 @@ module.exports = function(grunt) {
 
   grunt.loadTasks('tasks');
 
-  grunt.registerTask('default', ['package']);
-  grunt.registerTask('package', ['concat:dist', 'uglify']);
+  grunt.registerTask('default', ['package']); // You need to run package-zones on your own
+  grunt.registerTask('package', ['concat:dist', 'uglify:dist']);
+  grunt.registerTask('package-zones', ['package', 'tzdata', 'concat:zones', 'uglify:zones']);
+
   grunt.registerTask('coverage', 'mocha_istanbul');
   grunt.registerTask('linters', ['eslint']);
   grunt.registerTask('test-browser', ['karma:unit', 'karma:acceptance']);
@@ -277,5 +288,4 @@ module.exports = function(grunt) {
 
   // Additional tasks:
   //   - tests.js: performance-update, test-node
-  //   - timezones.js: timezones
 };
