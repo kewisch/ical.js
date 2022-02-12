@@ -67,16 +67,9 @@ To contribute to ICAL.js you need to set up the development environment. This
 requires Node.js 10.x or later and grunt. Run the following steps to get
 started.
 
-Preferred way (to match building and packaging with official process):
 ```
-yarn global add grunt-cli  # Might need to run with sudo
-yarn --frozen-lockfile
-```
-
-Alternative way:
-```
-npm install -g grunt-cli  # Might need to run with sudo
-npm install .
+npm install -g grunt-cli
+npm install
 ```
 
 You can now dive into the code, run the tests and check coverage.
