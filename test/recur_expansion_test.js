@@ -31,7 +31,7 @@ suite('recur_expansion', function() {
         });
 
         done();
-      }
+      };
 
       parse.process(icsData[file]);
     });
@@ -51,11 +51,9 @@ suite('recur_expansion', function() {
     });
 
     test('invalid', function() {
-      assert.throws(function() {
-        new ICAL.RecurExpansion({});
-      }, ".dtstart (ICAL.Time) must be given");
-      assert.throws(function() {
-        new ICAL.RecurExpansion({
+      assert.throws(() => new ICAL.RecurExpansion({}), ".dtstart (ICAL.Time) must be given");
+      assert.throws(() => {
+        return new ICAL.RecurExpansion({
           dtstart: ICAL.Time.now()
         });
       }, ".ruleIterators or .component must be given");

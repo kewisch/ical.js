@@ -191,7 +191,11 @@ suite('recur', function() {
     assert.equal(a.count, b.count);
     assert.equal(a.freq, b.freq);
 
-    b.interval++; b.wkst++; b.until.day++; b.count++; b.freq = 'WEEKLY';
+    b.interval++;
+    b.wkst++;
+    b.until.day++;
+    b.count++;
+    b.freq = 'WEEKLY';
 
     assert.notEqual(a.interval, b.interval);
     assert.notEqual(a.wkst, b.wkst);
@@ -337,7 +341,7 @@ suite('recur', function() {
         day: 12,
         hour: 10,
         minute: 15,
-        second: 07
+        second: 7
       }
     });
 
@@ -367,7 +371,7 @@ suite('recur', function() {
     function verifyFail(data) {
       test('invalid input "' + JSON.stringify(data) + '"', function() {
         assert.throws(function() {
-          ICAL.Recur.fromString(string);
+          ICAL.Recur.fromString(data);
         });
       });
     }
@@ -467,19 +471,19 @@ suite('recur', function() {
     test('multiple BYxxx values from string', function() {
       var rec = ICAL.Recur.fromString("FREQ=YEARLY;BYYEARDAY=20,30,40");
       var comp = rec.getComponent("byyearday");
-      assert.deepEqual(comp, [20,30,40]);
+      assert.deepEqual(comp, [20, 30, 40]);
     });
 
     test('multiple BYxxx values from jCal', function() {
       var prop = new ICAL.Property("rrule");
-      prop.setValue({ freq: "yearly", byyearday: [20,30,40] });
+      prop.setValue({ freq: "yearly", byyearday: [20, 30, 40] });
       var val = prop.getFirstValue();
 
       var comp = val.getComponent("byyearday");
-      assert.deepEqual(comp, [20,30,40]);
+      assert.deepEqual(comp, [20, 30, 40]);
     });
 
-    test('can be saved to a property that will be serialized correctly', function () {
+    test('can be saved to a property that will be serialized correctly', function() {
       var icalString = 'FREQ=WEEKLY;UNTIL=19700103T000000Z;WKST=SU;BYDAY=TU,TH';
       var recur = ICAL.Recur.fromString(icalString);
       var prop = new ICAL.Property('rrule');
@@ -619,7 +623,7 @@ suite('recur', function() {
   });
 
   suite('ICAL.Recur#numericDayToIcalDay', function() {
-    var expected = {}
+    var expected = {};
     expected[Time.SUNDAY] = 'SU';
     expected[Time.MONDAY] = 'MO';
     expected[Time.TUESDAY] = 'TU';

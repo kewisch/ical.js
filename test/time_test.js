@@ -505,7 +505,6 @@ suite('icaltime', function() {
       while (end.valueOf() >= cur.valueOf()) {
         if (inc > max) {
           throw new Error('test error inf loop');
-          break;
         }
 
         assert.equal(
@@ -833,7 +832,6 @@ suite('icaltime', function() {
       year: 2012,
       month: 1,
       day: 5,
-      month: 1,
       hour: 8,
       minute: 4,
       second: 13,
@@ -1110,13 +1108,16 @@ suite('icaltime', function() {
       assert.equal(cp, data.expect_1w);
       cp.addDuration(ICAL.Duration.fromString('-P1W'));
       assert.equal(cp.toString(), dt.toString());
-      
-      
-      
+
+
       cp = dt.clone();
       cp.addDuration(ICAL.Duration.fromString('PT24H'));
       cp.isDate = true;
-      cp.isDate;//force normalize
+
+      // force normalize
+      // eslint-disable-next-line no-unused-expressions
+      cp.isDate;
+
       cp.isDate = false;
       assert.equal(cp, data.expect_1d);
     }
@@ -1191,7 +1192,7 @@ suite('icaltime', function() {
     }
     testDateProperties.only = function(str, data) {
       testDateProperties(str, data, true);
-    }
+    };
 
     // A date where the year starts on sunday
     testDateProperties('2012-01-01T00:00:00', {
@@ -1261,7 +1262,7 @@ suite('icaltime', function() {
     });
   });
 
-  test('startOfWeek with different first day of week', function () {
+  test('startOfWeek with different first day of week', function() {
     var test_data = [{ /* A Sunday */
       str: '2012-01-01T12:01:00',
       firstDayOfWeek: {
@@ -1273,7 +1274,7 @@ suite('icaltime', function() {
           FRIDAY: '2011-12-30',
           SATURDAY: '2011-12-31'
       }
-    },{ /* A Monday */
+    }, { /* A Monday */
       str: '2012-01-02T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-01',
@@ -1284,7 +1285,7 @@ suite('icaltime', function() {
           FRIDAY: '2011-12-30',
           SATURDAY: '2011-12-31'
       }
-    },{ /* A Tuesday */
+    }, { /* A Tuesday */
       str: '2012-01-03T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-01',
@@ -1295,7 +1296,7 @@ suite('icaltime', function() {
           FRIDAY: '2011-12-30',
           SATURDAY: '2011-12-31'
       }
-    },{ /* A Wednesday */
+    }, { /* A Wednesday */
       str: '2012-01-04T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-01',
@@ -1306,7 +1307,7 @@ suite('icaltime', function() {
           FRIDAY: '2011-12-30',
           SATURDAY: '2011-12-31'
       }
-    },{ /* A Thursday */
+    }, { /* A Thursday */
       str: '2012-01-05T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-01',
@@ -1317,7 +1318,7 @@ suite('icaltime', function() {
           FRIDAY: '2011-12-30',
           SATURDAY: '2011-12-31'
       }
-    },{ /* A Friday */
+    }, { /* A Friday */
       str: '2012-01-06T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-01',
@@ -1328,7 +1329,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-06',
           SATURDAY: '2011-12-31'
       }
-    },{ /* A Saturday */
+    }, { /* A Saturday */
       str: '2012-01-07T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-01',
@@ -1350,7 +1351,7 @@ suite('icaltime', function() {
     }
   });
 
-  test('endOfWeek with different first day of week', function () {
+  test('endOfWeek with different first day of week', function() {
     var test_data = [{ /* A Sunday */
       str: '2012-01-01T12:01:00',
       firstDayOfWeek: {
@@ -1362,7 +1363,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-05',
           SATURDAY: '2012-01-06'
       }
-    },{ /* A Monday */
+    }, { /* A Monday */
       str: '2012-01-02T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-07',
@@ -1373,7 +1374,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-05',
           SATURDAY: '2012-01-06'
       }
-    },{ /* A Tuesday */
+    }, { /* A Tuesday */
       str: '2012-01-03T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-07',
@@ -1384,7 +1385,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-05',
           SATURDAY: '2012-01-06'
       }
-    },{ /* A Wednesday */
+    }, { /* A Wednesday */
       str: '2012-01-04T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-07',
@@ -1395,7 +1396,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-05',
           SATURDAY: '2012-01-06'
       }
-    },{ /* A Thursday */
+    }, { /* A Thursday */
       str: '2012-01-05T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-07',
@@ -1406,7 +1407,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-05',
           SATURDAY: '2012-01-06'
       }
-    },{ /* A Friday */
+    }, { /* A Friday */
       str: '2012-01-06T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-07',
@@ -1417,7 +1418,7 @@ suite('icaltime', function() {
           FRIDAY: '2012-01-12',
           SATURDAY: '2012-01-06'
       }
-    },{ /* A Saturday */
+    }, { /* A Saturday */
       str: '2012-01-07T12:01:00',
       firstDayOfWeek: {
           SUNDAY: '2012-01-07',
@@ -1740,7 +1741,7 @@ suite('icaltime', function() {
             var w1st = Time.weekOneStarts(year, icalwkday);
             assert.equal(dates[wkday], w1st.toString(), wkday);
 
-            var startOfWeek = ICAL.Time.fromString(dates[wkday])
+            var startOfWeek = ICAL.Time.fromString(dates[wkday]);
             assert.equal(startOfWeek.weekNumber(icalwkday), 1, wkday);
             startOfWeek.day--;
             assert.isAbove(startOfWeek.weekNumber(icalwkday), 51, wkday);
@@ -1749,7 +1750,7 @@ suite('icaltime', function() {
       }
       testWeekOne.only = function(year, dates) {
         testWeekOne(year, dates, true);
-      }
+      };
 
       test('default week start', function() {
         var w1st = Time.weekOneStarts(1989);
@@ -1757,38 +1758,66 @@ suite('icaltime', function() {
       });
 
       testWeekOne(1989, { // A and AG
-        SUNDAY: '1989-01-01', MONDAY: '1989-01-02', TUESDAY: '1989-01-03',
-        WEDNESDAY: '1989-01-04', THURSDAY: '1989-01-05', FRIDAY: '1988-12-30',
+        SUNDAY: '1989-01-01',
+        MONDAY: '1989-01-02',
+        TUESDAY: '1989-01-03',
+        WEDNESDAY: '1989-01-04',
+        THURSDAY: '1989-01-05',
+        FRIDAY: '1988-12-30',
         SATURDAY: '1988-12-31'
       });
       testWeekOne(1994, { // B and BA
-        SUNDAY: '1994-01-02', MONDAY: '1994-01-03', TUESDAY: '1994-01-04',
-        WEDNESDAY: '1994-01-05', THURSDAY: '1994-01-06', FRIDAY: '1993-12-31',
+        SUNDAY: '1994-01-02',
+        MONDAY: '1994-01-03',
+        TUESDAY: '1994-01-04',
+        WEDNESDAY: '1994-01-05',
+        THURSDAY: '1994-01-06',
+        FRIDAY: '1993-12-31',
         SATURDAY: '1994-01-01'
       });
       testWeekOne(1993, { // C and CB
-        SUNDAY: '1993-01-03', MONDAY: '1993-01-04', TUESDAY: '1993-01-05',
-        WEDNESDAY: '1993-01-06', THURSDAY: '1993-01-07', FRIDAY: '1993-01-01',
+        SUNDAY: '1993-01-03',
+        MONDAY: '1993-01-04',
+        TUESDAY: '1993-01-05',
+        WEDNESDAY: '1993-01-06',
+        THURSDAY: '1993-01-07',
+        FRIDAY: '1993-01-01',
         SATURDAY: '1993-01-02'
       });
       testWeekOne(1998, { // D and DC
-        SUNDAY: '1997-12-28', MONDAY: '1997-12-29', TUESDAY: '1997-12-30',
-        WEDNESDAY: '1997-12-31', THURSDAY: '1998-01-01', FRIDAY: '1997-12-26',
+        SUNDAY: '1997-12-28',
+        MONDAY: '1997-12-29',
+        TUESDAY: '1997-12-30',
+        WEDNESDAY: '1997-12-31',
+        THURSDAY: '1998-01-01',
+        FRIDAY: '1997-12-26',
         SATURDAY: '1997-12-27'
       });
       testWeekOne(1997, { // E and ED
-        SUNDAY: '1996-12-29', MONDAY: '1996-12-30', TUESDAY: '1996-12-31',
-        WEDNESDAY: '1997-01-01', THURSDAY: '1997-01-02', FRIDAY: '1996-12-27',
+        SUNDAY: '1996-12-29',
+        MONDAY: '1996-12-30',
+        TUESDAY: '1996-12-31',
+        WEDNESDAY: '1997-01-01',
+        THURSDAY: '1997-01-02',
+        FRIDAY: '1996-12-27',
         SATURDAY: '1996-12-28'
       });
       testWeekOne(1991, { // F and FE
-        SUNDAY: '1990-12-30', MONDAY: '1990-12-31', TUESDAY: '1991-01-01',
-        WEDNESDAY: '1991-01-02', THURSDAY: '1991-01-03', FRIDAY: '1990-12-28',
+        SUNDAY: '1990-12-30',
+        MONDAY: '1990-12-31',
+        TUESDAY: '1991-01-01',
+        WEDNESDAY: '1991-01-02',
+        THURSDAY: '1991-01-03',
+        FRIDAY: '1990-12-28',
         SATURDAY: '1990-12-29'
       });
       testWeekOne(1990, { // G and GF
-        SUNDAY: '1989-12-31', MONDAY: '1990-01-01', TUESDAY: '1990-01-02',
-        WEDNESDAY: '1990-01-03', THURSDAY: '1990-01-04', FRIDAY: '1989-12-29',
+        SUNDAY: '1989-12-31',
+        MONDAY: '1990-01-01',
+        TUESDAY: '1990-01-02',
+        WEDNESDAY: '1990-01-03',
+        THURSDAY: '1990-01-04',
+        FRIDAY: '1989-12-29',
         SATURDAY: '1989-12-30'
       });
     });

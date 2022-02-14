@@ -225,7 +225,7 @@ suite('design', function() {
             month: 9,
             day: 1,
             hour: 13,
-            minute: 05,
+            minute: 5,
             second: 11,
             isDate: false,
             zone: ICAL.Timezone.utcTimezone
@@ -260,7 +260,7 @@ suite('design', function() {
             month: 9,
             day: 1,
             hour: 13,
-            minute: 05,
+            minute: 5,
             second: 11,
             isDate: false
           }
@@ -369,84 +369,160 @@ suite('design', function() {
 
       // dates
       testRoundtrip('1985-04-12', '19850412', {
-        year: 1985, month: 4, day: 12,
-        hour: null, minute: null, second: null
+        year: 1985,
+        month: 4,
+        day: 12,
+        hour: null,
+        minute: null,
+        second: null
       });
       testRoundtrip('1985-04', '1985-04', {
-        year: 1985, month: 4, day: null,
-        hour: null, minute: null, second: null
+        year: 1985,
+        month: 4,
+        day: null,
+        hour: null,
+        minute: null,
+        second: null
       });
       testRoundtrip('1985', '1985', {
-        year: 1985, month: null, day: null,
-        hour: null, minute: null, second: null
+        year: 1985,
+        month: null,
+        day: null,
+        hour: null,
+        minute: null,
+        second: null
       });
       testRoundtrip('--04-12', '--0412', {
-        year: null, month: 4, day: 12,
-        hour: null, minute: null, second: null
+        year: null,
+        month: 4,
+        day: 12,
+        hour: null,
+        minute: null,
+        second: null
       });
       testRoundtrip('--04', '--04', {
-        year: null, month: 4, day: null,
-        hour: null, minute: null, second: null
+        year: null,
+        month: 4,
+        day: null,
+        hour: null,
+        minute: null,
+        second: null
       });
       testRoundtrip('---12', '---12', {
-        year: null, month: null, day: 12,
-        hour: null, minute: null, second: null
+        year: null,
+        month: null,
+        day: 12,
+        hour: null,
+        minute: null,
+        second: null
       });
 
       // times
       testRoundtrip('23:20:50', '232050', {
-        year: null, month: null, day: null,
-        hour: 23, minute: 20, second: 50,
+        year: null,
+        month: null,
+        day: null,
+        hour: 23,
+        minute: 20,
+        second: 50,
       });
       testRoundtrip('23:20', '2320', {
-        year: null, month: null, day: null,
-        hour: 23, minute: 20, second: null,
+        year: null,
+        month: null,
+        day: null,
+        hour: 23,
+        minute: 20,
+        second: null,
       });
       testRoundtrip('23', '23', {
-        year: null, month: null, day: null,
-        hour: 23, minute: null, second: null,
+        year: null,
+        month: null,
+        day: null,
+        hour: 23,
+        minute: null,
+        second: null,
       });
       testRoundtrip('-20:50', '-2050', {
-        year: null, month: null, day: null,
-        hour: null, minute: 20, second: 50,
+        year: null,
+        month: null,
+        day: null,
+        hour: null,
+        minute: 20,
+        second: 50,
       });
       testRoundtrip('-20', '-20', {
-        year: null, month: null, day: null,
-        hour: null, minute: 20, second: null,
+        year: null,
+        month: null,
+        day: null,
+        hour: null,
+        minute: 20,
+        second: null,
       });
       testRoundtrip('--50', '--50', {
-        year: null, month: null, day: null,
-        hour: null, minute: null, second: 50,
+        year: null,
+        month: null,
+        day: null,
+        hour: null,
+        minute: null,
+        second: 50,
       });
 
       // date-times
       testRoundtrip('1985-04-12T23:20:50', '19850412T232050', {
-        year: 1985, month: 4, day: 12,
-        hour: 23, minute: 20, second: 50
+        year: 1985,
+        month: 4,
+        day: 12,
+        hour: 23,
+        minute: 20,
+        second: 50
       });
       testRoundtrip('1985-04-12T23:20', '19850412T2320', {
-        year: 1985, month: 4, day: 12,
-        hour: 23, minute: 20, second: null
+        year: 1985,
+        month: 4,
+        day: 12,
+        hour: 23,
+        minute: 20,
+        second: null
       });
       testRoundtrip('1985-04-12T23', '19850412T23', {
-        year: 1985, month: 4, day: 12,
-        hour: 23, minute: null, second: null
+        year: 1985,
+        month: 4,
+        day: 12,
+        hour: 23,
+        minute: null,
+        second: null
       });
       testRoundtrip('--04-12T23:20', '--0412T2320', {
-        year: null, month: 4, day: 12,
-        hour: 23, minute: 20, second: null
+        year: null,
+        month: 4,
+        day: 12,
+        hour: 23,
+        minute: 20,
+        second: null
       });
       testRoundtrip('--04T23:20', '--04T2320', {
-        year: null, month: 4, day: null,
-        hour: 23, minute: 20, second: null
+        year: null,
+        month: 4,
+        day: null,
+        hour: 23,
+        minute: 20,
+        second: null
       });
       testRoundtrip('---12T23:20', '---12T2320', {
-        year: null, month: null, day: 12,
-        hour: 23, minute: 20, second: null
+        year: null,
+        month: null,
+        day: 12,
+        hour: 23,
+        minute: 20,
+        second: null
       });
       testRoundtrip('--04T23', '--04T23', {
-        year: null, month: 4, day: null,
-        hour: 23, minute: null, second: null
+        year: null,
+        month: 4,
+        day: null,
+        hour: 23,
+        minute: null,
+        second: null
       });
     });
 
@@ -678,7 +754,7 @@ suite('design', function() {
           freq: 'MONTHLY',
           until: '2012-11-12T13:14:15',
           count: 1
-        })
+        });
 
         assert.equal(
           subject.toICAL(fromICAL),
@@ -755,7 +831,7 @@ suite('design', function() {
         );
       });
     });
-    
+
     suite('utc-offset (vcard3)', function() {
       setup(function() {
         subject = ICAL.design.vcard3.value['utc-offset'];
@@ -883,7 +959,7 @@ suite('design', function() {
 
           prop = ICAL.Property.fromString("X-PROP;VALS=a,b,c:def");
           param = prop.getParameter("vals");
-          assert.deepEqual(param, ["a","b","c"]);
+          assert.deepEqual(param, ["a", "b", "c"]);
         });
       });
     });

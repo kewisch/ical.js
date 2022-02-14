@@ -3,7 +3,7 @@ suite('Property', function() {
 
   setup(function() {
     fixtures = {
-      component: [ 'vevent', [], [] ],
+      component: ['vevent', [], []],
       vcardComponent: ['vcard', [], []],
 
       noValue: [
@@ -113,7 +113,7 @@ suite('Property', function() {
     });
 
     test('new vcard property with vcard parent (known type)', function() {
-      var parent = new ICAL.Component(fixtures.vcardComponent)
+      var parent = new ICAL.Component(fixtures.vcardComponent);
       subject = new ICAL.Property('anniversary', parent);
       assert.equal(subject.type, 'date-and-or-time');
       assert.equal(subject.jCal[2], 'date-and-or-time');
@@ -282,7 +282,7 @@ suite('Property', function() {
       //2012-10-01
       assert.hasProperties(
         value,
-        { year: 2012, month: 10, day: 01, isDate: true },
+        { year: 2012, month: 10, day: 1, isDate: true },
         'property correctness'
       );
 
@@ -341,7 +341,7 @@ suite('Property', function() {
     });
 
     test('vcard type', function() {
-      var parent = new ICAL.Component(fixtures.vcardComponent)
+      var parent = new ICAL.Component(fixtures.vcardComponent);
       var subject = new ICAL.Property('anniversary', parent);
       subject.resetType('text');
 
@@ -511,7 +511,7 @@ suite('Property', function() {
 
       assert.equal(
         subject.jCal[3],
-        ICAL.design.icalendar.value['date'].undecorate(time)
+        ICAL.design.icalendar.value.date.undecorate(time)
       );
 
       assert.equal(

@@ -455,6 +455,12 @@
         "assert": "readonly",
         "testSupport": "readonly"
       }
+    },
+    {
+      "files": ["test/performance/**/*.js"],
+      "globals": {
+        "perfCompareSuite": "readonly"
+      }
     }
   ]
 }
