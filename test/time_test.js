@@ -396,7 +396,7 @@ suite('icaltime', function() {
       var msg = human + ' should be #' + dayOfWeek + ' day';
 
       test(msg, function() {
-        var subject = new ICAL.Time.fromJSDate(
+        var subject = ICAL.Time.fromJSDate(
           date
         );
 
@@ -468,7 +468,7 @@ suite('icaltime', function() {
       var msg = human + ' should be #' + dayOfWeek + ' day';
 
       test(msg, function() {
-        var subject = new ICAL.Time.fromJSDate(
+        var subject = ICAL.Time.fromJSDate(
           date
         );
 

@@ -1,6 +1,6 @@
 suite('ical/duration', function() {
   test('#clone', function() {
-    var subject = new ICAL.Duration.fromData({
+    var subject = ICAL.Duration.fromData({
       weeks: 1,
       days: 2,
       hours: 3,
@@ -97,8 +97,8 @@ suite('ical/duration', function() {
   suite("#compare", function() {
     function verify(str, a, b, cmp) {
       test(str, function() {
-        var dur_a = new ICAL.Duration.fromString(a);
-        var dur_b = new ICAL.Duration.fromString(b);
+        var dur_a = ICAL.Duration.fromString(a);
+        var dur_b = ICAL.Duration.fromString(b);
         assert.equal(dur_a.compare(dur_b), cmp);
       });
     }
@@ -132,7 +132,7 @@ suite('ical/duration', function() {
       }
 
       test('parse: "' + string + '"', function() {
-        var subject = new ICAL.Duration.fromString(string);
+        var subject = ICAL.Duration.fromString(string);
         assert.hasProperties(subject, expected);
         assert.equal(subject.toString(), verifystring || string);
       });
@@ -141,7 +141,7 @@ suite('ical/duration', function() {
     function verifyFail(string, errorParam) {
       test('expected failure: ' + string, function() {
         assert.throws(function() {
-          new ICAL.Duration.fromString(string);
+          ICAL.Duration.fromString(string);
         }, errorParam);
       });
     }
