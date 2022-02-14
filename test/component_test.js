@@ -51,7 +51,7 @@ suite('Component', function() {
 
   suite('parenting', function() {
     // Today we hear a tale about Tom, Marge, Bernhard and Claire.
-    var tom, bernhard, claire, marge, relationship
+    var tom, bernhard, claire, marge, relationship;
     var house, otherhouse;
     setup(function() {
       tom = new ICAL.Component("tom");
@@ -124,7 +124,7 @@ suite('Component', function() {
       // got was scratches and sadness. That didn't go so well.
       assert.throws(function() {
         tom.addProperty("bird");
-      }, 'must be instance of ICAL.Property')
+      }, 'must be instance of ICAL.Property');
     });
 
     test('properties', function() {

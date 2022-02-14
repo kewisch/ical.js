@@ -82,10 +82,10 @@ suite('ical/duration', function() {
       weeks: 7,
       days: 1
     });
-    verify('days => week' , 'P2W', {
+    verify('days => week', 'P2W', {
       days: 14
     });
-    verify('days and weeks => week' , 'P4W', {
+    verify('days and weeks => week', 'P4W', {
       weeks: 2,
       days: 14
     });

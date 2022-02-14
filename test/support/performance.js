@@ -1,3 +1,6 @@
+/* eslint-env browser */
+/* global Benchmark */
+
 /**
  * Define a performance suite...
  */
@@ -47,8 +50,6 @@
     },
 
     test: function(name, test) {
-      var context = this;
-
       this.bench.add(
         this.prefix + name,
         test

@@ -69,7 +69,7 @@ suite('ICAL.stringify', function() {
       ICAL.design.defaultSet.property.custom = {};
       var subject = new ICAL.Property('custom');
       subject.setValue('unescaped, right?');
-      assert.equal(subject.toICALString(), 'CUSTOM:unescaped, right?')
+      assert.equal(subject.toICALString(), 'CUSTOM:unescaped, right?');
 
       subject.resetType('integer');
       subject.setValue(123);

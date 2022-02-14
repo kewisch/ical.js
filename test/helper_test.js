@@ -24,7 +24,7 @@ suite('ICAL.helpers', function() {
     });
 
     test('shallow array', function() {
-      var obj = { v: 2 }
+      var obj = { v: 2 };
       var arr = [obj, 2, 3];
 
       var result = subject(arr, false);
@@ -34,7 +34,7 @@ suite('ICAL.helpers', function() {
     });
 
     test('deep array', function() {
-      var obj = { v: 2 }
+      var obj = { v: 2 };
       var arr = [obj, 2, 3];
 
       var result = subject(arr, true);
@@ -141,11 +141,12 @@ suite('ICAL.helpers', function() {
     });
 
     test('add missing timezones', function() {
-      cal.getFirstSubcomponent("vevent").
-        getFirstProperty("dtend").setParameter("tzid", "America/Atikokan");
+      let vtimezones;
+      cal.getFirstSubcomponent("vevent")
+        .getFirstProperty("dtend").setParameter("tzid", "America/Atikokan");
       vtimezones = cal.getAllSubcomponents("vtimezone");
       assert(vtimezones.length, 1);
-      
+
       vtimezones = subject(cal).getAllSubcomponents("vtimezone");
       assert.strictEqual(vtimezones.length, 2);
     });

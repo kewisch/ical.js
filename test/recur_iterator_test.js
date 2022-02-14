@@ -30,7 +30,7 @@ suite('recur_iterator', function() {
     var last = start.getDate();
     var cur;
 
-    while (true) {
+    while (true) { // eslint-disable-line no-constant-condition
       var next = new Date(
         start.getFullYear(),
         start.getMonth(),
@@ -86,7 +86,9 @@ suite('recur_iterator', function() {
 
     test('completed', function() {
       var next;
-      while (iterator.next()) {}
+      while (iterator.next()) {
+        // Continue until completed
+      }
 
       assert.isTrue(iterator.completed, 'is completed');
 
@@ -1036,8 +1038,8 @@ suite('recur_iterator', function() {
         ]
       });
 
-      /* 
-       * Leap-year test for February 29th 
+      /*
+       * Leap-year test for February 29th
        *
        * See https://github.com/kewisch/ical.js/issues/91
        * for details
