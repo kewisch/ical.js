@@ -30,7 +30,7 @@ suite('recur_iterator', function() {
     var last = start.getDate();
     var cur;
 
-    while (true) {
+    while (true) { // eslint-disable-line no-constant-condition
       var next = new Date(
         start.getFullYear(),
         start.getMonth(),
@@ -86,7 +86,9 @@ suite('recur_iterator', function() {
 
     test('completed', function() {
       var next;
-      while (iterator.next()) {}
+      while (iterator.next()) {
+        // Continue until completed
+      }
 
       assert.isTrue(iterator.completed, 'is completed');
 
@@ -604,7 +606,7 @@ suite('recur_iterator', function() {
           '2015-01-19T08:00:00',
           '2015-01-21T08:00:00',
           '2015-01-23T08:00:00'
-        ]});
+        ] });
 
       //Repeat Monthly, the fifth Saturday (BYDAY=5SA)
       testRRULE('FREQ=MONTHLY;BYDAY=5SA', {
@@ -696,7 +698,7 @@ suite('recur_iterator', function() {
           '2015-03-23T08:00:00Z',
           '2015-03-27T08:00:00Z',
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=MO,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-04-01T08:00:00Z',
         byCount: true,
@@ -706,7 +708,7 @@ suite('recur_iterator', function() {
           '2015-04-17T08:00:00Z',
           '2015-04-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=MO,SA;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-04-01T08:00:00Z',
         byCount: true,
@@ -716,7 +718,7 @@ suite('recur_iterator', function() {
           '2015-04-25T08:00:00Z',
           '2015-04-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=SU,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=9', {
         dtStart: '2015-02-28T08:00:00Z',
         byCount: true,
@@ -731,7 +733,7 @@ suite('recur_iterator', function() {
           "2015-04-17T08:00:00Z",
           "2015-04-19T08:00:00Z"
         ]
-      })
+      });
     });
 
     suite('YEARLY', function() {
@@ -1009,8 +1011,8 @@ suite('recur_iterator', function() {
         ]
       });
 
-      /* 
-       * Leap-year test for February 29th 
+      /*
+       * Leap-year test for February 29th
        *
        * See https://github.com/mozilla-comm/ical.js/issues/91
        * for details

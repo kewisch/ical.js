@@ -59,7 +59,7 @@ suite('ical/period', function() {
 
           if ('duration' in data && data.duration) {
             assert.hasProperties(dur, data.duration, 'duration matches calculated');
-          } 
+          }
           assert.hasProperties(dur, data.calculatedDuration);
         }
         if ('calculatedEnd' in data) {
@@ -67,7 +67,7 @@ suite('ical/period', function() {
 
           if ('end' in data && data.end) {
             assert.hasProperties(end, data.end, 'duration matches calculated');
-          } 
+          }
           assert.hasProperties(end, data.calculatedEnd);
         }
       });
@@ -100,7 +100,7 @@ suite('ical/period', function() {
         year: 1997,
         month: 1,
         day: 2,
-        hour: 07
+        hour: 7
       },
 
       duration: null,
@@ -114,7 +114,7 @@ suite('ical/period', function() {
         year: 1997,
         month: 1,
         day: 2,
-        hour: 07
+        hour: 7
       },
     });
 
@@ -130,7 +130,7 @@ suite('ical/period', function() {
         hours: 5,
         minutes: 30
       },
-      end:null,
+      end: null,
       calculatedDuration: {
         isNegative: false,
         hours: 5,
@@ -280,7 +280,7 @@ suite('ical/period', function() {
     test('cloned start/duration', function() {
       var subjectstart = start.clone();
       var subjectduration = duration.clone();
-      var subject1 = ICAL.Period.fromData({start: subjectstart, duration: subjectduration});
+      var subject1 = ICAL.Period.fromData({ start: subjectstart, duration: subjectduration });
       var subject2 = subject1.clone();
       subjectstart.hour++;
       subjectduration.hours++;
@@ -294,7 +294,7 @@ suite('ical/period', function() {
     test('cloned start/end', function() {
       var subjectstart = start.clone();
       var subjectend = end.clone();
-      var subject1 = ICAL.Period.fromData({start: subjectstart, end: subjectend});
+      var subject1 = ICAL.Period.fromData({ start: subjectstart, end: subjectend });
       var subject2 = subject1.clone();
       subjectstart.hour++;
       subjectend.hour++;

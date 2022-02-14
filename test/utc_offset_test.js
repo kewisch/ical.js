@@ -99,7 +99,7 @@ suite('ICAL.UtcOffset', function() {
       assert.equal(a.compare(b), -1);
     });
   });
-  
+
   suite('from/toSeconds', function() {
     test('static', function() {
       var subject = ICAL.UtcOffset.fromSeconds(3661);

@@ -275,7 +275,7 @@ suite('ICAL.Event', function() {
       });
 
       test('setters', function() {
-        for (key in props) {
+        for (let key in props) {
           subject[key] = props[key];
           assert.equal(subject[key], props[key], key);
         }
@@ -570,7 +570,7 @@ suite('ICAL.Event', function() {
         var expected = [
           listDetails(list[2]), // 1st
           listDetails(list[0]), // 2nd
-          listDetails(list[1])  // 3rd
+          listDetails(list[1]) // 3rd
         ];
 
         assert.deepEqual(
@@ -999,7 +999,7 @@ suite('ICAL.Event', function() {
       }).toString());
 
       assert.equal(subject.duration.toString(), 'PT5H30M');
-    })
+    });
 
     test('set', function() {
       var subject = new ICAL.Component(ICAL.parse(icsData));

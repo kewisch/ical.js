@@ -37,7 +37,7 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
     time.addDuration(dur);
 
     // to trigger normalization
-    time.year;
+    time.year; // eslint-disable-line no-unused-expressions
   });
 
   perf.test('create and clone time', function() {

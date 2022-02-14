@@ -8,6 +8,7 @@ suite('component_parser', function() {
 
   suite('#process', function() {
     var events = [];
+    var exceptions = [];
     var timezones = [];
 
     function eventEquals(a, b, msg) {
@@ -41,15 +42,15 @@ suite('component_parser', function() {
 
         subject.onevent = function(event) {
           events.push(event);
-        }
+        };
 
         subject.ontimezone = function(tz) {
           timezones.push(tz);
-        }
+        };
 
         subject.oncomplete = function() {
           done();
-        }
+        };
 
         subject.process(ICAL.parse(icsData));
       });
@@ -105,7 +106,7 @@ suite('component_parser', function() {
         subject.oncomplete = function() {
           assert.lengthOf(events, 3);
           done();
-        }
+        };
         subject.process(icsData);
       });
       test('parsing component from component', function(done) {
@@ -113,7 +114,7 @@ suite('component_parser', function() {
         subject.oncomplete = function() {
           assert.lengthOf(events, 3);
           done();
-        }
+        };
         var comp = new ICAL.Component(ICAL.parse(icsData));
         subject.process(comp);
       });
