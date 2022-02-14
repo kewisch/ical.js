@@ -28,7 +28,7 @@ suite('ICAL.Event', function() {
         last
       ).setParameter(
         'range',
-        subject.THISANDFUTURE);
+        ICAL.Event.THISANDFUTURE);
 
     return newEvent;
   }
@@ -319,6 +319,7 @@ suite('ICAL.Event', function() {
         exception.endDate.minute -= 2;
 
         subject.relateException(exception);
+
 
         // create a time that has no exception
         // but past the RID.
@@ -641,7 +642,7 @@ suite('ICAL.Event', function() {
           ICAL.Time.fromJSDate(new Date()))
         .setParameter(
           'range',
-          subject.THISANDFUTURE);
+          ICAL.Event.THISANDFUTURE);
 
       assert.isTrue(subject.modifiesFuture());
     });

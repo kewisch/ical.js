@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         'recur_expansion.js', 'event.js', 'component_parser.js'
       ],
       test: {
-        head: ['test/helper.js'],
+        head: ['test/helper.mjs'],
         unit: ['test/*_test.js'],
         acceptance: ['test/acceptance/*_test.js'],
         performance: ['test/performance/*_test.js']

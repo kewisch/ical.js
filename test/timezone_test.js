@@ -213,20 +213,20 @@ suite('timezone', function() {
 
   suite('#convertTime', function() {
     timezoneTest('America/Los_Angeles', 'convert date-time from utc', function() {
-      var subject = new ICAL.Time.fromString('2012-03-11T01:59:00Z');
+      var subject = ICAL.Time.fromString('2012-03-11T01:59:00Z');
       var subject2 = subject.convertToZone(timezone);
       assert.equal(subject2.zone.tzid, timezone.tzid);
       assert.equal(subject2.toString(), '2012-03-10T17:59:00');
     });
 
     timezoneTest('America/Los_Angeles', 'convert date from utc', function() {
-      var subject = new ICAL.Time.fromString('2012-03-11');
+      var subject = ICAL.Time.fromString('2012-03-11');
       var subject2 = subject.convertToZone(timezone);
       assert.equal(subject2.zone.tzid, timezone.tzid);
       assert.equal(subject2.toString(), '2012-03-11');
     });
     timezoneTest('America/Los_Angeles', 'convert local time to zone', function() {
-      var subject = new ICAL.Time.fromString('2012-03-11T01:59:00');
+      var subject = ICAL.Time.fromString('2012-03-11T01:59:00');
       subject.zone = ICAL.Timezone.localTimezone;
       assert.equal(subject.toString(), '2012-03-11T01:59:00');
 
