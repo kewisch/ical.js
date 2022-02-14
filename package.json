@@ -7,6 +7,7 @@
   ],
   "description": "Javascript parser for ics (rfc5545) and vcard (rfc6350) data",
   "main": "build/ical.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/kewisch/ical.js.git"

@@ -1,34 +1,43 @@
+import ICAL from "../lib/ical/module.mjs";
+import chai from "chai";
+import { URL } from 'url';
+import fs from "fs";
+
+/* eslint-env browser, node, mocha */
+
+global.ICAL = ICAL;
+
 (function() {
 
   var isNode = typeof(window) === 'undefined';
 
   if (!isNode) {
-    window.navigator;
+    window.navigator; // eslint-disable-line no-unused-expressions
   }
 
   // lazy defined navigator causes global leak warnings...
 
-  testSupport = {
+  let testSupport = global.testSupport = {
     isNode: (typeof(window) === 'undefined'),
     isKarma: (typeof(window) !== 'undefined' && typeof window.__karma__ !== 'undefined')
   };
 
   function loadChai(chai) {
     chai.config.includeStack = true;
-    assert = chai.assert;
-    assert.hasProperties = function chai_hasProperties(given, props, msg) {
+    global.assert = chai.assert;
+    global.assert.hasProperties = function chai_hasProperties(given, props, msg) {
       msg = (typeof(msg) === 'undefined') ? '' : msg + ': ';
 
       if (props instanceof Array) {
         props.forEach(function(prop) {
-          assert.ok(
+          global.assert.ok(
             (prop in given),
             msg + 'given should have "' + prop + '" property'
           );
         });
       } else {
         for (var key in props) {
-          assert.deepEqual(
+          global.assert.deepEqual(
             given[key],
             props[key],
             msg + ' property equality for (' + key + ') '
@@ -40,7 +49,7 @@
 
   // Load chai, and the extra libs we include
   if (testSupport.isNode) {
-    loadChai(require('chai'));
+    loadChai(chai);
   } else if (window.chai) {
     loadChai(window.chai);
   } else {
@@ -53,38 +62,8 @@
   testSupport.requireICAL = function() {
     let crossGlobal = typeof global == "undefined" ? window : global;
 
-    if (typeof crossGlobal !== "undefined") {
-      if (typeof crossGlobal.ICAL != "undefined") {
-        return;
-      }
-      crossGlobal.ICAL = {};
-    }
-
-    var files = [
-      'module',
-      'helpers',
-      'recur_expansion',
-      'event',
-      'component_parser',
-      'design',
-      'parse',
-      'stringify',
-      'component',
-      'property',
-      'utc_offset',
-      'binary',
-      'period',
-      'duration',
-      'timezone',
-      'timezone_service',
-      'time',
-      'vcard_time',
-      'recur',
-      'recur_iterator'
-    ];
-
-    files.forEach(function(file) {
-      testSupport.require('/lib/ical/' + file + '.js');
+    testSupport.require('/lib/ical/module.mjs', (lib) => {
+      crossGlobal.ICAL = lib;
     });
   };
 
@@ -99,7 +78,7 @@
   };
 
   testSupport.require = function cross_require(file, callback) {
-    if (!(/\.js$/.test(file))) {
+    if (!(/\.m?js$/.test(file))) {
       file += '.js';
     }
 
@@ -195,8 +174,8 @@
    */
   testSupport.load = function(path, callback) {
     if (testSupport.isNode) {
-      var root = __dirname + '/../';
-      require('fs').readFile(root + path, 'utf8', function(err, contents) {
+      let root = new URL('../' + path, import.meta.url).pathname;
+      fs.readFile(root, 'utf8', function(err, contents) {
         callback(err, contents);
       });
     } else {
@@ -240,11 +219,11 @@
   };
 
   if (!testSupport.isKarma) {
-    testSupport.require('/node_modules/benchmark/benchmark.js');
-    testSupport.require('/test/support/performance.js');
+    //testSupport.require('/node_modules/benchmark/benchmark.js');
+    //testSupport.require('/test/support/performance.js');
 
     // Load it here so its pre-loaded in all suite blocks...
-    testSupport.requireICAL();
+    //testSupport.requireICAL();
   }
 
-}());
+})();
