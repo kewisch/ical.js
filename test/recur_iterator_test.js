@@ -448,7 +448,7 @@ suite('recur_iterator', function() {
         ]
       });
 
-      //buisness days for 31 occurances'
+      //business days for 31 occurrences'
       testRRULE('FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR', {
         dates: [
           '2012-01-02T09:00:00', '2012-01-03T09:00:00', '2012-01-04T09:00:00', '2012-01-05T09:00:00', '2012-01-06T09:00:00',
@@ -513,7 +513,6 @@ suite('recur_iterator', function() {
         ]
       });
 
-
       // monthly, the third instance of tu,we,th
       testRRULE('FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3', {
           byCount: true,
@@ -526,7 +525,7 @@ suite('recur_iterator', function() {
 
       //monthly, each month last day that is monday
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;BYDAY=MO', {
-        dtStart: '2012-01-01T09:00:00',
+        dtStart: '2012-02-01T09:00:00',
         dates: [
           '2012-04-30T09:00:00',
           '2012-12-31T09:00:00'
@@ -666,13 +665,92 @@ suite('recur_iterator', function() {
         ]
       });
 
-      // monthly, bymonthday
+      // monthly, bymonthday, the last day of the month
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1', {
         dtStart: '2015-01-01T08:00:00',
         dates: [
           '2015-01-31T08:00:00',
           '2015-02-28T08:00:00',
           '2015-03-31T08:00:00'
+        ]
+      });
+
+      // monthly, bymonthday the last day of the month with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;INTERVAL=3', {
+        dtStart: '2016-04-20T08:00:00Z',
+        dates: [
+          '2016-04-30T08:00:00Z',
+          '2016-07-31T08:00:00Z',
+          '2016-10-31T08:00:00Z',
+          '2017-01-31T08:00:00Z'
+        ]
+      });
+
+      // monthly, bymonthday the second to last day of the month with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-2;INTERVAL=2', {
+        dtStart: '2016-04-20T08:00:00Z',
+        dates: [
+          '2016-04-29T08:00:00Z',
+          '2016-06-29T08:00:00Z',
+          '2016-08-30T08:00:00Z',
+          '2016-10-30T08:00:00Z',
+          '2016-12-30T08:00:00Z',
+          '2017-02-27T08:00:00Z'
+        ]
+      });
+
+      // monthly, bymonthday the 31st to last day of the month
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-31', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          '2016-03-01T08:00:00Z',
+          '2016-05-01T08:00:00Z',
+          '2016-07-01T08:00:00Z',
+          '2016-08-01T08:00:00Z',
+          '2016-10-01T08:00:00Z'
+        ]
+      });
+
+      // monthly, bymonthday the 31st to last day of the month with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-31;INTERVAL=4', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          '2016-10-01T08:00:00Z',
+          '2017-10-01T08:00:00Z',
+          '2018-10-01T08:00:00Z',
+          '2019-10-01T08:00:00Z'
+        ]
+      });
+
+      // monthly, bymonthday=31 starting from a month with less than 31 days
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          '2016-03-31T08:00:00Z',
+          '2016-05-31T08:00:00Z',
+          '2016-07-31T08:00:00Z',
+          '2016-08-31T08:00:00Z'
+        ]
+      });
+
+      // monthly, bymonthday=31 starting from a month with less than 31 days with interval
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31;INTERVAL=2', {
+        dtStart: '2016-02-08T08:00:00Z',
+        dates: [
+          '2016-08-31T08:00:00Z',
+          '2016-10-31T08:00:00Z',
+          '2016-12-31T08:00:00Z',
+          '2017-08-31T08:00:00Z'
+        ]
+      });
+
+      // monthly, bymonthday=-31 byday=MO with interval: first occurrence far in the future from start date
+      testRRULE('FREQ=MONTHLY;INTERVAL=9;BYMONTHDAY=-31;BYDAY=MO', {
+        dtStart: '2016-03-08T08:00:00Z',
+        dates: [
+          '2025-12-01T08:00:00Z',
+          '2031-12-01T08:00:00Z',
+          '2049-03-01T08:00:00Z'
         ]
       });
 
@@ -694,9 +772,9 @@ suite('recur_iterator', function() {
           '2015-03-09T08:00:00Z',
           '2015-03-13T08:00:00Z',
           '2015-03-23T08:00:00Z',
-          '2015-03-27T08:00:00Z',
+          '2015-03-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=MO,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-04-01T08:00:00Z',
         byCount: true,
@@ -706,7 +784,7 @@ suite('recur_iterator', function() {
           '2015-04-17T08:00:00Z',
           '2015-04-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=MO,SA;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-04-01T08:00:00Z',
         byCount: true,
@@ -716,22 +794,22 @@ suite('recur_iterator', function() {
           '2015-04-25T08:00:00Z',
           '2015-04-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=SU,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=9', {
         dtStart: '2015-02-28T08:00:00Z',
         byCount: true,
         dates: [
-          "2015-03-01T08:00:00Z",
-          "2015-03-13T08:00:00Z",
-          "2015-03-15T08:00:00Z",
-          "2015-03-27T08:00:00Z",
-          "2015-03-29T08:00:00Z",
-          "2015-04-03T08:00:00Z",
-          "2015-04-05T08:00:00Z",
-          "2015-04-17T08:00:00Z",
-          "2015-04-19T08:00:00Z"
+          '2015-03-01T08:00:00Z',
+          '2015-03-13T08:00:00Z',
+          '2015-03-15T08:00:00Z',
+          '2015-03-27T08:00:00Z',
+          '2015-03-29T08:00:00Z',
+          '2015-04-03T08:00:00Z',
+          '2015-04-05T08:00:00Z',
+          '2015-04-17T08:00:00Z',
+          '2015-04-19T08:00:00Z'
         ]
-      })
+      });
     });
 
     suite('YEARLY', function() {
@@ -842,26 +920,62 @@ suite('recur_iterator', function() {
 
       //Weekly Sunday, Monday, Tuesday with count=3
       testRRULE('FREQ=WEEKLY;COUNT=3;BYDAY=MO,SU,TU', {
-              dtStart: '2017-07-30',
-              byCount: true,
-              dates: [
-                '2017-07-30',
-                '2017-07-31',
-                '2017-08-01'
-              ]
+        dtStart: '2017-07-30',
+        byCount: true,
+        dates: [
+          '2017-07-30',
+          '2017-07-31',
+          '2017-08-01'
+        ]
       });
 
       //Weekly Sunday, Wednesday with count=5
       testRRULE('FREQ=WEEKLY;COUNT=5;BYDAY=SU,WE', {
-              dtStart: '2017-04-23',
-              byCount: true,
-              dates: [
-                '2017-04-23',
-                '2017-04-26',
-                '2017-04-30',
-                '2017-05-03',
-                '2017-05-07'
-              ]
+        dtStart: '2017-04-23',
+        byCount: true,
+        dates: [
+          '2017-04-23',
+          '2017-04-26',
+          '2017-04-30',
+          '2017-05-03',
+          '2017-05-07'
+        ]
+      });
+
+      //yearly, byDay,byMonth. The 4th Thursday of November (Thanksgiving Day)
+      testRRULE('FREQ=YEARLY;BYDAY=4TH;BYMONTH=11', {
+        dates: [
+          '2016-11-24',
+          '2017-11-23',
+          '2018-11-22',
+          '2019-11-28',
+          '2020-11-26',
+          '2021-11-25'
+        ]
+      });
+
+      //yearly, byDay,byMonth,bySetPos. The 4th Thursday of November (Thanksgiving Day)
+      testRRULE('FREQ=YEARLY;BYDAY=TH;BYSETPOS=4;BYMONTH=11', {
+        dates: [
+          '2016-11-24',
+          '2017-11-23',
+          '2018-11-22',
+          '2019-11-28',
+          '2020-11-26',
+          '2021-11-25'
+        ]
+      });
+
+      //yearly, byDay,byMonthday,byMonth with interval. The first Tuesday after November 1 (USA presidential elections)
+      testRRULE('FREQ=YEARLY;BYDAY=TU;BYMONTHDAY=2,3,4,5,6,7,8;BYMONTH=11;INTERVAL=4', {
+        dates: [
+          '2004-11-02',
+          '2008-11-04',
+          '2012-11-06',
+          '2016-11-08',
+          '2020-11-03',
+          '2024-11-05'
+        ]
       });
 
       //yearly, byMonth, byweekNo
@@ -995,7 +1109,7 @@ suite('recur_iterator', function() {
         dates: [
           '2012-02-28',
           '2012-02-29',
-          '2012-03-01',
+          '2012-03-01'
         ]
       });
 
@@ -1005,7 +1119,7 @@ suite('recur_iterator', function() {
         dates: [
           '2013-02-28',
           '2013-03-01',
-          '2013-03-02',
+          '2013-03-02'
         ]
       });
 
