@@ -1,4 +1,4 @@
-perfCompareSuite('iterator', function(perf, ICAL) {
+suite('iterator', function() {
 
   var icsData;
 
@@ -20,7 +20,7 @@ perfCompareSuite('iterator', function(perf, ICAL) {
     rrule = std.getFirstPropertyValue('rrule');
   });
 
-  perf.test('timezone iterator & first iteration', function() {
+  perfTest('timezone iterator & first iteration', function() {
     var iterator = rrule.iterator(std.getFirstPropertyValue('dtstart'));
     iterator.next();
   });

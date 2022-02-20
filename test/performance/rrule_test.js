@@ -1,4 +1,4 @@
-perfCompareSuite('rrule', function(perf, ICAL) {
+suite('rrule', function() {
 
   var start;
   var occurrences;
@@ -46,7 +46,7 @@ perfCompareSuite('rrule', function(perf, ICAL) {
     "FREQ=MONTHLY;BYDAY=SA,SU;BYMONTH=11;BYSETPOS=-1"
 
   ].forEach(function(rulestring) {
-    perf.test(rulestring, function() {
+    perfTest(rulestring, function() {
       var rrule = ICAL.Recur.fromString(rulestring);
       var iter = rrule.iterator(start);
       for (var i = 0; i < occurrences; i++) {

@@ -4,8 +4,10 @@ import { URL } from 'url';
 import fs from "fs";
 import Benchmark from "benchmark";
 
+
 /* eslint-env browser, node, mocha */
 
+let icalPrevious, icalUpstream;
 global.ICAL = ICAL;
 
 chai.config.includeStack = true;
@@ -152,4 +154,68 @@ testSupport.defineSample = function(file, cb) {
       done();
     });
   });
+};
+
+
+function perfTestDefine(scope, done) {
+  this.timeout(0);
+  let benchSuite = new Benchmark.Suite();
+  let currentTest = this.test;
+  benchSuite.add("latest", scope.bind(this));
+  if (icalPrevious) {
+    benchSuite.add("previous", () => {
+      let lastGlobal = global.ICAL;
+      global.ICAL = icalPrevious;
+      scope.call(this);
+    });
+  }
+  if (icalUpstream) {
+    benchSuite.add("upstream", () => {
+      let lastGlobal = global.ICAL;
+      global.ICAL = icalUpstream;
+      scope.call(this);
+    });
+  }
+
+  currentTest._benchCycle = [];
+
+  benchSuite.on('cycle', function(event) {
+    currentTest._benchCycle.push(String(event.target));
+  });
+
+  benchSuite.on('complete', function(event) {
+    currentTest._benchFastest = this.filter('fastest').map('name');
+    done(event.target.error);
+  });
+
+  benchSuite.run();
+}
+
+global.perfTest = function(name, scope) {
+  test(name, function(done) {
+    perfTestDefine.call(this, scope, done);
+  });
+};
+global.perfTest.only = function(name, scope) {
+  test.only(name, function(done) {
+    perfTestDefine.call(this, scope, done);
+  });
+};
+global.perfTest.skip = function(name, scope) {
+  test.skip(name, function(done) {
+    perfTestDefine.call(this, scope, done);
+  });
+};
+
+export const mochaHooks = {
+  beforeAll(done) {
+    Promise.allSettled([
+      import(`../../build/benchmark/ical_previous.js`).then((module) => {
+        icalPrevious = module.default;
+      }),
+      import(`../../build/benchmark/ical_upstream.js`).then((module) => {
+        icalUpstream = module.default;
+      }),
+    ]).then(() => done());
+  }
 };

@@ -64,6 +64,7 @@
     "test": "npm run test-unit && npm run test-acceptance",
     "test-unit": "c8 mocha",
     "test-acceptance": "mocha test/acceptance/*_test.js",
+    "test-performance": "mocha --reporter test/support/perfReporter.cjs test/performance/*_test.js",
     "build": "rollup -c",
     "lint": "eslint lib/ical test",
     "prepare": "grunt"
