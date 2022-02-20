@@ -27,6 +27,7 @@
     "biased-opener": "^0.2.8",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
+    "eslint": "^8.9.0",
     "grunt": "^1.1.0",
     "grunt-concurrent": "^3.0.0",
     "grunt-contrib-concat": "^2.1.0",
@@ -58,6 +59,7 @@
     "test-unit": "mocha",
     "test-acceptance": "mocha test/acceptance/*_test.js",
     "build": "rollup -c",
+    "lint": "eslint lib/ical test",
     "prepare": "grunt"
   },
   "files": [
