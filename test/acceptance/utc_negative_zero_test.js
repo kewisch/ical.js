@@ -1,5 +1,3 @@
-testSupport.requireICAL();
-
 suite('ics - negative zero', function() {
   var icsData;
 

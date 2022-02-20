@@ -1,5 +1,3 @@
-testSupport.requireICAL();
-
 suite('ics test', function() {
   var icsData;
 

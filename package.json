@@ -54,7 +54,9 @@
     "node": ">=10"
   },
   "scripts": {
-    "test": "grunt test-node",
+    "test": "npm run test-unit && npm run test-acceptance",
+    "test-unit": "mocha",
+    "test-acceptance": "mocha test/acceptance/*_test.js",
     "build": "rollup -c",
     "prepare": "grunt"
   },
@@ -65,6 +67,11 @@
     "build/ical.timezones.min.js",
     "lib/ical/*.js"
   ],
+  "mocha": {
+    "ui": "tdd",
+    "require": "test/support/helper.js",
+    "reporter": "spec"
+  },
   "saucelabs": {
     "SL_Chrome": {
       "base": "SauceLabs",

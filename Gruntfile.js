@@ -71,64 +71,6 @@ module.exports = function(grunt) {
       }
     },
 
-    mocha_istanbul: {
-      coverage: {
-        src: ['<%= libinfo.test.unit %>', '<%= libinfo.test.acceptance %>'],
-        options: {
-          root: './lib/ical/',
-          require: ['<%= libinfo.test.head %>'],
-          reporter: 'dot',
-          ui: 'tdd'
-        }
-      }
-    },
-
-    coveralls: {
-      options: {
-        force: true
-      },
-      unit: {
-        src: './coverage/lcov.info'
-      }
-    },
-
-    'node-inspector': {
-      test: {
-        hidden: ['node_modules']
-      }
-    },
-
-    concurrent: {
-      all: ['mochacli:performance', 'mochacli:acceptance', 'mochacli:unit', 'node-inspector'],
-      unit: ['mochacli:unit', 'node-inspector'],
-      acceptance: ['mochacli:acceptance', 'node-inspector'],
-      single: ['mochacli:single', 'node-inspector']
-    },
-
-    eslint: {
-      src: ['<%= libinfo.absfiles %>']
-    },
-
-    mochacli: {
-      options: {
-        ui: 'tdd',
-        require: ['<%= libinfo.test.head %>'],
-        'debug-brk': grunt.option('debug'),
-        reporter: grunt.option('reporter') || 'spec'
-      },
-      performance: {
-        src: ['<%= libinfo.test.performance %>']
-      },
-      acceptance: {
-        src: ['<%= libinfo.test.acceptance %>']
-      },
-      unit: {
-        src: ['<%= libinfo.test.unit %>']
-      },
-      single: {
-        src: [grunt.option('test')]
-      }
-    },
 
     karma: {
       options: {
@@ -189,27 +131,6 @@ module.exports = function(grunt) {
           src: ['<%= libinfo.test.acceptance %>']
         }
       }
-    },
-
-    uglify: {
-      options: {
-        sourceMap: true,
-        compress: {},
-        mangle: {
-          reserved: ['ICAL']
-        }
-      },
-      dist: {
-        files: {
-          'build/ical.min.js': ['build/ical.js']
-        }
-      },
-      zones: {
-        files: {
-          'build/ical.timezones.min.js': ['build/ical.timezones.js']
-        }
-      }
-    },
     release: {
       options: {
         tagName: 'v<%=version%>',
