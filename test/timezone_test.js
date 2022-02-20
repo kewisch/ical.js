@@ -1,5 +1,4 @@
 suite('timezone', function() {
-  var icsData;
   var timezone;
 
   function timezoneTest(tzid, name, testCb) {
@@ -18,14 +17,12 @@ suite('timezone', function() {
           timezone = ICAL.Timezone.localTimezone;
         });
       } else {
-        testSupport.defineSample('timezones/' + tzid + '.ics', function(data) {
-          icsData = data;
-        });
+        setup(async function() {
+          let icsData = await testSupport.loadSample('timezones/' + tzid + '.ics');
 
-        setup(function() {
-          var parsed = ICAL.parse(icsData);
-          var vcalendar = new ICAL.Component(parsed);
-          var comp = vcalendar.getFirstSubcomponent('vtimezone');
+          let parsed = ICAL.parse(icsData);
+          let vcalendar = new ICAL.Component(parsed);
+          let comp = vcalendar.getFirstSubcomponent('vtimezone');
 
           timezone = new ICAL.Timezone(comp);
         });

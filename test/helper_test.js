@@ -101,10 +101,11 @@ suite('ICAL.helpers', function() {
     var subject = ICAL.helpers.updateTimezones;
     var cal;
 
-    testSupport.defineSample('minimal.ics', function(data) {
+    suiteSetup(async function() {
+      let data = await testSupport.loadSample('minimal.ics');
       cal = new ICAL.Component(ICAL.parse(data));
-    });
-    testSupport.defineSample('timezones/America/Atikokan.ics', function(data) {
+
+      data = await testSupport.loadSample('timezones/America/Atikokan.ics');
       ICAL.TimezoneService.register(
         (new ICAL.Component(ICAL.parse(data))).getFirstSubcomponent("vtimezone")
       );

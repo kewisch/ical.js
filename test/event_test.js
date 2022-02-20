@@ -33,8 +33,8 @@ suite('ICAL.Event', function() {
     return newEvent;
   }
 
-  testSupport.defineSample('recur_instances.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('recur_instances.ics');
   });
 
   var exceptions = [];
@@ -461,8 +461,8 @@ suite('ICAL.Event', function() {
     suite('multiple rrules', function() {
       var icsData;
 
-      testSupport.defineSample('multiple_rrules.ics', function(data) {
-        icsData = data;
+      suiteSetup(async function() {
+        icsData = await testSupport.loadSample('multiple_rrules.ics');
       });
 
       test('result', function() {
@@ -828,8 +828,8 @@ suite('ICAL.Event', function() {
   suite('duration instead of dtend', function() {
     var icsData;
 
-    testSupport.defineSample('duration_instead_of_dtend.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('duration_instead_of_dtend.ics');
     });
 
     test('result', function() {
@@ -890,8 +890,8 @@ suite('ICAL.Event', function() {
   suite('only a dtstart date', function() {
     var icsData;
 
-    testSupport.defineSample('only_dtstart_date.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('only_dtstart_date.ics');
     });
 
     test('result', function() {
@@ -922,8 +922,8 @@ suite('ICAL.Event', function() {
   suite('only a dtstart time', function() {
     var icsData;
 
-    testSupport.defineSample('only_dtstart_time.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('only_dtstart_time.ics');
     });
 
     test('result', function() {
@@ -954,8 +954,8 @@ suite('ICAL.Event', function() {
   suite('dtend instead of duration', function() {
     var icsData;
 
-    testSupport.defineSample('minimal.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('minimal.ics');
     });
 
     test('result with different timezones', function() {

@@ -1,8 +1,8 @@
 suite('google birthday events', function() {
   var icsData;
 
-  testSupport.defineSample('google_birthday.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('google_birthday.ics');
   });
 
   test('expanding malformatted recurring event', function(done) {

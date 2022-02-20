@@ -1,6 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/" # Location of package manifests
+    directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    open-pull-requests-limit: 10
