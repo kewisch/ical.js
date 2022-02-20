@@ -42,6 +42,7 @@
     "grunt-release": "^0.14.0",
     "gruntify-eslint": "^5.0.0",
     "istanbul": "^0.4.5",
+    "jsdoc": "^3.6.10",
     "karma": "^6.3.9",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^2.0.1",
@@ -67,6 +68,7 @@
     "test-performance": "mocha --reporter test/support/perfReporter.cjs test/performance/*_test.js",
     "build": "rollup -c",
     "lint": "eslint lib/ical test",
+    "jsdoc": "rm -rf api && jsdoc -R README.md -d api -t node_modules/minami lib/ical/*.js",
     "prepare": "grunt"
   },
   "files": [

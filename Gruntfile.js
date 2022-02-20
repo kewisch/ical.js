@@ -131,40 +131,6 @@ module.exports = function(grunt) {
           src: ['<%= libinfo.test.acceptance %>']
         }
       }
-    release: {
-      options: {
-        tagName: 'v<%=version%>',
-        tagMessage: 'v<%=version%>',
-        additionalFiles: ['bower.json'],
-        github: {
-          repo: 'mozilla-comm/ical.js',
-          accessTokenVar: 'GITHUB_TOKEN'
-        }
-      }
-    },
-    jsdoc: {
-      dist: {
-        src: ['<%= libinfo.absfiles %>', 'README.md'],
-        options: {
-          destination: '<%= libinfo.doc %>',
-          template: './node_modules/minami/',
-          private: false
-        }
-      }
-    },
-
-    'gh-pages': {
-      options: {
-        clone: 'ghpages-stage',
-        only: '<%= libinfo.doc %>',
-        user: {
-          name: '<%= github.actor %>',
-          email: '<%= github.actor %>@users.noreply.github.com'
-        },
-        repo: 'https://x-access-token:<%= github.token %>@github.com/mozilla-comm/ical.js.git',
-        message: 'Update API documentation and validator for <%= github.sha %>'
-      },
-      src: ['<%= libinfo.doc %>/**', '<%= libinfo.validator.dest %>']
     }
   });
 
