@@ -75,6 +75,21 @@ suite('recur_iterator', function() {
     return datesBetween(start, end);
   }
 
+  suite('#fromData', function() {
+    test("required rule", function() {
+      assert.throws(function() {
+        new ICAL.RecurIterator({}); // eslint-disable-line no-new
+      }, /iterator requires a \(ICAL.Recur\) rule/);
+    });
+    test("required time", function() {
+      assert.throws(function() {
+        new ICAL.RecurIterator({ // eslint-disable-line no-new
+          rule: new ICAL.Recur()
+        });
+      }, /iterator requires a \(ICAL.Time\) dtstart/);
+    });
+  });
+
   suite('#toJSON', function() {
     var recur, iterator;
 
