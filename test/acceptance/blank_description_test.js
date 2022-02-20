@@ -1,9 +1,8 @@
-
 suite('ics - blank description', function() {
   var icsData;
 
-  testSupport.defineSample('blank_description.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('blank_description.ics');
   });
 
   test('summary', function() {

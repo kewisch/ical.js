@@ -1,10 +1,11 @@
 suite('design', function() {
 
   var timezone;
-  testSupport.defineSample('timezones/America/New_York.ics', function(data) {
-    var parsed = ICAL.parse(data);
-    var vcalendar = new ICAL.Component(parsed);
-    var vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
+  suiteSetup(async function() {
+    let data = await testSupport.loadSample('timezones/America/New_York.ics');
+    let parsed = ICAL.parse(data);
+    let vcalendar = new ICAL.Component(parsed);
+    let vtimezone = vcalendar.getFirstSubcomponent('vtimezone');
 
     timezone = new ICAL.Timezone(vtimezone);
     ICAL.TimezoneService.register('test', timezone);

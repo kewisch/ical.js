@@ -1,58 +1,49 @@
-# ical.js - Javascript parser for rfc5545
+# ical.js - Javascript parser for iCalendar, jCal, vCard, jCard.
 
-This is a library to parse the iCalendar format defined in
-[rfc5545](http://tools.ietf.org/html/rfc5545), as well as similar formats like
-vCard.
+This is a library to parse the formats defined in the following rfcs and their extensions:
+* [rfc 5545](http://tools.ietf.org/html/rfc5545) (iCalendar)
+* [rfc7265](http://tools.ietf.org/html/rfc7265) (jCal)
+* [rfc6350](http://tools.ietf.org/html/rfc6350) (vCard)
+* [rfc7095](http://tools.ietf.org/html/rfc7095) (jCard)
 
-There are still some issues to be taken care of, but the library works for most
-cases. If you would like to help out and would like to discuss any API changes,
-please [contact me](mailto:mozilla@kewis.ch) or create an issue.
-
-The initial goal was to use it as a replacement for libical in the [Mozilla
-Calendar Project](http://www.mozilla.org/projects/calendar/), but the library
-has been written with the web in mind. This library is now called ICAL.js and
-enables you to do all sorts of cool experiments with calendar data and the web.
-I am also aiming for a caldav.js when this is done. Most algorithms here were
-taken from [libical](https://github.com/libical/libical). If you are bugfixing
-this library, please check if the fix can be upstreamed to libical.
+The initial goal was to use it as a replacement for libical in the [Mozilla Calendar
+Project](http://www.mozilla.org/projects/calendar/), but the library has been written with the web
+in mind. This library enables you to do all sorts of cool experiments with calendar data and the
+web. Most algorithms here were taken from [libical](https://github.com/libical/libical). If you are
+bugfixing this library, please check if the fix can be upstreamed to libical.
 
 ![Build Status](https://github.com/kewisch/ical.js/workflows/Checkin/badge.svg) [![Coverage Status](https://coveralls.io/repos/kewisch/ical.js/badge.svg)](https://coveralls.io/r/kewisch/ical.js) [![npm version](https://badge.fury.io/js/ical.js.svg)](http://badge.fury.io/js/ical.js) [![CDNJS](https://img.shields.io/cdnjs/v/ical.js.svg)](https://cdnjs.com/libraries/ical.js)  
 
 ## Sandbox and Validator
 
 If you want to try out ICAL.js right now, there is a
-[jsfiddle](http://jsfiddle.net/kewisch/227efboL/) set up and ready to use. Read
-on for documentation and example links.
+[jsfiddle](http://jsfiddle.net/kewisch/227efboL/) set up and ready to use. Read on for documentation
+and example links.
 
-There is also a validator that demonstrates how to use the library in a webpage
-in the [sandbox/](https://github.com/kewisch/ical.js/tree/main/sandbox)
-subdirectory.
+There is also a validator that demonstrates how to use the library in a webpage in the
+[tools/](https://github.com/kewisch/ical.js/tree/main/tools) subdirectory.
 
-[Try the validator online](http://kewisch.github.io/ical.js/validator.html), it always uses the latest copy of ICAL.js.
+[Try the validator online](http://kewisch.github.io/ical.js/validator.html), it always uses the latest release of ICAL.js.
 
 ## Installing
 
-You can install ICAL.js via [npm](https://www.npmjs.com/), if you would like to
-use it in Node.js:
+You can install ICAL.js via [npm](https://www.npmjs.com/), if you would like to use it in Node.js:
 ```
 npm install ical.js
 ```
 
-Alternatively, it is also available via [bower](http://bower.io/) for front-end
-development:
+Alternatively, it is also available via [bower](http://bower.io/) for front-end development:
 ```
 bower install ical.js
 ```
 
-ICAL.js has no dependencies and uses fairly basic JavaScript. Therefore, it
-should work in all versions of Node.js and modern browsers. It does use getters
-and setters, so the minimum version of Internet Explorer is 9.
+ICAL.js has no dependencies and is written in modern JavaScript. A version transpiled to ES5 is
+available as well. It should work in all versions of Node.js and modern browsers.
 
 ## Timezones
-The stock ical.js does not register any timezones, due to the additional size it
-brings. If you'd like to do timezone conversion, and the timezone definitions
-are not included in the respective ics files, you'll need to use
-`ical.timezones.js` or its minified counterpart.
+The stock ical.js does not register any timezones, due to the additional size it brings. If you'd
+like to do timezone conversion, and the timezone definitions are not included in the respective ics
+files, you'll need to use `ical.timezones.js` or its minified counterpart.
 
 ## Documentation
 
@@ -63,99 +54,40 @@ If you are missing anything, please don't hesitate to create an issue.
 
 ## Developing
 
-To contribute to ICAL.js you need to set up the development environment. This
-requires Node.js 10.x or later and grunt. Run the following steps to get
-started.
-
-```
-npm install -g grunt-cli
-npm install
-```
-
-You can now dive into the code, run the tests and check coverage.
+To contribute to ICAL.js you need to set up the development environment. A simple `npm install` will
+get you set up. If you would like to help out and would like to discuss any API changes, please feel 
+free to create an issue.
 
 ### Tests
 
-Tests can either be run via Node.js or in the browser, but setting up the testing
-infrastructure requires [node](https://github.com/nodejs/node). More
-information on how to set up and run tests can be found on
-[the wiki](https://github.com/kewisch/ical.js/wiki/Running-Tests).
+The following test suites are available
 
-#### in Node.js
+    npm run test-unit         # Node unit tests
+    npm run test-acceptance   # Node acceptance tests
+    npm run test-performance  # Performance comparison tests
+    npm run test-browser      # Browser unit and acceptance tests
+    
+    npm run test              # Node unit and acceptance tests (This is fast and covers most aspects)
+    npm run test-all          # All of the above
 
-The quickest way to execute tests is using Node.js. Running the following command
-will run all test suites: performance, acceptance and unit tests.
+See [the wiki](https://github.com/kewisch/ical.js/wiki/Running-Tests) for more details.
 
-    grunt test-node
-
-You can also select a single suite, or run a single test.
-
-    grunt test-node:performance
-    grunt test-node:acceptance
-    grunt test-node:unit
-
-    grunt test-node:single --test=test/parse_test.js
-
-Appending the `--debug` option to any of the above commands will run the
-test(s) with node-inspector. It will start the debugging server and open it in
-Chrome or Opera, depending on what you have installed. The tests will pause
-before execution starts so you can set breakpoints and debug the unit tests
-you are working on.
-
-If you run the performance tests comparison will be done between the current
-working version (latest), a previous build of ICAL.js (previous) and the
-unchanged copy of build/ical.js (from the main branch). See
-[the wiki](https://github.com/kewisch/ical.js/wiki/Running-Tests) for more
-details.
-
-#### in the browser
-
-To run the browser tests, we are currently using [karma](http://karma-runner.github.io/).
-To run tests with karma, you can run the following targets:
-
-    grunt test-browser           # run all tests
-    grunt karma:unit             # run only the unit tests
-    grunt karma:acceptance       # run only the acceptance tests
-
-Now you can visit [http://localhost:9876](http://localhost:9876) in your
-browser. The test output will be shown in the console you started the grunt
-task from. You can also run a single test:
-
-    grunt karma:single --test=test/parse_test.js
-
-The mentioned targets all run the tests from start to finish. If you would like
-to debug the tests instead, you can add the `--debug` flag. Once you open the
-browser there will be a "debug" button. Clicking on the button opens am empty
-page, but if you open your browser's developer tools you will see the test
-output. You can reload this page as often as you want until all tests are
-running.
-
-Last off, if you add the `--remote` option, karma will listen on all
-interfaces. This is useful if you are running the browser to test in a VM, for
-example when using [Internet Exporer VM images](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/).
-
-### Code Coverage
-ICAL.js is set up to calculate code coverage. You can
-[view the coverage results](https://coveralls.io/r/kewisch/ical.js)
-online, or run them locally to make sure new code is covered. Running `grunt
-coverage` will run the unit test suite measuring coverage. You can then open
-`coverage/lcov-report/index.html` to view the results in your browser.
+Code coverage is automatically generated for the node unit tests. You can [view the coverage
+results](https://coveralls.io/r/kewisch/ical.js) online, or run them locally to make sure new
+code is covered.
 
 ### Linters
-To make sure all ICAL.js code uses a common style, please run the linters using
-`grunt linters`. Please make sure you fix any issues shown by this command
-before sending a pull request.
+To make sure all ICAL.js code uses a common style, please run the linters using `npm run lint`.
+Please make sure you fix any issues shown by this command before sending a pull request.
 
 ### Documentation
-You can generate the documentation locally, this is also helpful to ensure the
-jsdoc you have written is valid. To do so, run `grunt jsdoc`. You will find the
-output in the `api/` subdirectory.
+You can generate the documentation locally, this is also helpful to ensure the jsdoc you have
+written is valid. To do so, run `npm run jsdoc`. You will find the output in the `docs/api/`
+subdirectory.
 
 ### Packaging
-When you are done with your work, you can run `grunt package` to create the
-single-file build for use in the browser, including its minified counterpart
-and the source map. Use `grunt package-zones` to also create a version of
-ical.js that includes the latest timezone definitions.
+When you are done with your work, you can run `npm run build` to create the single-file build for
+use in the browser, including its minified counterpart and the source map.
 
 ## License
 ical.js is licensed under the

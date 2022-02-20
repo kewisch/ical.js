@@ -1,8 +1,8 @@
 suite('ics test', function() {
   var icsData;
 
-  testSupport.defineSample('forced_types.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('forced_types.ics');
   });
 
   test('force type', function() {

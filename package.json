@@ -1,6 +1,6 @@
 {
   "name": "ical.js",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "Philipp Kewisch",
   "contributors": [
     "Github Contributors (https://github.com/kewisch/ical.js/graphs/contributors)"
@@ -24,24 +24,9 @@
     "@babel/preset-env": "^7.16.11",
     "@rollup/plugin-babel": "^5.3.0",
     "benchmark": "^2.1.4",
-    "biased-opener": "^0.2.8",
     "c8": "^7.11.0",
     "chai": "^4.2.0",
-    "coveralls": "^3.1.0",
     "eslint": "^8.9.0",
-    "grunt": "^1.1.0",
-    "grunt-concurrent": "^3.0.0",
-    "grunt-contrib-concat": "^2.1.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-coveralls": "^2.0.0",
-    "grunt-gh-pages": "^4.0.0",
-    "grunt-jsdoc": "^2.4.1",
-    "grunt-karma": "^4.0.0",
-    "grunt-mocha-cli": "^7.0.0",
-    "grunt-mocha-istanbul": "^5.0.2",
-    "grunt-release": "^0.14.0",
-    "gruntify-eslint": "^5.0.0",
-    "istanbul": "^0.4.5",
     "jsdoc": "^3.6.10",
     "karma": "^6.4.0",
     "karma-chai": "^0.1.0",
@@ -61,10 +46,13 @@
     "test-unit": "c8 mocha",
     "test-acceptance": "mocha test/acceptance/*_test.js",
     "test-performance": "mocha --reporter test/support/perfReporter.cjs test/performance/*_test.js",
+    "test-browser": "karma start karma.conf.cjs",
+    "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
     "build": "rollup -c",
     "lint": "eslint lib/ical test",
-    "jsdoc": "rm -rf api && jsdoc -R README.md -d api -t node_modules/minami lib/ical/*.js",
-    "prepare": "grunt"
+    "jsdoc": "rm -rf docs/api && jsdoc -R README.md -d docs/api -t node_modules/minami lib/ical/*.js",
+    "validator": "sed -e 's#unpkg.com/ical.js#unpkg.com/ical.js@'`grep '\"version\"' package.json | cut -d '\"' -f 4`'/dist/ical.js#' tools/validator.html > docs/validator.html && echo 'Validator written to docs/validator.html'",
+    "ghpages": "npm run jsdoc && npm run validator"
   },
   "files": [
     "build/ical.js",

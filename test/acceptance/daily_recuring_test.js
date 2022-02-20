@@ -1,8 +1,8 @@
 suite('ics - blank description', function() {
   var icsData;
 
-  testSupport.defineSample('daily_recur.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('daily_recur.ics');
   });
 
   test('summary', function() {

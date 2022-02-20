@@ -1,7 +1,7 @@
 suite('timezone_service', function() {
   var icsData;
-  testSupport.defineSample('timezones/America/Los_Angeles.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('timezones/America/Los_Angeles.ics');
   });
 
   var subject;

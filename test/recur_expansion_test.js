@@ -5,35 +5,33 @@ suite('recur_expansion', function() {
   var primary;
 
   function createSubject(file) {
+    setup(async function() {
+      let icsData = await testSupport.loadSample(file);
+      let exceptions = [];
 
-    testSupport.defineSample(file, function(data) {
-      icsData[file] = data;
-    });
+      await new Promise((resolve) => {
+        let parse = new ICAL.ComponentParser();
 
-    setup(function(done) {
-      var exceptions = [];
+        parse.onevent = function(event) {
+          if (event.isRecurrenceException()) {
+            exceptions.push(event);
+          } else {
+            primary = event;
+          }
+        };
 
-      var parse = new ICAL.ComponentParser();
+        parse.oncomplete = function() {
+          exceptions.forEach(primary.relateException, primary);
+          subject = new ICAL.RecurExpansion({
+            component: primary.component,
+            dtstart: primary.startDate
+          });
 
-      parse.onevent = function(event) {
-        if (event.isRecurrenceException()) {
-          exceptions.push(event);
-        } else {
-          primary = event;
-        }
-      };
+          resolve();
+        };
+        parse.process(icsData);
+      });
 
-      parse.oncomplete = function() {
-        exceptions.forEach(primary.relateException, primary);
-        subject = new ICAL.RecurExpansion({
-          component: primary.component,
-          dtstart: primary.startDate
-        });
-
-        done();
-      };
-
-      parse.process(icsData[file]);
     });
   }
 
