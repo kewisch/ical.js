@@ -25,6 +25,7 @@
     "@rollup/plugin-babel": "^5.3.0",
     "benchmark": "^2.1.4",
     "biased-opener": "^0.2.8",
+    "c8": "^7.11.0",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
     "eslint": "^8.9.0",
@@ -56,7 +57,7 @@
   },
   "scripts": {
     "test": "npm run test-unit && npm run test-acceptance",
-    "test-unit": "mocha",
+    "test-unit": "c8 mocha",
     "test-acceptance": "mocha test/acceptance/*_test.js",
     "build": "rollup -c",
     "lint": "eslint lib/ical test",
@@ -73,6 +74,14 @@
     "ui": "tdd",
     "require": "test/support/helper.js",
     "reporter": "spec"
+  },
+  "c8": {
+    "include": "lib/ical",
+    "reporter": [
+      "text",
+      "html",
+      "lcov"
+    ]
   },
   "saucelabs": {
     "SL_Chrome": {
