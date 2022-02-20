@@ -1,8 +1,8 @@
 suite('ics - negative zero', function() {
   var icsData;
 
-  testSupport.defineSample('utc_negative_zero.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('utc_negative_zero.ics');
   });
 
   test('summary', function() {

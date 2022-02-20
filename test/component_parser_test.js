@@ -2,8 +2,8 @@ suite('component_parser', function() {
   var subject;
   var icsData;
 
-  testSupport.defineSample('recur_instances.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('recur_instances.ics');
   });
 
   suite('#process', function() {

@@ -23,8 +23,8 @@ suite('icaltime', function() {
 
   suite('initialize', function() {
     var icsData;
-    testSupport.defineSample('timezones/America/New_York.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('timezones/America/New_York.ics');
     });
 
     test('with timezone', function() {
@@ -782,11 +782,8 @@ suite('icaltime', function() {
 
     suite('with timezone', function() {
       var icsData;
-      testSupport.defineSample(
-        'timezones/America/Los_Angeles.ics',
-        function(data) {
-
-        icsData = data;
+      suiteSetup(async function() {
+        icsData = await testSupport.loadSample('timezones/America/Los_Angeles.ics');
       });
 
       var subject;

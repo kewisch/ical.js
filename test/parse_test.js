@@ -46,31 +46,18 @@ suite('parserv2', function() {
         var expected;
 
         // fetch ical
-        setup(function(done) {
-          testSupport.load(root + path, function(err, data) {
-            if (err) {
-              return done(new Error('failed to load ics'));
-            }
-            input = data;
-            done();
-          });
+        setup(async function() {
+          input = await testSupport.load(root + path);
         });
 
         // fetch json
-        setup(function(done) {
-          testSupport.load(root + path.replace(/vcf|ics$/, 'json'), function(err, data) {
-            if (err) {
-              return done(new Error('failed to load .json'));
-            }
-            try {
-              expected = JSON.parse(data.trim());
-            } catch (e) {
-              return done(
-                new Error('expect json is invalid: \n\n' + data)
-              );
-            }
-            done();
-          });
+        setup(async function() {
+          let data = await testSupport.load(root + path.replace(/vcf|ics$/, 'json'));
+          try {
+            expected = JSON.parse(data.trim());
+          } catch (e) {
+            throw new Error('expect json is invalid: \n\n' + data);
+          }
         });
 
         function jsonEqual(actual, expected) {

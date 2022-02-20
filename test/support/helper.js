@@ -1,41 +1,54 @@
-import ICAL from "../../lib/ical/module.js";
-import chai from "chai";
-import { URL } from 'url';
-import fs from "fs";
-import Benchmark from "benchmark";
-
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
 
 /* eslint-env browser, node, mocha */
 
-let icalPrevious, icalUpstream;
-global.ICAL = ICAL;
+let crossGlobal = typeof(window) === 'undefined' ? global : window;
+let testSupport = crossGlobal.testSupport = {
+  isNode: (typeof(global) !== 'undefined'),
+  isKarma: (typeof(window) !== 'undefined' && typeof window.__karma__ !== 'undefined')
+};
 
+if (testSupport.isKarma) {
+  // Need to do this before the first await, browser/karma won't wait on top level await
+  window.__karma__.loaded = function() {};
+}
+
+if (testSupport.isNode) {
+  var ICAL = (await import("../../lib/ical/module.js")).default;
+  var chai = (await import("chai")).default;
+  var Benchmark = (await import("benchmark")).default;
+  var { URL } = await import("url");
+  var { readFile } = (await import('fs/promises'));
+} else {
+  var ICAL = (await import("/base/lib/ical/module.js")).default;
+  var chai = window.chai;
+}
+
+crossGlobal.ICAL = ICAL;
 chai.config.includeStack = true;
-global.assert = chai.assert;
-global.assert.hasProperties = function chai_hasProperties(given, props, msg) {
+crossGlobal.assert = chai.assert;
+crossGlobal.assert.hasProperties = function chai_hasProperties(given, props, msg) {
   msg = (typeof(msg) === 'undefined') ? '' : msg + ': ';
 
   if (props instanceof Array) {
     props.forEach(function(prop) {
-      global.assert.ok(
+      crossGlobal.assert.ok(
         (prop in given),
         msg + 'given should have "' + prop + '" property'
       );
     });
   } else {
     for (var key in props) {
-      global.assert.deepEqual(
+      crossGlobal.assert.deepEqual(
         given[key],
         props[key],
         msg + ' property equality for (' + key + ') '
       );
     }
   }
-};
-
-let testSupport = global.testSupport = {
-  isNode: (typeof(window) === 'undefined'),
-  isKarma: (typeof(window) !== 'undefined' && typeof window.__karma__ !== 'undefined')
 };
 
 /**
@@ -67,15 +80,12 @@ testSupport.registerTimezone = function(zone, callback) {
     }, 0);
   } else {
     var path = 'samples/timezones/' + zone + '.ics';
-    testSupport.load(path, function(err, data) {
-      if (err) {
-        callback(err);
-      }
+    testSupport.load(path).then((data) => {
       var zone = register(data);
       this._timezones[zone] = data;
 
       callback(null, register(data));
-    }.bind(this));
+    }, callback);
   }
 };
 
@@ -118,45 +128,27 @@ testSupport.useTimezones = function(zones) {
  * @param {String} path relative to root (/) of project.
  * @param {Function} callback [err, contents].
  */
-testSupport.load = function(path, callback) {
+testSupport.load = async function(path, callback) {
   if (testSupport.isNode) {
     let root = new URL('../../' + path, import.meta.url).pathname;
-    fs.readFile(root, 'utf8', function(err, contents) {
-      callback(err, contents);
-    });
+    return readFile(root, 'utf8');
   } else {
-    var path = '/' + path;
-    if (testSupport.isKarma) {
-      path = '/base/' + path.replace(/^\//, '');
+    let response = await fetch("/base/" + path);
+    if (response.status == 200) {
+      let text = await response.text();
+      return text;
+    } else {
+      let err = new Error('file not found or other error', response);
+      throw err;
     }
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', path, true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status !== 200) {
-          callback(new Error('file not found or other error', xhr));
-        } else {
-          callback(null, xhr.responseText);
-        }
-      }
-    };
-    xhr.send(null);
   }
 };
 
-testSupport.defineSample = function(file, cb) {
-  suiteSetup(function(done) {
-    testSupport.load('samples/' + file, function(err, data) {
-      if (err) {
-        done(err);
-      }
-      cb(data);
-      done();
-    });
-  });
+testSupport.loadSample = async function(file) {
+  return testSupport.load('samples/' + file);
 };
 
-
+let icalPrevious, icalUpstream;
 function perfTestDefine(scope, done) {
   this.timeout(0);
   let benchSuite = new Benchmark.Suite();
@@ -164,16 +156,18 @@ function perfTestDefine(scope, done) {
   benchSuite.add("latest", scope.bind(this));
   if (icalPrevious) {
     benchSuite.add("previous", () => {
-      let lastGlobal = global.ICAL;
-      global.ICAL = icalPrevious;
+      let lastGlobal = crossGlobal.ICAL;
+      crossGlobal.ICAL = icalPrevious;
       scope.call(this);
+      crossGlobal.ICAL = lastGlobal;
     });
   }
   if (icalUpstream) {
     benchSuite.add("upstream", () => {
-      let lastGlobal = global.ICAL;
-      global.ICAL = icalUpstream;
+      let lastGlobal = crossGlobal.ICAL;
+      crossGlobal.ICAL = icalUpstream;
       scope.call(this);
+      crossGlobal.ICAL = lastGlobal;
     });
   }
 
@@ -191,21 +185,38 @@ function perfTestDefine(scope, done) {
   benchSuite.run();
 }
 
-global.perfTest = function(name, scope) {
+crossGlobal.perfTest = function(name, scope) {
   test(name, function(done) {
     perfTestDefine.call(this, scope, done);
   });
 };
-global.perfTest.only = function(name, scope) {
+crossGlobal.perfTest.only = function(name, scope) {
   test.only(name, function(done) {
     perfTestDefine.call(this, scope, done);
   });
 };
-global.perfTest.skip = function(name, scope) {
+crossGlobal.perfTest.skip = function(name, scope) {
   test.skip(name, function(done) {
     perfTestDefine.call(this, scope, done);
   });
 };
+
+if (!testSupport.isNode) {
+  console.log("KARMA");
+  try {
+    for (let file in window.__karma__.files) {
+      if (window.__karma__.files.hasOwnProperty(file)) {
+        if (/_test\.js$/.test(file)) {
+          await import(file);
+        }
+      }
+    }
+
+    window.__karma__.start();
+  } catch (e) {
+    window.__karma__.error(e.toString());
+  }
+}
 
 export const mochaHooks = {
   beforeAll(done) {

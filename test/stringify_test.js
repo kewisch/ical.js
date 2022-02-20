@@ -16,14 +16,8 @@ suite('ICAL.stringify', function() {
         var expected;
 
         // fetch ical
-        setup(function(done) {
-          testSupport.load(root + path + '.ics', function(err, data) {
-            if (err) {
-              return done(new Error('failed to load ics'));
-            }
-            input = data;
-            done();
-          });
+        setup(async function() {
+          input = await testSupport.load(root + path + '.ics');
         });
 
         function jsonEqual(actual, expected) {

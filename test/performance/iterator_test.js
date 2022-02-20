@@ -2,8 +2,8 @@ suite('iterator', function() {
 
   var icsData;
 
-  testSupport.defineSample('parserv2.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('parserv2.ics');
   });
 
   var parsed;
