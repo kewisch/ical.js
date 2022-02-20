@@ -1,6 +1,6 @@
-perfCompareSuite('ICAL.Time', function(perf, ICAL) {
+suite('ICAL.Time', function() {
 
-  perf.test('subtract date', function() {
+  perfTest('subtract date', function() {
     var time = new ICAL.Time({
       year: 2012,
       month: 1,
@@ -26,7 +26,7 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
     minutes: 3
   });
 
-  perf.test('add duration', function() {
+  perfTest('add duration', function() {
     var time = new ICAL.Time({
       year: 2012,
       month: 1,
@@ -40,7 +40,7 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
     time.year; // eslint-disable-line no-unused-expressions
   });
 
-  perf.test('create and clone time', function() {
+  perfTest('create and clone time', function() {
     var time = new ICAL.Time({
       year: 2012,
       month: 1,
@@ -66,19 +66,19 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
     seconds: 1
   });
 
-  perf.test('toUnixTime', function() {
+  perfTest('toUnixTime', function() {
     _time.toUnixTime();
   });
 
-  perf.test('fromUnixTime', function() {
+  perfTest('fromUnixTime', function() {
     _time.fromUnixTime(1234567890);
   });
 
-  perf.test('dayOfWeek', function() {
+  perfTest('dayOfWeek', function() {
     _time.dayOfWeek();
   });
 
-  perf.test('weekNumber', function() {
+  perfTest('weekNumber', function() {
     _time.weekNumber();
   });
 });
