@@ -58,6 +58,13 @@ jobs:
           flag-name: unit-${{ matrix.node }}
           parallel: true
 
+      - name: "Artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: distribution
+          path: dist/*.js
+
+
   ghpages:
     name: "GH Pages"
     if: github.ref == 'refs/heads/main'
