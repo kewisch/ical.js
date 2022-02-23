@@ -9,4 +9,6 @@ api
 ghpages-stage
 /validator.html
 coverage/
-build/
+dist/
+tools/benchmark/
+docs/api/

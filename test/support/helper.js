@@ -221,10 +221,10 @@ if (!testSupport.isNode) {
 export const mochaHooks = {
   beforeAll(done) {
     Promise.allSettled([
-      import(`../../build/benchmark/ical_previous.js`).then((module) => {
+      import(`../../tools/benchmark/ical_previous.js`).then((module) => {
         icalPrevious = module.default;
       }),
-      import(`../../build/benchmark/ical_upstream.js`).then((module) => {
+      import(`../../tools/benchmark/ical_upstream.js`).then((module) => {
         icalUpstream = module.default;
       }),
     ]).then(() => done());

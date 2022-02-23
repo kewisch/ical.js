@@ -28,24 +28,28 @@ jobs:
       - name: "npm ci"
         run: npm ci
 
-      - name: "Linters"
-        run: grunt linters
+      - name: "Build"
+        run: npm run build
 
-      - name: "grunt package-zones"
-        run: grunt package-zones
+      - name: "Linters"
+        run: npm run lint
+
+#     Package timezones with vzic and merge them into the rollup build
+#     - name: "grunt package-zones"
+#       run: grunt package-zones
 
       - name: "Node Unit Tests"
-        run: grunt unit-node-ci
+        run: npm run test-unit
+
+      - name: "Node Acceptance Tests"
+        run: npm run test-acceptance
 
 #      Disabled for the moment, I can't get sauce labs to work
 #      - name: "Browser Unit Tests"
 #        env:
 #          SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
 #          SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-#        run: grunt unit-browser-ci
-
-      - name: "Coverage Prepare"
-        run: grunt coverage
+#        run: npm run test-browser
 
       - name: "Coverage Push"
         uses: coverallsapp/github-action@master
@@ -69,12 +73,13 @@ jobs:
         run: npm ci
 
       - name: "GH Pages Prepare"
-        run: grunt ghpages-prepare
+        run: npm run ghpages
 
       - name: "GH Pages Push"
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: grunt ghpages-push
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          publish_dir: docs
 
 
   finish:
