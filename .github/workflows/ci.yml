@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: "Setup node"
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
 
@@ -34,22 +34,18 @@ jobs:
       - name: "Linters"
         run: npm run lint
 
-#     Package timezones with vzic and merge them into the rollup build
-#     - name: "grunt package-zones"
-#       run: grunt package-zones
-
       - name: "Node Unit Tests"
         run: npm run test-unit
 
       - name: "Node Acceptance Tests"
         run: npm run test-acceptance
 
-#      Disabled for the moment, I can't get sauce labs to work
-#      - name: "Browser Unit Tests"
-#        env:
-#          SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-#          SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-#        run: npm run test-browser
+      # Disabled for the moment, I can't get sauce labs to work
+      # - name: "Browser Unit Tests"
+      #   env:
+      #    SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      #    SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      #   run: npm run test-browser
 
       - name: "Coverage Push"
         uses: coverallsapp/github-action@master
@@ -74,7 +70,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: "Setup node"
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
 
       - name: "npm ci"
         run: npm ci
@@ -88,14 +86,55 @@ jobs:
           github_token: ${{secrets.GITHUB_TOKEN}}
           publish_dir: docs
 
-
-  finish:
-    needs: build-and-test
+  timezones:
+    name: "Timezones"
     runs-on: ubuntu-latest
     steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
-        parallel-finished: true
+      - name: "Checkout"
+        uses: actions/checkout@v2
 
+      - name: "Setup node"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Download tzdb"
+        id: tzdb
+        run: |
+          export TZDB_VERSION=$(node tools/scriptutils.js tzdb-version)
+          mkdir -p tools/tzdb
+          cd tools/tzdb
+          wget "https://data.iana.org/time-zones/releases/tzdata${TZDB_VERSION}.tar.gz" -O - | tar xz
+
+      - name: "Build vzic"
+        run: |
+          git clone https://github.com/libical/vzic tools/vzic
+          cd tools/vzic
+          make TZID_PREFIX="" OLSON_DIR="$(readlink -f ../tzdb)"
+
+      - name: "Run vzic"
+        run: tools/vzic/vzic --olson-dir tools/tzdb --output-dir tools/tzdb/zoneinfo
+
+      - name: "Create zones"
+        run: |
+          mkdir -p dist
+          node tools/scriptutils.js generate-zones tools/tzdb > dist/ical.timezones.js
+
+      - name: "Artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: timezones
+          path: dist/ical.timezones.js
+
+  finish:
+    needs: [build-and-test, timezones]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
