@@ -22,6 +22,7 @@
   ],
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
+    "@octokit/core": "^3.5.1",
     "@rollup/plugin-babel": "^5.3.0",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
@@ -35,7 +36,9 @@
     "karma-spec-reporter": "^0.0.32",
     "minami": "^1.2.3",
     "mocha": "^9.1.3",
-    "rollup-plugin-terser": "^7.0.2"
+    "node-fetch": "^3.2.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "yauzl-promise": "^2.1.3"
   },
   "overrides": {
     "grunt-release": {
@@ -54,7 +57,7 @@
     "test-browser": "karma start karma.conf.cjs",
     "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
     "build": "rollup -c",
-    "lint": "eslint lib/ical test",
+    "lint": "eslint lib/ical test tools/scriptutils.js",
     "jsdoc": "rm -rf docs/api && jsdoc -R README.md -d docs/api -t node_modules/minami lib/ical/*.js",
     "validator": "sed -e 's#unpkg.com/ical.js#unpkg.com/ical.js@'`grep '\"version\"' package.json | cut -d '\"' -f 4`'/build/ical.js#' tools/validator.html > docs/validator.html && echo 'Validator written to docs/validator.html'",
     "ghpages": "npm run jsdoc && npm run validator"
