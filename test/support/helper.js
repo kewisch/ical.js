@@ -205,7 +205,7 @@ if (!testSupport.isNode) {
   console.log("KARMA");
   try {
     for (let file in window.__karma__.files) {
-      if (window.__karma__.files.hasOwnProperty(file)) {
+      if (Object.hasOwn(window.__karma__.files, file)) {
         if (/_test\.js$/.test(file)) {
           await import(file);
         }
