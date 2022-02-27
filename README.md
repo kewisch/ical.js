@@ -32,11 +32,6 @@ You can install ICAL.js via [npm](https://www.npmjs.com/), if you would like to 
 npm install ical.js
 ```
 
-Alternatively, it is also available via [bower](http://bower.io/) for front-end development:
-```
-bower install ical.js
-```
-
 ICAL.js has no dependencies and is written in modern JavaScript. A version transpiled to ES5 is
 available as well. It should work in all versions of Node.js and modern browsers.
 
