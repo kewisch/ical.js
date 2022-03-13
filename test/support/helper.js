@@ -56,38 +56,31 @@ crossGlobal.assert.hasProperties = function chai_hasProperties(given, props, msg
 /**
  * Registers a given timezone from samples with the timezone service.
  *
- * @param {String} zone like "America/Los_Angeles".
- * @param {Function} callback fired when load/register is complete.
+ * @param {String} zoneName like "America/Los_Angeles".
  */
-testSupport.registerTimezone = function(zone, callback) {
-  if (!this._timezones) {
-    this._timezones = Object.create(null);
-  }
-
-  let ics = this._timezones[zone];
-
-  function register(ics) {
-    let parsed = ICAL.parse(ics);
+testSupport.registerTimezone = async function(zoneName) {
+  function register(icsData) {
+    let parsed = ICAL.parse(icsData);
     let calendar = new ICAL.Component(parsed);
     let vtimezone = calendar.getFirstSubcomponent('vtimezone');
-
-    let zone = new ICAL.Timezone(vtimezone);
 
     ICAL.TimezoneService.register(vtimezone);
   }
 
-  if (ics) {
-    setTimeout(function() {
-      callback(null, register(ics));
-    }, 0);
-  } else {
-    let path = 'samples/timezones/' + zone + '.ics';
-    testSupport.load(path).then((data) => {
-      let zone = register(data);
-      this._timezones[zone] = data;
+  if (!this._timezones) {
+    this._timezones = Object.create(null);
+  }
 
-      callback(null, register(data));
-    }, callback);
+  let ics = this._timezones[zoneName];
+
+  if (ics) {
+    return register(ics);
+  } else {
+    let path = 'samples/timezones/' + zoneName + '.ics';
+    let data = await testSupport.load(path);
+    let zone = register(data);
+    this._timezones[zone] = data;
+    return zone;
   }
 };
 
@@ -107,30 +100,20 @@ testSupport.useTimezones = function(zones) {
     ICAL.TimezoneService.reset();
   });
 
-  suiteSetup(function(done) {
-    function zoneDone() {
-      if (--remaining == 0) {
-        done();
-      }
-    }
-
+  suiteSetup(async function() {
     // By default, Z/UTC/GMT are already registered
     if (ICAL.TimezoneService.count > 3) {
       throw new Error("Can only register zones once");
     }
 
-    let remaining = allZones.length;
-    allZones.forEach(function(zone) {
-      testSupport.registerTimezone(zone, zoneDone);
-    });
+    await Promise.all(allZones.map(zone => testSupport.registerTimezone(zone)));
   });
 };
 
 /**
  * @param {String} path relative to root (/) of project.
- * @param {Function} callback [err, contents].
  */
-testSupport.load = async function(path, callback) {
+testSupport.load = async function(path) {
   if (testSupport.isNode) {
     let root = new URL('../../' + path, import.meta.url).pathname;
     return readFile(root, 'utf8');
