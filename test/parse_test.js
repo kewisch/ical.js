@@ -1,6 +1,6 @@
 suite('parserv2', function() {
 
-  var subject;
+  let subject;
   setup(function() {
     subject = ICAL.parse;
   });
@@ -10,8 +10,8 @@ suite('parserv2', function() {
    * (one to parse, one is expected
    */
   suite('full parser tests', function() {
-    var root = 'test/parser/';
-    var list = [
+    let root = 'test/parser/';
+    let list = [
       // icalendar tests
       'rfc.ics',
       'single_empty_vcalendar.ics',
@@ -44,8 +44,8 @@ suite('parserv2', function() {
 
     list.forEach(function(path) {
       suite(path.replace('_', ' '), function() {
-        var input;
-        var expected;
+        let input;
+        let expected;
 
         // fetch ical
         setup(async function() {
@@ -76,8 +76,8 @@ suite('parserv2', function() {
         }
 
         test('round-trip', function() {
-          var parsed = subject(input);
-          var ical = ICAL.stringify(parsed);
+          let parsed = subject(input);
+          let ical = ICAL.stringify(parsed);
 
           // NOTE: this is not an absolute test that serialization
           //       works as our parser should be error tolerant and
@@ -90,7 +90,7 @@ suite('parserv2', function() {
         });
 
         test('compare', function() {
-          var actual = subject(input);
+          let actual = subject(input);
           jsonEqual(actual, expected);
         });
       });
@@ -100,7 +100,7 @@ suite('parserv2', function() {
   suite('invalid ical', function() {
 
     test('invalid property', function() {
-      var ical = 'BEGIN:VCALENDAR\n';
+      let ical = 'BEGIN:VCALENDAR\n';
       // no param or value token
       ical += 'DTSTART\n';
       ical += 'DESCRIPTION:1\n';
@@ -112,7 +112,7 @@ suite('parserv2', function() {
     });
 
     test('invalid quoted params', function() {
-      var ical = 'BEGIN:VCALENDAR\n';
+      let ical = 'BEGIN:VCALENDAR\n';
       ical += 'X-FOO;BAR="quoted\n';
       // an invalid newline inside quoted parameter
       ical += 'params";FOO=baz:realvalue\n';
@@ -124,7 +124,7 @@ suite('parserv2', function() {
     });
 
     test('missing value with param delimiter', function() {
-      var ical = 'BEGIN:VCALENDAR\n' +
+      let ical = 'BEGIN:VCALENDAR\n' +
                  'X-FOO;\n';
       assert.throws(function() {
         subject(ical);
@@ -132,7 +132,7 @@ suite('parserv2', function() {
     });
 
     test('missing param name ', function() {
-      var ical = 'BEGIN:VCALENDAR\n' +
+      let ical = 'BEGIN:VCALENDAR\n' +
                  'X-FOO;=\n';
       assert.throws(function() {
         subject(ical);
@@ -140,7 +140,7 @@ suite('parserv2', function() {
     });
 
     test('missing param value', function() {
-      var ical = 'BEGIN:VCALENDAR\n' +
+      let ical = 'BEGIN:VCALENDAR\n' +
                  'X-FOO;BAR=\n';
       assert.throws(function() {
         subject(ical);
@@ -148,7 +148,7 @@ suite('parserv2', function() {
     });
 
     test('missing component end', function() {
-      var ical = 'BEGIN:VCALENDAR\n';
+      let ical = 'BEGIN:VCALENDAR\n';
       ical += 'BEGIN:VEVENT\n';
       ical += 'BEGIN:VALARM\n';
       ical += 'DESCRIPTION: foo\n';
@@ -165,8 +165,8 @@ suite('parserv2', function() {
 
   suite('#_parseParameters', function() {
     test('with processed text', function() {
-      var input = ';FOO=x\\na';
-      var expected = {
+      let input = ';FOO=x\\na';
+      let expected = {
         'foo': 'x\na'
       };
 
@@ -177,8 +177,8 @@ suite('parserv2', function() {
     });
 
     test('with multiple vCard TYPE parameters', function() {
-      var input = ';TYPE=work;TYPE=voice';
-      var expected = {
+      let input = ';TYPE=work;TYPE=voice';
+      let expected = {
         'type': ['work', 'voice']
       };
 
@@ -189,8 +189,8 @@ suite('parserv2', function() {
     });
 
     test('with multiple iCalendar MEMBER parameters', function() {
-      var input = ';MEMBER="urn:one","urn:two";MEMBER="urn:three"';
-      var expected = {
+      let input = ';MEMBER="urn:one","urn:two";MEMBER="urn:three"';
+      let expected = {
         'member': ['urn:one', 'urn:two', 'urn:three']
       };
 
@@ -201,8 +201,8 @@ suite('parserv2', function() {
     });
 
     test('with comma in singleValue parameter', function() {
-      var input = ';LABEL="A, B"';
-      var expected = {
+      let input = ';LABEL="A, B"';
+      let expected = {
         'label': 'A, B'
       };
 
@@ -214,8 +214,8 @@ suite('parserv2', function() {
 
     test('with comma in singleValue parameter after multiValue parameter', function() {
       // TYPE allows multiple values, whereas LABEL doesn't.
-      var input = ';TYPE=home;LABEL="A, B"';
-      var expected = {
+      let input = ';TYPE=home;LABEL="A, B"';
+      let expected = {
         'type': 'home',
         'label': 'A, B'
       };
@@ -228,8 +228,8 @@ suite('parserv2', function() {
   });
 
   test('#_parseMultiValue', function() {
-    var values = 'woot\\, category,foo,bar,baz';
-    var result = [];
+    let values = 'woot\\, category,foo,bar,baz';
+    let result = [];
     assert.deepEqual(
       subject._parseMultiValue(values, ',', 'text', result, null, ICAL.design.defaultSet),
       ['woot, category', 'foo', 'bar', 'baz']
@@ -238,8 +238,8 @@ suite('parserv2', function() {
 
   suite('#_parseValue', function() {
     test('text', function() {
-      var value = 'start \\n next';
-      var expected = 'start \n next';
+      let value = 'start \\n next';
+      let expected = 'start \n next';
 
       assert.equal(
         subject._parseValue(value, 'text', ICAL.design.defaultSet),
@@ -251,7 +251,7 @@ suite('parserv2', function() {
   suite('#_eachLine', function() {
 
     function unfold(input) {
-      var result = [];
+      let result = [];
 
       subject._eachLine(input, function(err, line) {
         result.push(line);
@@ -261,15 +261,15 @@ suite('parserv2', function() {
     }
 
     test('unfold single with \\r\\n', function() {
-      var input = 'foo\r\n bar';
-      var expected = ['foobar'];
+      let input = 'foo\r\n bar';
+      let expected = ['foobar'];
 
       assert.deepEqual(unfold(input), expected);
     });
 
     test('with \\n', function() {
-      var input = 'foo\nbar\n  baz';
-      var expected = [
+      let input = 'foo\nbar\n  baz';
+      let expected = [
         'foo',
         'bar baz'
       ];

@@ -1,5 +1,5 @@
 suite('ICAL.Binary', function() {
-  var subject;
+  let subject;
 
   setup(function() {
     subject = new ICAL.Binary();

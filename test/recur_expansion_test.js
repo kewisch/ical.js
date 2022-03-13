@@ -1,8 +1,8 @@
 suite('recur_expansion', function() {
-  var component;
-  var subject;
-  var icsData = {};
-  var primary;
+  let component;
+  let subject;
+  let icsData = {};
+  let primary;
 
   function createSubject(file) {
     setup(async function() {
@@ -58,12 +58,12 @@ suite('recur_expansion', function() {
     });
 
     test('default', function() {
-      var dtstart = ICAL.Time.fromData({
+      let dtstart = ICAL.Time.fromData({
         year: 2012,
         month: 2,
         day: 2
       });
-      var subject = new ICAL.RecurExpansion({
+      let subject = new ICAL.RecurExpansion({
         dtstart: dtstart,
         ruleIterators: []
       });
@@ -87,14 +87,14 @@ suite('recur_expansion', function() {
 
   suite('#_ensureRules', function() {
     test('.ruleDates', function() {
-      var expected = [
+      let expected = [
         new Date(2012, 10, 5, 10),
         new Date(2012, 10, 10, 10),
         new Date(2012, 10, 30, 10)
       ];
 
 
-      var dates = subject.ruleDates.map(function(time) {
+      let dates = subject.ruleDates.map(function(time) {
         return time.toJSDate();
       });
 
@@ -102,13 +102,13 @@ suite('recur_expansion', function() {
     });
 
     test('.exDates', function() {
-      var expected = [
+      let expected = [
         new Date(2012, 11, 4, 10),
         new Date(2013, 1, 5, 10),
         new Date(2013, 3, 2, 10)
       ];
 
-      var dates = subject.exDates.map(function(time) {
+      let dates = subject.exDates.map(function(time) {
         return time.toJSDate();
       });
 
@@ -117,7 +117,7 @@ suite('recur_expansion', function() {
   });
 
   suite('#_nextRecurrenceIter', function() {
-    var component;
+    let component;
 
     setup(function() {
       // setup a clean component with no rules
@@ -130,7 +130,7 @@ suite('recur_expansion', function() {
     });
 
     test('when rule ends', function() {
-      var start = {
+      let start = {
         year: 2012,
         month: 1,
         day: 1
@@ -140,21 +140,21 @@ suite('recur_expansion', function() {
       component.removeAllProperties('exdate');
       component.addPropertyWithValue('rrule', { freq: "WEEKLY", count: 3, byday: ["SU"] });
 
-      var subject = new ICAL.RecurExpansion({
+      let subject = new ICAL.RecurExpansion({
         component: component,
         dtstart: start
       });
 
-      var expected = [
+      let expected = [
         new Date(2012, 0, 1),
         new Date(2012, 0, 8),
         new Date(2012, 0, 15)
       ];
 
-      var max = 10;
-      var i = 0;
-      var next;
-      var dates = [];
+      let max = 10;
+      let i = 0;
+      let next;
+      let dates = [];
 
       while (i++ <= max && (next = subject.next())) {
         dates.push(next.toJSDate());
@@ -167,18 +167,18 @@ suite('recur_expansion', function() {
       component.addPropertyWithValue('rrule', { freq: "MONTHLY", bymonthday: [13] });
       component.addPropertyWithValue('rrule', { freq: "WEEKLY", byday: ["TH"] });
 
-      var start = ICAL.Time.fromData({
+      let start = ICAL.Time.fromData({
         year: 2012,
         month: 2,
         day: 2
       });
 
-      var subject = new ICAL.RecurExpansion({
+      let subject = new ICAL.RecurExpansion({
         component: component,
         dtstart: start
       });
 
-      var expected = [
+      let expected = [
         new Date(2012, 1, 2),
         new Date(2012, 1, 9),
         new Date(2012, 1, 13),
@@ -186,10 +186,10 @@ suite('recur_expansion', function() {
         new Date(2012, 1, 23)
       ];
 
-      var inc = 0;
-      var max = expected.length;
-      var next;
-      var dates = [];
+      let inc = 0;
+      let max = expected.length;
+      let next;
+      let dates = [];
 
       while (inc++ < max) {
         next = subject._nextRecurrenceIter();
@@ -205,7 +205,7 @@ suite('recur_expansion', function() {
   suite('#next', function() {
     // I use JS dates widely because its much easier
     // to compare them via chai's deepEquals function
-    var expected = [
+    let expected = [
       new Date(2012, 9, 2, 10),
       new Date(2012, 10, 5, 10),
       new Date(2012, 10, 6, 10),
@@ -215,10 +215,10 @@ suite('recur_expansion', function() {
     ];
 
     test('6 items', function() {
-      var dates = [];
-      var max = 6;
-      var inc = 0;
-      var next;
+      let dates = [];
+      let max = 6;
+      let inc = 0;
+      let next;
 
       while (inc++ < max && (next = subject.next())) {
         dates.push(next.toJSDate());
@@ -235,12 +235,12 @@ suite('recur_expansion', function() {
     createSubject('recur_instances_finite.ics');
 
     test('until complete', function() {
-      var max = 100;
-      var inc = 0;
-      var next;
+      let max = 100;
+      let inc = 0;
+      let next;
 
-      var dates = [];
-      var expected = [
+      let dates = [];
+      let expected = [
         new Date(2012, 9, 2, 10),
         new Date(2012, 10, 5, 10),
         new Date(2012, 10, 6, 10),
@@ -267,9 +267,9 @@ suite('recur_expansion', function() {
 
   suite('#toJSON', function() {
     test('from start', function() {
-      var json = subject.toJSON();
-      var newIter = new ICAL.RecurExpansion(json);
-      var cur = 0;
+      let json = subject.toJSON();
+      let newIter = new ICAL.RecurExpansion(json);
+      let cur = 0;
 
       while (cur++ < 10) {
         assert.deepEqual(
@@ -284,9 +284,9 @@ suite('recur_expansion', function() {
       subject.next();
       subject.next();
 
-      var json = subject.toJSON();
-      var newIter = new ICAL.RecurExpansion(json);
-      var cur = 0;
+      let json = subject.toJSON();
+      let newIter = new ICAL.RecurExpansion(json);
+      let cur = 0;
 
       while (cur++ < 10) {
         assert.deepEqual(
@@ -303,10 +303,10 @@ suite('recur_expansion', function() {
     createSubject('minimal.ics');
 
     test('iterate', function() {
-      var dates = [];
-      var next;
+      let dates = [];
+      let next;
 
-      var expected = primary.startDate.toJSDate();
+      let expected = primary.startDate.toJSDate();
 
       while ((next = subject.next())) {
         dates.push(next.toJSDate());

@@ -1,6 +1,6 @@
 suite('ical/period', function() {
 
-  var start, end, duration;
+  let start, end, duration;
 
   setup(function() {
     start = ICAL.Time.fromString("1970-01-02T03:04:05Z");
@@ -9,12 +9,12 @@ suite('ical/period', function() {
   });
 
   suite('#fromString', function() {
-    var assertions = {};
+    let assertions = {};
 
     function verify(string, icalstring, data) {
-      var key;
+      let key;
       test('parse: "' + string + '"', function() {
-        var subject = ICAL.Period.fromString(string);
+        let subject = ICAL.Period.fromString(string);
 
         assert.equal(subject.toICALString(), icalstring);
         assert.equal(subject.toString(), string);
@@ -55,7 +55,7 @@ suite('ical/period', function() {
         }
 
         if ('calculatedDuration' in data) {
-          var dur = subject.getDuration();
+          let dur = subject.getDuration();
 
           if ('duration' in data && data.duration) {
             assert.hasProperties(dur, data.duration, 'duration matches calculated');
@@ -63,7 +63,7 @@ suite('ical/period', function() {
           assert.hasProperties(dur, data.calculatedDuration);
         }
         if ('calculatedEnd' in data) {
-          var end = subject.getEnd();
+          let end = subject.getEnd();
 
           if ('end' in data && data.end) {
             assert.hasProperties(end, data.end, 'duration matches calculated');
@@ -149,7 +149,7 @@ suite('ical/period', function() {
 
   suite('#fromData', function() {
     test('valid start,end', function() {
-      var subject = ICAL.Period.fromData({
+      let subject = ICAL.Period.fromData({
         start: start,
         end: end
       });
@@ -159,7 +159,7 @@ suite('ical/period', function() {
       assert.isNull(subject.duration);
     });
     test('valid start,duration', function() {
-      var subject = ICAL.Period.fromData({
+      let subject = ICAL.Period.fromData({
         start: start,
         duration: duration,
       });
@@ -170,7 +170,7 @@ suite('ical/period', function() {
     });
 
     test('end value exists but is null', function() {
-      var subject = ICAL.Period.fromData({
+      let subject = ICAL.Period.fromData({
         start: start,
         end: null
       });
@@ -180,7 +180,7 @@ suite('ical/period', function() {
     });
 
     test('start value exists but is null', function() {
-      var subject = ICAL.Period.fromData({
+      let subject = ICAL.Period.fromData({
         start: null,
         duration: duration,
       });
@@ -190,7 +190,7 @@ suite('ical/period', function() {
     });
 
     test('duration value exists but is null', function() {
-      var subject = ICAL.Period.fromData({
+      let subject = ICAL.Period.fromData({
         start: start,
         duration: null,
       });
@@ -201,7 +201,7 @@ suite('ical/period', function() {
 
     test('start,end and duration', function() {
       assert.throws(function() {
-        var subject = ICAL.Period.fromData({
+        let subject = ICAL.Period.fromData({
           start: start,
           end: end,
           duration: duration
@@ -210,7 +210,7 @@ suite('ical/period', function() {
     });
 
     test('start,end and duration but one is null', function() {
-      var subject = ICAL.Period.fromData({
+      let subject = ICAL.Period.fromData({
         start: start,
         end: null,
         duration: duration
@@ -222,7 +222,7 @@ suite('ical/period', function() {
 
     test('invalid start value', function() {
       assert.throws(function() {
-        var subject = ICAL.Period.fromData({
+        let subject = ICAL.Period.fromData({
           start: '1970-01-02T03:04:05Z',
           end: end
         });
@@ -230,7 +230,7 @@ suite('ical/period', function() {
     });
     test('invalid end value', function() {
       assert.throws(function() {
-        var subject = ICAL.Period.fromData({
+        let subject = ICAL.Period.fromData({
           start: start,
           end: '1970-01-02T03:04:05Z'
         });
@@ -238,7 +238,7 @@ suite('ical/period', function() {
     });
     test('invalid duration value', function() {
       assert.throws(function() {
-        var subject = ICAL.Period.fromData({
+        let subject = ICAL.Period.fromData({
           start: start,
           duration: 'PT1S'
         });
@@ -248,14 +248,14 @@ suite('ical/period', function() {
 
   suite('#toString', function() {
     test('start,end', function() {
-        var subject = ICAL.Period.fromData({
+        let subject = ICAL.Period.fromData({
           start: start,
           end: end
         });
         assert.equal(subject.toString(), '1970-01-02T03:04:05Z/1970-01-02T03:04:05Z');
     });
     test('start,duration', function() {
-        var subject = ICAL.Period.fromData({
+        let subject = ICAL.Period.fromData({
           start: start,
           duration: duration
         });
@@ -265,23 +265,23 @@ suite('ical/period', function() {
 
   suite("generating jCal", function() {
     test("jCal from parser", function() {
-      var prop = ICAL.parse.property("FREEBUSY:20140401T010101/PT1H");
-      var val = prop[3];
+      let prop = ICAL.parse.property("FREEBUSY:20140401T010101/PT1H");
+      let val = prop[3];
       assert.deepEqual(val, ["2014-04-01T01:01:01", "PT1H"]);
     });
     test("jCal from property", function() {
-      var prop = ICAL.Property.fromString("FREEBUSY:20140401T010101/PT1H");
-      var val = prop.getFirstValue().toJSON();
+      let prop = ICAL.Property.fromString("FREEBUSY:20140401T010101/PT1H");
+      let val = prop.getFirstValue().toJSON();
       assert.deepEqual(val, ["2014-04-01T01:01:01", "PT1H"]);
     });
   });
 
   suite("#clone", function() {
     test('cloned start/duration', function() {
-      var subjectstart = start.clone();
-      var subjectduration = duration.clone();
-      var subject1 = ICAL.Period.fromData({ start: subjectstart, duration: subjectduration });
-      var subject2 = subject1.clone();
+      let subjectstart = start.clone();
+      let subjectduration = duration.clone();
+      let subject1 = ICAL.Period.fromData({ start: subjectstart, duration: subjectduration });
+      let subject2 = subject1.clone();
       subjectstart.hour++;
       subjectduration.hours++;
 
@@ -292,10 +292,10 @@ suite('ical/period', function() {
       assert.equal(subject2.duration.hours, 3);
     });
     test('cloned start/end', function() {
-      var subjectstart = start.clone();
-      var subjectend = end.clone();
-      var subject1 = ICAL.Period.fromData({ start: subjectstart, end: subjectend });
-      var subject2 = subject1.clone();
+      let subjectstart = start.clone();
+      let subjectend = end.clone();
+      let subject1 = ICAL.Period.fromData({ start: subjectstart, end: subjectend });
+      let subject2 = subject1.clone();
       subjectstart.hour++;
       subjectend.hour++;
 
@@ -307,8 +307,8 @@ suite('ical/period', function() {
     });
     test('cloned empty object', function() {
       // most importantly, this shouldn't throw.
-      var subject1 = ICAL.Period.fromData();
-      var subject2 = subject1.clone();
+      let subject1 = ICAL.Period.fromData();
+      let subject2 = subject1.clone();
 
       assert.equal(subject1.start, subject2.start);
       assert.equal(subject1.end, subject2.end);

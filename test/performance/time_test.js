@@ -1,7 +1,7 @@
 suite('ICAL.Time', function() {
 
   perfTest('subtract date', function() {
-    var time = new ICAL.Time({
+    let time = new ICAL.Time({
       year: 2012,
       month: 1,
       day: 1,
@@ -9,7 +9,7 @@ suite('ICAL.Time', function() {
       minute: 3
     });
 
-    var time2 = new ICAL.Time({
+    let time2 = new ICAL.Time({
       year: 2012,
       month: 10,
       day: 1,
@@ -20,14 +20,14 @@ suite('ICAL.Time', function() {
     time.subtractDate(time2);
   });
 
-  var dur = new ICAL.Duration({
+  let dur = new ICAL.Duration({
     days: 3,
     hour: 3,
     minutes: 3
   });
 
   perfTest('add duration', function() {
-    var time = new ICAL.Time({
+    let time = new ICAL.Time({
       year: 2012,
       month: 1,
       day: 32,
@@ -41,7 +41,7 @@ suite('ICAL.Time', function() {
   });
 
   perfTest('create and clone time', function() {
-    var time = new ICAL.Time({
+    let time = new ICAL.Time({
       year: 2012,
       month: 1,
       day: 32,
@@ -59,7 +59,7 @@ suite('ICAL.Time', function() {
     time.clone();
   });
 
-  var _time = new ICAL.Time({
+  let _time = new ICAL.Time({
     year: 2012,
     month: 1,
     day: 32,

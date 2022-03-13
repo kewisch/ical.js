@@ -1,5 +1,5 @@
 suite('ics - blank description', function() {
-  var icsData;
+  let icsData;
 
   suiteSetup(async function() {
     icsData = await testSupport.loadSample('daily_recur.ics');
@@ -7,22 +7,22 @@ suite('ics - blank description', function() {
 
   test('summary', function() {
     // just verify it can parse blank lines
-    var result = ICAL.parse(icsData);
-    var component = new ICAL.Component(result);
-    var vevent = component.getFirstSubcomponent(
+    let result = ICAL.parse(icsData);
+    let component = new ICAL.Component(result);
+    let vevent = component.getFirstSubcomponent(
       'vevent'
     );
 
-    var recur = vevent.getFirstPropertyValue(
+    let recur = vevent.getFirstPropertyValue(
       'rrule'
     );
 
-    var start = vevent.getFirstPropertyValue(
+    let start = vevent.getFirstPropertyValue(
       'dtstart'
     );
 
-    var iter = recur.iterator(start);
-    var limit = 10;
+    let iter = recur.iterator(start);
+    let limit = 10;
     while (limit) {
       iter.next();
       limit--;

@@ -16,6 +16,7 @@ if (testSupport.isKarma) {
   window.__karma__.loaded = function() {};
 }
 
+/* eslint-disable no-var, no-redeclare */
 if (testSupport.isNode) {
   var ICAL = (await import("../../lib/ical/module.js")).default;
   var chai = (await import("chai")).default;
@@ -26,6 +27,7 @@ if (testSupport.isNode) {
   var ICAL = (await import("/base/lib/ical/module.js")).default;
   var chai = window.chai;
 }
+/* eslint-enable no-var, no-redeclare*/
 
 crossGlobal.ICAL = ICAL;
 chai.config.includeStack = true;
@@ -41,7 +43,7 @@ crossGlobal.assert.hasProperties = function chai_hasProperties(given, props, msg
       );
     });
   } else {
-    for (var key in props) {
+    for (let key in props) {
       crossGlobal.assert.deepEqual(
         given[key],
         props[key],
@@ -62,14 +64,14 @@ testSupport.registerTimezone = function(zone, callback) {
     this._timezones = Object.create(null);
   }
 
-  var ics = this._timezones[zone];
+  let ics = this._timezones[zone];
 
   function register(ics) {
-    var parsed = ICAL.parse(ics);
-    var calendar = new ICAL.Component(parsed);
-    var vtimezone = calendar.getFirstSubcomponent('vtimezone');
+    let parsed = ICAL.parse(ics);
+    let calendar = new ICAL.Component(parsed);
+    let vtimezone = calendar.getFirstSubcomponent('vtimezone');
 
-    var zone = new ICAL.Timezone(vtimezone);
+    let zone = new ICAL.Timezone(vtimezone);
 
     ICAL.TimezoneService.register(vtimezone);
   }
@@ -79,9 +81,9 @@ testSupport.registerTimezone = function(zone, callback) {
       callback(null, register(ics));
     }, 0);
   } else {
-    var path = 'samples/timezones/' + zone + '.ics';
+    let path = 'samples/timezones/' + zone + '.ics';
     testSupport.load(path).then((data) => {
-      var zone = register(data);
+      let zone = register(data);
       this._timezones[zone] = data;
 
       callback(null, register(data));
@@ -117,7 +119,7 @@ testSupport.useTimezones = function(zones) {
       throw new Error("Can only register zones once");
     }
 
-    var remaining = allZones.length;
+    let remaining = allZones.length;
     allZones.forEach(function(zone) {
       testSupport.registerTimezone(zone, zoneDone);
     });

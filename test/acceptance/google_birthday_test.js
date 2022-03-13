@@ -1,5 +1,5 @@
 suite('google birthday events', function() {
-  var icsData;
+  let icsData;
 
   suiteSetup(async function() {
     icsData = await testSupport.loadSample('google_birthday.ics');
@@ -7,11 +7,11 @@ suite('google birthday events', function() {
 
   test('expanding malformatted recurring event', function(done) {
     // just verify it can parse forced types
-    var parser = new ICAL.ComponentParser();
-    var primary;
-    var exceptions = [];
+    let parser = new ICAL.ComponentParser();
+    let primary;
+    let exceptions = [];
 
-    var expectedDates = [
+    let expectedDates = [
       new Date(2012, 11, 10),
       new Date(2013, 11, 10),
       new Date(2014, 11, 10)
@@ -30,9 +30,9 @@ suite('google birthday events', function() {
         primary.relateException(item);
       });
 
-      var iter = primary.iterator();
-      var next;
-      var dates = [];
+      let iter = primary.iterator();
+      let next;
+      let dates = [];
       while ((next = iter.next())) {
         dates.push(next.toJSDate());
       }
