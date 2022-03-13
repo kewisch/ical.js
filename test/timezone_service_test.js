@@ -1,10 +1,10 @@
 suite('timezone_service', function() {
-  var icsData;
+  let icsData;
   suiteSetup(async function() {
     icsData = await testSupport.loadSample('timezones/America/Los_Angeles.ics');
   });
 
-  var subject;
+  let subject;
   setup(function() {
     subject = ICAL.TimezoneService;
     subject.reset();
@@ -15,7 +15,7 @@ suite('timezone_service', function() {
   });
 
   test('utc zones', function() {
-    var zones = ['Z', 'UTC', 'GMT'];
+    let zones = ['Z', 'UTC', 'GMT'];
     zones.forEach(function(tzid) {
       assert.ok(subject.has(tzid), tzid + ' should exist');
       assert.equal(subject.get(tzid), ICAL.Timezone.utcTimezone);
@@ -23,7 +23,7 @@ suite('timezone_service', function() {
   });
 
   test('#reset', function() {
-    var name = 'ZFOO';
+    let name = 'ZFOO';
     subject.register(name, ICAL.Timezone.utcTimezone);
     assert.isTrue(subject.has(name), 'should have set ' + name);
 
@@ -35,7 +35,7 @@ suite('timezone_service', function() {
 
   suite('register zones', function() {
     test('when it does not exist', function() {
-      var name = 'test';
+      let name = 'test';
       assert.isFalse(subject.has(name));
 
       assert.equal(subject.count, 3);
@@ -58,7 +58,7 @@ suite('timezone_service', function() {
     });
     test('with only invalid component', function() {
       assert.throws(function() {
-        var comp = new ICAL.Component('vtoaster');
+        let comp = new ICAL.Component('vtoaster');
         subject.register(comp);
       }, "timezone must be ICAL.Timezone");
     });
@@ -77,10 +77,10 @@ suite('timezone_service', function() {
     });
 
     test('using a component', function() {
-      var parsed = ICAL.parse(icsData);
-      var comp = new ICAL.Component(parsed);
-      var vtimezone = comp.getFirstSubcomponent('vtimezone');
-      var tzid = vtimezone.getFirstPropertyValue('tzid');
+      let parsed = ICAL.parse(icsData);
+      let comp = new ICAL.Component(parsed);
+      let vtimezone = comp.getFirstSubcomponent('vtimezone');
+      let tzid = vtimezone.getFirstPropertyValue('tzid');
 
       assert.equal(subject.count, 3);
       subject.register(vtimezone);
@@ -88,7 +88,7 @@ suite('timezone_service', function() {
 
       assert.isTrue(subject.has(tzid), 'successfully registed with component');
 
-      var zone = subject.get(tzid);
+      let zone = subject.get(tzid);
 
       assert.instanceOf(zone, ICAL.Timezone);
       assert.equal(zone.tzid, tzid);

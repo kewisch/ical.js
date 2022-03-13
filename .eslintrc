@@ -202,7 +202,7 @@
     "no-empty": 2,
 
     // Disallow declaring the same variable more than once (we use let anyway).
-    "no-redeclare": 0, // TODO re-enable this
+    "no-redeclare": 2,
 
     // Warn about declaration of variables already declared in the outer scope.
     // This isn't an error because it sometimes is useful to use the same name
@@ -442,6 +442,9 @@
     //"indent": [2, 2, { "SwitchCase": 1 }],
 
     "no-prototype-builtins": 0, // TODO remove
+
+    // Disallow var, use let or const instead
+    "no-var": 2
   },
   "overrides": [
     {

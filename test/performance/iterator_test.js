@@ -1,16 +1,16 @@
 suite('iterator', function() {
 
-  var icsData;
+  let icsData;
 
   suiteSetup(async function() {
     icsData = await testSupport.loadSample('parserv2.ics');
   });
 
-  var parsed;
-  var comp;
-  var tz;
-  var std;
-  var rrule;
+  let parsed;
+  let comp;
+  let tz;
+  let std;
+  let rrule;
 
   suiteSetup(function() {
     parsed = ICAL.parse(icsData);
@@ -21,7 +21,7 @@ suite('iterator', function() {
   });
 
   perfTest('timezone iterator & first iteration', function() {
-    var iterator = rrule.iterator(std.getFirstPropertyValue('dtstart'));
+    let iterator = rrule.iterator(std.getFirstPropertyValue('dtstart'));
     iterator.next();
   });
 

@@ -1,7 +1,7 @@
 suite('rrule', function() {
 
-  var start;
-  var occurrences;
+  let start;
+  let occurrences;
 
   suiteSetup(function() {
     start = ICAL.Time.fromString("2015-01-01T12:00:00");
@@ -47,9 +47,9 @@ suite('rrule', function() {
 
   ].forEach(function(rulestring) {
     perfTest(rulestring, function() {
-      var rrule = ICAL.Recur.fromString(rulestring);
-      var iter = rrule.iterator(start);
-      for (var i = 0; i < occurrences; i++) {
+      let rrule = ICAL.Recur.fromString(rulestring);
+      let iter = rrule.iterator(start);
+      for (let i = 0; i < occurrences; i++) {
         iter.next();
       }
     });
