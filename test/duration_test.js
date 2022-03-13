@@ -1,6 +1,6 @@
 suite('ical/duration', function() {
   test('#clone', function() {
-    var subject = ICAL.Duration.fromData({
+    let subject = ICAL.Duration.fromData({
       weeks: 1,
       days: 2,
       hours: 3,
@@ -9,7 +9,7 @@ suite('ical/duration', function() {
       isNegative: true
     });
 
-    var expected = {
+    let expected = {
       weeks: 1,
       days: 2,
       hours: 3,
@@ -18,7 +18,7 @@ suite('ical/duration', function() {
       isNegative: true
     };
 
-    var expected2 = {
+    let expected2 = {
       weeks: 6,
       days: 7,
       hours: 8,
@@ -27,11 +27,11 @@ suite('ical/duration', function() {
       isNegative: true
     };
 
-    var subject2 = subject.clone();
+    let subject2 = subject.clone();
     assert.hasProperties(subject, expected, 'base object unchanged');
     assert.hasProperties(subject2, expected, 'cloned object unchanged');
 
-    for (var k in expected2) {
+    for (let k in expected2) {
         subject2[k] = expected2[k];
     }
 
@@ -40,7 +40,7 @@ suite('ical/duration', function() {
   });
 
   test('#reset', function() {
-    var expected = {
+    let expected = {
       weeks: 1,
       days: 2,
       hours: 3,
@@ -48,7 +48,7 @@ suite('ical/duration', function() {
       seconds: 5,
       isNegative: true
     };
-    var subject = new ICAL.Duration(expected);
+    let subject = new ICAL.Duration(expected);
     assert.hasProperties(subject, expected);
 
     subject.reset();
@@ -68,8 +68,8 @@ suite('ical/duration', function() {
   suite('#normalize', function() {
     function verify(name, str, data) {
       test(name, function() {
-        var subject = new ICAL.Duration();
-        for (var k in data) {
+        let subject = new ICAL.Duration();
+        for (let k in data) {
           subject[k] = data[k];
         }
         subject.normalize();
@@ -97,8 +97,8 @@ suite('ical/duration', function() {
   suite("#compare", function() {
     function verify(str, a, b, cmp) {
       test(str, function() {
-        var dur_a = ICAL.Duration.fromString(a);
-        var dur_b = ICAL.Duration.fromString(b);
+        let dur_a = ICAL.Duration.fromString(a);
+        let dur_b = ICAL.Duration.fromString(b);
         assert.equal(dur_a.compare(dur_b), cmp);
       });
     }
@@ -110,8 +110,8 @@ suite('ical/duration', function() {
   });
 
   suite('#fromString', function() {
-    var assertions = {};
-    var base = {
+    let assertions = {};
+    let base = {
       weeks: 0,
       days: 0,
       minutes: 0,
@@ -120,8 +120,8 @@ suite('ical/duration', function() {
     };
 
     function verify(string, data, verifystring) {
-      var expected = {};
-      var key;
+      let expected = {};
+      let key;
 
       for (key in base) {
         expected[key] = base[key];
@@ -132,7 +132,7 @@ suite('ical/duration', function() {
       }
 
       test('parse: "' + string + '"', function() {
-        var subject = ICAL.Duration.fromString(string);
+        let subject = ICAL.Duration.fromString(string);
         assert.hasProperties(subject, expected);
         assert.equal(subject.toString(), verifystring || string);
       });

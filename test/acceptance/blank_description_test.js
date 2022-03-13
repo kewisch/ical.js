@@ -1,5 +1,5 @@
 suite('ics - blank description', function() {
-  var icsData;
+  let icsData;
 
   suiteSetup(async function() {
     icsData = await testSupport.loadSample('blank_description.ics');
@@ -7,6 +7,6 @@ suite('ics - blank description', function() {
 
   test('summary', function() {
     // just verify it can parse blank lines
-    var result = ICAL.parse(icsData);
+    let result = ICAL.parse(icsData);
   });
 });

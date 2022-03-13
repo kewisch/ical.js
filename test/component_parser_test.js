@@ -1,15 +1,15 @@
 suite('component_parser', function() {
-  var subject;
-  var icsData;
+  let subject;
+  let icsData;
 
   suiteSetup(async function() {
     icsData = await testSupport.loadSample('recur_instances.ics');
   });
 
   suite('#process', function() {
-    var events = [];
-    var exceptions = [];
-    var timezones = [];
+    let events = [];
+    let exceptions = [];
+    let timezones = [];
 
     function eventEquals(a, b, msg) {
       if (!a)
@@ -63,7 +63,7 @@ suite('component_parser', function() {
         assert.lengthOf(events, 0);
         assert.lengthOf(timezones, 1);
 
-        var tz = timezones[0];
+        let tz = timezones[0];
         assert.instanceOf(tz, ICAL.Timezone);
         assert.equal(tz.tzid, 'America/Los_Angeles');
       });
@@ -74,10 +74,10 @@ suite('component_parser', function() {
       setupProcess();
 
       test('parse result', function() {
-        var component = new ICAL.Component(ICAL.parse(icsData));
-        var list = component.getAllSubcomponents('vevent');
+        let component = new ICAL.Component(ICAL.parse(icsData));
+        let list = component.getAllSubcomponents('vevent');
 
-        var expectedEvents = [];
+        let expectedEvents = [];
 
         list.forEach(function(item) {
           expectedEvents.push(new ICAL.Event(item));
@@ -102,7 +102,7 @@ suite('component_parser', function() {
 
     suite('alternate input', function() {
       test('parsing component from string', function(done) {
-        var subject = new ICAL.ComponentParser();
+        let subject = new ICAL.ComponentParser();
         subject.oncomplete = function() {
           assert.lengthOf(events, 3);
           done();
@@ -110,12 +110,12 @@ suite('component_parser', function() {
         subject.process(icsData);
       });
       test('parsing component from component', function(done) {
-        var subject = new ICAL.ComponentParser();
+        let subject = new ICAL.ComponentParser();
         subject.oncomplete = function() {
           assert.lengthOf(events, 3);
           done();
         };
-        var comp = new ICAL.Component(ICAL.parse(icsData));
+        let comp = new ICAL.Component(ICAL.parse(icsData));
         subject.process(comp);
       });
     });

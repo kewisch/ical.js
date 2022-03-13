@@ -1,6 +1,6 @@
 suite('recur_iterator', function() {
-  var Time = ICAL.Time;
-  var Recur = ICAL.Recur;
+  let Time = ICAL.Time;
+  let Recur = ICAL.Recur;
 
   function addDates(expected, year, month, dates) {
     dates.forEach(function(date) {
@@ -26,12 +26,12 @@ suite('recur_iterator', function() {
 
   // taken from gaia calendar app
   function datesBetween(start, end, includeTime) {
-    var list = [];
-    var last = start.getDate();
-    var cur;
+    let list = [];
+    let last = start.getDate();
+    let cur;
 
     while (true) { // eslint-disable-line no-constant-condition
-      var next = new Date(
+      let next = new Date(
         start.getFullYear(),
         start.getMonth(),
         ++last
@@ -63,12 +63,12 @@ suite('recur_iterator', function() {
   }
 
   function getDaysIn(month) {
-    var start = new Date(
+    let start = new Date(
       month.getFullYear(),
       month.getMonth(),
       1
     );
-    var end = new Date(start.valueOf());
+    let end = new Date(start.valueOf());
     end.setMonth(start.getMonth() + 1);
     end.setMilliseconds(-1);
 
@@ -91,24 +91,24 @@ suite('recur_iterator', function() {
   });
 
   suite('#toJSON', function() {
-    var recur, iterator;
+    let recur, iterator;
 
     setup(function() {
-      var start = ICAL.Time.fromString('2012-02-01T09:00:00');
+      let start = ICAL.Time.fromString('2012-02-01T09:00:00');
       recur = ICAL.Recur.fromString('FREQ=MONTHLY;COUNT=12;INTERVAL=3');
       iterator = recur.iterator(start);
     });
 
     test('completed', function() {
-      var next;
+      let next;
       while (iterator.next()) {
         // Continue until completed
       }
 
       assert.isTrue(iterator.completed, 'is completed');
 
-      var json = iterator.toJSON();
-      var newIter = new ICAL.RecurIterator(json);
+      let json = iterator.toJSON();
+      let newIter = new ICAL.RecurIterator(json);
 
       assert.equal(newIter.next(), null, 'new iter next');
       assert.isTrue(newIter.completed, true, 'new iter completed');
@@ -118,9 +118,9 @@ suite('recur_iterator', function() {
       iterator.next();
       iterator.next();
 
-      var json = iterator.toJSON();
-      var newIter = new ICAL.RecurIterator(json);
-      var inc = 0;
+      let json = iterator.toJSON();
+      let newIter = new ICAL.RecurIterator(json);
+      let inc = 0;
 
       while (inc++ < 8) {
         assert.deepEqual(
@@ -132,7 +132,7 @@ suite('recur_iterator', function() {
     });
 
     test('from the begining of iteration', function() {
-      var expected = {
+      let expected = {
         rule: iterator.rule.toJSON(),
         dtstart: iterator.dtstart.toJSON(),
         by_data: iterator.by_data,
@@ -143,11 +143,11 @@ suite('recur_iterator', function() {
         occurrence_number: iterator.occurrence_number
       };
 
-      var json = iterator.toJSON();
+      let json = iterator.toJSON();
       assert.deepEqual(json, expected);
 
-      var newIter = new ICAL.RecurIterator(json);
-      var inc = 0;
+      let newIter = new ICAL.RecurIterator(json);
+      let inc = 0;
 
       while (inc++ < 10) {
         assert.deepEqual(
@@ -161,16 +161,16 @@ suite('recur_iterator', function() {
   });
 
   suite('#normalizeByMonthDayRules', function() {
-    var recur, iterator;
+    let recur, iterator;
 
     setup(function() {
-      var start = ICAL.Time.fromString('2012-02-01T09:00:00');
+      let start = ICAL.Time.fromString('2012-02-01T09:00:00');
       recur = ICAL.Recur.fromString('FREQ=MONTHLY;COUNT=2');
       iterator = recur.iterator(start);
     });
 
     test('positive rules', function() {
-      var result = iterator.normalizeByMonthDayRules(
+      let result = iterator.normalizeByMonthDayRules(
         2012, 2, [21, 15]
       );
 
@@ -178,7 +178,7 @@ suite('recur_iterator', function() {
     });
 
     test('when given zero', function() {
-      var result = iterator.normalizeByMonthDayRules(
+      let result = iterator.normalizeByMonthDayRules(
         2012, 2, [21, 0]
       );
 
@@ -186,7 +186,7 @@ suite('recur_iterator', function() {
     });
 
     test('extra days', function() {
-      var result = iterator.normalizeByMonthDayRules(
+      let result = iterator.normalizeByMonthDayRules(
         2012, 2, [1, 31]
       );
 
@@ -194,7 +194,7 @@ suite('recur_iterator', function() {
     });
 
     test('negative and positive days', function() {
-      var result = iterator.normalizeByMonthDayRules(
+      let result = iterator.normalizeByMonthDayRules(
         2012, 2, [1, -1]
       );
 
@@ -202,7 +202,7 @@ suite('recur_iterator', function() {
     });
 
     test('duplicates', function() {
-      var result = iterator.normalizeByMonthDayRules(
+      let result = iterator.normalizeByMonthDayRules(
         // -29 === 1st day
         2012, 2, [2, 2, 1, -29]
       );
@@ -212,19 +212,19 @@ suite('recur_iterator', function() {
   });
 
   function testRRULE(ruleString, options) {
-    var runner = options.only ? test.only : test;
+    let runner = options.only ? test.only : test;
     runner(ruleString, function() {
       if (!options.dtStart) {
         options.dtStart = options.dates[0];
       }
 
-      var start = ICAL.Time.fromString(options.dtStart);
-      var recur = ICAL.Recur.fromString(ruleString);
-      var iterator = recur.iterator(start);
+      let start = ICAL.Time.fromString(options.dtStart);
+      let recur = ICAL.Recur.fromString(ruleString);
+      let iterator = recur.iterator(start);
 
-      var inc = 0;
-      var dates = [];
-      var next, max;
+      let inc = 0;
+      let dates = [];
+      let next, max;
 
       if ('max' in options) {
         max = options.max;
