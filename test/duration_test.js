@@ -110,7 +110,6 @@ suite('ical/duration', function() {
   });
 
   suite('#fromString', function() {
-    let assertions = {};
     let base = {
       weeks: 0,
       days: 0,

@@ -1,8 +1,5 @@
 suite('recur_expansion', function() {
-  let component;
-  let subject;
-  let icsData = {};
-  let primary;
+  let subject, primary;
 
   function createSubject(file) {
     setup(async function() {

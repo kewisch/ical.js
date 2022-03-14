@@ -7,6 +7,6 @@ suite('ics - blank description', function() {
 
   test('summary', function() {
     // just verify it can parse blank lines
-    let result = ICAL.parse(icsData);
+    ICAL.parse(icsData);
   });
 });

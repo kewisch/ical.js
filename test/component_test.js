@@ -481,6 +481,7 @@ suite('Component', function() {
     subject.updatePropertyWithValue('x-foo', 'bar');
 
     let list = subject.getAllProperties();
+    assert.sameDeepMembers(list.map(prop => [prop.name, prop.getValues()]), [["x-foo", ["bar"]], ["description", ["xxx"]]]);
     assert.equal(subject.getFirstPropertyValue('x-foo'), 'bar');
   });
 

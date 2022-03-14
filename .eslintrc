@@ -205,15 +205,10 @@
     "no-redeclare": 2,
 
     // Warn about declaration of variables already declared in the outer scope.
-    // This isn't an error because it sometimes is useful to use the same name
-    // in a small helper function rather than having to come up with another
-    // random name.  Still, making this a warning can help people avoid being
-    // confused.
-    //"no-shadow": 2,
+    "no-shadow": 2,
 
     // Disallow global and local variables that aren't used, but allow unused function arguments.
-    //"no-unused-vars": [2, {"vars": "all", "args": "none", "varsIgnorePattern": "EXPORTED_SYMBOLS"}],
-    "no-unused-vars": 0, // TODO re-enable this
+    "no-unused-vars": [2, {"vars": "all", "args": "none" }],
 
     // Require padding inside curly braces
     "object-curly-spacing": [2, "always"],
@@ -441,7 +436,7 @@
     // Enforce consistent indentation (2-space)
     //"indent": [2, 2, { "SwitchCase": 1 }],
 
-    "no-prototype-builtins": 0, // TODO remove
+    "no-prototype-builtins": 2,
 
     // Disallow var, use let or const instead
     "no-var": 2
@@ -458,6 +453,10 @@
         "assert": "readonly",
         "testSupport": "readonly",
         "perfTest": "readonly"
+      },
+      "rules": {
+        // Tests use this way too often (e.g. subject)
+        "no-shadow": 0
       }
     },
     {
