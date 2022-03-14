@@ -8,7 +8,7 @@ suite('ICAL parse/stringify', function() {
   });
 
   perfTest('#parse', function() {
-    let data = ICAL.parse(icsData);
+    ICAL.parse(icsData);
   });
 
   perfTest('#stringify', function() {

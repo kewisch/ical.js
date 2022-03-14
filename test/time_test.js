@@ -492,7 +492,6 @@ suite('icaltime', function() {
 
       let max = 400;
       let cur = start;
-      let date = new Date();
       inc = 1;
       let time = Time.fromJSDate(cur);
 
@@ -1121,15 +1120,6 @@ suite('icaltime', function() {
   });
 
   test('#normalize', function() {
-    let f = new Time({
-        second: 59,
-        minute: 59,
-        hour: 23,
-        day: 31,
-        month: 12,
-        year: 2012
-    });
-
     let test_data = [{
         str: '2012-12-31T23:59:59',
         add_seconds: 1,
@@ -1143,7 +1133,6 @@ suite('icaltime', function() {
     for (let datakey in test_data) {
         let data = test_data[datakey];
         let dt = Time.fromString(data.str);
-        let cur_seconds = dt.second;
         let add_seconds = data.add_seconds || 0;
 
         dt.second += add_seconds;

@@ -153,7 +153,6 @@ suite('design', function() {
       test('#(from|to)ICAL', function() {
         let value = '20120901T130000';
         let expected = '2012-09-01T13:00:00';
-        let time = subject.fromICAL(value);
 
         assert.equal(
           subject.fromICAL(value),

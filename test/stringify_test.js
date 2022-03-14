@@ -13,7 +13,6 @@ suite('ICAL.stringify', function() {
     list.forEach(function(path) {
       suite(path.replace('_', ' '), function() {
         let input;
-        let expected;
 
         // fetch ical
         setup(async function() {

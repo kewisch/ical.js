@@ -1,7 +1,4 @@
 suite('recur', function() {
-  let Time = ICAL.Time;
-  let Recur = ICAL.Recur;
-
   suite('initialization', function() {
     test('empty init', function() {
       let recur = new ICAL.Recur();
@@ -38,7 +35,7 @@ suite('recur', function() {
           dtstart = ICAL.Time.epochTime.clone();
         }
         assert.throws(function() {
-          let iter = recur.iterator(dtstart);
+          recur.iterator(dtstart);
         }, expectedMessage);
       });
     }
@@ -286,7 +283,7 @@ suite('recur', function() {
     function verifyFail(string, errorParam) {
       test('invalid input "' + string + '"', function() {
         assert.throws(function() {
-          let result = ICAL.Recur.fromString(string);
+          ICAL.Recur.fromString(string);
         }, errorParam);
       });
     }
@@ -418,31 +415,31 @@ suite('recur', function() {
   suite('recur data types', function() {
     test('invalid freq', function() {
       assert.throws(function() {
-        let rec = ICAL.Recur.fromString("FREQ=123");
+        ICAL.Recur.fromString("FREQ=123");
       }, /invalid frequency/);
     });
 
     test('invalid wkst', function() {
       assert.throws(function() {
-        let rec = ICAL.Recur.fromString("FREQ=WEEKLY;WKST=DUNNO");
+        ICAL.Recur.fromString("FREQ=WEEKLY;WKST=DUNNO");
       }, /invalid WKST value/);
     });
 
     test('invalid count', function() {
       assert.throws(function() {
-        let rec = ICAL.Recur.fromString("FREQ=WEEKLY;COUNT=MAYBE10");
+        ICAL.Recur.fromString("FREQ=WEEKLY;COUNT=MAYBE10");
       }, /Could not extract integer from/);
     });
 
     test('invalid interval', function() {
       assert.throws(function() {
-        let rec = ICAL.Recur.fromString("FREQ=WEEKLY;INTERVAL=ADAGIO");
+        ICAL.Recur.fromString("FREQ=WEEKLY;INTERVAL=ADAGIO");
       }, /Could not extract integer from/);
     });
 
     test('invalid numeric byday', function() {
       assert.throws(function() {
-        let rec = ICAL.Recur.fromString("FREQ=WEEKLY;BYDAY=1,2,3");
+        ICAL.Recur.fromString("FREQ=WEEKLY;BYDAY=1,2,3");
       }, /invalid BYDAY value/);
     });
 
@@ -525,7 +522,6 @@ suite('recur', function() {
       assert.equal(a.toString(), b.toString(), 'roundtrip equality');
     });
     test('not all props', function() {
-      let until = ICAL.Time.epochTime.clone();
       let data = {
         freq: 'YEARLY',
       };
@@ -537,13 +533,13 @@ suite('recur', function() {
 
   suite('ICAL.Recur#icalDayToNumericDay', function() {
     let expected = {
-      'SU': Time.SUNDAY,
-      'MO': Time.MONDAY,
-      'TU': Time.TUESDAY,
-      'WE': Time.WEDNESDAY,
-      'TH': Time.THURSDAY,
-      'FR': Time.FRIDAY,
-      'SA': Time.SATURDAY
+      'SU': ICAL.Time.SUNDAY,
+      'MO': ICAL.Time.MONDAY,
+      'TU': ICAL.Time.TUESDAY,
+      'WE': ICAL.Time.WEDNESDAY,
+      'TH': ICAL.Time.THURSDAY,
+      'FR': ICAL.Time.FRIDAY,
+      'SA': ICAL.Time.SATURDAY
     };
 
     for (let map in expected) {
@@ -559,55 +555,55 @@ suite('recur', function() {
 
     let expectedWithWkst = [
       //day, wkst, expected
-      ['SU', Time.SUNDAY, 1],
-      ['MO', Time.SUNDAY, 2],
-      ['TU', Time.SUNDAY, 3],
-      ['WE', Time.SUNDAY, 4],
-      ['TH', Time.SUNDAY, 5],
-      ['FR', Time.SUNDAY, 6],
-      ['SA', Time.SUNDAY, 7],
-      ['SU', Time.MONDAY, 7],
-      ['MO', Time.MONDAY, 1],
-      ['TU', Time.MONDAY, 2],
-      ['WE', Time.MONDAY, 3],
-      ['TH', Time.MONDAY, 4],
-      ['FR', Time.MONDAY, 5],
-      ['SA', Time.MONDAY, 6],
-      ['SU', Time.TUESDAY, 6],
-      ['MO', Time.TUESDAY, 7],
-      ['TU', Time.TUESDAY, 1],
-      ['WE', Time.TUESDAY, 2],
-      ['TH', Time.TUESDAY, 3],
-      ['FR', Time.TUESDAY, 4],
-      ['SA', Time.TUESDAY, 5],
-      ['SU', Time.WEDNESDAY, 5],
-      ['MO', Time.WEDNESDAY, 6],
-      ['TU', Time.WEDNESDAY, 7],
-      ['WE', Time.WEDNESDAY, 1],
-      ['TH', Time.WEDNESDAY, 2],
-      ['FR', Time.WEDNESDAY, 3],
-      ['SA', Time.WEDNESDAY, 4],
-      ['SU', Time.THURSDAY, 4],
-      ['MO', Time.THURSDAY, 5],
-      ['TU', Time.THURSDAY, 6],
-      ['WE', Time.THURSDAY, 7],
-      ['TH', Time.THURSDAY, 1],
-      ['FR', Time.THURSDAY, 2],
-      ['SA', Time.THURSDAY, 3],
-      ['SU', Time.FRIDAY, 3],
-      ['MO', Time.FRIDAY, 4],
-      ['TU', Time.FRIDAY, 5],
-      ['WE', Time.FRIDAY, 6],
-      ['TH', Time.FRIDAY, 7],
-      ['FR', Time.FRIDAY, 1],
-      ['SA', Time.FRIDAY, 2],
-      ['SU', Time.SATURDAY, 2],
-      ['MO', Time.SATURDAY, 3],
-      ['TU', Time.SATURDAY, 4],
-      ['WE', Time.SATURDAY, 5],
-      ['TH', Time.SATURDAY, 6],
-      ['FR', Time.SATURDAY, 7],
-      ['SA', Time.SATURDAY, 1]
+      ['SU', ICAL.Time.SUNDAY, 1],
+      ['MO', ICAL.Time.SUNDAY, 2],
+      ['TU', ICAL.Time.SUNDAY, 3],
+      ['WE', ICAL.Time.SUNDAY, 4],
+      ['TH', ICAL.Time.SUNDAY, 5],
+      ['FR', ICAL.Time.SUNDAY, 6],
+      ['SA', ICAL.Time.SUNDAY, 7],
+      ['SU', ICAL.Time.MONDAY, 7],
+      ['MO', ICAL.Time.MONDAY, 1],
+      ['TU', ICAL.Time.MONDAY, 2],
+      ['WE', ICAL.Time.MONDAY, 3],
+      ['TH', ICAL.Time.MONDAY, 4],
+      ['FR', ICAL.Time.MONDAY, 5],
+      ['SA', ICAL.Time.MONDAY, 6],
+      ['SU', ICAL.Time.TUESDAY, 6],
+      ['MO', ICAL.Time.TUESDAY, 7],
+      ['TU', ICAL.Time.TUESDAY, 1],
+      ['WE', ICAL.Time.TUESDAY, 2],
+      ['TH', ICAL.Time.TUESDAY, 3],
+      ['FR', ICAL.Time.TUESDAY, 4],
+      ['SA', ICAL.Time.TUESDAY, 5],
+      ['SU', ICAL.Time.WEDNESDAY, 5],
+      ['MO', ICAL.Time.WEDNESDAY, 6],
+      ['TU', ICAL.Time.WEDNESDAY, 7],
+      ['WE', ICAL.Time.WEDNESDAY, 1],
+      ['TH', ICAL.Time.WEDNESDAY, 2],
+      ['FR', ICAL.Time.WEDNESDAY, 3],
+      ['SA', ICAL.Time.WEDNESDAY, 4],
+      ['SU', ICAL.Time.THURSDAY, 4],
+      ['MO', ICAL.Time.THURSDAY, 5],
+      ['TU', ICAL.Time.THURSDAY, 6],
+      ['WE', ICAL.Time.THURSDAY, 7],
+      ['TH', ICAL.Time.THURSDAY, 1],
+      ['FR', ICAL.Time.THURSDAY, 2],
+      ['SA', ICAL.Time.THURSDAY, 3],
+      ['SU', ICAL.Time.FRIDAY, 3],
+      ['MO', ICAL.Time.FRIDAY, 4],
+      ['TU', ICAL.Time.FRIDAY, 5],
+      ['WE', ICAL.Time.FRIDAY, 6],
+      ['TH', ICAL.Time.FRIDAY, 7],
+      ['FR', ICAL.Time.FRIDAY, 1],
+      ['SA', ICAL.Time.FRIDAY, 2],
+      ['SU', ICAL.Time.SATURDAY, 2],
+      ['MO', ICAL.Time.SATURDAY, 3],
+      ['TU', ICAL.Time.SATURDAY, 4],
+      ['WE', ICAL.Time.SATURDAY, 5],
+      ['TH', ICAL.Time.SATURDAY, 6],
+      ['FR', ICAL.Time.SATURDAY, 7],
+      ['SA', ICAL.Time.SATURDAY, 1]
     ];
 
     for (let i = 0; i< expectedWithWkst.length; i++) {
@@ -624,13 +620,13 @@ suite('recur', function() {
 
   suite('ICAL.Recur#numericDayToIcalDay', function() {
     let expected = {};
-    expected[Time.SUNDAY] = 'SU';
-    expected[Time.MONDAY] = 'MO';
-    expected[Time.TUESDAY] = 'TU';
-    expected[Time.WEDNESDAY] = 'WE';
-    expected[Time.THURSDAY] = 'TH';
-    expected[Time.FRIDAY] = 'FR';
-    expected[Time.SATURDAY] = 'SA';
+    expected[ICAL.Time.SUNDAY] = 'SU';
+    expected[ICAL.Time.MONDAY] = 'MO';
+    expected[ICAL.Time.TUESDAY] = 'TU';
+    expected[ICAL.Time.WEDNESDAY] = 'WE';
+    expected[ICAL.Time.THURSDAY] = 'TH';
+    expected[ICAL.Time.FRIDAY] = 'FR';
+    expected[ICAL.Time.SATURDAY] = 'SA';
 
     for (let map in expected) {
       (function(map) {
@@ -646,55 +642,55 @@ suite('recur', function() {
 
   let expectedWithWkst = [
     //expectedDay, wkst, numericDay
-    ['SU', Time.SUNDAY, 1],
-    ['MO', Time.SUNDAY, 2],
-    ['TU', Time.SUNDAY, 3],
-    ['WE', Time.SUNDAY, 4],
-    ['TH', Time.SUNDAY, 5],
-    ['FR', Time.SUNDAY, 6],
-    ['SA', Time.SUNDAY, 7],
-    ['SU', Time.MONDAY, 7],
-    ['MO', Time.MONDAY, 1],
-    ['TU', Time.MONDAY, 2],
-    ['WE', Time.MONDAY, 3],
-    ['TH', Time.MONDAY, 4],
-    ['FR', Time.MONDAY, 5],
-    ['SA', Time.MONDAY, 6],
-    ['SU', Time.TUESDAY, 6],
-    ['MO', Time.TUESDAY, 7],
-    ['TU', Time.TUESDAY, 1],
-    ['WE', Time.TUESDAY, 2],
-    ['TH', Time.TUESDAY, 3],
-    ['FR', Time.TUESDAY, 4],
-    ['SA', Time.TUESDAY, 5],
-    ['SU', Time.WEDNESDAY, 5],
-    ['MO', Time.WEDNESDAY, 6],
-    ['TU', Time.WEDNESDAY, 7],
-    ['WE', Time.WEDNESDAY, 1],
-    ['TH', Time.WEDNESDAY, 2],
-    ['FR', Time.WEDNESDAY, 3],
-    ['SA', Time.WEDNESDAY, 4],
-    ['SU', Time.THURSDAY, 4],
-    ['MO', Time.THURSDAY, 5],
-    ['TU', Time.THURSDAY, 6],
-    ['WE', Time.THURSDAY, 7],
-    ['TH', Time.THURSDAY, 1],
-    ['FR', Time.THURSDAY, 2],
-    ['SA', Time.THURSDAY, 3],
-    ['SU', Time.FRIDAY, 3],
-    ['MO', Time.FRIDAY, 4],
-    ['TU', Time.FRIDAY, 5],
-    ['WE', Time.FRIDAY, 6],
-    ['TH', Time.FRIDAY, 7],
-    ['FR', Time.FRIDAY, 1],
-    ['SA', Time.FRIDAY, 2],
-    ['SU', Time.SATURDAY, 2],
-    ['MO', Time.SATURDAY, 3],
-    ['TU', Time.SATURDAY, 4],
-    ['WE', Time.SATURDAY, 5],
-    ['TH', Time.SATURDAY, 6],
-    ['FR', Time.SATURDAY, 7],
-    ['SA', Time.SATURDAY, 1]
+    ['SU', ICAL.Time.SUNDAY, 1],
+    ['MO', ICAL.Time.SUNDAY, 2],
+    ['TU', ICAL.Time.SUNDAY, 3],
+    ['WE', ICAL.Time.SUNDAY, 4],
+    ['TH', ICAL.Time.SUNDAY, 5],
+    ['FR', ICAL.Time.SUNDAY, 6],
+    ['SA', ICAL.Time.SUNDAY, 7],
+    ['SU', ICAL.Time.MONDAY, 7],
+    ['MO', ICAL.Time.MONDAY, 1],
+    ['TU', ICAL.Time.MONDAY, 2],
+    ['WE', ICAL.Time.MONDAY, 3],
+    ['TH', ICAL.Time.MONDAY, 4],
+    ['FR', ICAL.Time.MONDAY, 5],
+    ['SA', ICAL.Time.MONDAY, 6],
+    ['SU', ICAL.Time.TUESDAY, 6],
+    ['MO', ICAL.Time.TUESDAY, 7],
+    ['TU', ICAL.Time.TUESDAY, 1],
+    ['WE', ICAL.Time.TUESDAY, 2],
+    ['TH', ICAL.Time.TUESDAY, 3],
+    ['FR', ICAL.Time.TUESDAY, 4],
+    ['SA', ICAL.Time.TUESDAY, 5],
+    ['SU', ICAL.Time.WEDNESDAY, 5],
+    ['MO', ICAL.Time.WEDNESDAY, 6],
+    ['TU', ICAL.Time.WEDNESDAY, 7],
+    ['WE', ICAL.Time.WEDNESDAY, 1],
+    ['TH', ICAL.Time.WEDNESDAY, 2],
+    ['FR', ICAL.Time.WEDNESDAY, 3],
+    ['SA', ICAL.Time.WEDNESDAY, 4],
+    ['SU', ICAL.Time.THURSDAY, 4],
+    ['MO', ICAL.Time.THURSDAY, 5],
+    ['TU', ICAL.Time.THURSDAY, 6],
+    ['WE', ICAL.Time.THURSDAY, 7],
+    ['TH', ICAL.Time.THURSDAY, 1],
+    ['FR', ICAL.Time.THURSDAY, 2],
+    ['SA', ICAL.Time.THURSDAY, 3],
+    ['SU', ICAL.Time.FRIDAY, 3],
+    ['MO', ICAL.Time.FRIDAY, 4],
+    ['TU', ICAL.Time.FRIDAY, 5],
+    ['WE', ICAL.Time.FRIDAY, 6],
+    ['TH', ICAL.Time.FRIDAY, 7],
+    ['FR', ICAL.Time.FRIDAY, 1],
+    ['SA', ICAL.Time.FRIDAY, 2],
+    ['SU', ICAL.Time.SATURDAY, 2],
+    ['MO', ICAL.Time.SATURDAY, 3],
+    ['TU', ICAL.Time.SATURDAY, 4],
+    ['WE', ICAL.Time.SATURDAY, 5],
+    ['TH', ICAL.Time.SATURDAY, 6],
+    ['FR', ICAL.Time.SATURDAY, 7],
+    ['SA', ICAL.Time.SATURDAY, 1]
   ];
 
   for (let i = 0; i< expectedWithWkst.length; i++) {

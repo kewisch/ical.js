@@ -9,10 +9,7 @@ suite('ical/period', function() {
   });
 
   suite('#fromString', function() {
-    let assertions = {};
-
     function verify(string, icalstring, data) {
-      let key;
       test('parse: "' + string + '"', function() {
         let subject = ICAL.Period.fromString(string);
 
@@ -201,7 +198,7 @@ suite('ical/period', function() {
 
     test('start,end and duration', function() {
       assert.throws(function() {
-        let subject = ICAL.Period.fromData({
+        ICAL.Period.fromData({
           start: start,
           end: end,
           duration: duration
@@ -222,7 +219,7 @@ suite('ical/period', function() {
 
     test('invalid start value', function() {
       assert.throws(function() {
-        let subject = ICAL.Period.fromData({
+        ICAL.Period.fromData({
           start: '1970-01-02T03:04:05Z',
           end: end
         });
@@ -230,7 +227,7 @@ suite('ical/period', function() {
     });
     test('invalid end value', function() {
       assert.throws(function() {
-        let subject = ICAL.Period.fromData({
+        ICAL.Period.fromData({
           start: start,
           end: '1970-01-02T03:04:05Z'
         });
@@ -238,7 +235,7 @@ suite('ical/period', function() {
     });
     test('invalid duration value', function() {
       assert.throws(function() {
-        let subject = ICAL.Period.fromData({
+        ICAL.Period.fromData({
           start: start,
           duration: 'PT1S'
         });
