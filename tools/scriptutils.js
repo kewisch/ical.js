@@ -144,7 +144,9 @@ async function main() {
     case "generate-zones":
       console.log(await generateZonesFile(process.argv[3]));
       break;
-
+    case "performance-downloader":
+      await performance_downloader();
+      break;
   }
 }
 main();

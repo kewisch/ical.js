@@ -248,7 +248,7 @@ suite('ICAL.Event', function() {
       let props;
 
       suiteSetup(function() {
-        let props = {
+        props = {
           uid: 'zfoo',
           summary: 'sum',
           description: 'desc',
@@ -305,7 +305,6 @@ suite('ICAL.Event', function() {
       test('starts earlier ends later', function() {
         let exception = rangeException(1);
         let rid = exception.recurrenceId;
-        let time = rid.clone();
 
         exception.startDate = rid.clone();
         exception.endDate = rid.clone();

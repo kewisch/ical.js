@@ -126,7 +126,7 @@ suite('ICAL.helpers', function() {
     });
 
     test('remove extra timezones', function() {
-      let vtimezones, atikokan;
+      let vtimezones;
       cal.addSubcomponent(
         ICAL.TimezoneService.get("America/Atikokan").component
       );

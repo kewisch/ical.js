@@ -1,80 +1,4 @@
 suite('recur_iterator', function() {
-  let Time = ICAL.Time;
-  let Recur = ICAL.Recur;
-
-  function addDates(expected, year, month, dates) {
-    dates.forEach(function(date) {
-      expected.push(new Date(
-        year, month, date, 9
-      ));
-    });
-  }
-
-  function createDay(date) {
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-  }
-
-  function isSameDate(first, second) {
-    return first.getMonth() == second.getMonth() &&
-           first.getDate() == second.getDate() &&
-           first.getFullYear() == second.getFullYear();
-  }
-
-  // taken from gaia calendar app
-  function datesBetween(start, end, includeTime) {
-    let list = [];
-    let last = start.getDate();
-    let cur;
-
-    while (true) { // eslint-disable-line no-constant-condition
-      let next = new Date(
-        start.getFullYear(),
-        start.getMonth(),
-        ++last
-      );
-
-      if (next > end) {
-        throw new Error(
-          'sanity fails next is greater then end'
-        );
-      }
-
-      if (!isSameDate(next, end)) {
-        list.push(next);
-        continue;
-      }
-
-      break;
-    }
-
-    if (includeTime) {
-      list.unshift(start);
-      list.push(end);
-    } else {
-      list.unshift(createDay(start));
-      list.push(createDay(end));
-    }
-
-    return list;
-  }
-
-  function getDaysIn(month) {
-    let start = new Date(
-      month.getFullYear(),
-      month.getMonth(),
-      1
-    );
-    let end = new Date(start.valueOf());
-    end.setMonth(start.getMonth() + 1);
-    end.setMilliseconds(-1);
-
-    return datesBetween(start, end);
-  }
-
   suite('#fromData', function() {
     test("required rule", function() {
       assert.throws(function() {
@@ -100,7 +24,6 @@ suite('recur_iterator', function() {
     });
 
     test('completed', function() {
-      let next;
       while (iterator.next()) {
         // Continue until completed
       }
