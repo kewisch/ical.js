@@ -1,25 +1,23 @@
-testSupport.requireICAL();
-
 suite('ics - negative zero', function() {
-  var icsData;
+  let icsData;
 
-  testSupport.defineSample('utc_negative_zero.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('utc_negative_zero.ics');
   });
 
   test('summary', function() {
-    var result = ICAL.parse(icsData);
-    var component = new ICAL.Component(result);
-    var vtimezone = component.getFirstSubcomponent(
+    let result = ICAL.parse(icsData);
+    let component = new ICAL.Component(result);
+    let vtimezone = component.getFirstSubcomponent(
       'vtimezone'
     );
 
-    var standard = vtimezone.getFirstSubcomponent(
+    let standard = vtimezone.getFirstSubcomponent(
       'standard'
     );
 
-    var props = standard.getAllProperties();
-    var offset = props[1].getFirstValue();
+    let props = standard.getAllProperties();
+    let offset = props[1].getFirstValue();
 
     assert.equal(
       offset.factor,

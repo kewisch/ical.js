@@ -1,16 +1,16 @@
-perfCompareSuite('iterator', function(perf, ICAL) {
+suite('iterator', function() {
 
-  var icsData;
+  let icsData;
 
-  testSupport.defineSample('parserv2.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('parserv2.ics');
   });
 
-  var parsed;
-  var comp;
-  var tz;
-  var std;
-  var rrule;
+  let parsed;
+  let comp;
+  let tz;
+  let std;
+  let rrule;
 
   suiteSetup(function() {
     parsed = ICAL.parse(icsData);
@@ -20,8 +20,8 @@ perfCompareSuite('iterator', function(perf, ICAL) {
     rrule = std.getFirstPropertyValue('rrule');
   });
 
-  perf.test('timezone iterator & first iteration', function() {
-    var iterator = rrule.iterator(std.getFirstPropertyValue('dtstart'));
+  perfTest('timezone iterator & first iteration', function() {
+    let iterator = rrule.iterator(std.getFirstPropertyValue('dtstart'));
     iterator.next();
   });
 

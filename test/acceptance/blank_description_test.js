@@ -1,14 +1,12 @@
-testSupport.requireICAL();
-
 suite('ics - blank description', function() {
-  var icsData;
+  let icsData;
 
-  testSupport.defineSample('blank_description.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('blank_description.ics');
   });
 
   test('summary', function() {
     // just verify it can parse blank lines
-    var result = ICAL.parse(icsData);
+    ICAL.parse(icsData);
   });
 });

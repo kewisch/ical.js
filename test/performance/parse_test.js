@@ -1,18 +1,17 @@
-perfCompareSuite('ICAL parse/stringify', function(perf, ICAL) {
+suite('ICAL parse/stringify', function() {
 
-  var icsData;
-  var parsed;
-  testSupport.defineSample('parserv2.ics', function(data) {
-    icsData = data;
+  let icsData;
+  let parsed;
+  suiteSetup(async function() {
+    icsData = await testSupport.loadSample('parserv2.ics');
     parsed = ICAL.parse(icsData);
   });
 
-  perf.test('#parse', function() {
-    var data = ICAL.parse(icsData);
+  perfTest('#parse', function() {
+    ICAL.parse(icsData);
   });
 
-  perf.test('#stringify', function() {
+  perfTest('#stringify', function() {
     ICAL.stringify(parsed);
   });
-
 });

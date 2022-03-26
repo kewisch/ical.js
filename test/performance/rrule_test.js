@@ -1,7 +1,7 @@
-perfCompareSuite('rrule', function(perf, ICAL) {
+suite('rrule', function() {
 
-  var start;
-  var occurrences;
+  let start;
+  let occurrences;
 
   suiteSetup(function() {
     start = ICAL.Time.fromString("2015-01-01T12:00:00");
@@ -46,10 +46,10 @@ perfCompareSuite('rrule', function(perf, ICAL) {
     "FREQ=MONTHLY;BYDAY=SA,SU;BYMONTH=11;BYSETPOS=-1"
 
   ].forEach(function(rulestring) {
-    perf.test(rulestring, function() {
-      var rrule = ICAL.Recur.fromString(rulestring);
-      var iter = rrule.iterator(start);
-      for (var i = 0; i < occurrences; i++) {
+    perfTest(rulestring, function() {
+      let rrule = ICAL.Recur.fromString(rulestring);
+      let iter = rrule.iterator(start);
+      for (let i = 0; i < occurrences; i++) {
         iter.next();
       }
     });

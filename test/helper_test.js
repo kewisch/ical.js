@@ -1,7 +1,7 @@
 suite('ICAL.helpers', function() {
 
   suite('#clone', function() {
-    var subject = ICAL.helpers.clone;
+    let subject = ICAL.helpers.clone;
     test('some primatives', function() {
       assert.equal(subject(null, false), null);
       assert.equal(subject(123, false), 123);
@@ -10,54 +10,54 @@ suite('ICAL.helpers', function() {
     });
 
     test('a date', function() {
-      var date = new Date(2015, 1, 1);
-      var time = date.getTime();
-      var copy = subject(date, false);
+      let date = new Date(2015, 1, 1);
+      let time = date.getTime();
+      let copy = subject(date, false);
 
       copy.setYear(2016);
       assert.notEqual(time, copy.getTime());
     });
 
     test('clonable', function() {
-      var obj = { clone: function() { return "test"; } };
+      let obj = { clone: function() { return "test"; } };
       assert.equal(subject(obj, false), "test");
     });
 
     test('shallow array', function() {
-      var obj = { v: 2 }
-      var arr = [obj, 2, 3];
+      let obj = { v: 2 };
+      let arr = [obj, 2, 3];
 
-      var result = subject(arr, false);
+      let result = subject(arr, false);
       assert.deepEqual(result, [{ v: 2 }, 2, 3]);
       obj.v = 3;
       assert.deepEqual(result, [{ v: 3 }, 2, 3]);
     });
 
     test('deep array', function() {
-      var obj = { v: 2 }
-      var arr = [obj, 2, 3];
+      let obj = { v: 2 };
+      let arr = [obj, 2, 3];
 
-      var result = subject(arr, true);
+      let result = subject(arr, true);
       assert.deepEqual(result, [{ v: 2 }, 2, 3]);
       obj.v = 3;
       assert.deepEqual(result, [{ v: 2 }, 2, 3]);
     });
 
     test('shallow object', function() {
-      var deepobj = { v: 2 };
-      var obj = { a: deepobj, b: 2 };
+      let deepobj = { v: 2 };
+      let obj = { a: deepobj, b: 2 };
 
-      var result = subject(obj, false);
+      let result = subject(obj, false);
       assert.deepEqual(result, { a: { v: 2 }, b: 2 });
       deepobj.v = 3;
       assert.deepEqual(result, { a: { v: 3 }, b: 2 });
     });
 
     test('deep object', function() {
-      var deepobj = { v: 2 };
-      var obj = { a: deepobj, b: 2 };
+      let deepobj = { v: 2 };
+      let obj = { a: deepobj, b: 2 };
 
-      var result = subject(obj, true);
+      let result = subject(obj, true);
       assert.deepEqual(result, { a: { v: 2 }, b: 2 });
       deepobj.v = 3;
       assert.deepEqual(result, { a: { v: 2 }, b: 2 });
@@ -65,7 +65,7 @@ suite('ICAL.helpers', function() {
   });
 
   suite('#pad2', function() {
-    var subject = ICAL.helpers.pad2;
+    let subject = ICAL.helpers.pad2;
 
     test('with string', function() {
       assert.equal(subject(""), "00");
@@ -87,7 +87,7 @@ suite('ICAL.helpers', function() {
   });
 
   suite('#foldline', function() {
-    var subject = ICAL.helpers.foldline;
+    let subject = ICAL.helpers.foldline;
 
     test('empty values', function() {
       assert.strictEqual(subject(null), "");
@@ -98,13 +98,14 @@ suite('ICAL.helpers', function() {
   });
 
   suite('#updateTimezones', function() {
-    var subject = ICAL.helpers.updateTimezones;
-    var cal;
+    let subject = ICAL.helpers.updateTimezones;
+    let cal;
 
-    testSupport.defineSample('minimal.ics', function(data) {
+    suiteSetup(async function() {
+      let data = await testSupport.loadSample('minimal.ics');
       cal = new ICAL.Component(ICAL.parse(data));
-    });
-    testSupport.defineSample('timezones/America/Atikokan.ics', function(data) {
+
+      data = await testSupport.loadSample('timezones/America/Atikokan.ics');
       ICAL.TimezoneService.register(
         (new ICAL.Component(ICAL.parse(data))).getFirstSubcomponent("vtimezone")
       );
@@ -115,7 +116,7 @@ suite('ICAL.helpers', function() {
     });
 
     test('timezones already correct', function() {
-      var vtimezones;
+      let vtimezones;
       vtimezones = cal.getAllSubcomponents("vtimezone");
       assert.strictEqual(vtimezones.length, 1);
       assert.strictEqual(
@@ -125,7 +126,7 @@ suite('ICAL.helpers', function() {
     });
 
     test('remove extra timezones', function() {
-      var vtimezones, atikokan;
+      let vtimezones;
       cal.addSubcomponent(
         ICAL.TimezoneService.get("America/Atikokan").component
       );
@@ -141,17 +142,18 @@ suite('ICAL.helpers', function() {
     });
 
     test('add missing timezones', function() {
-      cal.getFirstSubcomponent("vevent").
-        getFirstProperty("dtend").setParameter("tzid", "America/Atikokan");
+      let vtimezones;
+      cal.getFirstSubcomponent("vevent")
+        .getFirstProperty("dtend").setParameter("tzid", "America/Atikokan");
       vtimezones = cal.getAllSubcomponents("vtimezone");
       assert(vtimezones.length, 1);
-      
+
       vtimezones = subject(cal).getAllSubcomponents("vtimezone");
       assert.strictEqual(vtimezones.length, 2);
     });
 
     test('return non-vcalendar components unchanged', function() {
-      var vevent = cal.getFirstSubcomponent("vevent");
+      let vevent = cal.getFirstSubcomponent("vevent");
       assert.deepEqual(subject(vevent), vevent);
     });
   });

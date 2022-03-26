@@ -1,12 +1,13 @@
 {
   "name": "ical.js",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "Philipp Kewisch",
   "contributors": [
     "Github Contributors (https://github.com/mozilla-comm/ical.js/graphs/contributors)"
   ],
   "description": "Javascript parser for ics (rfc5545) and vcard (rfc6350) data",
   "main": "build/ical.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/mozilla-comm/ical.js.git"
@@ -20,30 +21,24 @@
     "parser"
   ],
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
+    "@octokit/core": "^3.5.1",
+    "@rollup/plugin-babel": "^5.3.0",
     "benchmark": "^2.1.4",
-    "biased-opener": "^0.2.8",
+    "c8": "^7.11.0",
     "chai": "^4.2.0",
-    "coveralls": "^3.1.0",
-    "grunt": "^1.1.0",
-    "grunt-concurrent": "^3.0.0",
-    "grunt-contrib-concat": "^2.0.0",
-    "grunt-contrib-uglify": "^5.0.1",
-    "grunt-coveralls": "^2.0.0",
-    "grunt-gh-pages": "^4.0.0",
-    "grunt-jsdoc": "^2.4.1",
-    "grunt-karma": "^4.0.0",
-    "grunt-mocha-cli": "^7.0.0",
-    "grunt-mocha-istanbul": "^5.0.2",
-    "grunt-release": "^0.14.0",
-    "gruntify-eslint": "^5.0.0",
-    "istanbul": "^0.4.5",
+    "eslint": "^8.9.0",
+    "jsdoc": "^3.6.10",
     "karma": "^6.3.9",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^2.0.1",
     "karma-sauce-launcher": "^4.1.5",
     "karma-spec-reporter": "^0.0.32",
     "minami": "^1.2.3",
-    "mocha": "^9.1.3"
+    "mocha": "^9.1.3",
+    "node-fetch": "^3.2.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "yauzl-promise": "^2.1.3"
   },
   "overrides": {
     "grunt-release": {
@@ -55,8 +50,17 @@
     "node": ">=10"
   },
   "scripts": {
-    "test": "grunt test-node",
-    "prepare": "grunt"
+    "test": "npm run test-unit && npm run test-acceptance",
+    "test-unit": "c8 mocha",
+    "test-acceptance": "mocha test/acceptance/*_test.js",
+    "test-performance": "mocha --reporter test/support/perfReporter.cjs test/performance/*_test.js",
+    "test-browser": "karma start karma.conf.cjs",
+    "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
+    "build": "rollup -c",
+    "lint": "eslint lib/ical test tools/scriptutils.js",
+    "jsdoc": "rm -rf docs/api && jsdoc -R README.md -d docs/api -t node_modules/minami lib/ical/*.js",
+    "validator": "sed -e 's#unpkg.com/ical.js#unpkg.com/ical.js@'`grep '\"version\"' package.json | cut -d '\"' -f 4`'/build/ical.js#' tools/validator.html > docs/validator.html && echo 'Validator written to docs/validator.html'",
+    "ghpages": "npm run jsdoc && npm run validator"
   },
   "files": [
     "build/ical.js",
@@ -65,6 +69,19 @@
     "build/ical.timezones.min.js",
     "lib/ical/*.js"
   ],
+  "mocha": {
+    "ui": "tdd",
+    "require": "test/support/helper.js",
+    "reporter": "spec"
+  },
+  "c8": {
+    "include": "lib/ical",
+    "reporter": [
+      "text",
+      "html",
+      "lcov"
+    ]
+  },
   "saucelabs": {
     "SL_Chrome": {
       "base": "SauceLabs",

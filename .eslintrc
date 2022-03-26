@@ -1,4 +1,12 @@
 {
+  "env": {
+    "es6": true,
+  },
+  "parserOptions": {
+    "ecmaVersion": 13,
+    "sourceType": "module"
+  },
+  "extends": "eslint:recommended",
   "rules": {
     // Enforce one true brace style (opening brace on the same line)
     // Allow single line (for now) because of the vast number of changes needed
@@ -194,17 +202,13 @@
     "no-empty": 2,
 
     // Disallow declaring the same variable more than once (we use let anyway).
-    //"no-redeclare": 2,
+    "no-redeclare": 2,
 
     // Warn about declaration of variables already declared in the outer scope.
-    // This isn't an error because it sometimes is useful to use the same name
-    // in a small helper function rather than having to come up with another
-    // random name.  Still, making this a warning can help people avoid being
-    // confused.
-    //"no-shadow": 2,
+    "no-shadow": 2,
 
     // Disallow global and local variables that aren't used, but allow unused function arguments.
-    //"no-unused-vars": [2, {"vars": "all", "args": "none", "varsIgnorePattern": "EXPORTED_SYMBOLS"}],
+    "no-unused-vars": [2, {"vars": "all", "args": "none" }],
 
     // Require padding inside curly braces
     "object-curly-spacing": [2, "always"],
@@ -431,5 +435,31 @@
 
     // Enforce consistent indentation (2-space)
     //"indent": [2, 2, { "SwitchCase": 1 }],
-  }
+
+    "no-prototype-builtins": 2,
+
+    // Disallow var, use let or const instead
+    "no-var": 2
+  },
+  "overrides": [
+    {
+      "files": ["test/**/*.js"],
+      "env": {
+        "mocha": true,
+        "node": true
+      },
+      "globals": {
+        "ICAL": "readonly",
+        "assert": "readonly",
+        "testSupport": "readonly",
+        "perfTest": "readonly"
+      }
+    },
+    {
+      "files": ["test/performance/**/*.js"],
+      "globals": {
+        "perfCompareSuite": "readonly"
+      }
+    }
+  ]
 }

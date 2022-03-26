@@ -1,24 +1,24 @@
 suite('ICAL.Event', function() {
 
 
-  var testTzid = 'America/New_York';
+  let testTzid = 'America/New_York';
   testSupport.useTimezones(testTzid, 'America/Denver', 'America/Los_Angeles');
 
-  var icsData;
+  let icsDataRecurInstances;
 
   function rangeException(nth) {
     if (!nth || nth <= 0) {
       nth = 1;
     }
 
-    var iter = subject.iterator();
-    var last;
+    let iter = subject.iterator();
+    let last;
 
     while (nth--) {
       last = iter.next();
     }
 
-    var newEvent = new ICAL.Event();
+    let newEvent = new ICAL.Event();
 
     newEvent.uid = subject.uid;
 
@@ -28,27 +28,27 @@ suite('ICAL.Event', function() {
         last
       ).setParameter(
         'range',
-        subject.THISANDFUTURE);
+        ICAL.Event.THISANDFUTURE);
 
     return newEvent;
   }
 
-  testSupport.defineSample('recur_instances.ics', function(data) {
-    icsData = data;
+  suiteSetup(async function() {
+    icsDataRecurInstances = await testSupport.loadSample('recur_instances.ics');
   });
 
-  var exceptions = [];
-  var subject;
-  var primaryItem;
+  let exceptions = [];
+  let subject;
+  let primaryItem;
 
   setup(function() {
     exceptions.length = 0;
 
-    var root = new ICAL.Component(
-      ICAL.parse(icsData)
+    let root = new ICAL.Component(
+      ICAL.parse(icsDataRecurInstances)
     );
 
-    var events = root.getAllSubcomponents('vevent');
+    let events = root.getAllSubcomponents('vevent');
     ICAL.TimezoneService.register(root.getFirstSubcomponent('vtimezone'));
 
     events.forEach(function(event) {
@@ -64,15 +64,15 @@ suite('ICAL.Event', function() {
 
   suite('changing timezones', function() {
 
-    var dateFields = [
+    let dateFields = [
       ['startDate', 'dtstart'],
       ['endDate', 'dtend']
     ];
 
     function verifyTzidHandling(eventProp, icalProp) {
 
-      var time;
-      var property;
+      let time;
+      let property;
       setup(function() {
         property = subject.component.getFirstProperty(icalProp);
 
@@ -205,7 +205,7 @@ suite('ICAL.Event', function() {
     test('with exceptions from the component\'s parent if not specified in options', function() {
       subject = new ICAL.Event(primaryItem);
 
-      var expected = Object.create(null);
+      let expected = Object.create(null);
       exceptions.forEach(function(exception) {
         expected[exception.getFirstPropertyValue('recurrence-id').toString()] = new ICAL.Event(exception);
       });
@@ -218,7 +218,7 @@ suite('ICAL.Event', function() {
         exceptions: exceptions.slice(1)
       });
 
-      var expected = Object.create(null);
+      let expected = Object.create(null);
       exceptions.slice(1).forEach(function(exception) {
         expected[exception.getFirstPropertyValue('recurrence-id').toString()] = new ICAL.Event(exception);
       });
@@ -245,10 +245,10 @@ suite('ICAL.Event', function() {
     });
 
     suite('roundtrip', function() {
-      var props;
+      let props;
 
       suiteSetup(function() {
-        var props = {
+        props = {
           uid: 'zfoo',
           summary: 'sum',
           description: 'desc',
@@ -275,21 +275,21 @@ suite('ICAL.Event', function() {
       });
 
       test('setters', function() {
-        for (key in props) {
+        for (let key in props) {
           subject[key] = props[key];
           assert.equal(subject[key], props[key], key);
         }
       });
 
       test('to string roundtrip', function() {
-        var aComp = new ICAL.Component(ICAL.parse(icsData));
-        var aEvent = new ICAL.Event(aComp);
+        let aComp = new ICAL.Component(ICAL.parse(icsDataRecurInstances));
+        let aEvent = new ICAL.Event(aComp);
 
-        var bComp = new ICAL.Component(
+        let bComp = new ICAL.Component(
           ICAL.parse(aComp.toString())
         );
 
-        var bEvent = new ICAL.Event(bComp);
+        let bEvent = new ICAL.Event(bComp);
         assert.equal(aEvent.toString(), bEvent.toString());
       });
     });
@@ -303,9 +303,8 @@ suite('ICAL.Event', function() {
 
     suite('RANGE=THISANDFUTURE', function() {
       test('starts earlier ends later', function() {
-        var exception = rangeException(1);
-        var rid = exception.recurrenceId;
-        var time = rid.clone();
+        let exception = rangeException(1);
+        let rid = exception.recurrenceId;
 
         exception.startDate = rid.clone();
         exception.endDate = rid.clone();
@@ -320,18 +319,19 @@ suite('ICAL.Event', function() {
 
         subject.relateException(exception);
 
+
         // create a time that has no exception
         // but past the RID.
-        var occurs = rid.clone();
+        let occurs = rid.clone();
         occurs.day += 3;
         occurs.hour = 13;
         occurs.minutes = 15;
 
         // Run the following tests twice, the second time around the results
         // will be cached.
-        for (var i = 0; i < 2; i++) {
-          var suffix = (i == 1 ? " (cached)" : "");
-          var details = subject.getOccurrenceDetails(
+        for (let i = 0; i < 2; i++) {
+          let suffix = (i == 1 ? " (cached)" : "");
+          let details = subject.getOccurrenceDetails(
             occurs
           );
 
@@ -339,8 +339,8 @@ suite('ICAL.Event', function() {
           assert.equal(details.item, exception, 'uses exception' + suffix);
 
 
-          var expectedStart = occurs.clone();
-          var expectedEnd = occurs.clone();
+          let expectedStart = occurs.clone();
+          let expectedEnd = occurs.clone();
 
           // same offset (in different day) as the difference
           // in the original exception.d
@@ -365,12 +365,12 @@ suite('ICAL.Event', function() {
     });
 
     test('exception', function() {
-      var time = exceptions[0].getFirstPropertyValue('recurrence-id');
+      let time = exceptions[0].getFirstPropertyValue('recurrence-id');
 
-      var start = exceptions[0].getFirstPropertyValue('dtstart');
-      var end = exceptions[0].getFirstPropertyValue('dtend');
+      let start = exceptions[0].getFirstPropertyValue('dtstart');
+      let end = exceptions[0].getFirstPropertyValue('dtend');
 
-      var result = subject.getOccurrenceDetails(time);
+      let result = subject.getOccurrenceDetails(time);
 
       assert.equal(
         result.recurrenceId.toString(),
@@ -399,16 +399,16 @@ suite('ICAL.Event', function() {
 
     test('non-exception', function() {
 
-      var time = new ICAL.Time({
+      let time = new ICAL.Time({
         year: 2012,
         month: 7,
         day: 12
       });
 
-      var end = time.clone();
+      let end = time.clone();
       end.addDuration(subject.duration);
 
-      var result = subject.getOccurrenceDetails(time);
+      let result = subject.getOccurrenceDetails(time);
 
       assert.equal(
         result.startDate.toString(),
@@ -430,9 +430,9 @@ suite('ICAL.Event', function() {
     });
 
     test('iterate over exceptions', function() {
-      for (var counter = 0, iterator = subject.iterator(); counter < 2; counter++) {
-        var result = subject.getOccurrenceDetails(iterator.next());
-        var exception = exceptions[counter];
+      for (let counter = 0, iterator = subject.iterator(); counter < 2; counter++) {
+        let result = subject.getOccurrenceDetails(iterator.next());
+        let exception = exceptions[counter];
 
         assert.equal(
           result.endDate.toString(),
@@ -458,17 +458,17 @@ suite('ICAL.Event', function() {
   suite('#recurrenceTypes', function() {
 
     suite('multiple rrules', function() {
-      var icsData;
+      let icsData;
 
-      testSupport.defineSample('multiple_rrules.ics', function(data) {
-        icsData = data;
+      suiteSetup(async function() {
+        icsData = await testSupport.loadSample('multiple_rrules.ics');
       });
 
       test('result', function() {
-        var subject = new ICAL.Component(ICAL.parse(icsData));
-        subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+        let comp = new ICAL.Component(ICAL.parse(icsData));
+        subject = new ICAL.Event(comp.getFirstSubcomponent('vevent'));
 
-        var expected = {
+        let expected = {
           'MONTHLY': true,
           'WEEKLY': true
         };
@@ -490,7 +490,7 @@ suite('ICAL.Event', function() {
   suite('#relateException', function() {
 
     test('trying to relate an exception to an exception', function() {
-      var exception = new ICAL.Event(exceptions[0]);
+      let exception = new ICAL.Event(exceptions[0]);
 
       assert.throws(function() {
         exception.relateException(exceptions[1]);
@@ -498,16 +498,16 @@ suite('ICAL.Event', function() {
     });
 
     test('trying to relate unrelated component (without strict)', function() {
-      var exception = exceptions[0];
-      var prop = exception.getFirstProperty('uid');
+      let exception = exceptions[0];
+      let prop = exception.getFirstProperty('uid');
       prop.setValue('foo');
 
       subject.relateException(exception);
     });
 
     test('trying to relate unrelated component (with strict)', function() {
-      var exception = exceptions[0];
-      var prop = exception.getFirstProperty('uid');
+      let exception = exceptions[0];
+      let prop = exception.getFirstProperty('uid');
       prop.setValue('foo');
 
       subject.strictExceptions = true;
@@ -518,10 +518,10 @@ suite('ICAL.Event', function() {
 
     test('from ical component', function() {
       subject = new ICAL.Event(primaryItem, { exceptions: [] });
-      var exception = exceptions[0];
+      let exception = exceptions[0];
       subject.relateException(exception);
 
-      var expected = Object.create(null);
+      let expected = Object.create(null);
       expected[exception.getFirstPropertyValue('recurrence-id').toString()] = new ICAL.Event(exception);
 
       assert.deepEqual(subject.exceptions, expected);
@@ -533,15 +533,15 @@ suite('ICAL.Event', function() {
         mod = mod || 0;
 
 
-        var item = subject.rangeExceptions[index];
-        var utc = item[0];
-        var time = new ICAL.Time();
+        let item = subject.rangeExceptions[index];
+        let utc = item[0];
+        let time = new ICAL.Time();
         time.fromUnixTime(utc + mod);
 
         return time;
       }
 
-      var list;
+      let list;
 
       setup(function() {
         list = [
@@ -566,10 +566,10 @@ suite('ICAL.Event', function() {
       }
 
       test('ranges', function() {
-        var expected = [
+        let expected = [
           listDetails(list[2]), // 1st
           listDetails(list[0]), // 2nd
-          listDetails(list[1])  // 3rd
+          listDetails(list[1]) // 3rd
         ];
 
         assert.deepEqual(
@@ -579,11 +579,11 @@ suite('ICAL.Event', function() {
       });
 
       test('#findRangeException', function() {
-        var before = exceptionTime(0, -1);
-        var on = exceptionTime(0);
-        var first = exceptionTime(0, 1);
-        var second = exceptionTime(1, 30);
-        var third = exceptionTime(2, 100000);
+        let before = exceptionTime(0, -1);
+        let on = exceptionTime(0);
+        let first = exceptionTime(0, 1);
+        let second = exceptionTime(1, 30);
+        let third = exceptionTime(2, 100000);
 
         assert.ok(
           !subject.findRangeException(before),
@@ -622,7 +622,7 @@ suite('ICAL.Event', function() {
     });
 
     test('when is exception', function() {
-      var subject = new ICAL.Event(exceptions[0]);
+      subject = new ICAL.Event(exceptions[0]);
       assert.isFalse(subject.isRecurring());
     });
   });
@@ -641,7 +641,7 @@ suite('ICAL.Event', function() {
           ICAL.Time.fromJSDate(new Date()))
         .setParameter(
           'range',
-          subject.THISANDFUTURE);
+          ICAL.Event.THISANDFUTURE);
 
       assert.isTrue(subject.modifiesFuture());
     });
@@ -653,7 +653,7 @@ suite('ICAL.Event', function() {
     });
 
     test('when is exception', function() {
-      var subject = new ICAL.Event(exceptions[0]);
+      subject = new ICAL.Event(exceptions[0]);
       assert.isTrue(subject.isRecurrenceException());
     });
   });
@@ -663,20 +663,20 @@ suite('ICAL.Event', function() {
       ['dtstart', 'startDate'],
       ['dtend', 'endDate']
     ].forEach(function(dateType) {
-      var ical = dateType[0];
-      var prop = dateType[1];
-      var timeProp;
-      var changeTime;
+      let ical = dateType[0];
+      let prop = dateType[1];
+      let timeProp;
+      let changeTime;
 
       suite('#' + prop, function() {
-        var tzid = 'America/Denver';
+        let tzid = 'America/Denver';
 
         setup(function() {
           timeProp = primaryItem.getFirstProperty(ical);
         });
 
         test('get', function() {
-          var expected = timeProp.getFirstValue(ical);
+          let expected = timeProp.getFirstValue(ical);
           assert.deepEqual(expected, subject[prop]);
         });
 
@@ -743,7 +743,7 @@ suite('ICAL.Event', function() {
   suite('remaining properties', function() {
     function testProperty(prop, changeval) {
       test('#' + prop, function() {
-        var expected = primaryItem.getFirstPropertyValue(prop);
+        let expected = primaryItem.getFirstPropertyValue(prop);
         assert.deepEqual(subject[prop], expected);
 
         subject[prop] = changeval;
@@ -760,9 +760,9 @@ suite('ICAL.Event', function() {
     testProperty('color', 'turquoise');
 
     test('#duration', function() {
-      var end = subject.endDate;
-      var start = subject.startDate;
-      var duration = end.subtractDate(start);
+      let end = subject.endDate;
+      let start = subject.startDate;
+      let duration = end.subtractDate(start);
 
       assert.deepEqual(
         subject.duration.toString(),
@@ -771,21 +771,21 @@ suite('ICAL.Event', function() {
     });
 
     test('#attendees', function() {
-      var props = primaryItem.getAllProperties('attendee');
+      let props = primaryItem.getAllProperties('attendee');
       assert.deepEqual(subject.attendees, props);
     });
 
     test('#recurrenceId', function() {
-      var subject = new ICAL.Event(exceptions[0]);
-      var expected = exceptions[0].getFirstPropertyValue('recurrence-id');
-      var changeval = exceptions[1].getFirstPropertyValue('recurrence-id');
+      subject = new ICAL.Event(exceptions[0]);
+      let expected = exceptions[0].getFirstPropertyValue('recurrence-id');
+      let changeval = exceptions[1].getFirstPropertyValue('recurrence-id');
       assert.deepEqual(subject.recurrenceId, expected);
 
       subject.recurrenceId = changeval;
       assert.deepEqual(subject.component.getFirstPropertyValue('recurrence-id'), changeval);
 
-      var tzid = 'America/New_York';
-      var changeval2 = new ICAL.Time({
+      let tzid = 'America/New_York';
+      let changeval2 = new ICAL.Time({
         year: 2012,
         month: 1,
         day: 1,
@@ -802,20 +802,20 @@ suite('ICAL.Event', function() {
 
   suite('#iterator', function() {
     test('with start time', function() {
-      var start = subject.startDate;
-      var time = new ICAL.Time({
+      let start = subject.startDate;
+      let time = new ICAL.Time({
         day: start.da + 1,
         month: start.month,
         year: start.year
       });
 
-      var iterator = subject.iterator(time);
+      let iterator = subject.iterator(time);
       assert.deepEqual(iterator.last.toString(), time.toString());
       assert.instanceOf(iterator, ICAL.RecurExpansion);
     });
 
     test('without a start time', function() {
-      var iterator = subject.iterator();
+      let iterator = subject.iterator();
 
       assert.equal(
         iterator.last.toString(),
@@ -825,14 +825,14 @@ suite('ICAL.Event', function() {
   });
 
   suite('duration instead of dtend', function() {
-    var icsData;
+    let icsData;
 
-    testSupport.defineSample('duration_instead_of_dtend.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('duration_instead_of_dtend.ics');
     });
 
     test('result', function() {
-      var subject = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Component(ICAL.parse(icsData));
       subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
       assert.equal(subject.startDate.toString(), new ICAL.Time({
           year: 2012,
@@ -856,8 +856,8 @@ suite('ICAL.Event', function() {
     });
 
     test('set', function() {
-      var subject = new ICAL.Component(ICAL.parse(icsData));
-      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      let comp = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(comp.getFirstSubcomponent('vevent'));
 
       assert.include(subject.toString(), "DURATION");
       assert.notInclude(subject.toString(), "DTEND");
@@ -887,15 +887,15 @@ suite('ICAL.Event', function() {
   });
 
   suite('only a dtstart date', function() {
-    var icsData;
+    let icsData;
 
-    testSupport.defineSample('only_dtstart_date.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('only_dtstart_date.ics');
     });
 
     test('result', function() {
-      var subject = new ICAL.Component(ICAL.parse(icsData));
-      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      let comp = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(comp.getFirstSubcomponent('vevent'));
       assert.equal(subject.startDate.toString(), new ICAL.Time({
           year: 2012,
           month: 6,
@@ -919,15 +919,15 @@ suite('ICAL.Event', function() {
   });
 
   suite('only a dtstart time', function() {
-    var icsData;
+    let icsData;
 
-    testSupport.defineSample('only_dtstart_time.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('only_dtstart_time.ics');
     });
 
     test('result', function() {
-      var subject = new ICAL.Component(ICAL.parse(icsData));
-      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      let comp = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(comp.getFirstSubcomponent('vevent'));
       assert.equal(subject.startDate.toString(), new ICAL.Time({
           year: 2012,
           month: 6,
@@ -951,14 +951,14 @@ suite('ICAL.Event', function() {
   });
 
   suite('dtend instead of duration', function() {
-    var icsData;
+    let icsData;
 
-    testSupport.defineSample('minimal.ics', function(data) {
-      icsData = data;
+    suiteSetup(async function() {
+      icsData = await testSupport.loadSample('minimal.ics');
     });
 
     test('result with different timezones', function() {
-      var subject = (new ICAL.Component(ICAL.parse(icsData)))
+      subject = (new ICAL.Component(ICAL.parse(icsData)))
         .getFirstSubcomponent('vevent');
       // 3 hours ahead of L.A.
       subject.updatePropertyWithValue('dtstart', ICAL.Time.fromData({
@@ -998,11 +998,11 @@ suite('ICAL.Event', function() {
       }).toString());
 
       assert.equal(subject.duration.toString(), 'PT5H30M');
-    })
+    });
 
     test('set', function() {
-      var subject = new ICAL.Component(ICAL.parse(icsData));
-      subject = new ICAL.Event(subject.getFirstSubcomponent('vevent'));
+      let comp = new ICAL.Component(ICAL.parse(icsData));
+      subject = new ICAL.Event(comp.getFirstSubcomponent('vevent'));
 
       assert.notInclude(subject.toString(), "DURATION");
       assert.include(subject.toString(), "DTEND");
