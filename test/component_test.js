@@ -460,7 +460,7 @@ suite('Component', function() {
   });
 
   test('#addPropertyWithValue', function() {
-    let subject = new ICAL.Component('vevent');
+    subject = new ICAL.Component('vevent');
 
     subject.addPropertyWithValue('description', 'value');
 
@@ -471,7 +471,7 @@ suite('Component', function() {
   });
 
   test('#updatePropertyWithValue', function() {
-    let subject = new ICAL.Component('vevent');
+    subject = new ICAL.Component('vevent');
     subject.addPropertyWithValue('description', 'foo');
     assert.lengthOf(subject.getAllProperties(), 1);
 

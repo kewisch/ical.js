@@ -532,7 +532,7 @@ suite('recur', function() {
   });
 
   suite('ICAL.Recur#icalDayToNumericDay', function() {
-    let expected = {
+    let expectedDayMap = {
       'SU': ICAL.Time.SUNDAY,
       'MO': ICAL.Time.MONDAY,
       'TU': ICAL.Time.TUESDAY,
@@ -542,16 +542,14 @@ suite('recur', function() {
       'SA': ICAL.Time.SATURDAY
     };
 
-    for (let map in expected) {
-      (function(map) {
-        test(map + ' to constant', function() {
-          assert.equal(
-            ICAL.Recur.icalDayToNumericDay(map),
-            expected[map]
-          );
-        });
-      }(map));
-    }
+    Object.entries(expectedDayMap).forEach(([icalDay, numericDay]) => {
+      test(icalDay + ' to constant', function() {
+        assert.equal(
+          ICAL.Recur.icalDayToNumericDay(icalDay),
+          numericDay
+        );
+      });
+    });
 
     let expectedWithWkst = [
       //day, wkst, expected
@@ -606,38 +604,35 @@ suite('recur', function() {
       ['SA', ICAL.Time.SATURDAY, 1]
     ];
 
-    for (let i = 0; i< expectedWithWkst.length; i++) {
-      (function(list) {
-        test(list[0] + ' to constant, wkst = ' + list[1], function() {
-          assert.equal(
-            ICAL.Recur.icalDayToNumericDay(list[0], list[1]),
-            list[2]
-          );
-        });
-      }(expectedWithWkst[i]));
-    }
+    expectedWithWkst.forEach(([day, wkst, expected]) => {
+      test(day + ' to constant, wkst = ' + wkst, function() {
+        assert.equal(
+          ICAL.Recur.icalDayToNumericDay(day, wkst),
+          expected
+        );
+      });
+    });
   });
 
   suite('ICAL.Recur#numericDayToIcalDay', function() {
-    let expected = {};
-    expected[ICAL.Time.SUNDAY] = 'SU';
-    expected[ICAL.Time.MONDAY] = 'MO';
-    expected[ICAL.Time.TUESDAY] = 'TU';
-    expected[ICAL.Time.WEDNESDAY] = 'WE';
-    expected[ICAL.Time.THURSDAY] = 'TH';
-    expected[ICAL.Time.FRIDAY] = 'FR';
-    expected[ICAL.Time.SATURDAY] = 'SA';
+    let expected = {
+      [ICAL.Time.SUNDAY]: 'SU',
+      [ICAL.Time.MONDAY]: 'MO',
+      [ICAL.Time.TUESDAY]: 'TU',
+      [ICAL.Time.WEDNESDAY]: 'WE',
+      [ICAL.Time.THURSDAY]: 'TH',
+      [ICAL.Time.FRIDAY]: 'FR',
+      [ICAL.Time.SATURDAY]: 'SA'
+    };
 
-    for (let map in expected) {
-      (function(map) {
-        test(map + ' to ' + expected[map], function() {
-          assert.equal(
-            ICAL.Recur.numericDayToIcalDay(+map),
-            expected[map]
-          );
-        });
-      }(map));
-    }
+    Object.entries(expected).forEach(([numericDay, icalDay]) => {
+      test(numericDay + ' to ' + icalDay, function() {
+        assert.equal(
+          ICAL.Recur.numericDayToIcalDay(+numericDay),
+          icalDay
+        );
+      });
+    });
   });
 
   let expectedWithWkst = [

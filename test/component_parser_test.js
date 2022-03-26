@@ -102,7 +102,7 @@ suite('component_parser', function() {
 
     suite('alternate input', function() {
       test('parsing component from string', function(done) {
-        let subject = new ICAL.ComponentParser();
+        subject = new ICAL.ComponentParser();
         subject.oncomplete = function() {
           assert.lengthOf(events, 3);
           done();
@@ -110,7 +110,7 @@ suite('component_parser', function() {
         subject.process(icsData);
       });
       test('parsing component from component', function(done) {
-        let subject = new ICAL.ComponentParser();
+        subject = new ICAL.ComponentParser();
         subject.oncomplete = function() {
           assert.lengthOf(events, 3);
           done();

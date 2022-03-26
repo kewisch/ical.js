@@ -453,10 +453,6 @@
         "assert": "readonly",
         "testSupport": "readonly",
         "perfTest": "readonly"
-      },
-      "rules": {
-        // Tests use this way too often (e.g. subject)
-        "no-shadow": 0
       }
     },
     {

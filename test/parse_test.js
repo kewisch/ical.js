@@ -62,16 +62,16 @@ suite('parserv2', function() {
           }
         });
 
-        function jsonEqual(actual, expected) {
+        function jsonEqual(jsonActual, jsonExpected) {
           assert.deepEqual(
-            actual,
-            expected,
+            jsonActual,
+            jsonExpected,
             'hint use: ' +
             'http://tlrobinson.net/projects/javascript-fun/jsondiff/\n\n' +
             '\nexpected:\n\n' +
-              JSON.stringify(actual, null, 2) +
+              JSON.stringify(jsonActual, null, 2) +
             '\n\n to equal:\n\n ' +
-              JSON.stringify(expected, null, 2) + '\n\n'
+              JSON.stringify(jsonExpected, null, 2) + '\n\n'
           );
         }
 
