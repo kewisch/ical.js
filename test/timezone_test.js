@@ -151,10 +151,10 @@ suite('timezone', function() {
 
     suite(title, function() {
       for (let tzid in item.offsets) {
-        timezoneTest(tzid, tzid + " offset " + item.offsets[tzid], function(tzid) {
+        timezoneTest(tzid, tzid + " offset " + item.offsets[tzid], function(testTzid) {
           assert.equal(
             utcHours(item.time),
-            item.offsets[tzid]
+            item.offsets[testTzid]
           );
         }.bind(this, tzid));
       }

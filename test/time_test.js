@@ -553,29 +553,23 @@ suite('icaltime', function() {
 
     });
 
-    let day = 0;
-    let max = 4;
+    [0, 1, 2, 3].forEach((day) => {
+      let date = new Date(
+        start.getFullYear(),
+        start.getMonth(),
+        start.getDate() + day
+      );
 
-    for (; day < max; day++) {
-      // scope hack
-      (function(day) {
-        let date = new Date(
-          start.getFullYear(),
-          start.getMonth(),
-          start.getDate() + day
+      let msg = 'convert: "' + date.toString() + '" to first day of week';
+
+      test(msg, function() {
+        subject = Time.fromJSDate(date);
+        assert.hasProperties(
+          subject.startOfWeek(),
+          expected
         );
-
-        let msg = 'convert: "' + date.toString() + '" to first day of week';
-
-        test(msg, function() {
-          subject = Time.fromJSDate(date);
-          assert.hasProperties(
-            subject.startOfWeek(),
-            expected
-          );
-        });
-      }(day));
-    }
+      });
+    });
 
   });
 

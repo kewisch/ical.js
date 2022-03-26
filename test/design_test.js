@@ -312,7 +312,7 @@ suite('design', function() {
     suite('vcard date/time types', function() {
       function testRoundtrip(jcal, ical, props, only) {
         function testForType(type, valuePrefix, valueSuffix, zone) {
-          let subject = ICAL.design.vcard.value[type];
+          let valueType = ICAL.design.vcard.value[type];
           let prefix = valuePrefix || '';
           let suffix = valueSuffix || '';
           let jcalvalue = prefix + jcal + suffix;
@@ -320,14 +320,14 @@ suite('design', function() {
           let zoneName = zone || valueSuffix || "floating";
 
           test(type + ' ' + zoneName + ' fromICAL/toICAL', function() {
-            assert.equal(subject.fromICAL(icalvalue), jcalvalue);
-            assert.equal(subject.toICAL(jcalvalue), icalvalue);
+            assert.equal(valueType.fromICAL(icalvalue), jcalvalue);
+            assert.equal(valueType.toICAL(jcalvalue), icalvalue);
           });
 
           test(type + ' ' + zoneName + ' decorated/undecorated', function() {
             let prop = new ICAL.Property(['anniversary', {}, type]);
-            let decorated = subject.decorate(jcalvalue, prop);
-            let undecorated = subject.undecorate(decorated);
+            let decorated = valueType.decorate(jcalvalue, prop);
+            let undecorated = valueType.undecorate(decorated);
 
             assert.hasProperties(decorated._time, props);
             assert.equal(zoneName, decorated.zone.toString());

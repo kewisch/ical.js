@@ -60,16 +60,16 @@ suite('recur_expansion', function() {
         month: 2,
         day: 2
       });
-      let subject = new ICAL.RecurExpansion({
+      let expansion = new ICAL.RecurExpansion({
         dtstart: dtstart,
         ruleIterators: []
       });
 
-      assert.lengthOf(subject.ruleDates, 0);
-      assert.lengthOf(subject.exDates, 0);
-      assert.isFalse(subject.complete);
+      assert.lengthOf(expansion.ruleDates, 0);
+      assert.lengthOf(expansion.exDates, 0);
+      assert.isFalse(expansion.complete);
 
-      assert.deepEqual(subject.toJSON(), {
+      assert.deepEqual(expansion.toJSON(), {
         ruleIterators: [],
         ruleDates: [],
         exDates: [],
@@ -137,7 +137,7 @@ suite('recur_expansion', function() {
       component.removeAllProperties('exdate');
       component.addPropertyWithValue('rrule', { freq: "WEEKLY", count: 3, byday: ["SU"] });
 
-      let subject = new ICAL.RecurExpansion({
+      let expansion = new ICAL.RecurExpansion({
         component: component,
         dtstart: start
       });
@@ -153,7 +153,7 @@ suite('recur_expansion', function() {
       let next;
       let dates = [];
 
-      while (i++ <= max && (next = subject.next())) {
+      while (i++ <= max && (next = expansion.next())) {
         dates.push(next.toJSDate());
       }
 
@@ -170,7 +170,7 @@ suite('recur_expansion', function() {
         day: 2
       });
 
-      let subject = new ICAL.RecurExpansion({
+      let expansion = new ICAL.RecurExpansion({
         component: component,
         dtstart: start
       });
@@ -189,7 +189,7 @@ suite('recur_expansion', function() {
       let dates = [];
 
       while (inc++ < max) {
-        next = subject._nextRecurrenceIter();
+        next = expansion._nextRecurrenceIter();
         dates.push(next.last.toJSDate());
         next.next();
       }
