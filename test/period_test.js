@@ -60,12 +60,12 @@ suite('ical/period', function() {
           assert.hasProperties(dur, data.calculatedDuration);
         }
         if ('calculatedEnd' in data) {
-          let end = subject.getEnd();
+          let subjectEnd = subject.getEnd();
 
           if ('end' in data && data.end) {
-            assert.hasProperties(end, data.end, 'duration matches calculated');
+            assert.hasProperties(subjectEnd, data.end, 'duration matches calculated');
           }
-          assert.hasProperties(end, data.calculatedEnd);
+          assert.hasProperties(subjectEnd, data.calculatedEnd);
         }
       });
     }
