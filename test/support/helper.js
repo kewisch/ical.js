@@ -22,7 +22,7 @@ if (testSupport.isNode) {
   var chai = (await import("chai")).default;
   var Benchmark = (await import("benchmark")).default;
   var { URL } = await import("url");
-  var { readFile } = (await import('fs/promises'));
+  var { readFile, readdir } = (await import('fs/promises'));
 } else {
   var ICAL = (await import("/base/lib/ical/module.js")).default;
   var chai = window.chai;
@@ -133,28 +133,20 @@ testSupport.loadSample = async function(file) {
   return testSupport.load('samples/' + file);
 };
 
-let icalPrevious, icalUpstream;
+let icalPerf = {};
 function perfTestDefine(scope, done) {
   this.timeout(0);
   let benchSuite = new Benchmark.Suite();
   let currentTest = this.test;
   benchSuite.add("latest", scope.bind(this));
-  if (icalPrevious) {
-    benchSuite.add("previous", () => {
+  Object.entries(icalPerf).forEach(([key, ical]) => {
+    benchSuite.add(key, () => {
       let lastGlobal = crossGlobal.ICAL;
-      crossGlobal.ICAL = icalPrevious;
+      crossGlobal.ICAL = ical;
       scope.call(this);
       crossGlobal.ICAL = lastGlobal;
     });
-  }
-  if (icalUpstream) {
-    benchSuite.add("upstream", () => {
-      let lastGlobal = crossGlobal.ICAL;
-      crossGlobal.ICAL = icalUpstream;
-      scope.call(this);
-      crossGlobal.ICAL = lastGlobal;
-    });
-  }
+  });
 
   currentTest._benchCycle = [];
 
@@ -204,14 +196,23 @@ if (!testSupport.isNode) {
 }
 
 export const mochaHooks = {
-  beforeAll(done) {
-    Promise.allSettled([
-      import(`../../tools/benchmark/ical_previous.js`).then((module) => {
-        icalPrevious = module.default;
-      }),
-      import(`../../tools/benchmark/ical_upstream.js`).then((module) => {
-        icalUpstream = module.default;
-      }),
-    ]).then(() => done());
+  async beforeAll() {
+    let benchmark = new URL('../../tools/benchmark', import.meta.url).pathname;
+    let files = await readdir(benchmark);
+    for (let file of files) {
+      let match = file.match(/^ical_(\w+).c?js$/);
+      if (match) {
+        try {
+          let module = await import("../../tools/benchmark/" + file);
+          if (module.default) {
+            icalPerf[match[1]] = module.default;
+          } else {
+            console.error(`Error loading tools/benchmark/${file}, skipping for performance tests: Missing default export`);
+          }
+        } catch (e) {
+          console.error(`Error loading tools/benchmark/${file}, skipping for performance tests: ${e}`);
+        }
+      }
+    }
   }
 };
