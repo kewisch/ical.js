@@ -17,7 +17,7 @@ suite('rrule', function() {
   [
     // COUNT, UNTIL and INTERVAL
     "FREQ=DAILY;COUNT=50",
-    "FREQ=DAILY;UNTIL=2015-02-20T12:00:00",
+    "FREQ=DAILY;UNTIL=20150220T120000",
     "FREQ=DAILY;INTERVAL=7",
 
     // Lightning rules

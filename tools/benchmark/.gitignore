@@ -1,0 +1,4 @@
+# This directory holds ical.js files that can be used for performance testing
+# Drop in a file called ical_foo.js or ical_bar.cjs and then npm run test-performance
+*
+!.gitignore

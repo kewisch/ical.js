@@ -65,9 +65,7 @@ async function get_latest_main(outFile) {
     throw new Error(response.status);
   }
 
-  let buffer = new Buffer(await response.arrayBuffer());
-  console.log(buffer);
-
+  let buffer = Buffer.from(await response.arrayBuffer());
   let archive = await yauzl.fromBuffer(buffer);
 
   let entry;
@@ -89,7 +87,7 @@ async function get_latest_main(outFile) {
 
 async function performance_downloader() {
   await Promise.allSettled([
-    get_latest_main("./tools/benchmark/ical_main.js"),
+    get_latest_main("./tools/benchmark/ical_main.cjs"),
     get_latest_release("./tools/benchmark/ical_release.js")
   ]);
 }
