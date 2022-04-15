@@ -124,7 +124,7 @@ suite('Component', function() {
       // got was scratches and sadness. That didn't go so well.
       assert.throws(function() {
         tom.addProperty("bird");
-      }, 'must instance of ICAL.Property')
+      }, 'must be instance of ICAL.Property')
     });
 
     test('properties', function() {
