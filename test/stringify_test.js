@@ -145,5 +145,34 @@ suite('ICAL.stringify', function() {
 
       assert.equal(ICAL.stringify.component(subject), expected);
     });
+
+    test('structured values', function() {
+      var subject = [
+        "vcard",
+        [
+          [
+            "adr",
+            {},
+            "text",
+            [
+              "one",
+              "two",
+              "three\n\n",
+              "four\nfour\n",
+              [
+                "five",
+                "five\n\n",
+                "five\nfive\n"
+              ],
+              "six",
+              "seven"
+            ]
+          ]
+        ]
+      ];
+      var expected = "BEGIN:VCARD\r\nADR:one;two;three\\n\\n;four\\nfour\\n;five,five\\n\\n,five\\nfive\\n;six;seven\r\nEND:VCARD";
+
+      assert.equal(ICAL.stringify.component(subject), expected);
+    });
   });
 });
