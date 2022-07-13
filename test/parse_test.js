@@ -174,6 +174,62 @@ suite('parserv2', function() {
       }, /invalid/);
     });
 
+    test('date without VALUE in dtstart/dtend', function() {
+      var ical = 'BEGIN:VCALENDAR\n';
+      ical += 'BEGIN:VEVENT\n';
+      ical += 'DTSTART=20220713\n';
+      ical += 'DTEND=20220714\n';
+      ical += 'END:VEVENT\n';
+      ical += 'END:VCALENDAR';
+
+      assert.throws(function() {
+        subject(ical);
+      }, /invalid/);
+    });
+
+  });
+
+  suite('lenient parser', function() {
+    suiteSetup(function() {
+      ICAL.design.strict = false;
+    });
+
+    suiteTeardown(function() {
+      ICAL.design.strict = true;
+    });
+
+    test('date without VALUE in dtstart/dtend (lenient)', function() {
+      var ical = 'BEGIN:VCALENDAR\n';
+      ical += 'BEGIN:VEVENT\n';
+      ical += 'DTSTART:20220713\n';
+      ical += 'DTEND:20220714\n';
+      ical += 'END:VEVENT\n';
+      ical += 'END:VCALENDAR';
+      assert.deepEqual(subject(ical), [
+        "vcalendar",
+        [],
+        [
+          [
+            "vevent",
+            [
+              [
+                "dtstart",
+                {},
+                "date",
+                "2022-07-13"
+                    ],
+              [
+                "dtend",
+                {},
+                "date",
+                "2022-07-14"
+              ]
+            ],
+            []
+          ]
+        ]
+      ]);
+    });
   });
 
   suite('#_parseParameters', function() {
