@@ -217,7 +217,7 @@ suite('parserv2', function() {
                 {},
                 "date",
                 "2022-07-13"
-                    ],
+              ],
               [
                 "dtend",
                 {},
