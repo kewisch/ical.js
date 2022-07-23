@@ -70,6 +70,10 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
     _time.toUnixTime();
   });
 
+  perf.test('fromUnixTime', function() {
+    _time.fromUnixTime(1234567890);
+  });
+
   perf.test('dayOfWeek', function() {
     _time.dayOfWeek();
   });
@@ -77,5 +81,4 @@ perfCompareSuite('ICAL.Time', function(perf, ICAL) {
   perf.test('weekNumber', function() {
     _time.weekNumber();
   });
-
 });
