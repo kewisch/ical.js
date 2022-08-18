@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         args: ['diff', '--shortstat'],
       }, function(error, result, code) {
         if (result.stdout.length) {
-          grunt.log.ok('There are git changes, also comparing against master branch');
+          grunt.log.ok('There are git changes, also comparing against main branch');
           copyMaster(done);
         } else {
           grunt.util.spawn({
@@ -34,12 +34,12 @@ module.exports = function(grunt) {
             args: ['symbolic-ref', 'HEAD']
           }, function(error, result, code) {
             var branch = result.stdout.replace('refs/heads/', '');
-            if (branch == 'master') {
-              grunt.log.ok('No git changes, not comparing against master branch');
+            if (branch == 'main') {
+              grunt.log.ok('No git changes, not comparing against main branch');
               grunt.file.delete(filepath);
               done();
             } else {
-              grunt.log.ok('Not on master, also comparing against master branch');
+              grunt.log.ok('Not on main, also comparing against main branch');
               copyMaster(done);
             }
           });
