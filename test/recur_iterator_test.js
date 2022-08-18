@@ -1012,7 +1012,7 @@ suite('recur_iterator', function() {
       /* 
        * Leap-year test for February 29th 
        *
-       * See https://github.com/mozilla-comm/ical.js/issues/91
+       * See https://github.com/kewisch/ical.js/issues/91
        * for details
        *
        * TODO: Uncomment when new recurrence iterator is ready

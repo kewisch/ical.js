@@ -1,4 +1,4 @@
-# jsical - Javascript parser for rfc5545
+# ical.js - Javascript parser for rfc5545
 
 This is a library to parse the iCalendar format defined in
 [rfc5545](http://tools.ietf.org/html/rfc5545), as well as similar formats like
@@ -16,7 +16,7 @@ I am also aiming for a caldav.js when this is done. Most algorithms here were
 taken from [libical](https://github.com/libical/libical). If you are bugfixing
 this library, please check if the fix can be upstreamed to libical.
 
-![Build Status](https://github.com/mozilla-comm/ical.js/workflows/Checkin/badge.svg) [![Coverage Status](https://coveralls.io/repos/mozilla-comm/ical.js/badge.svg)](https://coveralls.io/r/mozilla-comm/ical.js) [![npm version](https://badge.fury.io/js/ical.js.svg)](http://badge.fury.io/js/ical.js) [![CDNJS](https://img.shields.io/cdnjs/v/ical.js.svg)](https://cdnjs.com/libraries/ical.js)  
+![Build Status](https://github.com/kewisch/ical.js/workflows/Checkin/badge.svg) [![Coverage Status](https://coveralls.io/repos/kewisch/ical.js/badge.svg)](https://coveralls.io/r/kewisch/ical.js) [![npm version](https://badge.fury.io/js/ical.js.svg)](http://badge.fury.io/js/ical.js) [![CDNJS](https://img.shields.io/cdnjs/v/ical.js.svg)](https://cdnjs.com/libraries/ical.js)  
 
 ## Sandbox and Validator
 
@@ -25,10 +25,10 @@ If you want to try out ICAL.js right now, there is a
 on for documentation and example links.
 
 There is also a validator that demonstrates how to use the library in a webpage
-in the [sandbox/](https://github.com/mozilla-comm/ical.js/tree/master/sandbox)
+in the [sandbox/](https://github.com/kewisch/ical.js/tree/main/sandbox)
 subdirectory.
 
-[Try the validator online](http://mozilla-comm.github.io/ical.js/validator.html), it always uses the latest copy of ICAL.js.
+[Try the validator online](http://kewisch.github.io/ical.js/validator.html), it always uses the latest copy of ICAL.js.
 
 ## Installing
 
@@ -57,8 +57,8 @@ are not included in the respective ics files, you'll need to use
 ## Documentation
 
 For a few guides with code samples, please check out
-[the wiki](https://github.com/mozilla-comm/ical.js/wiki). If you prefer,
-full API documentation [is available here](http://mozilla-comm.github.io/ical.js/api/).
+[the wiki](https://github.com/kewisch/ical.js/wiki). If you prefer,
+full API documentation [is available here](http://kewisch.github.io/ical.js/api/).
 If you are missing anything, please don't hesitate to create an issue.
 
 ## Developing
@@ -79,7 +79,7 @@ You can now dive into the code, run the tests and check coverage.
 Tests can either be run via Node.js or in the browser, but setting up the testing
 infrastructure requires [node](https://github.com/nodejs/node). More
 information on how to set up and run tests can be found on
-[the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests).
+[the wiki](https://github.com/kewisch/ical.js/wiki/Running-Tests).
 
 #### in Node.js
 
@@ -104,8 +104,8 @@ you are working on.
 
 If you run the performance tests comparison will be done between the current
 working version (latest), a previous build of ICAL.js (previous) and the
-unchanged copy of build/ical.js (from the master branch). See
-[the wiki](https://github.com/mozilla-comm/ical.js/wiki/Running-Tests) for more
+unchanged copy of build/ical.js (from the main branch). See
+[the wiki](https://github.com/kewisch/ical.js/wiki/Running-Tests) for more
 details.
 
 #### in the browser
@@ -136,7 +136,7 @@ example when using [Internet Exporer VM images](https://developer.microsoft.com/
 
 ### Code Coverage
 ICAL.js is set up to calculate code coverage. You can
-[view the coverage results](https://coveralls.io/r/mozilla-comm/ical.js)
+[view the coverage results](https://coveralls.io/r/kewisch/ical.js)
 online, or run them locally to make sure new code is covered. Running `grunt
 coverage` will run the unit test suite measuring coverage. You can then open
 `coverage/lcov-report/index.html` to view the results in your browser.

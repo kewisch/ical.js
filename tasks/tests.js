@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     function copyMaster(callback) {
       grunt.util.spawn({
         cmd: 'git',
-        args: ['show', 'master:build/ical.js']
+        args: ['show', 'main:build/ical.js']
       }, function(error, result, code) {
         grunt.file.write(filepath, header + result.stdout + footer);
         callback();

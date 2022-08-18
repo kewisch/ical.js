@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         performance: ['test/performance/*_test.js']
       },
       validator: {
-        dev: 'https://unpkg.com/ical.js', // master builds don't currently have ical.js committed. See #405
+        dev: 'https://unpkg.com/ical.js', // main builds don't currently have ical.js committed. See #405
         prod: 'https://unpkg.com/ical.js@<%= pkg.version %>/build/ical.js',
         dest: 'validator.html'
       }
@@ -216,7 +216,7 @@ module.exports = function(grunt) {
         tagMessage: 'v<%=version%>',
         additionalFiles: ['bower.json'],
         github: {
-          repo: 'mozilla-comm/ical.js',
+          repo: 'kewisch/ical.js',
           accessTokenVar: 'GITHUB_TOKEN'
         }
       }
@@ -240,7 +240,7 @@ module.exports = function(grunt) {
           name: '<%= github.actor %>',
           email: '<%= github.actor %>@users.noreply.github.com'
         },
-        repo: 'https://x-access-token:<%= github.token %>@github.com/mozilla-comm/ical.js.git',
+        repo: 'https://x-access-token:<%= github.token %>@github.com/kewisch/ical.js.git',
         message: 'Update API documentation and validator for <%= github.sha %>'
       },
       src: ['<%= libinfo.doc %>/**', '<%= libinfo.validator.dest %>']

@@ -55,7 +55,7 @@ a comment on an issue, send [@kewisch] an email, or for ad-hoc questions contact
 [Lightning]: http://www.mozilla.org/projects/calendar/
 [rfc7095]: https://tools.ietf.org/html/rfc7095
 [rfc7265]: https://tools.ietf.org/html/rfc7265
-[running tests]: https://github.com/mozilla-comm/ical.js/wiki/Running-Tests
+[running tests]: https://github.com/kewisch/ical.js/wiki/Running-Tests
 [chat.mozilla.org]: https://chat.mozilla.org/
 [@kewisch]: https://github.com/kewisch/
 [Mozilla Public License]: https://www.mozilla.org/MPL/2.0/
