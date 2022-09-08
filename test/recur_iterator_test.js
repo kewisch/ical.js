@@ -516,12 +516,12 @@ suite('recur_iterator', function() {
 
       // monthly, the third instance of tu,we,th
       testRRULE('FREQ=MONTHLY;COUNT=3;BYDAY=TU,WE,TH;BYSETPOS=3', {
-          byCount: true,
-          dates: [
-            '1997-09-04T09:00:00',
-            '1997-10-07T09:00:00',
-            '1997-11-06T09:00:00'
-          ]
+        byCount: true,
+        dates: [
+          '1997-09-04T09:00:00',
+          '1997-10-07T09:00:00',
+          '1997-11-06T09:00:00'
+        ]
       });
 
       //monthly, each month last day that is monday
@@ -604,7 +604,8 @@ suite('recur_iterator', function() {
           '2015-01-19T08:00:00',
           '2015-01-21T08:00:00',
           '2015-01-23T08:00:00'
-        ]});
+        ]
+      });
 
       //Repeat Monthly, the fifth Saturday (BYDAY=5SA)
       testRRULE('FREQ=MONTHLY;BYDAY=5SA', {
@@ -616,8 +617,8 @@ suite('recur_iterator', function() {
           '2016-01-30T08:00:00',
           '2016-04-30T08:00:00',
           '2016-07-30T08:00:00'
-       ]
-     });
+        ]
+      });
 
       // Repeat Monthly, the fifth Wednesday every two months (BYDAY=5WE)
       testRRULE('FREQ=MONTHLY;INTERVAL=2;BYDAY=5WE', {
@@ -666,13 +667,39 @@ suite('recur_iterator', function() {
         ]
       });
 
-      // monthly, bymonthday
+      // Last day of the month, monthly.
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1', {
         dtStart: '2015-01-01T08:00:00',
         dates: [
           '2015-01-31T08:00:00',
           '2015-02-28T08:00:00',
           '2015-03-31T08:00:00'
+        ]
+      });
+
+      // Last day of the month, every 3 months.
+      testRRULE('FREQ=MONTHLY;INTERVAL=3;BYMONTHDAY=-1', {
+        dtStart: '2022-06-01T08:00:00',
+        dates: [
+          '2022-06-30T08:00:00',
+          '2022-09-30T08:00:00',
+          '2022-12-31T08:00:00',
+          '2023-03-31T08:00:00',
+          '2023-06-30T08:00:00',
+          '2023-09-30T08:00:00',
+        ]
+      });
+
+      // Second-to-last day of the month, every 3 months.
+      testRRULE('FREQ=MONTHLY;INTERVAL=3;BYMONTHDAY=-2', {
+        dtStart: '2022-06-01T08:00:00',
+        dates: [
+          '2022-06-29T08:00:00',
+          '2022-09-29T08:00:00',
+          '2022-12-30T08:00:00',
+          '2023-03-30T08:00:00',
+          '2023-06-29T08:00:00',
+          '2023-09-29T08:00:00',
         ]
       });
 
@@ -696,7 +723,7 @@ suite('recur_iterator', function() {
           '2015-03-23T08:00:00Z',
           '2015-03-27T08:00:00Z',
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=MO,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-04-01T08:00:00Z',
         byCount: true,
@@ -706,7 +733,7 @@ suite('recur_iterator', function() {
           '2015-04-17T08:00:00Z',
           '2015-04-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=MO,SA;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=4', {
         dtStart: '2015-04-01T08:00:00Z',
         byCount: true,
@@ -716,7 +743,7 @@ suite('recur_iterator', function() {
           '2015-04-25T08:00:00Z',
           '2015-04-27T08:00:00Z'
         ]
-      })
+      });
       testRRULE('FREQ=MONTHLY;BYDAY=SU,FR;BYMONTHDAY=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31;COUNT=9', {
         dtStart: '2015-02-28T08:00:00Z',
         byCount: true,
@@ -731,7 +758,7 @@ suite('recur_iterator', function() {
           "2015-04-17T08:00:00Z",
           "2015-04-19T08:00:00Z"
         ]
-      })
+      });
     });
 
     suite('YEARLY', function() {
