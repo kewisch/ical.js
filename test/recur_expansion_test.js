@@ -200,7 +200,7 @@ suite('recur_expansion', function() {
   });
 
   suite('#next', function() {
-    // I use JS dates widely because its much easier
+    // I use JS dates widely because it is much easier
     // to compare them via chai's deepEquals function
     let expected = [
       new Date(2012, 9, 2, 10),
