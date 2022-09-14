@@ -81,7 +81,7 @@ suite('parserv2', function() {
 
           // NOTE: this is not an absolute test that serialization
           //       works as our parser should be error tolerant and
-          //       its remotely possible that we consistently produce
+          //       it is remotely possible that we consistently produce
           //       ICAL that only we can parse.
           jsonEqual(
             subject(ical),
