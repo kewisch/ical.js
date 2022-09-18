@@ -94,6 +94,14 @@
       "mailto:y@example.org"
     ],
     [
+      "attendee",
+      {
+        "cn": "Z\\;"
+      },
+      "cal-address",
+      "mailto:z@example.org"
+    ],
+    [
       "x-foo",
       {
         "param1": "VAL1"
