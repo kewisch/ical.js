@@ -12,7 +12,7 @@ export default {
       plugins: [terser()]
     },
     {
-      file: 'dist/ical.es5.js',
+      file: 'dist/ical.es5.cjs',
       exports: "default",
       format: 'cjs',
       plugins: [
@@ -20,7 +20,7 @@ export default {
       ],
     },
     {
-      file: 'dist/ical.es5.min.js',
+      file: 'dist/ical.es5.min.cjs',
       exports: "default",
       format: 'cjs',
       plugins: [

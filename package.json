@@ -57,11 +57,15 @@
     "validator": "sed -e 's#unpkg.com/ical.js#unpkg.com/ical.js@'`grep '\"version\"' package.json | cut -d '\"' -f 4`'/dist/ical.js#' tools/validator.html > docs/validator.html && echo 'Validator written to docs/validator.html'",
     "ghpages": "npm run jsdoc && npm run validator"
   },
+  "exports": {
+    "import": "dist/ical.min.js",
+    "require": "dist/ical.es5.min.cjs"
+  },
   "files": [
-    "build/ical.js",
-    "build/ical.min.js",
-    "build/ical.timezones.js",
-    "build/ical.timezones.min.js",
+    "dist/ical.js",
+    "dist/ical.min.js",
+    "dist/ical.es5.cjs",
+    "dist/ical.es5.min.cjs",
     "lib/ical/*.js"
   ],
   "mocha": {
