@@ -114,6 +114,12 @@ suite('ICAL.stringify', function() {
 
       ICAL.foldLength = oldLength;
     });
+
+    test('property groups', function() {
+      // Make sure the GROUP param is stripped
+      let subject = ["fn", { "group": "bff" }, "text", "coffee"];
+      assert.equal(ICAL.stringify.property(subject, ICAL.design.vcard, false), "BFF.FN:coffee");
+    });
   });
 
   suite('stringify component', function() {
