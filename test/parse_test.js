@@ -39,7 +39,8 @@ suite('parserv2', function() {
       'vcard.vcf',
       'vcard_author.vcf',
       'vcard3.vcf',
-      'vcard_grouped.vcf'
+      'vcard_grouped.vcf',
+      'escape_semicolon.vcf'
     ];
 
     list.forEach(function(path) {
