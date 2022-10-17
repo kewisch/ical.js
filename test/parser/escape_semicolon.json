@@ -1,0 +1,26 @@
+[
+    "vcard",
+    [
+     [ "version", {}, "text", "3.0" ],
+     [ "prodid",  {}, "text", "-//Sabre//Sabre VObject 4.1.6//EN" ],
+     [ "uid", {}, "text", "ad612c16-fe12-4ec5-abf6-49998ee5ab88" ],
+     [ "fn", {}, "text", "First Last NextCloud" ],
+     [ "adr", { "type": "HOME" },  "text", [ "PO", "Street 2", "Street", "City", "AL", "zip", "Germany" ] ],
+     [ "adr", { "type": "WORK" },  "text", [ "PO W", "Street 2 W", "Street W", "City Work", "AL work", "zip Work", "Germany work" ] ],
+     [ "email",  { "type": "HOME" }, "text", "home@gmx.de" ],
+     [ "email",  { "type": "WORK" }, "text", "work@gmx.de" ],
+     [ "tel", { "type": [ "HOME", "VOICE" ] }, "phone-number", "11111111" ],
+     [ "tel", { "type": "CELL" }, "phone-number", "205333" ],
+     [ "tel", { "type": ["WORK", "FAX" ] }, "phone-number", "205246;;,;" ],
+     [ "tel", { "type": ["WORK", "VOICE" ] }, "phone-number", "222222" ],
+     [ "org", {}, "text", "Firma" ],
+     [ "bday", {}, "date-time", "2019-02-10T00:00:33" ],
+     [ "nickname", {}, "text", "Hugo" ],
+     [ "x-abdate",  {"group": "item1"}, "date-and-or-time", "20190220T000035" ],
+     [ "x-ablabel", {"group": "item1"}, "unknown", "_$!<Anniversary>!$_" ],
+     [ "x-anniversary", {}, "date-and-or-time", "20190220T000035" ],
+     [ "categories", {}, "text", "Test-Kontakte" ],
+     [ "rev", {}, "date-time", "2019-10-08T17:05:14Z" ]
+    ],
+    []
+ ]
