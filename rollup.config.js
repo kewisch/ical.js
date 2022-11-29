@@ -1,5 +1,5 @@
 import { babel } from '@rollup/plugin-babel';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
 const LICENSE =
 `/* This Source Code Form is subject to the terms of the Mozilla Public

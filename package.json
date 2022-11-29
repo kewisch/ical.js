@@ -25,6 +25,7 @@
     "@eslint/js": "^9.0.0",
     "@octokit/core": "^6.0.1",
     "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-terser": "^0.4.4",
     "@stylistic/eslint-plugin": "^2.1.0",
     "benchmark": "^2.1.4",
     "c8": "^9.1.0",
@@ -41,7 +42,6 @@
     "karma-spec-reporter": "^0.0.36",
     "mocha": "^10.3.0",
     "node-fetch": "^3.3.2",
-    "rollup-plugin-terser": "^7.0.2",
     "yauzl-promise": "^4.0.0"
   },
   "license": "MPL-2.0",
