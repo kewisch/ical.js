@@ -333,4 +333,17 @@ suite('recur_expansion', function() {
 
   });
 
+  suite('EXDATE and DTSTART have different value type', function() {
+    createSubject('rdate_exdate.ics');
+    test('Compare EXDATE;VALUE=DATE and DTSTART;VALUE=DATE-TIME', function() {
+      let dates = [], next;
+      while ((next = subject.next()))
+        dates.push(next.toJSDate());
+      assert.deepEqual(dates, [
+        new Date('2024-06-09T03:00:00.000Z'),
+        new Date('2024-06-10T03:00:00.000Z'),
+        new Date('2024-06-12T03:00:00.000Z')
+      ]);
+    });
+  });
 });
