@@ -58,8 +58,8 @@
     "ghpages": "npm run jsdoc && npm run validator"
   },
   "exports": {
-    "import": "dist/ical.min.js",
-    "require": "dist/ical.es5.min.cjs"
+    "import": "./dist/ical.min.js",
+    "require": "./dist/ical.es5.min.cjs"
   },
   "files": [
     "dist/ical.js",
