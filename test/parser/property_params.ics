@@ -7,6 +7,7 @@ ATTENDEE;CN="Foo, Bar":mailto:foo3@bar
 ATTENDEE;CN="Foo; Bar":mailto:foo4@bar
 ATTENDEE;DELEGATED-TO="mailto:foo7@bar";CN="Foo, Bar":mailto:foo5@bar
 ATTENDEE;DELEGATED-TO="mailto:foo7@bar";CN="Foo; Bar":mailto:foo6@bar
+ATTENDEE;CN="^^Ж 4 <>\'^'^n:":mailto:foo9@bar
 ATTENDEE;ROLE="REQ-PARTICIPANT;foo";DELEGATED-FROM="mailto:bar@baz.com";PAR
  TSTAT=ACCEPTED;RSVP=TRUE:mailto:foo@bar.com
 ATTENDEE;CN=X\:mailto:x@example.org
