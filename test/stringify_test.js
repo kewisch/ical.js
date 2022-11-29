@@ -80,6 +80,13 @@ suite('ICAL.stringify', function() {
       delete ICAL.design.defaultSet.property.custom;
     });
 
+    test('stringify property value containing "escaped" ; , :', function() {
+      let subject = new ICAL.Property('attendee');
+      subject.setParameter('cn', 'X\\:');
+      subject.setValue('mailto:id');
+      assert.equal(subject.toICALString(), 'ATTENDEE;CN="X\\:":mailto:id');
+    });
+
     test('rfc6868 roundtrip', function() {
       let subject = new ICAL.Property('attendee');
       let input = "caret ^ dquote \" newline \n end";
