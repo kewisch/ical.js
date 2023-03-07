@@ -278,4 +278,28 @@ suite('parserv2', function() {
       assert.deepEqual(unfold(input), expected);
     });
   });
+
+  suite('embedded timezones', function() {
+    let icsDataEmbeddedTimezones;
+    suiteSetup(async function() {
+      icsDataEmbeddedTimezones = await testSupport.loadSample('timezone_from_file.ics');
+    });
+
+    test('used in event date', function() {
+      const parsed = ICAL.parse(icsDataEmbeddedTimezones);
+      const component = new ICAL.Component(parsed);
+
+      const event = new ICAL.Event(component.getFirstSubcomponent('vevent'));
+      const startDate = event.startDate.toJSDate();
+      const endDate = event.endDate.toJSDate();
+
+      assert.equal(startDate.getUTCDate(), 6);
+      assert.equal(startDate.getUTCHours(), 21);
+      assert.equal(startDate.getUTCMinutes(), 23);
+
+      assert.equal(endDate.getUTCDate(), 6);
+      assert.equal(endDate.getUTCHours(), 22);
+      assert.equal(endDate.getUTCMinutes(), 23);
+    });
+  });
 });
