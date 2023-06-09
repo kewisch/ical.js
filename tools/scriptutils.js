@@ -18,7 +18,7 @@ const octokit = new Octokit();
 
 async function get_latest_release(outFile) {
   let response = await octokit.request('GET /repos/{owner}/{repo}/releases/latest', {
-    owner: 'mozilla-comm',
+    owner: 'kewisch',
     repo: 'ical.js'
   });
 
@@ -45,7 +45,7 @@ async function get_latest_main(outFile) {
     status: "success",
     //exclude_pull_requests: true,
     //event: "push",
-    owner: "mozilla-comm",
+    owner: "kewisch",
     repo: "ical.js"
   });
 
@@ -58,7 +58,7 @@ async function get_latest_main(outFile) {
     return (datea < dateb) - (dateb < datea);
   });
 
-  let archive_download_url = `https://nightly.link/mozilla-comm/ical.js/actions/runs/${workflows[0].id}/distribution.zip`;
+  let archive_download_url = `https://nightly.link/kewisch/ical.js/actions/runs/${workflows[0].id}/distribution.zip`;
   console.log(archive_download_url);
   response = await fetch(archive_download_url);
   if (!response.ok) {
