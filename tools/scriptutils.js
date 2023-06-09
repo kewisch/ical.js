@@ -104,7 +104,7 @@ async function generateZonesFile(tzdbDir) {
 
   let lines = [
     `(function() {`,
-    `  function register(tzdata) { ICAL.TimezoneService.register(ICAL.Component.fromString("BEGIN:VTIMEZONE\\r\\n" + tzdata + "END:VTIMEZONE")) };`,
+    `  function register(tzdata) { ICAL.TimezoneService.register(ICAL.Component.fromString("BEGIN:VTIMEZONE\\r\\n" + tzdata + "\\r\\nEND:VTIMEZONE")) };`,
     `  ICAL.TimezoneService.IANA_TZDB_VERSION = "${tzdbVersion}";`
   ];
 
