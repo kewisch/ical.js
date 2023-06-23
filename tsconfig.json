@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "stripInternal": true,
+    "useDefineForClassFields": true
+  }
+}
