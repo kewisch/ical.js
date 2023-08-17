@@ -226,6 +226,18 @@ suite('parserv2', function() {
         expected
       );
     });
+
+    test('with quoted value', function() {
+      let input = ';FMTTYPE="text/html":Here is HTML with signs like =;';
+      let expected = {
+        'fmttype': 'text/html'
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.components.vevent)[0],
+        expected
+      );
+    });
   });
 
   test('#_parseMultiValue', function() {
