@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
-    "@octokit/core": "^4.1.0",
+    "@octokit/core": "^5.0.2",
     "@rollup/plugin-babel": "^6.0.0",
     "benchmark": "^2.1.4",
     "c8": "^7.11.0",
