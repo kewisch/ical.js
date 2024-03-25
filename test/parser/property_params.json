@@ -70,6 +70,22 @@
       "mailto:foo@bar.com"
     ],
     [
+      "attendee",
+      {
+        "cn": "X\\"
+      },
+      "cal-address",
+      "mailto:x@example.org"
+    ],
+    [
+      "attendee",
+      {
+        "cn": "Y\\"
+      },
+      "cal-address",
+      "mailto:y@example.org"
+    ],
+    [
       "x-foo",
       {
         "param1": "VAL1"
