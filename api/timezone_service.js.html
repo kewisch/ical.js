@@ -8,26 +8,7 @@
 import Timezone from "./timezone.js";
 import Component from "./component.js";
 
-let zones = {
-};
-
-function lazyZone(name) {
-  return {
-    configurable: true,
-    enumerable: true,
-    get: function() {
-      delete this[name];
-      TimezoneService.reset();
-      return this[name];
-    }
-  };
-}
-
-Object.defineProperties(zones, {
-  Z: lazyZone("Z"),
-  UTC: lazyZone("UTC"),
-  GMT: lazyZone("GMT"),
-});
+let zones = null;
 
 /**
  * @classdesc
@@ -40,6 +21,10 @@ Object.defineProperties(zones, {
  */
 const TimezoneService = {
   get count() {
+    if (zones === null) {
+      return 0;
+    }
+
     return Object.keys(zones).length;
   },
 
@@ -59,6 +44,10 @@ const TimezoneService = {
    * @return {Boolean}        False, when not present
    */
   has: function(tzid) {
+    if (zones === null) {
+      return false;
+    }
+
     return !!zones[tzid];
   },
 
@@ -69,6 +58,10 @@ const TimezoneService = {
    * @return {?ICAL.Timezone} The timezone, or null if not found
    */
   get: function(tzid) {
+    if (zones === null) {
+      this.reset();
+    }
+
     return zones[tzid];
   },
 
@@ -82,6 +75,10 @@ const TimezoneService = {
    *        The initialized zone or vtimezone.
    */
   register: function(name, timezone) {
+    if (zones === null) {
+      this.reset();
+    }
+
     if (name instanceof Component) {
       if (name.name === 'vtimezone') {
         timezone = new Timezone(name);
@@ -103,6 +100,10 @@ const TimezoneService = {
    * @return {?ICAL.Timezone} The removed timezone, or null if not registered
    */
   remove: function(tzid) {
+    if (zones === null) {
+      return null;
+    }
+
     return (delete zones[tzid]);
   }
 };
