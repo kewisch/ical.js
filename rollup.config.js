@@ -4,7 +4,7 @@ import { terser } from 'rollup-plugin-terser';
 export default {
   input: 'lib/ical/module.js',
   output: [
-    { file: 'dist/ical.js',  format: 'es', exports: "default" },
+    { file: 'dist/ical.js', format: 'es', exports: "default" },
     {
       file: 'dist/ical.min.js',
       format: 'es',
