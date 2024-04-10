@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
-/* eslint-env browser, node, mocha */
-
 let crossGlobal = typeof(window) === 'undefined' ? global : window;
 let testSupport = crossGlobal.testSupport = {
   isNode: (typeof(global) !== 'undefined'),

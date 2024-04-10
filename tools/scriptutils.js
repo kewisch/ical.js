@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
- /* eslint-env node */
-
 import { Octokit } from "@octokit/core";
 import fetch from 'node-fetch';
 import yauzl from 'yauzl-promise';
