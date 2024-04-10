@@ -58,7 +58,7 @@ suite('parserv2', function() {
           let data = await testSupport.load(root + path.replace(/vcf|ics$/, 'json'));
           try {
             expected = JSON.parse(data.trim());
-          } catch (e) {
+          } catch {
             throw new Error('expect json is invalid: \n\n' + data);
           }
         });
