@@ -1,5 +1,6 @@
 import { babel } from '@rollup/plugin-babel';
 import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
 
 const LICENSE =
 `/* This Source Code Form is subject to the terms of the Mozilla Public
@@ -50,6 +51,7 @@ export default [{
     }
   ],
   plugins: [
-    babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] })
+    babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
+    typescript({ include: ["lib/ical/*.js"], noForceEmit: true })
   ]
 }];
