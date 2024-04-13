@@ -390,7 +390,9 @@ parse._parseParameters = function(line, start, designSet) {
       }
       value = line.slice(valuePos, pos);
       lastParam = unescapedIndexOf(line, PARAM_DELIMITER, pos);
-      if (lastParam === -1) {
+      let propValuePos = unescapedIndexOf(line, VALUE_DELIMITER, pos);
+      // if either no next parameter or delimeter in property value, let's stop here
+      if (lastParam === -1 || (propValuePos !== -1 &amp;&amp; lastParam > propValuePos)) {
         pos = false;
       }
     } else {
