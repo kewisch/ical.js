@@ -346,7 +346,7 @@ parse._parseParameters = function(line, start, designSet) {
   // then increment pos to find next ;
 
   while ((pos !== false) &amp;&amp;
-         (pos = unescapedIndexOf(line, delim, pos + 1)) !== -1) {
+         (pos = line.indexOf(delim, pos + 1)) !== -1) {
 
     name = line.slice(lastParam + 1, pos);
     if (name.length == 0) {
@@ -372,12 +372,12 @@ parse._parseParameters = function(line, start, designSet) {
     let nextChar = line[pos + 1];
     if (nextChar === '"') {
       valuePos = pos + 2;
-      pos = unescapedIndexOf(line, '"', valuePos);
+      pos = line.indexOf('"', valuePos);
       if (multiValue &amp;&amp; pos != -1) {
           let extendedValue = true;
           while (extendedValue) {
             if (line[pos + 1] == multiValue &amp;&amp; line[pos + 2] == '"') {
-              pos = unescapedIndexOf(line, '"', pos + 3);
+              pos = line.indexOf('"', pos + 3);
             } else {
               extendedValue = false;
             }
@@ -389,8 +389,8 @@ parse._parseParameters = function(line, start, designSet) {
         );
       }
       value = line.slice(valuePos, pos);
-      lastParam = unescapedIndexOf(line, PARAM_DELIMITER, pos);
-      let propValuePos = unescapedIndexOf(line, VALUE_DELIMITER, pos);
+      lastParam = line.indexOf(PARAM_DELIMITER, pos);
+      let propValuePos = line.indexOf(VALUE_DELIMITER, pos);
       // if either no next parameter or delimeter in property value, let's stop here
       if (lastParam === -1 || (propValuePos !== -1 &amp;&amp; lastParam > propValuePos)) {
         pos = false;
@@ -399,8 +399,8 @@ parse._parseParameters = function(line, start, designSet) {
       valuePos = pos + 1;
 
       // move to next ";"
-      let nextPos = unescapedIndexOf(line, PARAM_DELIMITER, valuePos);
-      let propValuePos = unescapedIndexOf(line, VALUE_DELIMITER, valuePos);
+      let nextPos = line.indexOf(PARAM_DELIMITER, valuePos);
+      let propValuePos = line.indexOf(VALUE_DELIMITER, valuePos);
       if (propValuePos !== -1 &amp;&amp; nextPos > propValuePos) {
         // this is a delimiter in the property value, let's stop here
         nextPos = propValuePos;
