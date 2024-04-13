@@ -6,7 +6,7 @@
  * Portions Copyright (C) Philipp Kewisch */
 
 import design from "./design.js";
-import { foldline, unescapedIndexOf } from "./helpers.js";
+import { foldline } from "./helpers.js";
 
 const LINE_ENDING = '\r\n';
 const DEFAULT_VALUE_TYPE = 'unknown';
@@ -133,7 +133,6 @@ stringify.property = function(property, designSet, noFold) {
       value = stringify.paramPropertyValue(value);
     }
 
-
     line += ';' + paramName.toUpperCase() + '=' + value;
   }
 
@@ -218,9 +217,9 @@ stringify.property = function(property, designSet, noFold) {
  */
 stringify.paramPropertyValue = function(value, force) {
   if (!force &amp;&amp;
-      (unescapedIndexOf(value, ',') === -1) &amp;&amp;
-      (unescapedIndexOf(value, ':') === -1) &amp;&amp;
-      (unescapedIndexOf(value, ';') === -1)) {
+      (value.indexOf(',') === -1) &amp;&amp;
+      (value.indexOf(':') === -1) &amp;&amp;
+      (value.indexOf(';') === -1)) {
 
     return value;
   }
