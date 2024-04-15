@@ -343,7 +343,7 @@ class RecurIterator {
    * Retrieve the next occurrence from the iterator.
    * @return {ICAL.Time}
    */
-  next() {
+  next(again = false) {
     let before = (this.last ? this.last.clone() : null);
 
     if ((this.rule.count &amp;&amp; this.occurrence_number >= this.rule.count) ||
@@ -397,10 +397,11 @@ class RecurIterator {
              this.last.compare(this.dtstart) &lt; 0 ||
              !valid);
 
-    // TODO is this valid?
     if (this.last.compare(before) == 0) {
-      throw new Error("Same occurrence found twice, protecting " +
-                      "you from death by recursion");
+      if (again) {
+        throw new Error("Same occurrence found twice, protecting you from death by recursion");
+      }
+      this.next(true);
     }
 
     if (this.rule.until &amp;&amp; this.last.compare(this.rule.until) > 0) {

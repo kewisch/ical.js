@@ -105,12 +105,13 @@ class Recur {
 
       if (ucname in partDesign) {
         let partArr = value.split(',');
-        let partArrIdx = 0;
-        let partArrLen = partArr.length;
+        let partSet = new Set();
 
-        for (; partArrIdx &lt; partArrLen; partArrIdx++) {
-          partArr[partArrIdx] = partDesign[ucname](partArr[partArrIdx]);
+        for (let part of partArr) {
+          partSet.add(partDesign[ucname](part));
         }
+        partArr = [...partSet];
+
         dict[name] = (partArr.length == 1 ? partArr[0] : partArr);
       } else if (ucname in optionDesign) {
         optionDesign[ucname](value, dict, fmtIcal);
