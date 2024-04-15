@@ -642,6 +642,39 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // Weirdly ordered BYMONTHDAY. Occurrences should be in chronological order.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=28,-4,11', {
+        dtStart: '2022-01-01T08:00:00',
+        dates: [
+          '2022-01-11T08:00:00',
+          '2022-01-28T08:00:00',
+          '2022-02-11T08:00:00',
+          '2022-02-25T08:00:00',
+          '2022-02-28T08:00:00',
+          '2022-03-11T08:00:00',
+          '2022-03-28T08:00:00',
+          '2022-04-11T08:00:00',
+          '2022-04-27T08:00:00',
+          '2022-04-28T08:00:00',
+        ]
+      });
+
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-4,28,11', {
+        dtStart: '2022-01-01T08:00:00',
+        dates: [
+          '2022-01-11T08:00:00',
+          '2022-01-28T08:00:00',
+          '2022-02-11T08:00:00',
+          '2022-02-25T08:00:00',
+          '2022-02-28T08:00:00',
+          '2022-03-11T08:00:00',
+          '2022-03-28T08:00:00',
+          '2022-04-11T08:00:00',
+          '2022-04-27T08:00:00',
+          '2022-04-28T08:00:00',
+        ]
+      });
+
       // Last day of the month, monthly.
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1', {
         dtStart: '2015-01-01T08:00:00',
@@ -1050,6 +1083,36 @@ suite('recur_iterator', function() {
           '2013-02-28',
           '2013-03-01',
           '2013-03-02',
+        ]
+      });
+
+      // BYYEARDAY with positive and negative rules.
+      // Occurrences should be in chronological order.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=359,-7', {
+        dtStart: '2024-01-01',
+        dates: [
+          '2024-12-24', // 359
+          '2024-12-25', // -7
+          '2025-12-25',
+          '2026-12-25',
+          '2027-12-25',
+          '2028-12-24',
+          '2028-12-25',
+        ]
+      });
+
+      // BYYEARDAY with negative and positive rules.
+      // Occurrences should be in chronological order.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-7,359', {
+        dtStart: '2024-01-01',
+        dates: [
+          '2024-12-24', // 359
+          '2024-12-25', // -7
+          '2025-12-25',
+          '2026-12-25',
+          '2027-12-25',
+          '2028-12-24',
+          '2028-12-25',
         ]
       });
 
