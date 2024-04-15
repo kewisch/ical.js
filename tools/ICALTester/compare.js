@@ -3,22 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2015 */
 
-var fs = require('fs');
-var spawn = require('child_process').spawn;
-
-var diff = require('difflet')({ indent: true, comments: true });
-var Tester = require('./lib/ICALTester');
-var ICAL = require('../..');
+import fs from "fs";
+import { spawn } from "child_process";
+import difflet from "difflet";
+import Tester from "./lib/ICALTester.js";
+import ICAL from "../../lib/ical/module.js";
 
 function setupHandlers(binPath) {
   Tester.addHandler("icaljs", function(rule, dtstart, max, callback) {
-    var iter = rule.iterator(dtstart);
-    var occ = 0;
-    var start = new Date();
+    let iter = rule.iterator(dtstart);
+    let occ = 0;
+    let start = new Date();
 
-    var results = [];
+    let results = [];
     (function loop() {
-      var next, diff;
+      let next, diff;
 
       if (++occ > max) {
         return callback(results);
@@ -46,9 +45,9 @@ function setupHandlers(binPath) {
   });
 
   Tester.addHandler("other", function(rule, dtstart, max, callback) {
-    var results = [];
-    var ptimer = null;
-    var recur = spawn(binPath, [rule.toString(), dtstart.toICALString(), max]);
+    let results = [];
+    let ptimer = null;
+    let recur = spawn(binPath, [rule.toString(), dtstart.toICALString(), max]);
 
     recur.stdout.on('data', function(data) {
       Array.prototype.push.apply(results, data.toString().split("\n").slice(0, -1));
@@ -88,16 +87,17 @@ function main() {
     usage();
   }
 
-  var rulesFile = fs.statSync(process.argv[2]) && process.argv[2];
-  var binPath = fs.statSync(process.argv[3]) && process.argv[3];
-  var ruleData = JSON.parse(fs.readFileSync(rulesFile));
+  let rulesFile = fs.statSync(process.argv[2]) && process.argv[2];
+  let binPath = fs.statSync(process.argv[3]) && process.argv[3];
+  let ruleData = JSON.parse(fs.readFileSync(rulesFile));
 
-  var dtstart = ICAL.Time.fromString("2014-11-11T08:00:00");
-  var max = 10;
+  let dtstart = ICAL.Time.fromString("2014-11-11T08:00:00");
+  let max = 10;
 
   setupHandlers(binPath);
 
   Tester.run(ruleData, dtstart, max, function(err, results) {
+    let diff = difflet({ indent: true, comments: true });
     console.log(diff.compare(results.other, results.icaljs));
   });
 }

@@ -9,6 +9,7 @@ export default [
       "!lib/ical/**/*.{js,cjs}",
       "!test/**/*.{js,cjs}",
       "!tools/scriptutils.js",
+      "!tools/ICALTester/**/*.js",
       "!eslint.config.js",
       "!rollup.config.js",
       "!karma.conf.cjs"
@@ -360,7 +361,7 @@ export default [
     }
   },
   {
-    files: ["tools/scriptutils.js", "test/support/perfReporter.cjs", "karma.conf.cjs"],
+    files: ["tools/scriptutils.js", "test/support/perfReporter.cjs", "karma.conf.cjs", "tools/ICALTester/**/*.js"],
     languageOptions: {
       globals: globals.node
     }
