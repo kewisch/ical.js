@@ -80,6 +80,46 @@ suite('ICAL.stringify', function() {
       delete ICAL.design.defaultSet.property.custom;
     });
 
+    test('property with multiple parameter values', function() {
+      ICAL.design.defaultSet.property.custom = { defaultType: 'text' };
+      ICAL.design.defaultSet.param.type = { multiValue: ',' };
+      let subject = new ICAL.Property('custom');
+      subject.setParameter('type', ['ABC', 'XYZ']);
+      subject.setValue('some value');
+      assert.equal(subject.toICALString(), 'CUSTOM;TYPE=ABC,XYZ:some value');
+      delete ICAL.design.defaultSet.property.custom;
+      delete ICAL.design.defaultSet.param.type;
+    });
+
+    test('property with multiple parameter values which must be escaped', function() {
+      ICAL.design.defaultSet.property.custom = { defaultType: 'text' };
+      ICAL.design.defaultSet.param.type = { multiValue: ',' };
+      let subject = new ICAL.Property('custom');
+      subject.setParameter('type', ['ABC', '--"XYZ"--']);
+      subject.setValue('some value');
+      assert.equal(subject.toICALString(), "CUSTOM;TYPE=ABC,--^'XYZ^'--:some value");
+      delete ICAL.design.defaultSet.property.custom;
+      delete ICAL.design.defaultSet.param.type;
+    });
+
+    test('property with multiple parameter values with enabled quoting', function() {
+      ICAL.design.defaultSet.property.custom = { defaultType: 'text' };
+      ICAL.design.defaultSet.param.type = { multiValue: ',', multiValueSeparateDQuote: true };
+      let subject = new ICAL.Property('custom');
+      subject.setParameter('type', ['ABC', 'XYZ']);
+      subject.setValue('some value');
+      assert.equal(subject.toICALString(), 'CUSTOM;TYPE="ABC","XYZ":some value');
+      delete ICAL.design.defaultSet.property.custom;
+      delete ICAL.design.defaultSet.param.type;
+    });
+
+    test('stringify property value containing "escaped" semicolons, commas, colons', function() {
+      let subject = new ICAL.Property('attendee');
+      subject.setParameter('cn', 'X\\:');
+      subject.setValue('mailto:id');
+      assert.equal(subject.toICALString(), 'ATTENDEE;CN="X\\:":mailto:id');
+    });
+
     test('rfc6868 roundtrip', function() {
       let subject = new ICAL.Property('attendee');
       let input = "caret ^ dquote \" newline \n end";
@@ -88,6 +128,19 @@ suite('ICAL.stringify', function() {
       subject.setValue('mailto:id');
       assert.equal(subject.toICALString(), expected);
       assert.equal(ICAL.parse.property(expected)[1].cn, input);
+    });
+
+    test('roundtrip for property with multiple parameters', function() {
+      ICAL.design.defaultSet.property.custom = { defaultType: 'text' };
+      ICAL.design.defaultSet.param.type = { multiValue: ',', multiValueSeparateDQuote: true };
+      let subject = new ICAL.Property('custom');
+      subject.setParameter('type', ['ABC', '--"123"--']);
+      subject.setValue('some value');
+      assert.lengthOf(ICAL.parse.property(subject.toICALString())[1].type, 2);
+      assert.include(ICAL.parse.property(subject.toICALString())[1].type, 'ABC');
+      assert.include(ICAL.parse.property(subject.toICALString())[1].type, '--"123"--');
+      delete ICAL.design.defaultSet.property.custom;
+      delete ICAL.design.defaultSet.param.type;
     });
 
     test('folding', function() {

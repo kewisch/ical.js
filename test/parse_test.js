@@ -58,7 +58,7 @@ suite('parserv2', function() {
           let data = await testSupport.load(root + path.replace(/vcf|ics$/, 'json'));
           try {
             expected = JSON.parse(data.trim());
-          } catch (e) {
+          } catch {
             throw new Error('expect json is invalid: \n\n' + data);
           }
         });
@@ -223,6 +223,18 @@ suite('parserv2', function() {
 
       assert.deepEqual(
         subject._parseParameters(input, 0, ICAL.design.components.vcard)[0],
+        expected
+      );
+    });
+
+    test('with quoted value', function() {
+      let input = ';FMTTYPE="text/html":Here is HTML with signs like =;';
+      let expected = {
+        'fmttype': 'text/html'
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.components.vevent)[0],
         expected
       );
     });

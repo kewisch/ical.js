@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
-/* eslint-env browser, node, mocha */
-
 let crossGlobal = typeof(window) === 'undefined' ? global : window;
 let testSupport = crossGlobal.testSupport = {
   isNode: (typeof(global) !== 'undefined'),
@@ -19,7 +17,7 @@ if (testSupport.isKarma) {
 /* eslint-disable no-var, no-redeclare */
 if (testSupport.isNode) {
   var ICAL = (await import("../../lib/ical/module.js")).default;
-  var chai = (await import("chai")).default;
+  var chai = await import("chai");
   var Benchmark = (await import("benchmark")).default;
   var { URL } = await import("url");
   var { readFile, readdir } = (await import('fs/promises'));

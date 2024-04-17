@@ -620,6 +620,35 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // Last day and 31st day of the month. The last day could be the 31st,
+      // and this shouldn't throw an error.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1,31', {
+        dtStart: '2022-01-01T08:00:00',
+        dates: [
+          '2022-01-31T08:00:00',
+          '2022-02-28T08:00:00',
+          '2022-03-31T08:00:00',
+          '2022-04-30T08:00:00',
+          '2022-05-31T08:00:00',
+          '2022-06-30T08:00:00'
+        ]
+      });
+
+      // 31st day of the month, specified more than once. The repeated values
+      // should be collapsed to one.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31,31,31,31', {
+        dtStart: '2022-01-01T08:00:00',
+        dates: [
+          '2022-01-31T08:00:00',
+          '2022-03-31T08:00:00',
+          '2022-05-31T08:00:00',
+          '2022-07-31T08:00:00',
+          '2022-08-31T08:00:00',
+          '2022-10-31T08:00:00',
+          '2022-12-31T08:00:00',
+        ]
+      });
+
       // Last day of the month, monthly.
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1', {
         dtStart: '2015-01-01T08:00:00',

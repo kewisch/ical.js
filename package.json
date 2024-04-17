@@ -1,6 +1,6 @@
 {
   "name": "ical.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Philipp Kewisch",
   "contributors": [
     "Github Contributors (https://github.com/kewisch/ical.js/graphs/contributors)"
@@ -21,24 +21,27 @@
     "parser"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11",
-    "@octokit/core": "^4.1.0",
-    "@rollup/plugin-babel": "^6.0.0",
+    "@babel/preset-env": "^7.24.3",
+    "@eslint/js": "^9.0.0",
+    "@octokit/core": "^6.0.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@stylistic/eslint-plugin": "^1.7.0",
     "benchmark": "^2.1.4",
-    "c8": "^7.11.0",
-    "chai": "^4.2.0",
-    "clean-jsdoc-theme": "^4.2.7",
-    "eslint": "^8.9.0",
+    "c8": "^9.1.0",
+    "chai": "^5.1.0",
+    "clean-jsdoc-theme": "^4.2.18",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
     "jsdoc": "^4.0.2",
-    "karma": "^6.4.0",
+    "karma": "^6.4.3",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^2.0.1",
-    "karma-sauce-launcher": "^4.1.4",
+    "karma-sauce-launcher": "^4.3.6",
     "karma-spec-reporter": "^0.0.36",
-    "mocha": "^10.0.0",
-    "node-fetch": "^3.2.0",
+    "mocha": "^10.3.0",
+    "node-fetch": "^3.3.2",
     "rollup-plugin-terser": "^7.0.2",
-    "yauzl-promise": "^2.1.3"
+    "yauzl-promise": "^4.0.0"
   },
   "license": "MPL-2.0",
   "engine": {
@@ -52,7 +55,7 @@
     "test-browser": "karma start karma.conf.cjs",
     "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
     "build": "rollup -c",
-    "lint": "eslint lib/ical test tools/scriptutils.js",
+    "lint": "eslint",
     "jsdoc": "rm -rf docs/api && jsdoc --configure jsdoc.json --verbose",
     "validator": "sed -e 's#unpkg.com/ical.js#unpkg.com/ical.js@'`grep '\"version\"' package.json | cut -d '\"' -f 4`'/dist/ical.js#' tools/validator.html > docs/validator.html && echo 'Validator written to docs/validator.html'",
     "ghpages": "npm run jsdoc && npm run validator"

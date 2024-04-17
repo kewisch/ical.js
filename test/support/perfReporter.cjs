@@ -47,8 +47,8 @@ class MyReporter extends Base {
         Base.consoleLog(this.indent() + test._benchCycle.join("\n" + this.indent()));
         this._indents -= 2;
       })
-      .on(EVENT_TEST_FAIL, (test, err) => {
-        Base.consoleLog(this.indent() + color('fail', '  %d) %s'), ++this._n, test.title)
+      .on(EVENT_TEST_FAIL, (test) => {
+        Base.consoleLog(this.indent() + color('fail', '  %d) %s'), ++this._n, test.title);
       })
       .once(EVENT_RUN_END, this.epilogue.bind(this));
   }

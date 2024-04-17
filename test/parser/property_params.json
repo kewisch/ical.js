@@ -61,6 +61,14 @@
     [
       "attendee",
       {
+        "cn": "^Ж 4 <>\\'\"\n:"
+      },
+      "cal-address",
+      "mailto:foo9@bar"
+    ],
+    [
+      "attendee",
+      {
         "role": "REQ-PARTICIPANT;foo",
         "delegated-from": "mailto:bar@baz.com",
         "partstat": "ACCEPTED",
@@ -68,6 +76,22 @@
       },
       "cal-address",
       "mailto:foo@bar.com"
+    ],
+    [
+      "attendee",
+      {
+        "cn": "X\\"
+      },
+      "cal-address",
+      "mailto:x@example.org"
+    ],
+    [
+      "attendee",
+      {
+        "cn": "Y\\"
+      },
+      "cal-address",
+      "mailto:y@example.org"
     ],
     [
       "x-foo",

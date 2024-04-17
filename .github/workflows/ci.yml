@@ -15,15 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['16', '17']
+        node:
+          - lts/*
+          - node
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "Setup node"
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+          cache: npm
 
       - name: "npm ci"
         run: npm ci
@@ -48,17 +51,19 @@ jobs:
       #   run: npm run test-browser
 
       - name: "Coverage Push"
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: unit-${{ matrix.node }}
           parallel: true
 
       - name: "Artifacts"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
+        if: matrix.node == 'node'
         with:
           name: distribution
           path: dist/*.js
+          if-no-files-found: error
 
 
   ghpages:
@@ -67,12 +72,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "Setup node"
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 17
+          node-version: latest
+          cache: npm
 
       - name: "npm ci"
         run: npm ci
@@ -91,12 +97,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: "Setup node"
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 17
+          node-version: latest
+          cache: npm
 
       - name: "npm ci"
         run: npm ci
@@ -124,7 +131,7 @@ jobs:
           node tools/scriptutils.js generate-zones tools/tzdb > dist/ical.timezones.js
 
       - name: "Artifacts"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: timezones
           path: dist/ical.timezones.js
@@ -134,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.github_token }}
           parallel-finished: true

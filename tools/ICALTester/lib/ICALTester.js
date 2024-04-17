@@ -9,12 +9,12 @@
  * @module ICALTester
  */
 
-var ICAL = require('../../..');
-var async = require('async');
+import ICAL from "../../../lib/ical/module.js";
+import async from "async";
 
 function range(min, max, nozero) {
-  var res = [];
-  for (var i = min; i <= max; i++) {
+  let res = [];
+  for (let i = min; i <= max; i++) {
     if (i == 0 && nozero) {
       continue;
     }
@@ -32,8 +32,8 @@ function randInt(min, max) {
 }
 
 function randList(list, count) {
-  var vals = list.slice();
-  var res = [];
+  let vals = list.slice();
+  let res = [];
 
   while (count--) {
     res.push(vals.splice(randInt(0, vals.length), 1)[0]);
@@ -42,14 +42,15 @@ function randList(list, count) {
 }
 
 function randValues(designdata) {
-  var count = randInt(1, designdata.length);
+  let count = randInt(1, designdata.length);
   return randList(designdata, count);
 }
 
 function sortByday(aRules, aWeekStart) {
-  var thisobj = {
+  let thisobj = {
     ruleDayOfWeek: ICAL.RecurIterator.prototype.ruleDayOfWeek,
-    sort_byday_rules: ICAL.RecurIterator.prototype.sort_byday_rules
+    sort_byday_rules: ICAL.RecurIterator.prototype.sort_byday_rules,
+    rule: { wkst: "MO" }
   };
 
   return thisobj.sort_byday_rules(aRules, aWeekStart || ICAL.Time.MONDAY);
@@ -61,7 +62,7 @@ function sortNumeric(a, b) {
 
 function substitute(rules) {
   return rules.map(function(r) {
-    for (var key in r) {
+    for (let key in r) {
       if (r[key] == "%") {
         r[key] = generators[key](r);
       }
@@ -75,7 +76,7 @@ function addHandler(name, callback) {
 }
 
 function runHandler(handler, rules, dtstart, max, callback) {
-  var res = {};
+  let res = {};
   async.eachLimit(rules, CONCURRENCY, function(rule, eachcb) {
     handler(rule, dtstart, max, function(err, result) {
       res[rule] = err || result;
@@ -87,22 +88,22 @@ function runHandler(handler, rules, dtstart, max, callback) {
 }
 
 function run(ruleData, dtstart, max, callback) {
-  var runner = (CONCURRENCY == 1 ? async.series : async.parallel);
-  var boundAsyncHandler = {};
-  var rules = substitute(ruleData);
+  let runner = (CONCURRENCY == 1 ? async.series : async.parallel);
+  let boundAsyncHandler = {};
+  let rules = substitute(ruleData);
   Object.keys(asyncHandler).forEach(function(k) {
     boundAsyncHandler[k] = runHandler.bind(null, asyncHandler[k], rules, dtstart, max);
   });
   runner(boundAsyncHandler, callback);
 }
 
-var CONCURRENCY = 2;
-var MAX_EXECUTION_TIME = 1000;
-var asyncHandler = {};
+let CONCURRENCY = 2;
+let MAX_EXECUTION_TIME = 1000;
+let asyncHandler = {};
 
-var day_names = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
-var freq_values = ['SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
-var design = {
+let day_names = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+let freq_values = ['SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
+let design = {
   FREQ: freq_values,
 
   BYSECOND: range(0, 60),
@@ -124,13 +125,13 @@ var design = {
   WKST: day_names
 };
 
-var generators = {
+let generators = {
   byday: function(rule) {
-    var designdata = design.BYDAY[rule.freq];
+    let designdata = design.BYDAY[rule.freq];
 
-    var daycount = randInt(1, designdata[1].length);
-    var days = randList(designdata[1], daycount);
-    var prefix = randList(designdata[0], daycount);
+    let daycount = randInt(1, designdata[1].length);
+    let days = randList(designdata[1], daycount);
+    let prefix = randList(designdata[0], daycount);
 
     sortByday(days, rule.wkst);
 
@@ -151,20 +152,20 @@ var generators = {
  * gjslint complains about missing docs
  * @ignore
  */
-module.exports = {
+export default {
   /**
    * The number of concurrent threads to use
    * @type {Number}
    */
   get CONCURRENCY() { return CONCURRENCY; },
-  set CONCURRENCY(v) { return (CONCURRENCY = v); },
+  set CONCURRENCY(v) { CONCURRENCY = v; },
 
   /**
    * The maximum execution time
    * @type {Number}
    */
   get MAX_EXECUTION_TIME() { return MAX_EXECUTION_TIME; },
-  set MAX_EXECUTION_TIME(v) { return (MAX_EXECUTION_TIME = v); },
+  set MAX_EXECUTION_TIME(v) { MAX_EXECUTION_TIME = v; },
 
   generators: generators,
   addHandler: addHandler,

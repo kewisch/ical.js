@@ -5,15 +5,17 @@
 
 LIBICAL_BASE ?= $(CURDIR)/../libical
 LIBICAL_BUILD = $(LIBICAL_BASE)/build
-LDFLAGS = -L $(LIBICAL_BUILD)/lib -lical
+LDFLAGS = $(LIBICAL_BUILD)/lib/libical.a
 CFLAGS = -I $(LIBICAL_BUILD)/src -g
+
+LIBICAL_DEFINES = -DSTATIC_ONLY=True  -DENABLE_GTK_DOC=OFF
 
 LIBICAL_SOURCES = support/libical-recur.c
 LIBICAL_PROG = support/libical-recur
 
 all: libical
 
-libical: $(LIBICAL_BUILD)
+libical: $(LIBICAL_BUILD)/lib/libical.a
 	$(CC) -o $(LIBICAL_PROG) $(LIBICAL_SOURCES) $(LDFLAGS) $(CFLAGS)
 
 clean:
@@ -22,7 +24,9 @@ clean:
 run:
 	node index.js
 
-$(LIBICAL_BUILD):
+$(LIBICAL_BASE):
 	cd $(dir $(LIBICAL_BASE)) && git clone https://github.com/libical/libical
-	mkdir  $(LIBICAL_BUILD)
-	cd $(LIBICAL_BUILD) && cmake .. && make
+
+$(LIBICAL_BUILD)/lib/libical.a: $(LIBICAL_BASE)
+	mkdir -p $(LIBICAL_BUILD)
+	cd $(LIBICAL_BUILD) && cmake $(LIBICAL_DEFINES) .. && make
