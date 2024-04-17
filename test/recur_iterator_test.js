@@ -144,6 +144,13 @@ suite('recur_iterator', function() {
       let start = ICAL.Time.fromString(options.dtStart);
       let recur = ICAL.Recur.fromString(ruleString);
 
+      if (options.throws) {
+        assert.throws(function() {
+          recur.iterator(start);
+        });
+        return;
+      }
+
       let iterator = recur.iterator(start);
 
       if (options.noInstance) {
@@ -688,7 +695,7 @@ suite('recur_iterator', function() {
       // Invalid rule. There's never a 31st of Feburary, check that this fails.
       testRRULE('FREQ=MONTHLY;INTERVAL=12;BYMONTHDAY=31', {
         dtStart: '2022-02-01T08:00:00',
-        noInstance: true,
+        throws: true,
       });
 
       // monthly + by month
