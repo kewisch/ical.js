@@ -143,13 +143,21 @@ suite('recur_iterator', function() {
 
       let start = ICAL.Time.fromString(options.dtStart);
       let recur = ICAL.Recur.fromString(ruleString);
+
       if (options.throws) {
         assert.throws(function() {
           recur.iterator(start);
         });
         return;
       }
+
       let iterator = recur.iterator(start);
+
+      if (options.noInstance) {
+        assert.equal(iterator.next(), null);
+        assert.ok(iterator.completed);
+        return;
+      }
 
       let inc = 0;
       let dates = [];
@@ -1079,6 +1087,13 @@ suite('recur_iterator', function() {
         dates: [
           '2019-01-07T08:00:00'
         ]
+      });
+
+      // Invalid recurrence rule. The first Monday can never fall later than the
+      // 7th.
+      testRRULE('FREQ=YEARLY;BYMONTHDAY=15,16,17,18,19,20,21;BYDAY=1MO', {
+        dtStart: '2015-01-01T08:00:00',
+        noInstance: true,
       });
 
       // Tycho brahe days - yearly, byYearDay with negative offsets
