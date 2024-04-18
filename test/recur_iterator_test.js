@@ -155,6 +155,7 @@ suite('recur_iterator', function() {
 
       if (options.noInstance) {
         assert.equal(iterator.next(), null);
+        assert.ok(iterator.completed);
         return;
       }
 
