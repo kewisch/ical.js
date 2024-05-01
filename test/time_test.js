@@ -1632,7 +1632,6 @@ suite('icaltime', function() {
         end: Time.fromString("1970-01-02T03:04:07Z")
       });
 
-
       let dt = Time.fromString('1970-01-02T03:04:05Z');
 
       assert.equal(dt.compare(periodbefore), 1);
