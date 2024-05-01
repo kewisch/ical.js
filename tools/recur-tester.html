@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      body {
+        font-family: 'Verdana', sans-serif;
+        color: #333;
+        background-color: #f4f4f4;
+        padding: 20px;
+        font-size: 16px;
+        width: 42em;
+      }
+      input[type="submit"] {
+        font-size: 1.2rem;
+        border-radius: 5px;
+        border: 1px solid black;
+        margin-top: 1ex;
+        padding: 10px;
+      }
+      input[type="text"] {
+        width: 100%;
+        font-family: monospace;
+        padding: 5px;
+      }
+      input[type="datetime-local"] {
+        font-family: monospace;
+        padding: 5px;
+      }
+      form > div {
+        margin-bottom: 10px;
+      }
+    </style>
+    <script type="module">
+      import ICAL from "https://unpkg.com/ical.js";
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const now = new Date();
+        now.setMinutes(0);
+        now.setSeconds(0);
+        now.setMilliseconds(0);
+        const oneMonthLater = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+
+        // Format dates for input fields
+        const dtstartValue = now.toISOString().slice(0, 16); // Formats to YYYY-MM-DDTHH:MM
+        const rangeEndValue = oneMonthLater.toISOString().slice(0, 16); // Formats to YYYY-MM-DDTHH:MM
+
+        // Set default values
+        document.getElementById('dtstart').value = dtstartValue;
+        document.getElementById('rangeStart').value = dtstartValue;
+        document.getElementById('rangeEnd').value = rangeEndValue;
+      });
+
+      document.getElementById("form").addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        let dtstart = new Date(document.getElementById('dtstart').value);
+        let rruleString = document.getElementById('rrule').value;
+        let rangeStart = new Date(document.getElementById('rangeStart').value);
+        let rangeEnd = new Date(document.getElementById('rangeEnd').value);
+
+         if (isNaN(dtstart.getTime()) || !rruleString || isNaN(rangeStart.getTime()) || isNaN(rangeEnd.getTime())) {
+          alert('Please fill all fields correctly.');
+          return;
+        }
+
+        let icDtStart = ICAL.Time.fromJSDate(dtstart);
+        let icRangeEnd = ICAL.Time.fromJSDate(rangeEnd);
+        let icRangeStart = ICAL.Time.fromJSDate(rangeStart);
+
+        if (rruleString.startsWith("RRULE;")) {
+          rruleString = rruleString.substring(6);
+        }
+
+        let rrule = ICAL.Recur.fromString(`RRULE;${rruleString}`);
+        let vevent = new ICAL.Component('vevent');
+        vevent.addPropertyWithValue('dtstart', icDtStart);
+        vevent.addPropertyWithValue('rrule', rrule);
+
+        let iter = rrule.iterator(icDtStart);
+
+        let occurrences = [];
+        let next;
+        while ((next = iter.next())) {
+            if (next.compare(icRangeStart) < 0) {
+               continue;
+            } else if (next.compare(icRangeEnd) > 0) {
+                break;
+            }
+
+            occurrences.push(next.toString());
+        }
+
+        console.log(dtstart, rangeStart);
+
+        document.getElementById("testcase").textContent =
+          `// <describe testcase here>\n` +
+          `testRRULE('${rruleString}', {\n` +
+          (dtstart.getTime() == rangeStart.getTime() ? ""
+      : `  dtStart: '${icRangeStart.toString()}',\n`
+          ) +
+          "  dates: [\n" +
+          `    '${occurrences.join("',\n    '")}'\n` +
+          "  ]\n" +
+          "});";
+
+        document.getElementById('occurrences').textContent = occurrences.join('\n');
+      });
+    </script>
+  </head>
+  <body>
+    <form id="form" method="post" action="#">
+      <h1>Recurrence Rule Tester</h1>
+      <p id="descr">
+        This tool allows you to calculate occurrences for RRULEs and prepare testcases for them. It
+        will use ICAL.js from https://unpkg.com/ical.js. <b>Be sure to manually validate the
+        occurrences, as otherwise it wouldn't be a good test</b>.
+      </p>
+      <div>
+        <label for="dtstart">DTSTART:</label>
+        <input type="datetime-local" id="dtstart">
+      </div>
+      <div>
+        <label for="rrule">RRULE:</label>
+        <input type="text" id="rrule">
+      </div>
+      <div>
+        <label for="rangeStart">Expand range:</label>
+        <input type="datetime-local" id="rangeStart">
+        <label for="rangeEnd">–</label>
+        <input type="datetime-local" id="rangeEnd">
+      </div>
+      <input type="submit" id="calculate" value="Calculate Occurrences"/><br/>
+      <hr>
+      <pre id="occurrences"></pre>
+      <hr>
+      <pre id="testcase"></pre>
+    </form>
+  </body>
+</html>

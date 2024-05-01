@@ -31,6 +31,7 @@
     "chai": "^5.1.0",
     "clean-jsdoc-theme": "^4.2.18",
     "eslint": "^9.0.0",
+    "eslint-plugin-html": "^8.1.1",
     "globals": "^15.0.0",
     "jsdoc": "^4.0.2",
     "karma": "^6.4.3",
@@ -57,8 +58,9 @@
     "build": "rollup -c",
     "lint": "eslint",
     "jsdoc": "rm -rf docs/api && jsdoc --configure jsdoc.json --verbose",
-    "validator": "sed -e 's#unpkg.com/ical.js#unpkg.com/ical.js@'`grep '\"version\"' package.json | cut -d '\"' -f 4`'/dist/ical.js#' tools/validator.html > docs/validator.html && echo 'Validator written to docs/validator.html'",
-    "ghpages": "npm run jsdoc && npm run validator"
+    "validator": "node tools/scriptutils.js replace-unpkg tools/validator.html docs/validator.html",
+    "recurtester": "node tools/scriptutils.js replace-unpkg tools/recur-tester.html docs/recur-tester.html",
+    "ghpages": "npm run jsdoc && npm run validator && npm run recurtester"
   },
   "exports": {
     "import": "./dist/ical.min.js",

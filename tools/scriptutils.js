@@ -132,6 +132,13 @@ async function get_tzdb_version() {
   return match[1];
 }
 
+async function replace_unpkg(input, output) {
+  let content = await fs.readFile(input, { encoding: "utf-8" });
+  let pkg = JSON.parse(await fs.readFile(path.join(import.meta.dirname, "..", "package.json"), { encoding: "utf-8" }));
+  await fs.writeFile(output, content.replace(/unpkg.com\/ical.js/g, `unpkg.com/ical.js@${pkg.version}/dist/ical.js`));
+  console.log(`unpkg link from ${input} updated to ${pkg.version} and written to ${output}`);
+}
+
 async function main() {
   switch (process.argv[2]) {
     case "tzdb-version":
@@ -143,6 +150,8 @@ async function main() {
     case "performance-downloader":
       await performance_downloader();
       break;
+    case "replace-unpkg":
+      await replace_unpkg(process.argv[3], process.argv[4]);
   }
 }
 main();

@@ -4,6 +4,7 @@ bower_components
 dist/
 docs/api/
 docs/validator.html
+docs/recur-tester.html
 tools/vzic/
 tools/tzdb/
 tools/libical/

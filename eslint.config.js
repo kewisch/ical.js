@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import globals from "globals";
 import stylistic from '@stylistic/eslint-plugin';
+import html from "eslint-plugin-html";
 
 export default [
   {
@@ -373,6 +374,15 @@ export default [
     },
     rules: {
       "@stylistic/quote-props": ["error", "consistent-as-needed"]
+    }
+  },
+  {
+    files: ["tools/**/*.html"],
+    plugins: {
+      "@html": html
+    },
+    languageOptions: {
+      globals: globals.browser
     }
   }
 ];
