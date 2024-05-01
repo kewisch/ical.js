@@ -1617,6 +1617,28 @@ suite('icaltime', function() {
       assert.equal(a.compare(b), 1);
       assert.equal(b.compare(a), -1);
     });
+
+    test("compare with period", function() {
+      let periodbefore = ICAL.Period.fromData({
+        start: Time.fromString("1970-01-02T03:04:03Z"),
+        end: Time.fromString("1970-01-02T03:04:04Z")
+      });
+      let periodat = ICAL.Period.fromData({
+        start: Time.fromString("1970-01-02T03:04:05Z"),
+        end: Time.fromString("1970-01-02T03:04:05Z")
+      });
+      let periodafter = ICAL.Period.fromData({
+        start: Time.fromString("1970-01-02T03:04:06Z"),
+        end: Time.fromString("1970-01-02T03:04:07Z")
+      });
+
+
+      let dt = Time.fromString('1970-01-02T03:04:05Z');
+
+      assert.equal(dt.compare(periodbefore), 1);
+      assert.equal(dt.compare(periodat), 0);
+      assert.equal(dt.compare(periodafter), -1);
+    });
   });
 
   test('cache cleared', function() {
