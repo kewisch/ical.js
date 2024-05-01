@@ -1,0 +1,19 @@
+{
+  "name": "icaltester",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Philipp Kewisch",
+  "contributors": [
+    "Github Contributors (https://github.com/kewisch/ical.js/graphs/contributors)"
+  ],
+  "description": "Compare ical.js recurrence against other implementations",
+  "license": "MPL-2.0",
+  "main": "compare.js",
+  "type": "module",
+  "devDependencies": {
+    "difflet": "^1.0.1"
+  },
+  "scripts": {
+    "compare": "node compare.js rules.json support/libical-recur"
+  }
+}
