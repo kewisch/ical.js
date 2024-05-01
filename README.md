@@ -17,14 +17,14 @@ bugfixing this library, please check if the fix can be upstreamed to libical.
 ## Sandbox and Validator
 
 If you want to try out ICAL.js right now, there is a
-[jsfiddle](http://jsfiddle.net/kewisch/227efboL/) set up and ready to use. Read on for documentation
-and example links.
+[jsfiddle](http://jsfiddle.net/kewisch/227efboL/) set up and ready to use.
 
-There is also a validator that demonstrates how to use the library in a webpage in the
-[tools/](https://github.com/kewisch/ical.js/tree/main/tools) subdirectory.
+The ICAL validator demonstrates how to use the library in a webpage, and helps verify iCalendar and
+jCal. [Try the validator online](http://kewisch.github.io/ical.js/validator.html)
 
-[Try the validator online](http://kewisch.github.io/ical.js/validator.html), it always uses the
-latest release of ICAL.js.
+The recurrence tester calculates occurrences based on a RRULE. It can be used to aid in
+creating test cases for the recurrence iterator.
+[Try the recurrence tester online](https://kewisch.github.io/ical.js/recur-tester.html).
 
 ## Installing
 

@@ -41,20 +41,20 @@
       }
 
       window.validate = function validate() {
-        var duration = document.getElementById("duration");
+        let duration = document.getElementById("duration");
 
-        var data = document.getElementById("data");
+        let data = document.getElementById("data");
 
-        var error = document.getElementById("error");
-        var jcalres = document.getElementById("jcal");
-        var icalres = document.getElementById("ical");
+        let error = document.getElementById("error");
+        let jcalres = document.getElementById("jcal");
+        let icalres = document.getElementById("ical");
 
         duration.textContent = '';
         error.textContent = jcalres.textContent = icalres.textContent = "";
 
-        var beginTime = Date.now();
+        let beginTime = Date.now();
 
-        var jcal, ical, from;
+        let jcal, ical, from;
         try {
             jcal = JSON.parse(data.value);
             from = "json";
@@ -78,7 +78,7 @@
             ical = jcal = null;
         }
 
-        var totalRuntime = Date.now() - beginTime;
+        let totalRuntime = Date.now() - beginTime;
         duration.textContent = 'Total Runtime: ' + totalRuntime + ' ms';
 
         try {
@@ -91,8 +91,7 @@
         }
 
         return false;
-      }
-
+      };
     </script>
   </head>
   <body>
