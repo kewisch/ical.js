@@ -964,4 +964,39 @@ suite('design', function() {
       });
     });
   });
+
+  suite('design sets', function() {
+    test('detection', function() {
+      let component = new ICAL.Component(ICAL.parse(
+        'BEGIN:VCARD\n' +
+        'VERSION:4.0\n' +
+        'FN:Fun Name\n' +
+        'BDAY:--0203\n' +
+        'END:VCARD'
+      ));
+      assert.equal(component._designSet?.name, 'vcard4');
+      assert.equal(component.getFirstProperty('fn')._designSet?.name, 'vcard4');
+
+      component = new ICAL.Component(ICAL.parse(
+        'BEGIN:VCARD\n'+
+        'VERSION:3.0\n'+
+        'FN:Fun Name\n'+
+        'TEL;TYPE=VOICE,MSG,WORK:+1-555-937-3419\n'+
+        'TEL;TYPE=FAX,WORK:+1-555-528-4164\n'+
+        'EMAIL;TYPE=INTERNET:user@example.com\n'+
+        'END:VCARD'
+      ));
+      assert.equal(component._designSet?.name, 'vcard3');
+      assert.equal(component.getFirstProperty('fn')._designSet?.name, 'vcard3');
+
+      component = new ICAL.Component(ICAL.parse(
+        'BEGIN:VCALENDAR\n'+
+        'PRODID:-//Google Inc//Google Calendar 70.9054//EN\n' +
+        'VERSION:2.0\n'+
+        'END:VCALENDAR'
+      ));
+      assert.equal(component._designSet?.name, 'ical');
+      assert.equal(component.getFirstProperty('version')._designSet?.name, 'ical');
+    });
+  });
 });
