@@ -14,6 +14,25 @@ suite('timezone_service', function() {
     subject.reset();
   });
 
+  test('init', function() {
+    // This tests the default behavior when the time zone service is first initialized
+    subject._hard_reset();
+    assert.isFalse(subject.has('UTC'));
+
+    subject._hard_reset();
+    assert.equal(subject.count, 0);
+    assert.isFalse(subject.has('UTC'));
+
+    subject._hard_reset();
+    assert.isNull(subject.remove('bogus'));
+    assert.isFalse(subject.has('UTC'));
+
+    // Getting a timezone will initialize the service and set UTC
+    subject._hard_reset();
+    assert.isUndefined(subject.get('bogus'));
+    assert.isTrue(subject.has('UTC'));
+  });
+
   test('utc zones', function() {
     let zones = ['Z', 'UTC', 'GMT'];
     zones.forEach(function(tzid) {
