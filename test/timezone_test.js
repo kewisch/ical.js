@@ -41,124 +41,129 @@ suite('timezone', function() {
     return (seconds / 3600);
   }
 
-  let sanityChecks = [
-    {
-      // just before US DST
-      time: { year: 2012, month: 3, day: 11, hour: 1, minute: 59 },
-      offsets: {
-        'America/Los_Angeles': -8,
-        'America/New_York': -5,
-        'America/Denver': -7,
-        'America/Atikokan': -5, // single tz
-        'UTC': 0,
-        'floating': 0
-      }
-    },
+  function sanityCheckSuite(options) {
+    let runner = options.only ? suite.only : suite;
+    let title = 'time: ' + JSON.stringify(options.time);
 
-    {
-      // just after US DST
-      time: { year: 2012, month: 3, day: 11, hour: 2 },
-      offsets: {
-        'America/Los_Angeles': -7,
-        'America/Denver': -6,
-        'America/New_York': -4,
-        'America/Atikokan': -5,
-        'UTC': 0,
-        'floating': 0
-      }
-    },
-
-    {
-      time: { year: 2004, month: 10, day: 31, hour: 0, minute: 59, second: 59 },
-      offsets: {
-        'America/Denver': -6
-      }
-    },
-
-    {
-      time: { year: 2004, month: 10, day: 31, hour: 1 },
-      offsets: {
-        'America/Denver': -7
-      }
-    },
-
-
-    // Edge case timezone that defines an RDATE with VALUE=DATE
-    {
-      // just before DST
-      time: { year: 1980, month: 1, day: 1, hour: 0, minute: 59 },
-      offsets: {
-        'Makebelieve/RDATE_test': -4,
-        'Makebelieve/RDATE_utc_test': -5
-      }
-    },
-
-    {
-      // just after DST
-      time: { year: 1980, month: 1, day: 1, hour: 1 },
-      offsets: {
-        'Makebelieve/RDATE_test': -5,
-        'Makebelieve/RDATE_utc_test': -5
-      }
-    },
-
-    // Edge case where RDATE is defined in UTC
-    {
-      // just before DST
-      time: { year: 1990, month: 1, day: 1, hour: 0, minute: 59 },
-      offsets: {
-        'Makebelieve/RDATE_test': -4,
-        'Makebelieve/RDATE_utc_test': -4
-      }
-    },
-
-    {
-      // just after DST
-      time: { year: 1990, month: 1, day: 1, hour: 2 },
-      offsets: {
-        'Makebelieve/RDATE_test': -5,
-        'Makebelieve/RDATE_utc_test': -5
-      }
-    },
-
-    // Edge case timezone where an RRULE with UNTIL in UTC is specified
-    {
-      // Just before DST
-      time: { year: 1975, month: 1, day: 1, hour: 1, minute: 0, second: 0 },
-      offsets: {
-        'Makebelieve/RRULE_UNTIL_test': -5
-      }
-    },
-    {
-      // Just after DST
-      time: { year: 1975, month: 1, day: 1, hour: 3, minute: 0, second: 0 },
-      offsets: {
-        'Makebelieve/RRULE_UNTIL_test': -4
-      }
-    },
-    {
-      // After the RRULE ends
-      time: { year: 1985, month: 1, day: 1, hour: 3, minute: 0, second: 0 },
-      offsets: {
-        'Makebelieve/RRULE_UNTIL_test': -4
-      }
-    }
-  ];
-
-  // simple format checks
-  sanityChecks.forEach(function(item) {
-    let title = 'time: ' + JSON.stringify(item.time);
-
-    suite(title, function() {
-      for (let tzid in item.offsets) {
-        timezoneTest(tzid, tzid + " offset " + item.offsets[tzid], function(testTzid) {
+    runner(title, function() {
+      for (let tzid in options.offsets) {
+        timezoneTest(tzid, tzid + " offset " + options.offsets[tzid], function(testTzid) {
           assert.equal(
-            utcHours(item.time),
-            item.offsets[testTzid]
+            utcHours(options.time),
+            options.offsets[testTzid]
           );
         }.bind(this, tzid));
       }
     });
+  }
+  sanityCheckSuite.only = function(options) {
+    options.only = true;
+    sanityCheckSuite(options);
+  };
+
+
+  // just before US DST
+  sanityCheckSuite({
+    time: { year: 2012, month: 3, day: 11, hour: 1, minute: 59 },
+    offsets: {
+      'America/Los_Angeles': -8,
+      'America/New_York': -5,
+      'America/Denver': -7,
+      'America/Atikokan': -5, // single tz
+      'UTC': 0,
+      'floating': 0
+    }
+  });
+
+  // just after US DST
+  sanityCheckSuite({
+    time: { year: 2012, month: 3, day: 11, hour: 2 },
+    offsets: {
+      'America/Los_Angeles': -7,
+      'America/Denver': -6,
+      'America/New_York': -4,
+      'America/Atikokan': -5,
+      'UTC': 0,
+      'floating': 0
+    }
+  });
+
+  sanityCheckSuite({
+    time: { year: 2004, month: 10, day: 31, hour: 0, minute: 59, second: 59 },
+    offsets: {
+      'America/Denver': -6
+    }
+  });
+
+  sanityCheckSuite({
+    time: { year: 2004, month: 10, day: 31, hour: 1 },
+    offsets: {
+      'America/Denver': -7
+    }
+  });
+
+
+  // Edge case timezone that defines an RDATE with VALUE=DATE
+  sanityCheckSuite({
+    // just before DST
+    time: { year: 1980, month: 1, day: 1, hour: 0, minute: 59 },
+    offsets: {
+      'Makebelieve/RDATE_test': -4,
+      'Makebelieve/RDATE_utc_test': -5
+    }
+  });
+
+  sanityCheckSuite({
+    // just after DST
+    time: { year: 1980, month: 1, day: 1, hour: 1 },
+    offsets: {
+      'Makebelieve/RDATE_test': -5,
+      'Makebelieve/RDATE_utc_test': -5
+    }
+  });
+
+  // Edge case where RDATE is defined in UTC
+  sanityCheckSuite({
+    // just before DST
+    time: { year: 1990, month: 1, day: 1, hour: 0, minute: 59 },
+    offsets: {
+      'Makebelieve/RDATE_test': -4,
+      'Makebelieve/RDATE_utc_test': -4
+    }
+  });
+
+  sanityCheckSuite({
+    // just after DST
+    time: { year: 1990, month: 1, day: 1, hour: 2 },
+    offsets: {
+      'Makebelieve/RDATE_test': -5,
+      'Makebelieve/RDATE_utc_test': -5
+    }
+  });
+
+  // Edge case timezone where an RRULE with UNTIL in UTC is specified
+  sanityCheckSuite({
+    // Just before DST
+    time: { year: 1975, month: 1, day: 1, hour: 1, minute: 0, second: 0 },
+    offsets: {
+      'Makebelieve/RRULE_UNTIL_test': -5
+    }
+  });
+
+  sanityCheckSuite({
+    // Just after DST
+    time: { year: 1975, month: 1, day: 1, hour: 3, minute: 0, second: 0 },
+    offsets: {
+      'Makebelieve/RRULE_UNTIL_test': -4
+    }
+  });
+
+  sanityCheckSuite({
+    // After the RRULE ends
+    time: { year: 1985, month: 1, day: 1, hour: 3, minute: 0, second: 0 },
+    offsets: {
+      'Makebelieve/RRULE_UNTIL_test': -4
+    }
   });
 
   timezoneTest('America/Los_Angeles', '#expandedUntilYear', function() {
