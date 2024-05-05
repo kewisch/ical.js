@@ -596,4 +596,32 @@ suite('Component', function() {
     assert.deepEqual(subject.jCal, fromICAL.jCal);
   });
 
+  test('#getTimeZoneByID', async function() {
+    let icsData = await testSupport.loadSample('timezone_from_file.ics');
+    let vcalendar = new ICAL.Component(ICAL.parse(icsData));
+
+    let zone = vcalendar.getTimeZoneByID("Nowhere/Middle");
+    assert.equal(zone.tzid, "Nowhere/Middle");
+
+    // Zone remains in cache
+    vcalendar.removeSubcomponent("vtimezone");
+    zone = vcalendar.getTimeZoneByID("Nowhere/Middle");
+    assert.equal(zone.tzid, "Nowhere/Middle");
+
+    // Lookup from child component
+    zone = vcalendar.getFirstSubcomponent("vevent").getTimeZoneByID("Nowhere/Middle");
+    assert.equal(zone.tzid, "Nowhere/Middle");
+
+    // Non vcalendar root component
+    let vother = new ICAL.Component(["x-other", [], [["vtimezone", [], []]]]);
+    zone = vother.getFirstSubcomponent().getTimeZoneByID("Nowhere/Middle");
+    assert.isNull(zone);
+
+
+    // Missing timezone definition
+    vcalendar = new ICAL.Component(ICAL.parse(icsData));
+    vcalendar.removeSubcomponent("vtimezone");
+    zone = vcalendar.getTimeZoneByID("Nowhere/Middle");
+    assert.isNull(zone);
+  });
 });
