@@ -847,6 +847,17 @@ suite('icaltime', function() {
       time.second,
       otherTime.second
     );
+
+    let date = new ICAL.Time({
+      year: 2012,
+      month: 1,
+      day: 5
+    });
+
+    date.fromUnixTime(date.toUnixTime());
+    assert.equal(date.hour, 0);
+    assert.equal(date.minute, 0);
+    assert.equal(date.second, 0);
   });
 
   suite('#adjust', function() {
