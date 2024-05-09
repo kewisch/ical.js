@@ -25,7 +25,7 @@
     "@eslint/js": "^9.0.0",
     "@octokit/core": "^6.0.1",
     "@rollup/plugin-babel": "^6.0.4",
-    "@stylistic/eslint-plugin": "^1.7.0",
+    "@stylistic/eslint-plugin": "^2.1.0",
     "benchmark": "^2.1.4",
     "c8": "^9.1.0",
     "chai": "^5.1.0",
