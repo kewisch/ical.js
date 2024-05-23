@@ -1,15 +1,6 @@
 {
-  "compilerOptions": {
-    // Tells TypeScript to read JS files, as
-    // normally they are ignored as source files
-    "allowJs": true,
-    // Generate d.ts files
-    "declaration": true,
-    // only output d.ts files
-    "emitDeclarationOnly": true,
-    // go to js file when using IDE functions like
-    // "Go to Definition" in VSCode
-    "declarationMap": true,
-    "declarationDir": "dist/types"
-  }
+  // dont compile types directly with tsc, use npm run build instead
+  // type generation is handled by @rollup/plugin-typescript
+
+  // this file exists because of https://github.com/rollup/plugins/issues/1572
 }

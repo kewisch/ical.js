@@ -52,6 +52,16 @@ export default [{
   ],
   plugins: [
     babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
-    typescript({ include: ["lib/ical/*.js"], noForceEmit: true })
+    typescript({
+      include: ['lib/ical/*.js'],
+      noForceEmit: true,
+      compilerOptions: {
+        allowJs: true,
+        declaration: true,
+        emitDeclarationOnly: true,
+        declarationMap: true,
+        declarationDir: 'dist/types',
+      },
+    })
   ]
 }];
