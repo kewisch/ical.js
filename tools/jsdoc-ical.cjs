@@ -3,15 +3,35 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2024 */
 
-let gIcalClasses = new Set();
+let gIcalClasses = new Set(["Binary", "Component", "ComponentParser", "Duration", "Event", "Period", "Property", "Recur", "RecurExpansion", "RecurIterator", "Time", "Timezone", "UtcOffset", "VCardTime", "ParserError"]);
 
-function augmentTypes(obj) {
-  if (obj.type?.names?.length) {
-    for (let i = 0; i < obj.type.names.length; i++) {
-      if (gIcalClasses.has(obj.type.names[i]) && !obj.type.names[i].startsWith("ICAL.")) {
-        obj.type.names[i] = "ICAL." + obj.type.names[i];
+function addPrefix(objNames) {
+  if (objNames?.length) {
+    for (let i = 0; i < objNames.length; i++) {
+      // finds all strings in objNames[i] that include a known class
+      let classNames = Array.from(gIcalClasses).reduce((acc, curr) => {
+        if (objNames[i].includes(curr)) acc = [...acc, curr];
+        return acc;
+      }, []);
+      if ((gIcalClasses.has(objNames[i]) || classNames.length !== 0) && !objNames[i].includes("ICAL.")) {
+        for (let className of classNames) {
+          let index = objNames[i].indexOf(className);
+          // add ICAL. to classnames without ICAL.
+          objNames[i] = objNames[i].substring(0, index) + "ICAL." + objNames[i].substring(index);
+        }
       }
     }
+  }
+}
+
+function augmentTypes(obj) {
+  // handle @type
+  if (obj.names?.length) {
+    addPrefix(obj.names);
+  }
+  // handle @returns or @params
+  if (obj.type?.names?.length) {
+    addPrefix(obj.type?.names);
   }
 }
 
@@ -19,6 +39,10 @@ exports.handlers = {
   newDoclet: function({ doclet }) {
     if (doclet.kind == "class" && doclet.longname.startsWith("ICAL.")) {
       gIcalClasses.add(doclet.name);
+    }
+
+    if (doclet.type) {
+      augmentTypes(doclet.type);
     }
 
     if (doclet.returns) {
