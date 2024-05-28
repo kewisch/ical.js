@@ -4,13 +4,16 @@
  * Portions Copyright (C) Philipp Kewisch, 2024 */
 
 let gIcalClasses = new Set(["Binary", "Component", "ComponentParser", "Duration", "Event", "Period", "Property", "Recur", "RecurExpansion", "RecurIterator", "Time", "Timezone", "UtcOffset", "VCardTime", "ParserError"]);
+let typedefs = [{ name: "occurrenceDetails", full: "ICAL.Event.occurrenceDetails" },
+                { name: "frequencyValues", full: "ICAL.Recur.frequencyValues" },
+                { name: "weekDay", full: "ICAL.Time.weekDay" }];
 
 function addPrefix(objNames) {
   if (objNames?.length) {
     for (let i = 0; i < objNames.length; i++) {
       // finds all strings in objNames[i] that include a known class
       let classNames = Array.from(gIcalClasses).reduce((acc, curr) => {
-        if (objNames[i].includes(curr)) acc = [...acc, curr];
+        if (objNames[i] === curr) acc = [...acc, curr];
         return acc;
       }, []);
       if ((gIcalClasses.has(objNames[i]) || classNames.length !== 0) && !objNames[i].includes("ICAL.")) {
@@ -19,6 +22,13 @@ function addPrefix(objNames) {
           // add ICAL. to classnames without ICAL.
           objNames[i] = objNames[i].substring(0, index) + "ICAL." + objNames[i].substring(index);
         }
+      }
+      // add correct typedef path to anything using a known typedef
+      let typedef = typedefs.find((val) => objNames[i].includes(val.name));
+      if (typedef !== undefined) {
+        // replace partial name with full path
+        let result = objNames[i].replace(typedef.name, typedef.full);
+        objNames[i] = result;
       }
     }
   }
