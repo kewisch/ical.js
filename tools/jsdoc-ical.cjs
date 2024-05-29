@@ -3,20 +3,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2024 */
 
-let gIcalClasses = new Set(["Binary", "Component", "ComponentParser", "Duration", "Event", "Period", "Property", "Recur", "RecurExpansion", "RecurIterator", "Time", "Timezone", "UtcOffset", "VCardTime", "ParserError"]);
-let typedefs = [{ name: "occurrenceDetails", full: "ICAL.Event.occurrenceDetails" },
-                { name: "frequencyValues", full: "ICAL.Recur.frequencyValues" },
-                { name: "weekDay", full: "ICAL.Time.weekDay" }];
+const fs = require("node:fs");
+const { gIcalClasses, typedefs } = JSON.parse(fs.readFileSync("./temp.json", "utf-8"));
 
 function addPrefix(objNames) {
   if (objNames?.length) {
     for (let i = 0; i < objNames.length; i++) {
       // finds all strings in objNames[i] that include a known class
-      let classNames = Array.from(gIcalClasses).reduce((acc, curr) => {
+      let classNames = gIcalClasses.reduce((acc, curr) => {
         if (objNames[i] === curr) acc = [...acc, curr];
         return acc;
       }, []);
-      if ((gIcalClasses.has(objNames[i]) || classNames.length !== 0) && !objNames[i].includes("ICAL.")) {
+      if ((gIcalClasses.includes(objNames[i]) || classNames.length !== 0) && !objNames[i].includes("ICAL.")) {
         for (let className of classNames) {
           let index = objNames[i].indexOf(className);
           // add ICAL. to classnames without ICAL.
@@ -47,10 +45,6 @@ function augmentTypes(obj) {
 
 exports.handlers = {
   newDoclet: function({ doclet }) {
-    if (doclet.kind == "class" && doclet.longname.startsWith("ICAL.")) {
-      gIcalClasses.add(doclet.name);
-    }
-
     if (doclet.type) {
       augmentTypes(doclet.type);
     }

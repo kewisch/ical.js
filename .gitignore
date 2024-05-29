@@ -9,3 +9,4 @@ tools/vzic/
 tools/tzdb/
 tools/libical/
 coverage/
+temp.json
