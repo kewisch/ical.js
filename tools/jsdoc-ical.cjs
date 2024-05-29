@@ -59,5 +59,10 @@ exports.handlers = {
         augmentTypes(param);
       }
     }
+    if (doclet.properties) {
+      for (let property of doclet.properties) {
+        augmentTypes(property);
+      }
+    }
   }
 };
