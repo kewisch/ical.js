@@ -312,4 +312,57 @@ suite('ical/period', function() {
       assert.equal(subject1.duration, subject2.duration);
     });
   });
+
+  suite("#compare", function() {
+    test("with date", function() {
+      let subject = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:04Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:06Z")
+      });
+
+      let beforestart = ICAL.Time.fromString("1970-01-02T03:04:03Z");
+      let between = ICAL.Time.fromString("1970-01-02T03:04:05Z");
+      let afterend = ICAL.Time.fromString("1970-01-02T03:04:07Z");
+
+      assert.equal(subject.compare(beforestart), 1);
+      assert.equal(subject.compare(subject.start), 0);
+      assert.equal(subject.compare(between), 0);
+      assert.equal(subject.compare(subject.end), 0);
+      assert.equal(subject.compare(afterend), -1);
+    });
+
+    test("with other period", function() {
+      let subject = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:04Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:06Z")
+      });
+
+      let beforestart = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:02Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:03Z")
+      });
+      let overlapstart = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:03Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:05Z")
+      });
+      let within = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:05Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:05Z")
+      });
+      let overlapend = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:05Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:07Z")
+      });
+      let afterend = ICAL.Period.fromData({
+        start: ICAL.Time.fromString("1970-01-02T03:04:07Z"),
+        end: ICAL.Time.fromString("1970-01-02T03:04:09Z")
+      });
+
+      assert.equal(subject.compare(beforestart), 1);
+      assert.equal(subject.compare(overlapstart), 0);
+      assert.equal(subject.compare(within), 0);
+      assert.equal(subject.compare(overlapend), 0);
+      assert.equal(subject.compare(afterend), -1);
+    });
+  });
 });

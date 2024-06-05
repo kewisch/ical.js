@@ -87,12 +87,16 @@ suite('recur_expansion', function() {
       let expected = [
         new Date('2012-11-05T18:00:00.000Z'),
         new Date('2012-11-10T18:00:00.000Z'),
-        new Date('2012-11-30T18:00:00.000Z')
+        new Date('2012-11-30T18:00:00.000Z'),
+
+        // RDATEs
+        new Date('2023-11-23T09:00:00.000Z'),
+        new Date('2023-11-25T09:00:00.000Z')
       ];
 
-
       let dates = subject.ruleDates.map(function(time) {
-        return time.toJSDate();
+        // We have a period in here, take the start date
+        return (time.start || time).toJSDate();
       });
 
       assert.deepEqual(dates, expected);
