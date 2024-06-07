@@ -3,6 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch, 2024 */
 
+/**
+ * This jsdoc plugin add the correct prefix `ICAL.` to everything that
+ * uses a class or typedef which are collected by the jsdoc-collect-types plugin
+ * so that the generated API docs link to the correct classes, typedefs, etc.
+ */
+
 const fs = require("node:fs");
 const { gIcalClasses, typedefs } = JSON.parse(fs.readFileSync("./temp.json", "utf-8"));
 
