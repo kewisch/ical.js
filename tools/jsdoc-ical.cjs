@@ -10,7 +10,8 @@
  */
 
 const fs = require("node:fs");
-const { gIcalClasses, typedefs } = JSON.parse(fs.readFileSync("./temp.json", "utf-8"));
+let gIcalClasses = [];
+let typedefs = [];
 
 function addPrefix(objNames) {
   if (objNames?.length) {
@@ -50,6 +51,9 @@ function augmentTypes(obj) {
 }
 
 exports.handlers = {
+  parseBegin: function() {
+    ({ gIcalClasses, typedefs } = JSON.parse(fs.readFileSync("./tools/jsdoc-symbols-temp.json", "utf-8")));
+  },
   newDoclet: function({ doclet }) {
     if (doclet.type) {
       augmentTypes(doclet.type);

@@ -8,5 +8,5 @@ docs/recur-tester.html
 tools/vzic/
 tools/tzdb/
 tools/libical/
+tools/jsdoc-symbols-temp.json
 coverage/
-temp.json

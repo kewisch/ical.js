@@ -61,7 +61,7 @@
     "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
     "build": "rollup -c",
     "lint": "eslint",
-    "jsdoc": "rm -rf docs/api && jsdoc --configure jsdoc.json --verbose",
+    "jsdoc": "rm -rf docs/api && jsdoc --configure jsdoc-prepare.json && rm -rf docs/api && jsdoc --configure jsdoc.json --verbose",
     "validator": "node tools/scriptutils.js replace-unpkg tools/validator.html docs/validator.html",
     "recurtester": "node tools/scriptutils.js replace-unpkg tools/recur-tester.html docs/recur-tester.html",
     "ghpages": "npm run jsdoc && npm run validator && npm run recurtester"
