@@ -28,7 +28,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@stylistic/eslint-plugin": "^2.1.0",
     "benchmark": "^2.1.4",
-    "c8": "^9.1.0",
+    "c8": "^10.0.0",
     "chai": "^5.1.0",
     "clean-jsdoc-theme": "^4.2.18",
     "eslint": "^9.0.0",
