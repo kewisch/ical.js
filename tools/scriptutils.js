@@ -5,7 +5,6 @@
 
 import { Octokit } from "@octokit/core";
 import fetch from 'node-fetch';
-import yauzl from 'yauzl-promise';
 import fs from "fs/promises";
 import fsc from "fs";
 import path from "path";
@@ -64,6 +63,11 @@ async function get_latest_main(outFile) {
   }
 
   let buffer = Buffer.from(await response.arrayBuffer());
+
+  // Yauzl has been difficult due to the native bindings for crc32.
+  // Import ad-hoc to make GitHub Actions work.
+  let yauzl = await import("yauzl-promise");
+
   let archive = await yauzl.fromBuffer(buffer);
 
   let entry;
