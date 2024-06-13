@@ -11,6 +11,7 @@ export default [
       "!test/**/*.{js,cjs}",
       "!tools/scriptutils.js",
       "!tools/ICALTester/**/*.js",
+      "!tools/jsdoc-ical.cjs",
       "!eslint.config.js",
       "!rollup.config.js",
       "!karma.conf.cjs"

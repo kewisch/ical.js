@@ -3,7 +3,7 @@
     "include": "lib/ical",
     "includePattern": ".js$"
   },
-  "plugins": ["plugins/markdown"],
+  "plugins": ["plugins/markdown", "tools/jsdoc-ical.cjs", "node_modules/jsdoc-tsimport-plugin/index.js"],
   "opts": {
     "encoding": "utf8",
     "readme": "README.md",

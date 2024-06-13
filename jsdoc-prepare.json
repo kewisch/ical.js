@@ -1,0 +1,10 @@
+{
+  "source": {
+    "include": "lib/ical",
+    "includePattern": ".js$"
+  },
+  "plugins": ["tools/jsdoc-collect-types.cjs", "node_modules/jsdoc-tsimport-plugin/index.js"],
+  "opts": {
+    "destination": "docs/api/"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  // dont compile types directly with tsc, use npm run build instead
+  // type generation is handled by @rollup/plugin-typescript
+
+  // this file exists because of https://github.com/rollup/plugins/issues/1572
+}
