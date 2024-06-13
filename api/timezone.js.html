@@ -25,8 +25,7 @@ const OPTIONS = ["tzid", "location", "tznames", "latitude", "longitude"];
  *   tzid
  * });
  *
- * @class
- * @alias ICAL.Timezone
+ * @memberof ICAL
  */
 class Timezone {
   static _compare_change_fn(a, b) {
@@ -54,10 +53,10 @@ class Timezone {
   /**
    * Convert the date/time from one zone to the next.
    *
-   * @param {ICAL.Time} tt                  The time to convert
-   * @param {ICAL.Timezone} from_zone       The source zone to convert from
-   * @param {ICAL.Timezone} to_zone         The target zone to convert to
-   * @return {ICAL.Time}                    The converted date/time object
+   * @param {Time} tt                  The time to convert
+   * @param {Timezone} from_zone       The source zone to convert from
+   * @param {Timezone} to_zone         The target zone to convert to
+   * @return {Time}                    The converted date/time object
    */
   static convert_time(tt, from_zone, to_zone) {
     if (tt.isDate ||
@@ -80,8 +79,8 @@ class Timezone {
   /**
    * Creates a new ICAL.Timezone instance from the passed data object.
    *
-   * @param {ICAL.Component|Object} aData options for class
-   * @param {String|ICAL.Component} aData.component
+   * @param {Component|Object} aData options for class
+   * @param {String|Component} aData.component
    *        If aData is a simple object, then this member can be set to either a
    *        string containing the component data, or an already parsed
    *        ICAL.Component
@@ -99,7 +98,7 @@ class Timezone {
 
   /**
    * The instance describing the UTC timezone
-   * @type {ICAL.Timezone}
+   * @type {Timezone}
    * @constant
    * @instance
    */
@@ -115,7 +114,7 @@ class Timezone {
 
   /**
    * The instance describing the local timezone
-   * @type {ICAL.Timezone}
+   * @type {Timezone}
    * @constant
    * @instance
    */
@@ -155,8 +154,8 @@ class Timezone {
   /**
    * Creates a new ICAL.Timezone instance, by passing in a tzid and component.
    *
-   * @param {ICAL.Component|Object} data options for class
-   * @param {String|ICAL.Component} data.component
+   * @param {Component|Object} data options for class
+   * @param {String|Component} data.component
    *        If data is a simple object, then this member can be set to either a
    *        string containing the component data, or an already parsed
    *        ICAL.Component
@@ -205,7 +204,7 @@ class Timezone {
 
   /**
    * The vtimezone component for this timezone.
-   * @type {ICAL.Component}
+   * @type {Component}
    */
   component = null;
 
@@ -229,8 +228,8 @@ class Timezone {
   /**
    * Sets up the current instance using members from the passed data object.
    *
-   * @param {ICAL.Component|Object} aData options for class
-   * @param {String|ICAL.Component} aData.component
+   * @param {Component|Object} aData options for class
+   * @param {String|Component} aData.component
    *        If aData is a simple object, then this member can be set to either a
    *        string containing the component data, or an already parsed
    *        ICAL.Component
@@ -284,8 +283,8 @@ class Timezone {
   /**
    * Finds the utcOffset the given time would occur in this timezone.
    *
-   * @param {ICAL.Time} tt        The time to check for
-   * @return {Number} utc offset in seconds
+   * @param {Time} tt         The time to check for
+   * @return {Number}         utc offset in seconds
    */
   utcOffset(tt) {
     if (this == Timezone.utcTimezone || this == Timezone.localTimezone) {

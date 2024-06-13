@@ -8,6 +8,16 @@
 import design from "./design.js";
 import { unescapedIndexOf } from "./helpers.js";
 
+/**
+ * This lets typescript resolve our custom types in the
+ * generated d.ts files (jsdoc typedefs are converted to typescript types).
+ * Ignore prevents the typedefs from being documented more than once.
+ *
+ * @ignore
+ * @typedef {import("./types.d.js").parserState} parserState
+ * Imports the 'parserState' type from the "types.d.js" module
+ */
+
 const CHAR = /[^ \t]/;
 const VALUE_DELIMITER = ':';
 const PARAM_DELIMITER = ';';
@@ -93,7 +103,6 @@ parse.component = function(str) {
  * @param {String} message        The error message
  * @memberof ICAL.parse
  * @extends {Error}
- * @class
  */
 class ParserError extends Error {
   name = this.constructor.name;
@@ -102,25 +111,14 @@ class ParserError extends Error {
 // classes &amp; constants
 parse.ParserError = ParserError;
 
-/**
- * The state for parsing content lines from an iCalendar/vCard string.
- *
- * @private
- * @memberof ICAL.parse
- * @typedef {Object} parserState
- * @property {ICAL.design.designSet} designSet    The design set to use for parsing
- * @property {ICAL.Component[]} stack             The stack of components being processed
- * @property {ICAL.Component} component           The currently active component
- */
-
 
 /**
  * Handles a single line of iCalendar/vCard, updating the state.
  *
  * @private
  * @function ICAL.parse._handleContentLine
- * @param {String} line               The content line to process
- * @param {ICAL.parse.parserState}    The current state of the line parsing
+ * @param {String} line          The content line to process
+ * @param {parserState} state    The current state of the line parsing
  */
 parse._handleContentLine = function(line, state) {
   // break up the parts of the line

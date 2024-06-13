@@ -19,8 +19,7 @@ const COMPONENT_INDEX = 2;
  * Wraps a jCal component, adding convenience methods to add, remove and update subcomponents and
  * properties.
  *
- * @class
- * @alias ICAL.Component
+ * @memberof ICAL
  */
 class Component {
   /**
@@ -33,11 +32,11 @@ class Component {
   }
 
   /**
-   * Creates a new ICAL.Component instance.
+   * Creates a new Component instance.
    *
    * @param {Array|String} jCal         Raw jCal component data OR name of new
    *                                      component
-   * @param {ICAL.Component} parent     Parent component to associate
+   * @param {Component=} parent     Parent component to associate
    */
   constructor(jCal, parent) {
     if (typeof(jCal) === 'string') {
@@ -85,7 +84,19 @@ class Component {
   _timezoneCache = null;
 
   /**
+   * @private
+   */
+  _components = null;
+
+  /**
+   * @private
+   */
+  _properties = null;
+
+  /**
    * The name of this component
+   *
+   * @type {String}
    * @readonly
    */
   get name() {
@@ -103,6 +114,9 @@ class Component {
     return parentDesign || design.getDesignSet(this.name);
   }
 
+  /**
+   * @private
+   */
   _hydrateComponent(index) {
     if (!this._components) {
       this._components = [];
@@ -122,6 +136,9 @@ class Component {
     return (this._components[index] = comp);
   }
 
+  /**
+   * @private
+   */
   _hydrateProperty(index) {
     if (!this._properties) {
       this._properties = [];
@@ -145,7 +162,7 @@ class Component {
    * Finds first sub component, optionally filtered by name.
    *
    * @param {String=} name        Optional name to filter by
-   * @return {?ICAL.Component}     The found subcomponent
+   * @return {?Component}     The found subcomponent
    */
   getFirstSubcomponent(name) {
     if (name) {
@@ -173,7 +190,7 @@ class Component {
    * Finds all sub components, optionally filtering by name.
    *
    * @param {String=} name            Optional name to filter by
-   * @return {ICAL.Component[]}       The found sub components
+   * @return {Component[]}       The found sub components
    */
   getAllSubcomponents(name) {
     let jCalLen = this.jCal[COMPONENT_INDEX].length;
@@ -228,7 +245,7 @@ class Component {
    * Finds the first property, optionally with the given name.
    *
    * @param {String=} name        Lowercase property name
-   * @return {?ICAL.Property}     The found property
+   * @return {?Property}     The found property
    */
   getFirstProperty(name) {
     if (name) {
@@ -270,7 +287,7 @@ class Component {
    * Get all properties in the component, optionally filtered by name.
    *
    * @param {String=} name        Lowercase property name
-   * @return {ICAL.Property[]}    List of properties
+   * @return {Property[]}    List of properties
    */
   getAllProperties(name) {
     let jCalLen = this.jCal[PROPERTY_INDEX].length;
@@ -300,6 +317,9 @@ class Component {
     }
   }
 
+  /**
+   * @private
+   */
   _removeObjectByIndex(jCalIndex, cache, index) {
     cache = cache || [];
     // remove cached version
@@ -316,6 +336,9 @@ class Component {
     this.jCal[jCalIndex].splice(index, 1);
   }
 
+  /**
+   * @private
+   */
   _removeObject(jCalIndex, cache, nameOrObject) {
     let i = 0;
     let objects = this.jCal[jCalIndex];
@@ -341,6 +364,9 @@ class Component {
     return false;
   }
 
+  /**
+   * @private
+   */
   _removeAllObjects(jCalIndex, cache, name) {
     let cached = this[cache];
 
@@ -361,8 +387,8 @@ class Component {
   /**
    * Adds a single sub component.
    *
-   * @param {ICAL.Component} component        The component to add
-   * @return {ICAL.Component}                 The passed in component
+   * @param {Component} component        The component to add
+   * @return {Component}                 The passed in component
    */
   addSubcomponent(component) {
     if (!this._components) {
@@ -385,7 +411,7 @@ class Component {
    * Removes a single component by name or the instance of a specific
    * component.
    *
-   * @param {ICAL.Component|String} nameOrComp    Name of component, or component
+   * @param {Component|String} nameOrComp    Name of component, or component
    * @return {Boolean}                            True when comp is removed
    */
   removeSubcomponent(nameOrComp) {
@@ -411,8 +437,8 @@ class Component {
   /**
    * Adds an {@link ICAL.Property} to the component.
    *
-   * @param {ICAL.Property} property      The property to add
-   * @return {ICAL.Property}              The passed in property
+   * @param {Property} property      The property to add
+   * @return {Property}              The passed in property
    */
   addProperty(property) {
     if (!(property instanceof Property)) {
@@ -440,7 +466,7 @@ class Component {
    *
    * @param {String}               name         Property name to add
    * @param {String|Number|Object} value        Property value
-   * @return {ICAL.Property}                    The created property
+   * @return {Property}                    The created property
    */
   addPropertyWithValue(name, value) {
     let prop = new Property(name);
@@ -458,7 +484,7 @@ class Component {
    *
    * @param {String}               name         Property name to update
    * @param {String|Number|Object} value        Property value
-   * @return {ICAL.Property}                    The created property
+   * @return {Property}                    The created property
    */
   updatePropertyWithValue(name, value) {
     let prop = this.getFirstProperty(name);
@@ -476,7 +502,7 @@ class Component {
    * Removes a single property by name or the instance of the specific
    * property.
    *
-   * @param {String|ICAL.Property} nameOrProp     Property name or instance to remove
+   * @param {String|Property} nameOrProp     Property name or instance to remove
    * @return {Boolean}                            True, when deleted
    */
   removeProperty(nameOrProp) {
@@ -525,7 +551,7 @@ class Component {
    * matched, returns null.
    *
    * @param {String} tzid     The ID of the time zone to retrieve
-   * @return {ICAL.Timezone}  The time zone corresponding to the ID, or null
+   * @return {Timezone}  The time zone corresponding to the ID, or null
    */
   getTimeZoneByID(tzid) {
     // VTIMEZONE components can only appear as a child of the VCALENDAR
