@@ -42,7 +42,7 @@ If you are working with a browser, be aware this is an ES6 module:
 
 ```html
 <script type="module">
-  import ICAL from "https://unpkg.com/ical.js";
+  import ICAL from "https://unpkg.com/ical.js/dist/ical.min.js";
   document.querySelector("button").addEventListener("click", () => {
     ICAL.parse(document.getElementById("txt").value);
   });
@@ -51,10 +51,16 @@ If you are working with a browser, be aware this is an ES6 module:
 
 If you need to make use of a script tag, you can use the transpiled ES5 version:
 ```html
-<script src="https://unpkg.com/ical.js/dist/ical.es5.cjs"></script>
+<script src="https://unpkg.com/ical.js/dist/ical.es5.min.cjs"></script>
 <textarea id="txt"></textarea>
 <button onclick="ICAL.parse(document.getElementById('txt').value)"></button>
 ```
+
+The browser examples above use the minified versions of the library, which is probably what you want.
+However, there are also unminified versions of ICAL.js available on unpkg.
+
+- Unminified ES6 module: `https://unpkg.com/ical.js/dist/ical.js`
+- Unminified ES5 version: `https://unpkg.com/ical.js/dist/ical.es5.cjs`
 
 ## Timezones
 The stock ical.js does not register any timezones, due to the additional size it brings. If you'd
