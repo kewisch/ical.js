@@ -227,6 +227,30 @@ suite('parserv2', function() {
       );
     });
 
+    test('with quoted multi-value parameter', function() {
+      let attendee = ICAL.Property.fromString(
+        'ATTENDEE;MEMBER=' +
+        '"mailto:mygroup@localhost",' +
+        '"mailto:mygroup2@localhost",' +
+        '"mailto:mygroup3@localhost":' +
+        'mailto:user2@localhost'
+      );
+      let expected = [
+        'attendee',
+        {
+          member: [
+            'mailto:mygroup@localhost',
+            'mailto:mygroup2@localhost',
+            'mailto:mygroup3@localhost'
+          ]
+        },
+        'cal-address',
+        'mailto:user2@localhost'
+      ];
+
+      assert.deepEqual(attendee.toJSON(), expected);
+    });
+
     test('with quoted value', function() {
       let input = ';FMTTYPE="text/html":Here is HTML with signs like =;';
       let expected = {
