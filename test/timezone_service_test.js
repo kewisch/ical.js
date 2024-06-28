@@ -79,7 +79,7 @@ suite('timezone_service', function() {
       assert.throws(function() {
         let comp = new ICAL.Component('vtoaster');
         subject.register(comp);
-      }, "timezone must be ICAL.Timezone");
+      }, "Neither a timezone nor a name was passed");
     });
 
     test('override', function() {
