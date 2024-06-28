@@ -43,9 +43,38 @@ import Component from "./component";
  * @private
  * @memberof ICAL.parse
  * @typedef {Object} parserState
- * @property {ICAL.design.designSet} designSet    The design set to use for parsing
+ * @property {designSet} designSet           The design set to use for parsing
  * @property {Component[]} stack             The stack of components being processed
  * @property {Component} component           The currently active component
+ */
+
+/**
+ * A jCal component.
+ *
+ * TODO: Properly typedef this when https://github.com/hegemonic/catharsis/pull/70
+ * is merged. Documentation is ignored until this can be documented properly.
+ *
+ * @example
+ *     ["vevent", [...properties here...], [...components here...] ]
+ *
+ * @ignore
+ * @typedef {Array} jCalComponent
+ * @property {String} 0               The component name
+ * @property {jCalProperty[]} 1       The properties of this component
+ * @property {jCalComponent[]} 2      The subcomponents of this component
+ */
+
+/**
+ * A designSet describes value, parameter and property data. It is used by
+ * ther parser and stringifier in components and properties to determine they
+ * should be represented.
+ *
+ * @memberof ICAL.design
+ * @typedef {Object} designSet
+ * @property {Object} value       Definitions for value types, keys are type names
+ * @property {Object} param       Definitions for params, keys are param names
+ * @property {Object} property    Definitions for properties, keys are property names
+ * @property {boolean} propertyGroups  If content lines may include a group name
  */
 
 export const _ = {};

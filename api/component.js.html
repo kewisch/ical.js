@@ -11,6 +11,15 @@ import ICALParse from "./parse.js";
 import stringify from "./stringify.js";
 import design from "./design.js";
 
+/**
+ * This lets typescript resolve our custom types in the
+ * generated d.ts files (jsdoc typedefs are converted to typescript types).
+ * Ignore prevents the typedefs from being documented more than once.
+ * @ignore
+ * @typedef {import("./types.d.js").designSet} designSet
+ * Imports the 'designSet' type from the "types.d.js" module
+ */
+
 const NAME_INDEX = 0;
 const PROPERTY_INDEX = 1;
 const COMPONENT_INDEX = 2;
@@ -97,7 +106,6 @@ class Component {
    * The name of this component
    *
    * @type {String}
-   * @readonly
    */
   get name() {
     return this.jCal[NAME_INDEX];
@@ -106,7 +114,7 @@ class Component {
   /**
    * The design set for this component, e.g. icalendar vs vcard
    *
-   * @type {ICAL.design.designSet}
+   * @type {designSet}
    * @private
    */
   get _designSet() {

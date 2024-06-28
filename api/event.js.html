@@ -40,10 +40,10 @@ class Event {
    * Creates a new ICAL.Event instance.
    *
    * @param {Component=} component              The ICAL.Component to base this event on
-   * @param {Object} options                    Options for this event
-   * @param {Boolean} options.strictExceptions  When true, will verify exceptions are related by
+   * @param {Object} [options]                  Options for this event
+   * @param {Boolean=} options.strictExceptions  When true, will verify exceptions are related by
    *                                              their UUID
-   * @param {Array&lt;Component|Event>} options.exceptions
+   * @param {Array&lt;Component|Event>=} options.exceptions
    *          Exceptions to this event, either as components or events. If not
    *            specified exceptions will automatically be set in relation of
    *            component's parent
@@ -428,7 +428,6 @@ class Event {
   /**
    * The attendees in the event
    * @type {Property[]}
-   * @readonly
    */
   get attendees() {
     //XXX: This is way lame we should have a better
