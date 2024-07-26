@@ -75,7 +75,7 @@
     "dist/ical.min.js",
     "dist/ical.es5.cjs",
     "dist/ical.es5.min.cjs",
-    "dist/types/*.d.ts",
+    "dist/types/*",
     "lib/ical/*.js"
   ],
   "mocha": {
