@@ -67,7 +67,8 @@
   },
   "exports": {
     "import": "./dist/ical.js",
-    "require": "./dist/ical.es5.cjs"
+    "require": "./dist/ical.es5.cjs",
+    "types": "./dist/types/module.d.ts"
   },
   "files": [
     "dist/ical.js",
