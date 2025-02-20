@@ -28,7 +28,7 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.0",
-    "@stylistic/eslint-plugin": "^2.1.0",
+    "@stylistic/eslint-plugin": "^4.0.1",
     "benchmark": "^2.1.4",
     "c8": "^10.1.2",
     "chai": "^5.1.0",
