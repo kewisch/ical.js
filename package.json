@@ -35,7 +35,7 @@
     "clean-jsdoc-theme": "^4.2.18",
     "eslint": "^9.0.0",
     "eslint-plugin-html": "^8.1.1",
-    "globals": "^15.0.0",
+    "globals": "^16.0.0",
     "jsdoc": "^4.0.2",
     "jsdoc-tsimport-plugin": "^1.0.5",
     "karma": "^6.4.3",
