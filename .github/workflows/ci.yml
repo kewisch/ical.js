@@ -116,6 +116,10 @@ jobs:
           cd tools/tzdb
           wget "https://data.iana.org/time-zones/releases/tzdata${TZDB_VERSION}.tar.gz" -O - | tar xz
 
+      - name: "Install dependencies"
+        run: |
+          sudo apt-get install libgtk-3-dev
+
       - name: "Build vzic"
         run: |
           git clone https://github.com/libical/vzic tools/vzic
