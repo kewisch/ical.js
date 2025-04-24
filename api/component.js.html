@@ -44,6 +44,9 @@ const NAME_INDEX = 0;
 const PROPERTY_INDEX = 1;
 const COMPONENT_INDEX = 2;
 
+const PROPERTY_NAME_INDEX = 0;
+const PROPERTY_VALUE_INDEX = 3;
+
 /**
  * Wraps a jCal component, adding convenience methods to add, remove and update subcomponents and
  * properties.
@@ -139,6 +142,17 @@ class Component {
    */
   get _designSet() {
     let parentDesign = this.parent &amp;&amp; this.parent._designSet;
+    if (!parentDesign &amp;&amp; this.name == "vcard") {
+      // We can't decide on vcard3 vs vcard4 just based on the component name, the version number is
+      // in the version property. We also can't use hydrated properties here because it would lead
+      // to recursion, but the spec says that the version property needs to be the very first one.
+      let versionProp = this.jCal[PROPERTY_INDEX]?.[0];
+
+      if (versionProp &amp;&amp; versionProp[PROPERTY_NAME_INDEX] == "version" &amp;&amp; versionProp[PROPERTY_VALUE_INDEX] == "3.0") {
+        return design.getDesignSet("vcard3");
+      }
+    }
+
     return parentDesign || design.getDesignSet(this.name);
   }
 
