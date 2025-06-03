@@ -2,18 +2,20 @@
 // Generated on Sun Feb 20 2022 00:57:11 GMT+0100 (Central European Standard Time)
 
 let pkg = require("./package.json");
+let path = require("path");
 
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['mocha', 'chai'],
-    plugins: ["karma-chai", "karma-mocha", "karma-spec-reporter"],
+    frameworks: ['mocha'],
+    plugins: ["karma-mocha", "karma-spec-reporter"],
     files: [
+      { pattern: path.resolve(require.resolve('chai'), '../chai.js'), type: "module", included: true },
       { pattern: 'samples/**/*.ics', included: false },
       { pattern: 'test/parser/*', included: false },
       { pattern: 'lib/ical/*.js', type: 'module', included: false },
-      { pattern: 'test/*_test.js', included: false },
-      { pattern: 'test/acceptance/*_test.js', included: false },
+      { pattern: 'test/*_test.js', type: 'module', included: false },
+      { pattern: 'test/acceptance/*_test.js', type: 'module', included: false },
       { pattern: 'test/support/helper.js', type: "module", included: true },
     ],
     client: { mocha: Object.assign(pkg.mocha, { timeout: 0 }) },

@@ -12,12 +12,19 @@ let testSupport = crossGlobal.testSupport = {
 if (testSupport.isKarma) {
   // Need to do this before the first await, browser/karma won't wait on top level await
   window.__karma__.loaded = function() {};
+
+  let chaiFile = Object.keys(window.__karma__.files).find(elem => elem.endsWith("chai.js"));
+  if (!chaiFile) {
+    throw new Error("Could not find chai.js");
+  }
+  window.chai = await import(chaiFile);
 }
+
 
 /* eslint-disable no-var, no-redeclare */
 if (testSupport.isNode) {
   var ICAL = (await import("../../lib/ical/module.js")).default;
-  var chai = await import("chai");
+  var chai = await import("../../node_modules/chai/chai.js");
   var Benchmark = (await import("benchmark")).default;
   var { URL } = await import("url");
   var { readFile, readdir } = (await import('fs/promises'));
@@ -179,11 +186,9 @@ crossGlobal.perfTest.skip = function(name, scope) {
 if (!testSupport.isNode) {
   console.log("KARMA");
   try {
-    for (let file in window.__karma__.files) {
-      if (Object.hasOwn(window.__karma__.files, file)) {
-        if (/_test\.js$/.test(file)) {
-          await import(file);
-        }
+    for (let file of Object.keys(window.__karma__.files)) {
+      if (/_test\.js$/.test(file)) {
+        await import(file);
       }
     }
 
