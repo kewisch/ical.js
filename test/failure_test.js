@@ -1,6 +1,3 @@
-import assert from "assert";
-
-
 /**
  * The tests in this suite are known to fail, due to a bug in the library. If the tests here start
  * failing in the sense of mocha, then the test is passing and you have either:
@@ -18,7 +15,8 @@ suite('Known failures', function() {
         testFn(done);
         done(new Error("Expected test fo fail"));
       } catch (e) {
-        if (e instanceof assert.AssertionError) {
+        console.log("EE", e.constructor.name);
+        if (e.constructor.name == "AssertionError") {
           this.skip();
         } else {
           done(e);
