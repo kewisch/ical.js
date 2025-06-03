@@ -255,6 +255,33 @@ suite('icaltime', function() {
     });
   });
 
+  suite('#fromDateTimeString', function() {
+    test('utc without decimals', function() {
+      let date = "2012-01-01T00:00:00Z";
+      let expected = date;
+      let subject = Time.fromDateTimeString(date);
+      assert.equal(
+        subject.toString(),
+        expected);
+    });
+    test('utc with decimals', function() {
+      let date = "2012-01-01T00:00:00.000Z";
+      let expected = new Date(date);
+      let subject = Time.fromDateTimeString(date);
+      assert.deepEqual(
+        subject.toJSDate(),
+        expected);
+    });
+    test('local time with decimals', function() {
+      let date = "2012-01-01T00:00:00.000";
+      let expected = new Date(date);
+      let subject = Time.fromDateTimeString(date);
+      assert.deepEqual(
+        subject.toJSDate(),
+        expected);
+    });
+  });
+
   suite('#fromJSDate', function() {
 
     test('utc', function() {
