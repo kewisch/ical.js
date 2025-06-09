@@ -23,6 +23,10 @@ import { strictParseInt, trunc, pad2 } from "./helpers.js";
  * @ignore
  * @typedef {import("./types.js").weekDay} weekDay
  * Imports the 'weekDay' type from the "types.js" module
+ *
+ * @ignore
+ * @typedef {import("./types.js").timeInit} timeInit
+ * Imports the 'timeInit' type from the "types.js" module
  */
 
 /**
@@ -250,15 +254,7 @@ class Time {
   /**
    * Creates a new ICAL.Time instance from the the passed data object.
    *
-   * @param {Object} aData            Time initialization
-   * @param {Number=} aData.year      The year for this date
-   * @param {Number=} aData.month     The month for this date
-   * @param {Number=} aData.day       The day for this date
-   * @param {Number=} aData.hour      The hour for this date
-   * @param {Number=} aData.minute    The minute for this date
-   * @param {Number=} aData.second    The second for this date
-   * @param {Boolean=} aData.isDate   If true, the instance represents a date
-   *                                    (as opposed to a date-time)
+   * @param {timeInit} aData          Time initialization
    * @param {Timezone=} aZone         Timezone this position occurs in
    */
   static fromData = function fromData(aData, aZone) {
@@ -386,29 +382,26 @@ class Time {
   /**
    * Creates a new ICAL.Time instance.
    *
-   * @param {Object} data           Time initialization
-   * @param {Number=} data.year     The year for this date
-   * @param {Number=} data.month    The month for this date
-   * @param {Number=} data.day      The day for this date
-   * @param {Number=} data.hour     The hour for this date
-   * @param {Number=} data.minute   The minute for this date
-   * @param {Number=} data.second   The second for this date
-   * @param {Boolean=} data.isDate  If true, the instance represents a date (as
-   *                                  opposed to a date-time)
-   * @param {Timezone} zone         timezone this position occurs in
+   * @param {timeInit} data           Time initialization
+   * @param {Timezone} zone           timezone this position occurs in
    */
   constructor(data, zone) {
     this.wrappedJSObject = this;
-    let time = this._time = Object.create(null);
+
+    /**
+     * @type {timeInit}
+     * @private
+     */
+    this._time = Object.create(null);
 
     /* time defaults */
-    time.year = 0;
-    time.month = 1;
-    time.day = 1;
-    time.hour = 0;
-    time.minute = 0;
-    time.second = 0;
-    time.isDate = false;
+    this._time.year = 0;
+    this._time.month = 1;
+    this._time.day = 1;
+    this._time.hour = 0;
+    this._time.minute = 0;
+    this._time.second = 0;
+    this._time.isDate = false;
 
     this.fromData(data, zone);
   }
@@ -447,6 +440,123 @@ class Time {
    * @private
    */
   _pendingNormalization = false;
+
+  /**
+   * The year of this date.
+   * @type {Number}
+   */
+  get year() {
+    return this._getTimeAttr('year');
+  }
+
+  set year(val) {
+    this._setTimeAttr('year', val);
+  }
+
+  /**
+   * The month of this date.
+   * @type {Number}
+   */
+  get month() {
+    return this._getTimeAttr('month');
+  }
+
+  set month(val) {
+    this._setTimeAttr('month', val);
+  }
+
+  /**
+   * The day of this date.
+   * @type {Number}
+   */
+  get day() {
+    return this._getTimeAttr('day');
+  }
+
+  set day(val) {
+    this._setTimeAttr('day', val);
+  }
+
+  /**
+   * The hour of this date-time.
+   * @type {Number}
+   */
+  get hour() {
+    return this._getTimeAttr('hour');
+  }
+
+  set hour(val) {
+    this._setTimeAttr('hour', val);
+  }
+
+  /**
+   * The minute of this date-time.
+   * @type {Number}
+   */
+  get minute() {
+    return this._getTimeAttr('minute');
+  }
+
+  set minute(val) {
+    this._setTimeAttr('minute', val);
+  }
+
+  /**
+   * The second of this date-time.
+   * @type {Number}
+   */
+  get second() {
+    return this._getTimeAttr('second');
+  }
+
+  set second(val) {
+    this._setTimeAttr('second', val);
+  }
+
+  /**
+   * If true, the instance represents a date (as opposed to a date-time)
+   * @type {Boolean}
+   */
+  get isDate() {
+    return this._getTimeAttr('isDate');
+  }
+
+  set isDate(val) {
+    this._setTimeAttr('isDate', val);
+  }
+
+  /**
+   * @private
+   * @param {String} attr             Attribute to get (one of: year, month,
+   *                                  day, hour, minute, second, isDate)
+   * @return {Number|Boolean}         Current value for the attribute
+   */
+  _getTimeAttr(attr) {
+    if (this._pendingNormalization) {
+      this._normalize();
+      this._pendingNormalization = false;
+    }
+
+    return this._time[attr];
+  }
+
+  /**
+   * @private
+   * @param {String} attr             Attribute to set (one of: year, month,
+   *                                  day, hour, minute, second, isDate)
+   * @param {Number|Boolean} val      New value for the attribute
+   */
+  _setTimeAttr(attr, val) {
+    // Check if isDate will be set and if was not set to normalize date.
+    // This avoids losing days when seconds, minutes and hours are zeroed
+    // what normalize will do when time is a date.
+    if (attr === "isDate" &amp;&amp; val &amp;&amp; !this._time.isDate) {
+      this.adjust(0, 0, 0, 0);
+    }
+    this._cachedUnixTime = null;
+    this._pendingNormalization = true;
+    this._time[attr] = val;
+  }
 
   /**
    * Returns a clone of the time object.
@@ -523,15 +633,7 @@ class Time {
   /**
    * Sets up the current instance using members from the passed data object.
    *
-   * @param {Object} aData            Time initialization
-   * @param {Number=} aData.year      The year for this date
-   * @param {Number=} aData.month     The month for this date
-   * @param {Number=} aData.day       The day for this date
-   * @param {Number=} aData.hour      The hour for this date
-   * @param {Number=} aData.minute    The minute for this date
-   * @param {Number=} aData.second    The second for this date
-   * @param {Boolean=} aData.isDate   If true, the instance represents a date
-   *                                    (as opposed to a date-time)
+   * @param {timeInit} aData          Time initialization
    * @param {Timezone=} aZone         Timezone this position occurs in
    */
   fromData(aData, aZone) {
@@ -1303,40 +1405,4 @@ class Time {
   }
 }
 export default Time;
-
-(function setupNormalizeAttributes() {
-  // This needs to run before any instances are created!
-  function defineAttr(attr) {
-    Object.defineProperty(Time.prototype, attr, {
-      get: function getTimeAttr() {
-        if (this._pendingNormalization) {
-          this._normalize();
-          this._pendingNormalization = false;
-        }
-
-        return this._time[attr];
-      },
-      set: function setTimeAttr(val) {
-        // Check if isDate will be set and if was not set to normalize date.
-        // This avoids losing days when seconds, minutes and hours are zeroed
-        // what normalize will do when time is a date.
-        if (attr === "isDate" &amp;&amp; val &amp;&amp; !this._time.isDate) {
-          this.adjust(0, 0, 0, 0);
-        }
-        this._cachedUnixTime = null;
-        this._pendingNormalization = true;
-        this._time[attr] = val;
-      }
-    });
-
-  }
-
-    defineAttr("year");
-    defineAttr("month");
-    defineAttr("day");
-    defineAttr("hour");
-    defineAttr("minute");
-    defineAttr("second");
-    defineAttr("isDate");
-})();
 </code></pre></article></section></div></div></div><div class="search-container" id="PkfLWpAbet" style="display:none"><div class="wrapper" id="iCxFxjkHbP"><button class="icon-button search-close-button" id="VjLlGakifb" aria-label="close search"><svg><use xlink:href="#close-icon"></use></svg></button><div class="search-box-c"><svg><use xlink:href="#search-icon"></use></svg> <input type="text" id="vpcKVYIppa" class="search-input" placeholder="Search..." autofocus></div><div class="search-result-c" id="fWwVHRuDuN"><span class="search-result-c-text">Type anything to view search result</span></div></div></div><div class="mobile-menu-icon-container"><button class="icon-button" id="mobile-menu" data-isopen="false" aria-label="menu"><svg><use xlink:href="#menu-icon"></use></svg></button></div><div id="mobile-sidebar" class="mobile-sidebar-container"><div class="mobile-sidebar-wrapper"><div class="mobile-nav-links"></div><div class="mobile-sidebar-items-c"><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-modules"><div>Modules</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="ICAL.module_TimezoneService.html">TimezoneService</a></div><div class="sidebar-section-children"><a href="ICAL.module_design.html">design</a></div><div class="sidebar-section-children"><a href="ICAL.module_design.html">design</a></div><div class="sidebar-section-children"><a href="ICAL.module_helpers.html">helpers</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-classes"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="ICAL.Binary.html">Binary</a></div><div class="sidebar-section-children"><a href="ICAL.Component.html">Component</a></div><div class="sidebar-section-children"><a href="ICAL.ComponentParser.html">ComponentParser</a></div><div class="sidebar-section-children"><a href="ICAL.Duration.html">Duration</a></div><div class="sidebar-section-children"><a href="ICAL.Event.html">Event</a></div><div class="sidebar-section-children"><a href="ICAL.Period.html">Period</a></div><div class="sidebar-section-children"><a href="ICAL.Property.html">Property</a></div><div class="sidebar-section-children"><a href="ICAL.Recur.html">Recur</a></div><div class="sidebar-section-children"><a href="ICAL.RecurExpansion.html">RecurExpansion</a></div><div class="sidebar-section-children"><a href="ICAL.RecurIterator.html">RecurIterator</a></div><div class="sidebar-section-children"><a href="ICAL.Time.html">Time</a></div><div class="sidebar-section-children"><a href="ICAL.Timezone.html">Timezone</a></div><div class="sidebar-section-children"><a href="ICAL.UtcOffset.html">UtcOffset</a></div><div class="sidebar-section-children"><a href="ICAL.VCardTime.html">VCardTime</a></div><div class="sidebar-section-children"><a href="ICAL.parse.ParserError.html">ParserError</a></div><div class="sidebar-section-children"><a href="InvalidRecurrenceRuleError.html">InvalidRecurrenceRuleError</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-namespaces"><div>Namespaces</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="ICAL.html">ICAL</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-global"><div>Global</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="global.html#Geo">Geo</a></div></div></div><div class="mobile-navbar-actions"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#dark-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div></div></div><script type="text/javascript" src="scripts/core.min.js"></script><script src="scripts/search.min.js" defer="defer"></script><script src="scripts/third-party/fuse.js" defer="defer"></script><script type="text/javascript">var tocbotInstance=tocbot.init({tocSelector:"#eed4d2a0bfd64539bb9df78095dec881",contentSelector:".main-content",headingSelector:"h1, h2, h3",hasInnerContainers:!0,scrollContainer:".main-content",headingsOffset:130,onClick:bringLinkToView})</script></body></html>
