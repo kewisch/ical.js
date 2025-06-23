@@ -127,7 +127,7 @@ export default [
       "@stylistic/keyword-spacing": "error",
 
       // Disallow space between function identifier and application.
-      "@stylistic/func-call-spacing": "error",
+      "@stylistic/function-call-spacing": "error",
 
       // Disallow use of comma operator.
       "no-sequences": "error",
@@ -278,7 +278,7 @@ export default [
       //"func-names": ["error", "never"],
 
       // Enforce placing object properties on separate lines
-      "@stylistic/object-property-newline": ["error", { allowMultiplePropertiesPerLine: true }],
+      "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }],
 
       // Enforce consistent line breaks inside braces
       //"object-curly-newline": ["error", { "multiline": true }],
