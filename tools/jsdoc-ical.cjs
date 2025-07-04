@@ -55,8 +55,18 @@ exports.handlers = {
     ({ gIcalClasses, typedefs } = JSON.parse(fs.readFileSync("./tools/jsdoc-symbols-temp.json", "utf-8")));
   },
   newDoclet: function({ doclet }) {
+
     if (doclet.type) {
       augmentTypes(doclet.type);
+    }
+
+    if (doclet.augments) {
+      addPrefix(doclet.augments);
+    }
+
+    // Remove the duplicate design entry
+    if (doclet.longname == "ICAL.module:design" && doclet.comment == "/** @module ICAL.design */") {
+      doclet.undocumented = true;
     }
 
     if (doclet.returns) {

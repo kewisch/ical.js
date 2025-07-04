@@ -22,6 +22,11 @@ exports.handlers = {
     if (doclet.kind === "typedef" && doclet.scope === "static" && doclet.longname.startsWith("ICAL.")) {
       typedefs.add({name: doclet.name, full: doclet.longname})
     }
+    if (doclet.kind === "class" && doclet.augments) {
+      for (let aug of doclet.augments) {
+        typedefs.add(aug)
+      }
+    }
   },
   processingComplete: function() {
     fs.writeFileSync("./tools/jsdoc-symbols-temp.json", JSON.stringify({gIcalClasses: Array.from(gIcalClasses), typedefs: Array.from(typedefs)}));
