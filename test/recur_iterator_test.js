@@ -1089,6 +1089,74 @@ suite('recur_iterator', function() {
         noInstance: true,
       });
 
+      // BYYEARDAY bounds.
+
+      // 1st day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=1', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-01-01T00:00:00',
+          '2026-01-01T00:00:00',
+          '2027-01-01T00:00:00',
+          '2028-01-01T00:00:00',
+          '2029-01-01T00:00:00',
+        ],
+      });
+
+      // 365th day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=365', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-12-31T00:00:00',
+          '2026-12-31T00:00:00',
+          '2027-12-31T00:00:00',
+          '2028-12-30T00:00:00',
+          '2029-12-31T00:00:00',
+        ],
+      });
+
+      // 366th day of the year. Only in leap years.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=366', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2028-12-31T00:00:00',
+          '2032-12-31T00:00:00',
+        ],
+      });
+
+      // Last day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-1', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-12-31T00:00:00',
+          '2026-12-31T00:00:00',
+          '2027-12-31T00:00:00',
+          '2028-12-31T00:00:00',
+          '2029-12-31T00:00:00',
+        ],
+      });
+
+      // 365th-to-last day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-365', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-01-01T00:00:00',
+          '2026-01-01T00:00:00',
+          '2027-01-01T00:00:00',
+          '2028-01-02T00:00:00',
+          '2029-01-01T00:00:00',
+        ],
+      });
+
+      // 366th-to-last day of the year. Only in leap years.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-366', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2028-01-01T00:00:00',
+          '2032-01-01T00:00:00',
+        ],
+      });
+
       // Tycho brahe days - yearly, byYearDay with negative offsets
       testRRULE('FREQ=YEARLY;BYYEARDAY=1,2,4,6,11,12,20,42,48,49,-306,-303,' +
                 '-293,-292,-266,-259,-258,-239,-228,-209,-168,-164,-134,-133,' +
