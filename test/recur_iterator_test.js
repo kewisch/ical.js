@@ -144,13 +144,6 @@ suite('recur_iterator', function() {
       let start = ICAL.Time.fromString(options.dtStart);
       let recur = ICAL.Recur.fromString(ruleString);
 
-      if (options.throws) {
-        assert.throws(function() {
-          recur.iterator(start);
-        });
-        return;
-      }
-
       let iterator = recur.iterator(start);
 
       if (options.noInstance) {
@@ -814,7 +807,7 @@ suite('recur_iterator', function() {
       // Invalid rule. There's never a 31st of Feburary, check that this fails.
       testRRULE('FREQ=MONTHLY;INTERVAL=12;BYMONTHDAY=31', {
         dtStart: '2022-02-01T08:00:00',
-        throws: true,
+        noInstance: true,
       });
 
       // monthly + by month
@@ -1094,6 +1087,74 @@ suite('recur_iterator', function() {
       testRRULE('FREQ=YEARLY;BYMONTHDAY=15,16,17,18,19,20,21;BYDAY=1MO', {
         dtStart: '2015-01-01T08:00:00',
         noInstance: true,
+      });
+
+      // BYYEARDAY bounds.
+
+      // 1st day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=1', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-01-01T00:00:00',
+          '2026-01-01T00:00:00',
+          '2027-01-01T00:00:00',
+          '2028-01-01T00:00:00',
+          '2029-01-01T00:00:00',
+        ],
+      });
+
+      // 365th day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=365', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-12-31T00:00:00',
+          '2026-12-31T00:00:00',
+          '2027-12-31T00:00:00',
+          '2028-12-30T00:00:00',
+          '2029-12-31T00:00:00',
+        ],
+      });
+
+      // 366th day of the year. Only in leap years.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=366', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2028-12-31T00:00:00',
+          '2032-12-31T00:00:00',
+        ],
+      });
+
+      // Last day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-1', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-12-31T00:00:00',
+          '2026-12-31T00:00:00',
+          '2027-12-31T00:00:00',
+          '2028-12-31T00:00:00',
+          '2029-12-31T00:00:00',
+        ],
+      });
+
+      // 365th-to-last day of the year.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-365', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2025-01-01T00:00:00',
+          '2026-01-01T00:00:00',
+          '2027-01-01T00:00:00',
+          '2028-01-02T00:00:00',
+          '2029-01-01T00:00:00',
+        ],
+      });
+
+      // 366th-to-last day of the year. Only in leap years.
+      testRRULE('FREQ=YEARLY;BYYEARDAY=-366', {
+        dtStart: '2025-01-01T00:00:00',
+        dates: [
+          '2028-01-01T00:00:00',
+          '2032-01-01T00:00:00',
+        ],
       });
 
       // Tycho brahe days - yearly, byYearDay with negative offsets
@@ -1431,6 +1492,18 @@ suite('recur_iterator', function() {
           '2016-02-07',
           '2016-03-06',
         ]
+      });
+
+      // Invalid recurrence rule. There can't be a second first Thursday.
+      testRRULE('FREQ=MONTHLY;BYDAY=1TH;BYSETPOS=2', {
+        dtStart: '2015-01-11T08:00:00',
+        noInstance: true
+      });
+
+      // Invalid recurrence rule. There can't be a 24th weekday in a month.
+      testRRULE('FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=24', {
+        dtStart: '2025-07-18T00:00:00',
+        noInstance: true
       });
 
       //YEARLY TESTS
