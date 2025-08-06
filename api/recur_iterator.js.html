@@ -369,7 +369,7 @@ class RecurIterator {
           // The longest possible sequence of skipped months is February-April-June,
           // so we might need to call next_month up to three times.
           if (!this.next_month() &amp;&amp; !this.next_month() &amp;&amp; !this.next_month()) {
-            throw new Error("No possible occurrences");
+            throw new InvalidRecurrenceRuleError();
           }
         }
       }
@@ -399,6 +399,7 @@ class RecurIterator {
     }
 
     let valid;
+    let invalid_count = 0;
     do {
       valid = 1;
 
@@ -420,6 +421,13 @@ class RecurIterator {
         break;
       case "MONTHLY":
         valid = this.next_month();
+        if (valid) {
+          invalid_count = 0;
+        } else if (++invalid_count == 336) {
+          // We've been through all the possible months and not found a recurrence. Stop.
+          this.completed = true;
+          return null;
+        }
         break;
       case "YEARLY":
         this.next_year();
