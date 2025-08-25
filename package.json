@@ -31,7 +31,7 @@
     "@stylistic/eslint-plugin": "^5.2.2",
     "benchmark": "^2.1.4",
     "c8": "^10.1.3",
-    "chai": "^5.2.1",
+    "chai": "^6.0.1",
     "clean-jsdoc-theme": "^4.3.0",
     "eslint": "^9.32.0",
     "eslint-plugin-html": "^8.1.3",
