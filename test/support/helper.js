@@ -24,7 +24,7 @@ if (testSupport.isKarma) {
 /* eslint-disable no-var, no-redeclare */
 if (testSupport.isNode) {
   var ICAL = (await import("../../lib/ical/module.js")).default;
-  var chai = await import("../../node_modules/chai/chai.js");
+  var chai = await import("../../node_modules/chai/index.js");
   var Benchmark = (await import("benchmark")).default;
   var { URL } = await import("url");
   var { readFile, readdir } = (await import('fs/promises'));
