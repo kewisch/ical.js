@@ -39,6 +39,13 @@ suite('parserv2', function() {
       'vcard.vcf',
       'vcard_author.vcf',
       'vcard3.vcf',
+      'vcard21.vcf',
+      // vcard21_encoding.vcf - QUOTED-PRINTABLE not supported (see VCARD21_SUPPORT.md)
+      'vcard21_newline.vcf',
+      'vcard21_escaping.vcf',
+      'vcard21_charset.vcf',
+      'vcard21_type_params.vcf',
+      'vcard21_comprehensive.vcf',
       'vcard_grouped.vcf',
       'escape_semicolon.vcf'
     ];

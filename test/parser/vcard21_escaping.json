@@ -1,0 +1,13 @@
+[
+  "vcard",
+  [
+    [ "version", {}, "text", "2.1" ],
+    [ "fn", {}, "text", "Test, Escaping; Characters" ],
+    [ "n", {}, "text", [ "Test, Inc.", "John", "Q.", "Mr.", "Jr." ] ],
+    [ "org", {}, "text", [ "Smith, Jones & Associates", "Research; Development" ] ],
+    [ "title", {}, "text", "Vice President, Engineering" ],
+    [ "note", {}, "text", "Use backslash to escape: comma, semicolon; and backslash\\" ],
+    [ "email", { "type": "INTERNET" }, "text", "test,user@example.com" ]
+  ],
+  []
+]
