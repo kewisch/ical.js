@@ -39,6 +39,7 @@ suite('parserv2', function() {
       'vcard.vcf',
       'vcard_author.vcf',
       'vcard3.vcf',
+      'vcard21.vcf',
       'vcard_grouped.vcf',
       'escape_semicolon.vcf'
     ];
