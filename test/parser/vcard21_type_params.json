@@ -4,10 +4,10 @@
     [ "version", {}, "text", "2.1" ],
     [ "fn", {}, "text", "Test Type Parameters" ],
     [ "n", {}, "text", [ "Parameters", "Type", "", "", "" ] ],
-    [ "tel", { "work": "", "voice": "" }, "phone-number", "+1-555-1234" ],
-    [ "tel", { "home": "", "fax": "" }, "phone-number", "+1-555-5678" ],
-    [ "adr", { "home": "", "postal": "" }, "text", [ "", "", "123 Main St", "Springfield", "IL", "62701", "USA" ] ],
-    [ "email", { "internet": "", "pref": "" }, "text", "test@example.com" ],
+    [ "tel", { "type": [ "WORK", "VOICE" ] }, "phone-number", "+1-555-1234" ],
+    [ "tel", { "type": [ "HOME", "FAX" ] }, "phone-number", "+1-555-5678" ],
+    [ "adr", { "type": [ "HOME", "POSTAL" ] }, "text", [ "", "", "123 Main St", "Springfield", "IL", "62701", "USA" ] ],
+    [ "email", { "type": [ "INTERNET", "PREF" ] }, "text", "test@example.com" ],
     [ "tel", { "type": [ "WORK", "CELL" ] }, "phone-number", "+1-555-9999" ]
   ],
   []

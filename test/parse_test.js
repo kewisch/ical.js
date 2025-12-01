@@ -44,8 +44,8 @@ suite('parserv2', function() {
       'vcard21_newline.vcf',
       'vcard21_escaping.vcf',
       'vcard21_charset.vcf',
-      // vcard21_type_params.vcf - Bare TYPE params not supported (see VCARD21_SUPPORT.md)
-      // vcard21_comprehensive.vcf - Uses bare TYPE params (see VCARD21_SUPPORT.md)
+      'vcard21_type_params.vcf',
+      'vcard21_comprehensive.vcf',
       'vcard_grouped.vcf',
       'escape_semicolon.vcf'
     ];

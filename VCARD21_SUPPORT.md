@@ -34,8 +34,9 @@ All standard vCard 2.1 properties are supported:
 - BASE64 and B encoding for inline binary data (PHOTO, LOGO, SOUND, KEY)
 - Proper handling of folded binary content
 
-### ✅ Parameter Support (Partial)
-- TYPE parameter with explicit `TYPE=` prefix: `TEL;TYPE=WORK;TYPE=VOICE`
+### ✅ Parameter Support
+- TYPE parameter with or without `TYPE=` prefix: `TEL;WORK;VOICE` or `TEL;TYPE=WORK;TYPE=VOICE`
+- Bare TYPE parameters (vCard 2.1 style): automatically normalized to TYPE= format
 - ENCODING parameter: `ENCODING=BASE64`, `ENCODING=B`
 - VALUE parameter for type specification
 - CHARSET parameter (parsed but not actively used for character set conversion)
@@ -56,27 +57,6 @@ NOTE;ENCODING=QUOTED-PRINTABLE:This has speci=E4l ch=E4racters
 
 **Workaround**: Use BASE64 encoding or plain text values instead.
 
-### ⚠️ Parameters Without TYPE= Prefix (Difference #9)
-**Status**: Not implemented
-
-vCard 2.1 allows parameters without the "TYPE=" prefix:
-```
-TEL;WORK;VOICE:+1-555-1234
-ADR;HOME;POSTAL:;;123 Main St;City;State;Zip;Country
-```
-
-vCard 3.0 requires explicit TYPE= prefix:
-```
-TEL;TYPE=WORK;TYPE=VOICE:+1-555-1234
-ADR;TYPE=HOME;TYPE=POSTAL:;;123 Main St;City;State;Zip;Country
-```
-
-**Reason**: This requires significant parser modifications to distinguish between:
-- Parameter names with values: `ENCODING=BASE64`
-- Bare parameter values: `WORK`, `VOICE`
-- Determining which parameters accept bare values
-
-**Workaround**: Use the vCard 3.0 format with explicit `TYPE=` prefix. Most modern vCard 2.1 implementations accept this syntax.
 
 ### ⚠️ CHARSET Parameter Character Set Conversion (Difference #7)
 **Status**: Parsed but not actively converted
@@ -102,7 +82,7 @@ However, automatic character set conversion from ISO-8859-1, Windows-1252, etc. 
 | Newline in text | Literal `\n` | Actual newline | ✅ Correct for both |
 | Comma escaping | Required | Required | ✅ Fully supported |
 | Semicolon escaping | Required | Required | ✅ Fully supported |
-| Bare TYPE parameters | ✅ Allowed | ❌ Requires `TYPE=` | ⚠️ Use `TYPE=` prefix |
+| Bare TYPE parameters | ✅ Allowed | ❌ Requires `TYPE=` | ✅ Fully supported |
 | CHARSET parameter | ✅ Supported | ❌ Removed | ⚠️ Parsed only |
 | Multi-value properties | No commas | Commas allowed | ✅ Correct for both |
 
@@ -115,17 +95,17 @@ Test files are provided in `test/parser/` to verify vCard 2.1 support:
 - `vcard21_escaping.vcf` - Tests comma, semicolon, and backslash escaping
 - `vcard21_charset.vcf` - Tests CHARSET parameter parsing (⚠️ limited support)
 - `vcard21_encoding.vcf` - Tests QUOTED-PRINTABLE encoding (⚠️ not supported)
-- `vcard21_type_params.vcf` - Tests bare TYPE parameters (⚠️ not supported)
+- `vcard21_type_params.vcf` - Tests bare TYPE parameters (✅ fully supported)
 - `vcard21_comprehensive.vcf` - Comprehensive test of all properties
 
 ## Recommendations
 
 For maximum compatibility:
 
-1. **Use explicit TYPE= prefix** even in vCard 2.1 files:
+1. **Bare TYPE parameters are fully supported** - both formats work:
    ```
-   TEL;TYPE=WORK;TYPE=VOICE:+1-555-1234  ✅ Works
-   TEL;WORK;VOICE:+1-555-1234             ❌ Won't parse
+   TEL;WORK;VOICE:+1-555-1234             ✅ Works (vCard 2.1 style)
+   TEL;TYPE=WORK;TYPE=VOICE:+1-555-1234   ✅ Works (vCard 3.0 style)
    ```
 
 2. **Use BASE64 encoding** instead of QUOTED-PRINTABLE:
@@ -143,9 +123,8 @@ For maximum compatibility:
 Potential future improvements:
 
 1. Implement QUOTED-PRINTABLE decoder for full vCard 2.1 compatibility
-2. Add support for bare TYPE parameter values
-3. Implement character set conversion for CHARSET parameter
-4. Add more comprehensive error messages for unsupported features
+2. Implement character set conversion for CHARSET parameter
+3. Add more comprehensive error messages for unsupported features
 
 ## References
 
