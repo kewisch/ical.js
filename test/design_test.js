@@ -526,6 +526,59 @@ suite('design', function() {
       });
     });
 
+    suite('date (vcard3)', function() {
+      setup(function() {
+        subject = ICAL.design.vcard3.value.date;
+      });
+
+      test('#(to|from)ICAL date', function() {
+        let original = '2026-02-24';
+        let fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '2026-02-24');
+        assert.equal(subject.toICAL(fromICAL), original);
+      });
+
+      test('#(un)decorate date', function() {
+        let undecorated = '2026-02-24';
+        let decorated = subject.decorate(undecorated);
+
+        assert.equal(decorated.year, 2026, 'year');
+        assert.equal(decorated.month, 2, 'month');
+        assert.equal(decorated.day, 24, 'day');
+
+        assert.equal(subject.undecorate(decorated), undecorated);
+      });
+    });
+
+    suite('date-time (vcard3)', function() {
+      setup(function() {
+        subject = ICAL.design.vcard3.value['date-time'];
+      });
+
+      test('#(to|from)ICAL datetime', function() {
+        let original = '2026-02-24T15:00:00';
+        let fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '2026-02-24T15:00:00');
+        assert.equal(subject.toICAL(fromICAL), original);
+      });
+
+      test('#(un)decorate datetime', function() {
+        let undecorated = '2026-02-24T15:00:00';
+        let decorated = subject.decorate(undecorated);
+
+        assert.equal(decorated.year, 2026, 'year');
+        assert.equal(decorated.month, 2, 'month');
+        assert.equal(decorated.day, 24, 'day');
+        assert.equal(decorated.hour, 15, 'hour');
+        assert.equal(decorated.minute, 0, 'minute');
+        assert.equal(decorated.second, 0, 'second');
+
+        assert.equal(subject.undecorate(decorated), undecorated);
+      });
+    });
+
     suite('duration', function() {
       setup(function() {
         subject = subject.value.duration;
