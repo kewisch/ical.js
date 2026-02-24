@@ -14,13 +14,13 @@
      [ "tel", { "type": ["WORK", "FAX" ] }, "phone-number", "205246;;,;" ],
      [ "tel", { "type": ["WORK", "VOICE" ] }, "phone-number", "222222" ],
      [ "org", {}, "text", "Firma" ],
-     [ "bday", {}, "date-time", "2019-02-10T00:00:33" ],
+     [ "bday", {}, "date-or-datetime", "2019-02-10T00:00:33" ],
      [ "nickname", {}, "text", "Hugo" ],
      [ "x-abdate",  {"group": "item1"}, "date-and-or-time", "20190220T000035" ],
      [ "x-ablabel", {"group": "item1"}, "unknown", "_$!<Anniversary>!$_" ],
      [ "x-anniversary", {}, "date-and-or-time", "20190220T000035" ],
      [ "categories", {}, "text", "Test-Kontakte" ],
-     [ "rev", {}, "date-time", "2019-10-08T17:05:14Z" ]
+     [ "rev", {}, "date-or-datetime", "2019-10-08T17:05:14Z" ]
     ],
     []
  ]
