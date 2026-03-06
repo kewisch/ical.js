@@ -61,6 +61,7 @@ export default [{
         emitDeclarationOnly: true,
         declarationMap: true,
         declarationDir: 'dist/types',
+        outDir: 'dist',
       },
     })
   ]
