@@ -1081,13 +1081,12 @@ suite('icaltime', function() {
     for (let datakey in test_data) {
       let data = test_data[datakey];
       let dt = Time.fromString(data.str);
-      let cp = dt.clone();
 
       assert.equal(dt.toUnixTime(), data.expect_unixtime);
       let dur = dt.subtractDate(Time.epochTime);
       assert.equal(dur.toSeconds(), data.expect_unixtime);
 
-      cp = dt.clone();
+      let cp = dt.clone();
       cp.year += 1;
 
       let diff = cp.subtractDate(dt);
