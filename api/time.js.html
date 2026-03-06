@@ -998,13 +998,11 @@ class Time {
       week1 = Time.weekOneStarts(isoyear + 1, aWeekStart);
       if (dt.compare(week1) &lt; 0) {
         week1 = Time.weekOneStarts(isoyear, aWeekStart);
-      } else {
-        isoyear++;
       }
     } else {
       week1 = Time.weekOneStarts(isoyear, aWeekStart);
       if (dt.compare(week1) &lt; 0) {
-        week1 = Time.weekOneStarts(--isoyear, aWeekStart);
+        week1 = Time.weekOneStarts(isoyear - 1, aWeekStart);
       }
     }
 
@@ -1101,13 +1099,13 @@ class Time {
   compareDateOnlyTz(other, tz) {
     let a = this.convertToZone(tz);
     let b = other.convertToZone(tz);
-    let rc = 0;
+    let rc;
 
     if ((rc = Time._cmp_attr(a, b, "year")) != 0) return rc;
     if ((rc = Time._cmp_attr(a, b, "month")) != 0) return rc;
     if ((rc = Time._cmp_attr(a, b, "day")) != 0) return rc;
 
-    return rc;
+    return 0;
   }
 
   /**

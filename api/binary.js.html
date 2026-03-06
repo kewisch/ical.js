@@ -76,7 +76,6 @@ class Binary {
               "abcdefghijklmnopqrstuvwxyz0123456789+/=";
     let o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
       ac = 0,
-      enc = "",
       tmp_arr = [];
 
     if (!data) {
@@ -99,7 +98,7 @@ class Binary {
       tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
     } while (i &lt; data.length);
 
-    enc = tmp_arr.join('');
+    let enc = tmp_arr.join('');
 
     let r = data.length % 3;
 
@@ -129,7 +128,6 @@ class Binary {
               "abcdefghijklmnopqrstuvwxyz0123456789+/=";
     let o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
       ac = 0,
-      dec = "",
       tmp_arr = [];
 
     if (!data) {
@@ -159,9 +157,7 @@ class Binary {
       }
     } while (i &lt; data.length);
 
-    dec = tmp_arr.join('');
-
-    return dec;
+    return tmp_arr.join('');
   }
 
   /**
