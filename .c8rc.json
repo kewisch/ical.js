@@ -1,0 +1,8 @@
+{
+  "include": "lib/ical",
+  "reporter": [
+    "html",
+    "text",
+    "lcov"
+  ]
+}
