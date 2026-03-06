@@ -47,6 +47,11 @@
     "rollup": "^4.59.0",
     "yauzl-promise": "^4.0.0"
   },
+  "overrides": {
+    "c8": {
+      "yargs": "^18.0.0"
+    }
+  },
   "license": "MPL-2.0",
   "engine": {
     "node": ">=10"
@@ -82,14 +87,6 @@
     "ui": "tdd",
     "require": "test/support/helper.js",
     "reporter": "spec"
-  },
-  "c8": {
-    "include": "lib/ical",
-    "reporter": [
-      "text",
-      "html",
-      "lcov"
-    ]
   },
   "saucelabs": {
     "SL_Chrome": {
