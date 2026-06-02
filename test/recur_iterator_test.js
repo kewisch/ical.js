@@ -866,6 +866,130 @@ suite('recur_iterator', function() {
           "2015-04-19T08:00:00Z"
         ]
       });
+      // Choose the last valid day among a list of month-end candidates.
+      // This covers February and months with 30 or 31 days.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=28,29,30,31;BYSETPOS=-1', {
+        dtStart: '2026-01-01',
+        dates: [
+          '2026-01-31',
+          '2026-02-28',
+          '2026-03-31',
+          '2026-04-30',
+          '2026-05-31',
+          '2026-06-30',
+          '2026-07-31',
+          '2026-08-31',
+          '2026-09-30',
+          '2026-10-31',
+          '2026-11-30',
+          '2026-12-31',
+        ]
+      });
+      // Pick the first occurrence from multiple BYMONTHDAY values.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=1;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-02-01',
+          '2016-03-01',
+        ]
+      });
+      // Pick the second occurrence from the same BYMONTHDAY list.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=2;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-15',
+          '2016-02-15',
+          '2016-03-15',
+        ]
+      });
+      // Pick the last occurrence from the same BYMONTHDAY list.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=-1;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-15',
+          '2016-02-15',
+          '2016-03-15',
+        ]
+      });
+      // Pick multiple positions from the same sorted list, verifying order.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=1,2;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-15',
+          '2016-02-01',
+          '2016-02-15',
+        ]
+      });
+      // Combine negative BYMONTHDAY normalization with BYSETPOS selection.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;BYSETPOS=1;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-31',
+          '2016-02-29',
+          '2016-03-31',
+        ]
+      });
+      // Mixed positive and negative BYMONTHDAY values with BYSETPOS=-1.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1,31;BYSETPOS=-1;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-31',
+          '2016-02-29',
+          '2016-03-31',
+          '2016-04-30',
+        ]
+      });
+      // Start mid-month and pick the second BYMONTHDAY occurrence each month.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=5,15,25;BYSETPOS=2;COUNT=4', {
+        dtStart: '2016-01-16',
+        byCount: true,
+        dates: [
+          '2016-02-15',
+          '2016-03-15',
+          '2016-04-15',
+          '2016-05-15',
+        ]
+      });
+      // Select the last valid candidate from a list that spans both 30- and 31-day months.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31,30;BYSETPOS=-1;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-31',
+          '2016-03-31',
+          '2016-04-30',
+          '2016-05-31',
+        ]
+      });
+      // 31st with BYSETPOS=1 across a long UNTIL range, ensuring months without
+      // a 31st are skipped and the recurrence continues correctly.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31;BYSETPOS=1;UNTIL=20161231', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-31',
+          '2016-03-31',
+          '2016-05-31',
+          '2016-07-31',
+          '2016-08-31',
+          '2016-10-31',
+          '2016-12-31',
+        ]
+      });
+      // BYSETPOS is too large for the list of matching BYMONTHDAY values,
+      // so the rule produces no occurrences.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=3', {
+        dtStart: '2016-01-01',
+        noInstance: true
+      });
     });
 
     suite('YEARLY', function() {
