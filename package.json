@@ -1,6 +1,6 @@
 {
   "name": "ical.js",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "author": "Philipp Kewisch",
   "contributors": [
     "Github Contributors (https://github.com/kewisch/ical.js/graphs/contributors)"
@@ -54,7 +54,7 @@
   },
   "license": "MPL-2.0",
   "engine": {
-    "node": ">=10"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "test": "npm run test-unit && npm run test-acceptance",
