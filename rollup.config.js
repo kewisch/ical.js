@@ -51,7 +51,7 @@ export default [{
     }
   ],
   plugins: [
-    babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
+    babel({ babelHelpers: 'bundled' }),
     typescript({
       include: ['lib/ical/*.js'],
 
