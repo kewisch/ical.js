@@ -82,10 +82,5 @@
     "dist/ical.es5.min.cjs",
     "dist/types/*",
     "lib/ical/*.js"
-  ],
-  "mocha": {
-    "ui": "tdd",
-    "require": "test/support/helper.js",
-    "reporter": "spec"
-  }
+  ]
 }

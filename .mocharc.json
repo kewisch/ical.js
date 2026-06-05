@@ -1,0 +1,6 @@
+{
+  "ui": "tdd",
+  "require": "test/support/helper.js",
+  "reporter": "spec",
+  "timeout": 5000
+}
