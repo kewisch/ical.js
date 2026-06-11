@@ -1,0 +1,12 @@
+[
+  "vcard",
+  [
+    [ "version", {}, "text", "2.1" ],
+    [ "fn", { "charset": "UTF-8" }, "text", "Test Charset" ],
+    [ "n", { "charset": "UTF-8" }, "text", [ "Charset", "Test", "", "", "" ] ],
+    [ "note", { "charset": "ISO-8859-1" }, "text", "This note uses ISO-8859-1 charset" ],
+    [ "org", { "charset": "UTF-8" }, "text", "Test Organization" ],
+    [ "email", { "type": "INTERNET" }, "text", "test@example.com" ]
+  ],
+  []
+]

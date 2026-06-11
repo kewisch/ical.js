@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION:2.1
+FN;CHARSET=UTF-8:Test Charset
+N;CHARSET=UTF-8:Charset;Test;;;
+NOTE;CHARSET=ISO-8859-1:This note uses ISO-8859-1 charset
+ORG;CHARSET=UTF-8:Test Organization
+EMAIL;TYPE=INTERNET:test@example.com
+END:VCARD

@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:2.1
+FN:Test Encoding
+N:Encoding;Test;;;
+NOTE;ENCODING=QUOTED-PRINTABLE:This is a test with speci=E4l ch=E4racters=
+ and a line that is quite long and needs to be wrapped according to the Q=
+uoted-Printable encoding rules.
+PHOTO;ENCODING=BASE64;TYPE=JPEG:SGVsbG8sIHRoaXMgaXMgYSB0ZXN0IGltYWdl
+ IGluIGJhc2U2NCBlbmNvZGluZy4=
+END:VCARD

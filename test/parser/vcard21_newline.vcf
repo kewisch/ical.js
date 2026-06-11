@@ -1,0 +1,8 @@
+BEGIN:VCARD
+VERSION:2.1
+FN:Test Newline
+N:Newline;Test;;;
+ADR;TYPE=HOME:;;123 Main St\nApt 4B;Springfield;IL;62701;USA
+NOTE:Line one\nLine two\nLine three
+LABEL;TYPE=HOME:John Doe\n123 Main Street\nSpringfield\, IL 62701
+END:VCARD

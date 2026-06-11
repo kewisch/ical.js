@@ -1,0 +1,9 @@
+BEGIN:VCARD
+VERSION:2.1
+FN:Test\, Escaping\; Characters
+N:Test\, Inc.;John;Q.;Mr.;Jr.
+ORG:Smith\, Jones & Associates;Research\; Development
+TITLE:Vice President\, Engineering
+NOTE:Use backslash to escape: comma\, semicolon\; and backslash\\
+EMAIL;TYPE=INTERNET:test\,user@example.com
+END:VCARD

@@ -1,0 +1,12 @@
+[
+  "vcard",
+  [
+    [ "version", {}, "text", "2.1" ],
+    [ "fn", {}, "text", "Test Newline" ],
+    [ "n", {}, "text", [ "Newline", "Test", "", "", "" ] ],
+    [ "adr", { "type": "HOME" }, "text", [ "", "", "123 Main St\\nApt 4B", "Springfield", "IL", "62701", "USA" ] ],
+    [ "note", {}, "text", "Line one\\nLine two\\nLine three" ],
+    [ "label", { "type": "HOME" }, "text", "John Doe\\n123 Main Street\\nSpringfield, IL 62701" ]
+  ],
+  []
+]

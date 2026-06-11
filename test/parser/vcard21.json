@@ -1,0 +1,30 @@
+[
+  "vcard",
+  [
+    [ "version", {}, "text", "2.1" ],
+    [ "fn", {}, "text", "Mr. John Q. Public, Esq." ],
+    [ "n", {}, "text", [ "Public", "John", "Quinlan", "Mr.", "Esq." ] ],
+    [ "nickname", {}, "text", "Robbie" ],
+    [ "photo", { "encoding": "BASE64", "type": "JPEG" }, "binary", "SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBpbWFnZSBqdXN0IGEgdGVzdC4=" ],
+    [ "bday", {}, "date", "1996-04-15" ],
+    [ "adr", { "type": "HOME" }, "text", ["", "", "123 Main Street", "Any Town", "CA", "91921-1234" ] ],
+    [ "label", { "type": "HOME" }, "text", "Mr.John Q. Public, Esq.\\nMail Drop: TNE QB\\n123 Main Street\\nAny Town, CA  91921-1234\\nU.S.A." ],
+    [ "tel", { "type": [ "WORK", "VOICE" ] }, "phone-number", "+1-213-555-1234" ],
+    [ "email", { "type": "INTERNET" }, "text", "jqpublic@xyz.dom1.com" ],
+    [ "mailer", {}, "text", "PigeonMail 2.1" ],
+    [ "tz", {}, "utc-offset", "-05:00" ],
+    [ "geo", {}, "float", [37.386013, -122.082932 ] ],
+    [ "title", {}, "text", "Director, Research and Development" ],
+    [ "role", {}, "text", "Programmer" ],
+    [ "logo", { "encoding": "BASE64", "type": "JPEG" }, "binary", "SGVsbG8sIHRoaXMgaXMgbm90IGEgcmVhbCBpbWFnZSBqdXN0IGEgdGVzdC4=" ],
+    [ "org", {}, "text", ["ABC, Inc.", "North American Division", "Marketing" ] ],
+    [ "note", {}, "text", "This fax number is operational 0800 to 1715 EST, Mon-Fri." ],
+    [ "prodid", {}, "text", "-//ONLINE DIRECTORY//NONSGML Version 1//EN" ],
+    [ "rev", {}, "date-time", "1995-10-31T22:27:10Z" ],
+    [ "sort-string", {}, "text", "Harten" ],
+    [ "sound", { "encoding": "BASE64", "type": "BASIC" }, "binary", "VGhlcmUgaXMgbm8gc291bmQgaW4gc3BhY2U=" ],
+    [ "class", {}, "text", "PUBLIC" ],
+    [ "key", { "encoding": "BASE64" }, "binary", "Tm90IHRoZSBrZXkgeW91IGFyZSBsb29raW5nIGZvcg==" ]
+  ],
+  []
+]
