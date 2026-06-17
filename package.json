@@ -22,7 +22,7 @@
     "parser"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-env": "^8.0.0",
     "@eslint/js": "^10.0.1",
     "@octokit/core": "^7.0.6",
     "@rollup/plugin-babel": "^7.0.0",
@@ -32,7 +32,7 @@
     "benchmark": "^2.1.4",
     "c8": "^11.0.0",
     "chai": "^6.2.2",
-    "clean-jsdoc-theme": "^4.3.0",
+    "clean-jsdoc-theme": "^5.0.2",
     "eslint": "^10.0.2",
     "eslint-plugin-html": "^8.1.4",
     "globals": "^17.4.0",
