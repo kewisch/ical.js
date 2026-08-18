@@ -157,6 +157,42 @@ suite('icaltime', function() {
 
   });
 
+  suite('#501 - flipping isDate true then false clears the time', function() {
+    test('hour/minute/second are cleared', function() {
+      let time = new ICAL.Time({
+        second: 56,
+        minute: 34,
+        hour: 12,
+        day: 1,
+        month: 1,
+        year: 2022
+      });
+
+      time.isDate = true;
+      time.isDate = false;
+
+      assert.equal(time.hour, 0);
+      assert.equal(time.minute, 0);
+      assert.equal(time.second, 0);
+    });
+
+    test('adjust still runs first so days are not lost', function() {
+      let time = new ICAL.Time({
+        hour: 14,
+        day: 10,
+        month: 8,
+        year: 2016
+      });
+
+      time.adjust(1, 10, 0, 0);
+      time.isDate = true;
+
+      assert.equal(time.year, 2016);
+      assert.equal(time.month, 8);
+      assert.equal(time.day, 12);
+    });
+  });
+
   suite('#subtractDate and #subtractDateTz', function() {
     testSupport.useTimezones('America/Los_Angeles', 'America/New_York');
 
