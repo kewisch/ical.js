@@ -251,6 +251,15 @@ suite('parserv2', function() {
       assert.deepEqual(attendee.toJSON(), expected);
     });
 
+    test('with colon in quoted multi-value parameter', function() {
+      let line = 'X-A;MEMBER="a","b:c":v';
+      let property = ICAL.Property.fromString(line);
+
+      assert.deepEqual(property.getParameter('member'), ['a', 'b:c']);
+      assert.equal(property.getFirstValue(), 'v');
+      assert.equal(property.toICALString(), line);
+    });
+
     test('with quoted value', function() {
       let input = ';FMTTYPE="text/html":Here is HTML with signs like =;';
       let expected = {
