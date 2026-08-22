@@ -169,6 +169,33 @@
       },
       "unknown",
       "v"
+    ],
+    [
+      "x-b",
+      {
+        "param": "a;:"
+      },
+      "unknown",
+      "v"
+    ],
+    [
+      "x-c",
+      {
+        "param": "a\"b;:"
+      },
+      "unknown",
+      "v"
+    ],
+    [
+      "x-d",
+      {
+        "member": [
+          "a\"b",
+          "c;:"
+        ]
+      },
+      "unknown",
+      "v"
     ]
   ],
   []
