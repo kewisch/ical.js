@@ -157,6 +157,32 @@ suite('icaltime', function() {
 
   });
 
+  suite('#clone', function() {
+    function pendingNormalizationDate() {
+      let subject = new ICAL.Time({ year: 2025, month: 1, day: 11, isDate: true });
+      // Adding a sub-day duration to a date is a no-op, but it leaves the
+      // normalization pending.
+      subject.addDuration(ICAL.Duration.fromString('-PT8H'));
+      return subject;
+    }
+
+    test('date with pending normalization', function() {
+      assert.equal(pendingNormalizationDate().clone().toString(), '2025-01-11');
+    });
+
+    test('date normalized by a read before cloning', function() {
+      let subject = pendingNormalizationDate();
+      assert.equal(subject.toString(), '2025-01-11');
+      assert.equal(subject.clone().toString(), '2025-01-11');
+    });
+
+    test('date-time with pending normalization', function() {
+      let subject = new ICAL.Time({ year: 2025, month: 1, day: 11, hour: 4 });
+      subject.addDuration(ICAL.Duration.fromString('-PT8H'));
+      assert.equal(subject.clone().toString(), '2025-01-10T20:00:00');
+    });
+  });
+
   suite('#subtractDate and #subtractDateTz', function() {
     testSupport.useTimezones('America/Los_Angeles', 'America/New_York');
 
