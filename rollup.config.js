@@ -54,12 +54,23 @@ export default [{
     babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
     typescript({
       include: ['lib/ical/*.js'],
+
+      // The plugin resolves `include` against compilerOptions.rootDir, keep it relative to the project root
+      filterRoot: '.',
+
+      // tslib is an optional peer dependency the plugin insists on, but its helpers are never injected
+      // because we only emit declarations. Stub it out instead of pulling in the dependency.
+      tslib: 'tslib',
+
       noForceEmit: true,
       compilerOptions: {
         allowJs: true,
+        module: 'esnext',
+        moduleResolution: 'bundler',
         declaration: true,
         emitDeclarationOnly: true,
         declarationMap: true,
+        rootDir: 'lib/ical',
         declarationDir: 'dist/types',
         outDir: 'dist',
       },

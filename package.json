@@ -22,34 +22,35 @@
     "parser"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-env": "^7.29.7",
     "@eslint/js": "^10.0.1",
-    "@octokit/core": "^7.0.6",
-    "@rollup/plugin-babel": "^7.0.0",
+    "@octokit/core": "^7.0.8",
+    "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "benchmark": "^2.1.4",
-    "c8": "^11.0.0",
+    "c8": "^12.0.0",
     "chai": "^6.2.2",
-    "clean-jsdoc-theme": "^4.3.0",
-    "eslint": "^10.0.2",
-    "eslint-plugin-html": "^8.1.4",
-    "globals": "^17.4.0",
+    "clean-jsdoc-theme": "^5.2.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-html": "^8.2.0",
+    "globals": "^17.12.0",
     "jsdoc": "^4.0.5",
     "jsdoc-tsimport-plugin": "^1.0.5",
     "karma": "^6.4.4",
     "karma-mocha": "^2.0.1",
-    "karma-sauce-launcher": "^4.3.6",
-    "karma-spec-reporter": "^0.0.36",
-    "mocha": "^11.7.5",
+    "karma-sauce-launcher": "^4.3.2",
+    "karma-spec-reporter": "^0.0.37",
+    "mocha": "^12.0.1",
     "node-fetch": "^3.3.2",
-    "rollup": "^4.59.0",
+    "rollup": "^4.63.3",
     "yauzl-promise": "^4.0.0"
   },
+  "_overridesComment": "@rollup/plugin-typescript doesn't support TypeScript 7 yet. See https://github.com/rollup/plugins/issues/2016",
   "overrides": {
-    "c8": {
-      "yargs": "^18.0.0"
+    "@rollup/plugin-typescript": {
+      "typescript": "^6.0.3"
     }
   },
   "license": "MPL-2.0",
