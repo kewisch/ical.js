@@ -526,6 +526,78 @@ suite('design', function() {
       });
     });
 
+    suite('timestamp (vcard)', function() {
+      setup(function() {
+        subject = ICAL.design.vcard.value.timestamp;
+      });
+
+      test('#(to|from)ICAL', function() {
+        let fromICAL = subject.fromICAL('19951031T222710Z');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10Z');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710Z');
+      });
+
+      test('#(to|from)ICAL with utc offset', function() {
+        let fromICAL = subject.fromICAL('19951031T222710+0200');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10+02:00');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710+0200');
+      });
+
+      test('#(to|from)ICAL floating', function() {
+        let fromICAL = subject.fromICAL('19951031T222710');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710');
+      });
+
+      test('#fromICAL extended format', function() {
+        // RFC 6350 requires the basic format, so in strict mode the extended
+        // format keeps producing garbage rather than being rejected, for the
+        // same lack of an error collector as '#fromICAL somewhat invalid'.
+        assert.equal(
+          subject.fromICAL('1995-10-31T22:27:10Z'),
+          '1995--1-0-T1T:22::2'
+        );
+      });
+
+      test('#(to|from)ICAL extended format (lenient)', function() {
+        ICAL.design.strict = false;
+
+        assert.equal(
+          subject.fromICAL('1995-10-31T22:27:10Z'),
+          '1995-10-31T22:27:10Z'
+        );
+        assert.equal(
+          subject.fromICAL('1995-10-31T22:27:10+02:00'),
+          '1995-10-31T22:27:10+02:00'
+        );
+        assert.equal(
+          subject.toICAL('1995-10-31T22:27:10Z'),
+          '19951031T222710Z'
+        );
+        ICAL.design.strict = true;
+      });
+
+      test('#(un)decorate timestamp', function() {
+        let undecorated = '1995-10-31T22:27:10Z';
+        let decorated = subject.decorate(undecorated);
+
+        assert.hasProperties(decorated, {
+          year: 1995,
+          month: 10,
+          day: 31,
+          hour: 22,
+          minute: 27,
+          second: 10
+        });
+        assert.equal(decorated.zone.toString(), 'UTC');
+
+        assert.equal(subject.undecorate(decorated), undecorated);
+      });
+    });
+
     suite('date (vcard3)', function() {
       setup(function() {
         subject = ICAL.design.vcard3.value.date;
