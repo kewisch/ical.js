@@ -125,17 +125,6 @@ async function generateZonesFile(tzdbDir) {
   return lines.join("\n");
 }
 
-async function get_tzdb_version() {
-  let response = await fetch('https://www.iana.org/time-zones');
-  let text = await response.text();
-
-  let match = text.match(/version">([0-9a-z]*)<\/span>/);
-  if (!match) {
-    throw new Error('Could not detect latest timezone database version');
-  }
-  return match[1];
-}
-
 async function replace_unpkg(input, output) {
   let content = await fs.readFile(input, { encoding: "utf-8" });
   let pkg = JSON.parse(await fs.readFile(path.join(import.meta.dirname, "..", "package.json"), { encoding: "utf-8" }));
@@ -145,9 +134,6 @@ async function replace_unpkg(input, output) {
 
 async function main() {
   switch (process.argv[2]) {
-    case "tzdb-version":
-      console.log(await get_tzdb_version());
-      break;
     case "generate-zones":
       console.log(await generateZonesFile(process.argv[3]));
       break;
