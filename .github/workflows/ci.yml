@@ -111,10 +111,9 @@ jobs:
       - name: "Download tzdb"
         id: tzdb
         run: |
-          export TZDB_VERSION=$(node tools/scriptutils.js tzdb-version)
           mkdir -p tools/tzdb
           cd tools/tzdb
-          wget "https://data.iana.org/time-zones/releases/tzdata${TZDB_VERSION}.tar.gz" -O - | tar xz
+          wget "https://data.iana.org/time-zones/tzdata-latest.tar.gz" -O - | tar xz
 
       - name: "Install dependencies"
         run: |
