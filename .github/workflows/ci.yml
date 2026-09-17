@@ -20,10 +20,10 @@ jobs:
           - node
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: "Setup node"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -58,12 +58,41 @@ jobs:
           parallel: true
 
       - name: "Artifacts"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: matrix.node == 'node'
         with:
           name: distribution
           path: dist/*.js
           if-no-files-found: error
+
+
+  browser-test:
+    name: "Browser Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v7
+
+      - name: "Setup node"
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "Cache Playwright browsers"
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: "Install Playwright browsers"
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: "Browser Tests"
+        run: npm run test-browser
 
 
   ghpages:
@@ -72,10 +101,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: "Setup node"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: latest
           cache: npm
@@ -87,7 +116,7 @@ jobs:
         run: npm run ghpages
 
       - name: "GH Pages Push"
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
           publish_dir: docs
@@ -97,10 +126,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: "Setup node"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: latest
           cache: npm
@@ -135,7 +164,7 @@ jobs:
           node tools/scriptutils.js generate-zones tools/tzdb > dist/ical.timezones.js
 
       - name: "Artifacts"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: timezones
           path: dist/ical.timezones.js
