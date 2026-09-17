@@ -526,6 +526,59 @@ suite('design', function() {
       });
     });
 
+    suite('timestamp (vcard)', function() {
+      setup(function() {
+        subject = ICAL.design.vcard.value.timestamp;
+      });
+
+      test('#(to|from)ICAL basic format', function() {
+        let fromICAL = subject.fromICAL('19951031T222710Z');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10Z');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710Z');
+      });
+
+      // RFC 6350 only allows the basic format, but the extended format is
+      // widely used and must not be mangled.
+      test('#(to|from)ICAL extended format', function() {
+        let fromICAL = subject.fromICAL('1995-10-31T22:27:10Z');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10Z');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710Z');
+      });
+
+      test('#(to|from)ICAL utc offset', function() {
+        let fromICAL = subject.fromICAL('19951031T222710+0200');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10+02:00');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710+0200');
+      });
+
+      test('#(to|from)ICAL floating', function() {
+        let fromICAL = subject.fromICAL('19951031T222710');
+
+        assert.equal(fromICAL, '1995-10-31T22:27:10');
+        assert.equal(subject.toICAL(fromICAL), '19951031T222710');
+      });
+
+      test('#(un)decorate timestamp', function() {
+        let undecorated = '1995-10-31T22:27:10Z';
+        let decorated = subject.decorate(undecorated);
+
+        assert.hasProperties(decorated, {
+          year: 1995,
+          month: 10,
+          day: 31,
+          hour: 22,
+          minute: 27,
+          second: 10
+        });
+        assert.equal(decorated.zone.toString(), 'UTC');
+
+        assert.equal(subject.undecorate(decorated), undecorated);
+      });
+    });
+
     suite('date (vcard3)', function() {
       setup(function() {
         subject = ICAL.design.vcard3.value.date;
