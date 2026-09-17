@@ -14,7 +14,7 @@ export default [
       "!tools/jsdoc-ical.cjs",
       "!eslint.config.js",
       "!rollup.config.js",
-      "!karma.conf.cjs"
+      "!web-test-runner.config.js"
     ]
   },
   js.configs.recommended,
@@ -363,7 +363,7 @@ export default [
     }
   },
   {
-    files: ["tools/scriptutils.js", "test/support/perfReporter.cjs", "karma.conf.cjs", "tools/ICALTester/**/*.js"],
+    files: ["tools/scriptutils.js", "test/support/perfReporter.cjs", "tools/ICALTester/**/*.js"],
     languageOptions: {
       globals: globals.node
     }
