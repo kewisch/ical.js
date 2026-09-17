@@ -3,36 +3,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Portions Copyright (C) Philipp Kewisch */
 
+import * as chai from "chai";
+import ICAL from "../../lib/ical/module.js";
+
 let crossGlobal = typeof(window) === 'undefined' ? global : window;
 let testSupport = crossGlobal.testSupport = {
-  isNode: (typeof(global) !== 'undefined'),
-  isKarma: (typeof(window) !== 'undefined' && typeof window.__karma__ !== 'undefined')
+  isNode: (typeof(global) !== 'undefined')
 };
 
-if (testSupport.isKarma) {
-  // Need to do this before the first await, browser/karma won't wait on top level await
-  window.__karma__.loaded = function() {};
-
-  let chaiFile = Object.keys(window.__karma__.files).find(elem => elem.endsWith("chai.js"));
-  if (!chaiFile) {
-    throw new Error("Could not find chai.js");
-  }
-  window.chai = await import(chaiFile);
-}
-
-
-/* eslint-disable no-var, no-redeclare */
+let Benchmark, readFile, readdir;
 if (testSupport.isNode) {
-  var ICAL = (await import("../../lib/ical/module.js")).default;
-  var chai = await import("../../node_modules/chai/index.js");
-  var Benchmark = (await import("benchmark")).default;
-  var { URL } = await import("url");
-  var { readFile, readdir } = (await import('fs/promises'));
-} else {
-  var ICAL = (await import("/base/lib/ical/module.js")).default;
-  var chai = window.chai;
+  // Imported through a variable so that the browser test runner does not
+  // statically resolve the Node only imports in that module.
+  let nodeHelper = "./helper-node.js";
+  ({ Benchmark, readFile, readdir } = await import(nodeHelper));
 }
-/* eslint-enable no-var, no-redeclare*/
 
 crossGlobal.ICAL = ICAL;
 chai.config.includeStack = true;
@@ -123,7 +108,7 @@ testSupport.load = async function(path) {
     let root = new URL('../../' + path, import.meta.url).pathname;
     return readFile(root, 'utf8');
   } else {
-    let response = await fetch("/base/" + path);
+    let response = await fetch("/" + path);
     if (response.status == 200) {
       let text = await response.text();
       return text;
@@ -182,21 +167,6 @@ crossGlobal.perfTest.skip = function(name, scope) {
     perfTestDefine.call(this, scope, done);
   });
 };
-
-if (!testSupport.isNode) {
-  console.log("KARMA");
-  try {
-    for (let file of Object.keys(window.__karma__.files)) {
-      if (/_test\.js$/.test(file)) {
-        await import(file);
-      }
-    }
-
-    window.__karma__.start();
-  } catch (e) {
-    window.__karma__.error(e.toString());
-  }
-}
 
 export const mochaHooks = {
   async beforeAll() {

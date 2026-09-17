@@ -43,13 +43,6 @@ jobs:
       - name: "Node Acceptance Tests"
         run: npm run test-acceptance
 
-      # Disabled for the moment, I can't get sauce labs to work
-      # - name: "Browser Unit Tests"
-      #   env:
-      #    SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      #    SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      #   run: npm run test-browser
-
       - name: "Coverage Push"
         uses: coverallsapp/github-action@v2
         with:

@@ -21,7 +21,7 @@ an issue beforehand. If you have a bug fix that doesn't affect the API or just a
 don't want to waste time discussing it, feel free to just send a pull request and we'll see.
 
 Also, you should check for linter errors and run the tests using `npm run lint` `npm run test`.
-There are also performance tests and browser tests if you want to be thourough.
+There are also performance tests and browser tests if you want to be thorough.
 
 Currently the team working on ical.js consists of a very small number of voluntary contributors. If
 you don't get a reply in a timely manner please don't feel turned down. If you are getting impatient

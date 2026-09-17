@@ -96,6 +96,11 @@ The following test suites are available
     npm run test              # Node unit and acceptance tests (This is fast and covers most aspects)
     npm run test-all          # All of the above
 
+The browser tests run the unit and acceptance suites in Chromium, Firefox and WebKit via
+[Playwright](https://playwright.dev/). Run `npx playwright install` once to download the browsers.
+To run a single engine, pass its name as a group, for example
+`npm run test-browser -- --group webkit`.
+
 See [the wiki](https://github.com/kewisch/ical.js/wiki/Running-Tests) for more details.
 
 Code coverage is automatically generated for the node unit tests. You can [view the coverage

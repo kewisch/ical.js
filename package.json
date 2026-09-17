@@ -29,6 +29,8 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
+    "@web/test-runner": "^1.0.0",
+    "@web/test-runner-playwright": "^1.0.0",
     "benchmark": "^2.1.4",
     "c8": "^12.0.0",
     "chai": "^6.2.2",
@@ -38,12 +40,9 @@
     "globals": "^17.12.0",
     "jsdoc": "^4.0.5",
     "jsdoc-tsimport-plugin": "^1.0.5",
-    "karma": "^6.4.4",
-    "karma-mocha": "^2.0.1",
-    "karma-sauce-launcher": "^4.3.2",
-    "karma-spec-reporter": "^0.0.37",
     "mocha": "^12.0.1",
     "node-fetch": "^3.3.2",
+    "playwright": "^1.63.0",
     "rollup": "^4.63.3",
     "yauzl-promise": "^4.0.0"
   },
@@ -62,7 +61,7 @@
     "test-unit": "c8 mocha",
     "test-acceptance": "mocha test/acceptance/*_test.js",
     "test-performance": "mocha --reporter test/support/perfReporter.cjs test/performance/*_test.js",
-    "test-browser": "karma start karma.conf.cjs",
+    "test-browser": "web-test-runner",
     "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
     "build": "rollup -c",
     "lint": "eslint",
@@ -88,15 +87,5 @@
     "ui": "tdd",
     "require": "test/support/helper.js",
     "reporter": "spec"
-  },
-  "saucelabs": {
-    "SL_Chrome": {
-      "base": "SauceLabs",
-      "browserName": "chrome"
-    },
-    "SL_Firefox": {
-      "base": "SauceLabs",
-      "browserName": "firefox"
-    }
   }
 }
