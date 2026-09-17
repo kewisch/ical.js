@@ -27,6 +27,29 @@
     [
       "attendee",
       {
+        "member": [
+          "mailto:a@b.c",
+          "mailto:d@e.f"
+        ]
+      },
+      "cal-address",
+      "mailto:x@y.z"
+    ],
+    [
+      "attendee",
+      {
+        "member": [
+          "mailto:a@b.c",
+          "mailto:d@e.f",
+          "mailto:g@h.i"
+        ]
+      },
+      "cal-address",
+      "mailto:x@y.z"
+    ],
+    [
+      "attendee",
+      {
         "cn": "Foo, Bar"
       },
       "cal-address",
@@ -135,6 +158,44 @@
       },
       "unknown",
       "BAZ;BAR"
+    ],
+    [
+      "x-a",
+      {
+        "member": [
+          "a",
+          "b:c"
+        ]
+      },
+      "unknown",
+      "v"
+    ],
+    [
+      "x-b",
+      {
+        "param": "a;:"
+      },
+      "unknown",
+      "v"
+    ],
+    [
+      "x-c",
+      {
+        "param": "a\"b;:"
+      },
+      "unknown",
+      "v"
+    ],
+    [
+      "x-d",
+      {
+        "member": [
+          "a\"b",
+          "c;:"
+        ]
+      },
+      "unknown",
+      "v"
     ]
   ],
   []
