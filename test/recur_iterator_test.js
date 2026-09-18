@@ -1590,13 +1590,12 @@ suite('recur_iterator', function() {
       /*
        * Leap-year test for February 29th
        *
-       * See https://github.com/kewisch/ical.js/issues/91
-       * for details
+       * A bare yearly rule anchored on February 29th must recur only in leap
+       * years; non-leap years have no February 29th and per RFC 5545 3.3.10
+       * those invalid instances MUST be ignored (not rolled over to March 1st).
        *
-       * TODO: Uncomment when new recurrence iterator is ready
+       * See https://github.com/kewisch/ical.js/issues/91 for details.
        */
-
-      /*
       testRRULE('FREQ=YEARLY;', {
         dtStart: '2012-02-29T12:00:00',
         dates: [
@@ -1604,7 +1603,6 @@ suite('recur_iterator', function() {
           '2016-02-29T12:00:00'
         ]
       });
-      */
 
       // Multiple BYYEARDAYs, checks that we start on the right one.
       testRRULE('FREQ=YEARLY;BYYEARDAY=73,146,219,292', {
