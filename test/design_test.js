@@ -579,6 +579,31 @@ suite('design', function() {
       });
     });
 
+    suite('time (vcard3)', function() {
+      setup(function() {
+        subject = ICAL.design.vcard3.value.time;
+      });
+
+      test('#(to|from)ICAL time', function() {
+        let original = '15:00:00';
+        let fromICAL = subject.fromICAL(original);
+
+        assert.equal(fromICAL, '15:00:00');
+        assert.equal(subject.toICAL(fromICAL), original);
+      });
+
+      test('#(un)decorate time', function() {
+        let undecorated = '15:00:00';
+        let decorated = subject.decorate(undecorated);
+
+        assert.equal(decorated.hour, 15, 'hour');
+        assert.equal(decorated.minute, 0, 'minute');
+        assert.equal(decorated.second, 0, 'second');
+
+        assert.equal(subject.undecorate(decorated), undecorated);
+      });
+    });
+
     suite('duration', function() {
       setup(function() {
         subject = subject.value.duration;
