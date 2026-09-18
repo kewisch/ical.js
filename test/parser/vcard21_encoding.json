@@ -1,0 +1,11 @@
+[
+  "vcard",
+  [
+    [ "version", {}, "text", "2.1" ],
+    [ "fn", {}, "text", "Test Encoding" ],
+    [ "n", {}, "text", [ "Encoding", "Test", "", "", "" ] ],
+    [ "note", { "encoding": "QUOTED-PRINTABLE" }, "text", "This is a test with speciäl chäracters and a line that is quite long and needs to be wrapped according to the Quoted-Printable encoding rules." ],
+    [ "photo", { "encoding": "BASE64", "type": "JPEG" }, "binary", "SGVsbG8sIHRoaXMgaXMgYSB0ZXN0IGltYWdlIGluIGJhc2U2NCBlbmNvZGluZy4=" ]
+  ],
+  []
+]
