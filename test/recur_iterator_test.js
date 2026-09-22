@@ -209,6 +209,16 @@ suite('recur_iterator', function() {
           '2015-04-30T14:00:00'
         ]
       });
+
+      // Invalid rule. February never has a 30th, so stop rather than looking
+      // for one for ever.
+      testRRULE('FREQ=HOURLY;BYMONTH=2;BYMONTHDAY=30', {
+        dtStart: '2026-01-01T09:00:00',
+        max: 5,
+        dates: [
+          '2026-01-01T09:00:00'
+        ]
+      });
     });
 
     suite('DAILY', function() {
@@ -270,6 +280,35 @@ suite('recur_iterator', function() {
           '2012-01-11T09:00:00',
           '2012-01-12T09:00:00',
           '2012-01-13T09:00:00'
+        ]
+      });
+
+      // Only matches every four years, and every 28 years with the BYDAY part.
+      testRRULE('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=29', {
+        dtStart: '2026-01-01T09:00:00',
+        max: 3,
+        dates: [
+          '2026-01-01T09:00:00',
+          '2028-02-29T09:00:00',
+          '2032-02-29T09:00:00'
+        ]
+      });
+      testRRULE('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=29;BYDAY=MO', {
+        dtStart: '2026-01-01T09:00:00',
+        max: 2,
+        dates: [
+          '2026-01-01T09:00:00',
+          '2044-02-29T09:00:00'
+        ]
+      });
+
+      // Invalid rule. February never has a 30th, so stop rather than looking
+      // for one for ever.
+      testRRULE('FREQ=DAILY;BYMONTH=2;BYMONTHDAY=30', {
+        dtStart: '2026-01-01T09:00:00',
+        max: 5,
+        dates: [
+          '2026-01-01T09:00:00'
         ]
       });
     });
