@@ -22,7 +22,11 @@ suite('recur', function() {
           dtstart = ICAL.Time.epochTime.clone();
         }
         let iter = recur.iterator(dtstart);
-        assert.equal(iter.next().toString(), last);
+        if (last === null) {
+          assert.isNull(iter.next());
+        } else {
+          assert.equal(iter.next().toString(), last);
+        }
       });
     }
 
@@ -93,7 +97,9 @@ suite('recur', function() {
         BYMONTH: ['2'],
         BYSETPOS: ['2']
       }
-    }, '1970-01-01T00:00:00Z');
+      // A secondly period holds a single instance, so there is no second one
+      // for BYSETPOS to pick and the rule has no occurrences at all.
+    }, null);
 
     checkDate({
       freq: 'MINUTELY',
