@@ -1491,14 +1491,16 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // The start date is the 1st, which is neither the last nor the second
+      // day of the month, so it is not part of the set.
       testRRULE('FREQ=MONTHLY;BYSETPOS=-1;BYDAY=SU,MO,TU,WE,TH,FR,SA;INTERVAL=1;COUNT=4', {
         dtStart: '2016-01-01',
         byCount: true,
         dates: [
-          '2016-01-01',
           '2016-01-31',
           '2016-02-29',
           '2016-03-31',
+          '2016-04-30',
           ]
       });
 
@@ -1506,10 +1508,10 @@ suite('recur_iterator', function() {
         dtStart: '2016-01-01',
         byCount: true,
         dates: [
-          '2016-01-01',
           '2016-01-02',
           '2016-02-02',
           '2016-03-02',
+          '2016-04-02',
         ]
       });
 
@@ -1708,6 +1710,112 @@ suite('recur_iterator', function() {
           '2015-03-30T03:00:00',
           '2016-03-28T03:00:00'
         ]
+      });
+    });
+
+    suite('BYSETPOS', function() {
+      // The second-to-last weekday of the month, from RFC 5545 section 3.8.5.3.
+      testRRULE('FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-2', {
+        dtStart: '1997-09-29T09:00:00',
+        dates: [
+          '1997-09-29T09:00:00',
+          '1997-10-30T09:00:00',
+          '1997-11-27T09:00:00',
+          '1997-12-30T09:00:00',
+          '1998-01-29T09:00:00',
+          '1998-02-26T09:00:00',
+          '1998-03-30T09:00:00'
+        ]
+      });
+
+      // The set is numbered over the whole period, so it counts the instances
+      // before the start date even though they are not part of the recurrence.
+      testRRULE('FREQ=MONTHLY;COUNT=2;BYDAY=TU,WE,TH;BYSETPOS=1', {
+        byCount: true,
+        dtStart: '1997-09-04T09:00:00',
+        dates: [
+          '1997-10-01T09:00:00',
+          '1997-11-04T09:00:00'
+        ]
+      });
+
+      // A position no period reaches gives an empty set, a position only some
+      // periods reach gives a sparse one.
+      testRRULE('FREQ=MONTHLY;BYDAY=MO;BYSETPOS=5', {
+        dtStart: '2016-01-01T09:00:00',
+        dates: [
+          '2016-02-29T09:00:00',
+          '2016-05-30T09:00:00',
+          '2016-08-29T09:00:00',
+          '2016-10-31T09:00:00',
+          '2017-01-30T09:00:00'
+        ]
+      });
+
+      // Positions counted from either end at once.
+      testRRULE('FREQ=DAILY;BYHOUR=9,12,17;BYSETPOS=1,-1', {
+        dtStart: '2016-01-01T09:00:00',
+        dates: [
+          '2016-01-01T09:00:00',
+          '2016-01-01T17:00:00',
+          '2016-01-02T09:00:00',
+          '2016-01-02T17:00:00',
+          '2016-01-03T09:00:00'
+        ]
+      });
+
+      testRRULE('FREQ=HOURLY;BYMINUTE=0,15,30,45;BYSETPOS=2', {
+        dtStart: '2016-01-01T09:00:00',
+        dates: [
+          '2016-01-01T09:15:00',
+          '2016-01-01T10:15:00',
+          '2016-01-01T11:15:00',
+          '2016-01-01T12:15:00'
+        ]
+      });
+
+      // The week the start date falls in begins before it, and the first
+      // weekday of that week is not part of the recurrence.
+      testRRULE('FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=1,-1', {
+        dtStart: '2016-01-01T09:00:00',
+        dates: [
+          '2016-01-01T09:00:00',
+          '2016-01-04T09:00:00',
+          '2016-01-08T09:00:00',
+          '2016-01-11T09:00:00'
+        ]
+      });
+
+      // A yearly period is the whole year, not each of its months.
+      testRRULE('FREQ=YEARLY;BYMONTH=3,6;BYDAY=SU;BYSETPOS=2,-2', {
+        dtStart: '2016-01-01T09:00:00',
+        dates: [
+          '2016-03-13T09:00:00',
+          '2016-06-19T09:00:00',
+          '2017-03-12T09:00:00',
+          '2017-06-18T09:00:00'
+        ]
+      });
+
+      // Zero names nothing, so the rule has no occurrences at all and no
+      // period is expanded looking for one.
+      testRRULE('FREQ=MONTHLY;BYDAY=MO;BYSETPOS=0', {
+        dtStart: '2016-01-01T09:00:00',
+        noInstance: true
+      });
+
+      test('resuming from a serialized iterator', function() {
+        let recur = ICAL.Recur.fromString('FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=1,-1');
+        let iterator = recur.iterator(ICAL.Time.fromString('2016-01-01T09:00:00'));
+
+        assert.equal(iterator.next().toString(), '2016-01-01T09:00:00');
+        assert.equal(iterator.next().toString(), '2016-01-29T09:00:00');
+
+        let resumed = new ICAL.RecurIterator(iterator.toJSON());
+        for (let expected of ['2016-02-01T09:00:00', '2016-02-29T09:00:00']) {
+          assert.equal(iterator.next().toString(), expected);
+          assert.equal(resumed.next().toString(), expected);
+        }
       });
     });
   });
