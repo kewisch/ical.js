@@ -266,6 +266,75 @@ suite('recur_expansion', function() {
   });
 
 
+  suite('overlapping RDATE and RRULE', function() {
+    createSubject('recur_duplicate_dates.ics');
+
+    function remainingDates(expansion) {
+      let dates = [];
+      let next;
+      while (dates.length < 10 && (next = expansion.next())) {
+        dates.push(next.toICALString());
+      }
+      assert.isTrue(expansion.complete);
+      return dates;
+    }
+
+    test('emit matching first and last occurrences once', function() {
+      assert.deepEqual(remainingDates(primary.iterator()), [
+        '20240101T090000Z',
+        '20240102T090000Z',
+        '20240103T090000Z',
+        '20240104T090000Z'
+      ]);
+    });
+
+    test('resume after a matching occurrence', function() {
+      assert.equal(subject.next().toICALString(), '20240101T090000Z');
+      let resumed = new ICAL.RecurExpansion(JSON.parse(JSON.stringify(subject)));
+      assert.deepEqual(remainingDates(resumed), [
+        '20240102T090000Z',
+        '20240103T090000Z',
+        '20240104T090000Z'
+      ]);
+    });
+
+    test('exclude a matching occurrence from both sources', function() {
+      primary.component.addPropertyWithValue(
+        'exdate', ICAL.Time.fromString('2024-01-03T09:00:00Z')
+      );
+      assert.deepEqual(remainingDates(primary.iterator()), [
+        '20240101T090000Z',
+        '20240102T090000Z',
+        '20240104T090000Z'
+      ]);
+    });
+
+    test('preserve the matching RDATE period', function() {
+      primary.component.removeAllProperties('rdate');
+      primary.component.addProperty(ICAL.Property.fromString(
+        'RDATE;VALUE=PERIOD:20240101T090000Z/20240103T090000Z'
+      ));
+      assert.deepEqual(remainingDates(primary.iterator()), [
+        '20240101T090000Z/20240103T090000Z',
+        '20240102T090000Z',
+        '20240103T090000Z'
+      ]);
+    });
+
+    test('keep a distinct occurrence within an RDATE period', function() {
+      primary.component.removeAllProperties('rdate');
+      primary.component.addProperty(ICAL.Property.fromString(
+        'RDATE;VALUE=PERIOD:20240102T080000Z/20240102T100000Z'
+      ));
+      assert.deepEqual(remainingDates(primary.iterator()), [
+        '20240101T090000Z',
+        '20240102T080000Z/20240102T100000Z',
+        '20240102T090000Z',
+        '20240103T090000Z'
+      ]);
+    });
+  });
+
   suite('#toJSON', function() {
     // While other tests in this file don't require specifying a timezone, we
     // need to do so here because we're building the `RecurExpansion` from a
