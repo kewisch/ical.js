@@ -1711,6 +1711,44 @@ suite('recur_iterator', function() {
           '2016-03-28T03:00:00'
         ]
       });
+
+      // A yearly rule expands the sub-day parts too.
+      testRRULE('FREQ=YEARLY;BYMONTH=6;BYMONTHDAY=15;BYHOUR=9,17;COUNT=4', {
+        byCount: true,
+        dtStart: '2016-06-15T09:00:00',
+        dates: [
+          '2016-06-15T09:00:00',
+          '2016-06-15T17:00:00',
+          '2017-06-15T09:00:00',
+          '2017-06-15T17:00:00'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMINUTE=0,30;COUNT=4', {
+        byCount: true,
+        dtStart: '2016-06-15T09:00:00',
+        dates: [
+          '2016-06-15T09:00:00',
+          '2016-06-15T09:30:00',
+          '2017-06-15T09:00:00',
+          '2017-06-15T09:30:00'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMONTH=1;BYMONTHDAY=1,2;BYHOUR=1,2;BYSECOND=1,2;COUNT=8', {
+        byCount: true,
+        dtStart: '2026-01-01T01:00:01',
+        dates: [
+          '2026-01-01T01:00:01',
+          '2026-01-01T01:00:02',
+          '2026-01-01T02:00:01',
+          '2026-01-01T02:00:02',
+          '2026-01-02T01:00:01',
+          '2026-01-02T01:00:02',
+          '2026-01-02T02:00:01',
+          '2026-01-02T02:00:02'
+        ]
+      });
     });
 
     suite('BYSETPOS', function() {
