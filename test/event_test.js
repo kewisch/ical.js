@@ -801,16 +801,29 @@ suite('ICAL.Event', function() {
   });
 
   suite('#iterator', function() {
-    test('with start time', function() {
+    test('with later start time', function() {
       let start = subject.startDate;
       let time = new ICAL.Time({
-        day: start.da + 1,
+        day: start.day + 1,
         month: start.month,
         year: start.year
       });
 
       let iterator = subject.iterator(time);
       assert.deepEqual(iterator.last.toString(), time.toString());
+      assert.instanceOf(iterator, ICAL.RecurExpansion);
+    });
+
+    test('with earlier start time', function() {
+      let start = subject.startDate;
+      let time = new ICAL.Time({
+        day: start.day - 1,
+        month: start.month,
+        year: start.year
+      });
+
+      let iterator = subject.iterator(time);
+      assert.deepEqual(iterator.last.toString(), subject.startDate.toString());
       assert.instanceOf(iterator, ICAL.RecurExpansion);
     });
 
