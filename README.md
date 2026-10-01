@@ -38,6 +38,8 @@ Then simply import it for use:
 import ICAL from "ical.js";
 ```
 
+CommonJS consumers can use `const ICAL = require("ical.js");`.
+
 If you are working with a browser, be aware this is an ES6 module:
 
 ```html
@@ -49,18 +51,18 @@ If you are working with a browser, be aware this is an ES6 module:
 </script>
 ```
 
-If you need to make use of a script tag, you can use the transpiled ES5 version:
+If you need to use a classic script tag, load the modern browser-global bundle. It requires a modern browser and does not support ES5-era engines:
 ```html
-<script src="https://unpkg.com/ical.js/dist/ical.es5.min.cjs"></script>
+<script src="https://unpkg.com/ical.js/dist/ical.browser.min.js"></script>
 <textarea id="txt"></textarea>
 <button onclick="ICAL.parse(document.getElementById('txt').value)"></button>
 ```
 
 The browser examples above use the minified versions of the library, which is probably what you want.
-However, there are also unminified versions of ICAL.js available on unpkg.
+However, there are also unminified versions of ICAL.js available on unpkg. Source maps are published with the bundles.
 
-- Unminified ES6 module: `https://unpkg.com/ical.js/dist/ical.js`
-- Unminified ES5 version: `https://unpkg.com/ical.js/dist/ical.es5.cjs`
+- Unminified ES module: `https://unpkg.com/ical.js/dist/ical.js`
+- Unminified browser-global bundle: `https://unpkg.com/ical.js/dist/ical.browser.js`
 
 ## Timezones
 The stock ical.js does not register any timezones, due to the additional size it brings. If you'd

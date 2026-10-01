@@ -1,12 +1,13 @@
 {
   "name": "ical.js",
-  "version": "2.2.1",
+  "version": "3.0.0",
   "author": "Philipp Kewisch",
   "contributors": [
     "Github Contributors (https://github.com/kewisch/ical.js/graphs/contributors)"
   ],
   "description": "Javascript parser for ics (rfc5545) and vcard (rfc6350) data",
-  "main": "dist/ical.js",
+  "main": "dist/ical.cjs",
+  "module": "dist/ical.js",
   "types": "dist/types/module.d.ts",
   "type": "module",
   "repository": {
@@ -22,12 +23,8 @@
     "parser"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.29.7",
     "@eslint/js": "^10.0.1",
     "@octokit/core": "^7.0.8",
-    "@rollup/plugin-babel": "^7.1.0",
-    "@rollup/plugin-terser": "^1.0.0",
-    "@rollup/plugin-typescript": "^12.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@web/test-runner": "^1.0.0",
     "@web/test-runner-playwright": "^1.0.0",
@@ -43,18 +40,13 @@
     "mocha": "^12.0.1",
     "node-fetch": "^3.3.2",
     "playwright": "^1.63.0",
-    "rollup": "^4.63.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.0",
     "yauzl-promise": "^4.0.0"
-  },
-  "_overridesComment": "@rollup/plugin-typescript doesn't support TypeScript 7 yet. See https://github.com/rollup/plugins/issues/2016",
-  "overrides": {
-    "@rollup/plugin-typescript": {
-      "typescript": "^6.0.3"
-    }
   },
   "license": "MPL-2.0",
   "engine": {
-    "node": ">=10"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "test": "npm run test-unit && npm run test-acceptance",
@@ -63,29 +55,30 @@
     "test-performance": "mocha --reporter test/support/perfReporter.cjs test/performance/*_test.js",
     "test-browser": "web-test-runner",
     "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
-    "build": "rollup -c",
+    "build": "vite build && vite build --mode development && tsc --project tsconfig.json",
     "lint": "eslint",
-    "jsdoc": "rm -rf docs/api && jsdoc --configure jsdoc-prepare.json && rm -rf docs/api && jsdoc --configure jsdoc.json --verbose",
+    "jsdoc": "node tools/build-jsdoc.js",
     "validator": "node tools/scriptutils.js replace-unpkg tools/validator.html docs/validator.html",
     "recurtester": "node tools/scriptutils.js replace-unpkg tools/recur-tester.html docs/recur-tester.html",
     "ghpages": "npm run jsdoc && npm run validator && npm run recurtester"
   },
   "exports": {
-    "import": "./dist/ical.js",
-    "require": "./dist/ical.es5.cjs",
-    "types": "./dist/types/module.d.ts"
+    ".": {
+      "types": "./dist/types/module.d.ts",
+      "import": "./dist/ical.js",
+      "require": "./dist/ical.cjs"
+    },
+    "./browser": "./dist/ical.browser.js"
   },
   "files": [
     "dist/ical.js",
     "dist/ical.min.js",
-    "dist/ical.es5.cjs",
-    "dist/ical.es5.min.cjs",
+    "dist/ical.cjs",
+    "dist/ical.min.cjs",
+    "dist/ical.browser.js",
+    "dist/ical.browser.min.js",
+    "dist/ical*.map",
     "dist/types/*",
     "lib/ical/*.js"
-  ],
-  "mocha": {
-    "ui": "tdd",
-    "require": "test/support/helper.js",
-    "reporter": "spec"
-  }
+  ]
 }

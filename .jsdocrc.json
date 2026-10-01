@@ -3,15 +3,19 @@
     "include": "lib/ical",
     "includePattern": ".js$"
   },
-  "plugins": ["plugins/markdown", "tools/jsdoc-ical.cjs", "node_modules/jsdoc-tsimport-plugin/index.js"],
+  "plugins": [
+    "plugins/markdown",
+    "tools/jsdoc-ical.cjs",
+    "node_modules/jsdoc-tsimport-plugin/index.js"
+  ],
   "opts": {
     "encoding": "utf8",
     "readme": "README.md",
     "destination": "docs/api/",
-    "template": "node_modules/clean-jsdoc-theme",
-    "theme_opts": {
-      "default_theme": "light"
-    }
+    "template": "node_modules/clean-jsdoc-theme"
+  },
+  "theme_opts": {
+    "default_theme": "light"
   },
   "markdown": {
     "hardwrap": false,
