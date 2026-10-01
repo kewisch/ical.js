@@ -1,6 +1,16 @@
 {
-  // dont compile types directly with tsc, use npm run build instead
-  // type generation is handled by @rollup/plugin-typescript
-
-  // this file exists because of https://github.com/rollup/plugins/issues/1572
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2022",
+    "rootDir": "lib/ical",
+    "declarationDir": "dist/types",
+    "skipLibCheck": true
+  },
+  "files": ["lib/ical/module.js"]
 }
