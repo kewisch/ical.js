@@ -263,6 +263,55 @@ suite('timezone', function() {
     });
   });
 
+  suite('#_expandComponent', function() {
+    function timezoneWithRdates(daylightRdate, standardRdate) {
+      let component = new ICAL.Component(ICAL.parse(`BEGIN:VTIMEZONE
+TZID:Makebelieve/MultiRdate
+BEGIN:DAYLIGHT
+DTSTART:19800406T030000
+${daylightRdate}
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:19800928T030000
+${standardRdate}
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+END:STANDARD
+END:VTIMEZONE`));
+
+      return new ICAL.Timezone(component);
+    }
+
+    function assertSummerUtcTime(zone) {
+      let time = ICAL.Time.fromDateTimeString('2026-07-01T12:00:00');
+      time.zone = zone;
+      assert.equal(
+        time.convertToZone(ICAL.Timezone.utcTimezone).toString(),
+        '2026-07-01T10:00:00Z'
+      );
+    }
+
+    test('uses every value in multi-valued RDATE properties', function() {
+      let zone = timezoneWithRdates(
+        'RDATE:20250330T030000,20260329T030000,20270328T030000',
+        'RDATE:20251026T030000,20261025T030000,20271031T030000'
+      );
+
+      assertSummerUtcTime(zone);
+    });
+
+    test('uses the start of every PERIOD-valued RDATE', function() {
+      let zone = timezoneWithRdates(
+        'RDATE;VALUE=PERIOD:20250330T030000/PT1H,20260329T030000/PT1H,20270328T030000/PT1H',
+        'RDATE;VALUE=PERIOD:20251026T030000/PT1H,20261025T030000/PT1H,20271031T030000/PT1H'
+      );
+
+      assertSummerUtcTime(zone);
+    });
+  });
+
   suite('#utcOffset', function() {
     test('empty vtimezone', function() {
       let subject = new ICAL.Timezone({
