@@ -297,6 +297,66 @@ suite('timezone', function() {
     });
   });
 
+  suite('#_expandComponent limits', function() {
+    function makeTimezone(rrule) {
+      return new ICAL.Timezone(ICAL.Component.fromString([
+        'BEGIN:VTIMEZONE',
+        'TZID:Test',
+        'BEGIN:STANDARD',
+        'DTSTART:19700101T000000',
+        'TZOFFSETFROM:+0100',
+        'TZOFFSETTO:+0200',
+        'RRULE:' + rrule,
+        'END:STANDARD',
+        'END:VTIMEZONE'
+      ].join('\r\n')));
+    }
+
+    let time = ICAL.Time.fromDateTimeString('2025-06-01T12:00:00');
+
+    [
+      'FREQ=SECONDLY',
+      'FREQ=MINUTELY',
+      'FREQ=HOURLY;BYMINUTE=30',
+      'FREQ=SECONDLY;BYMONTH=2;BYMONTHDAY=30'
+    ].forEach(function(rrule) {
+      test('sub-daily rule ' + rrule, function() {
+        let zone = makeTimezone(rrule);
+        assert.equal(zone.utcOffset(time), 2 * 3600);
+        assert.lengthOf(zone.changes, 1);
+
+        assert.include(zone.changes[0], {
+          year: 1969, month: 12, day: 31, hour: 23, minute: 0, second: 0
+        });
+      });
+    });
+
+    test('exploding BY* parts', function() {
+      let range = (n) => Array.from({ length: n }, (_, i) => i).join(',');
+      let zone = makeTimezone(
+        'FREQ=DAILY;BYHOUR=' + range(24) +
+        ';BYMINUTE=' + range(60) +
+        ';BYSECOND=' + range(60)
+      );
+      assert.equal(zone.utcOffset(time), 2 * 3600);
+      assert.lengthOf(zone.changes, ICAL.Timezone.MAX_CHANGES);
+    });
+
+    test('extending coverage does not duplicate changes', function() {
+      let rrule = 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU';
+      let later = ICAL.Time.fromDateTimeString('2100-06-01T12:00:00');
+
+      let zone = makeTimezone(rrule);
+      zone.utcOffset(time);
+      zone.utcOffset(later);
+
+      let expected = makeTimezone(rrule);
+      expected.utcOffset(later);
+
+      assert.equal(zone.changes.length, expected.changes.length);
+    });
+  });
+
   test('#_compare_change_fn', function() {
     let subject = ICAL.Timezone._compare_change_fn;
 
