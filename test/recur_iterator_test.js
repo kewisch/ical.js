@@ -1074,6 +1074,56 @@ suite('recur_iterator', function() {
       });
       */
 
+      //yearly, byweekNo, byDay
+      testRRULE('FREQ=YEARLY;BYWEEKNO=9;BYDAY=SA', {
+        dates: [
+          '2022-03-05T09:00:00',
+          '2023-03-04T09:00:00',
+          '2024-03-02T09:00:00',
+          '2025-03-01T09:00:00',
+          '2026-02-28T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo 53, byDay
+      testRRULE('FREQ=YEARLY;BYWEEKNO=53;BYDAY=MO', {
+        dates: [
+          '2015-12-28T09:00:00',
+          '2020-12-28T09:00:00',
+          '2026-12-28T09:00:00',
+          '2032-12-27T09:00:00'
+        ]
+      });
+
+      //yearly, negative byweekNo, byDay
+      testRRULE('FREQ=YEARLY;BYWEEKNO=-1;BYDAY=MO', {
+        dates: [
+          '2024-12-23T09:00:00',
+          '2025-12-22T09:00:00',
+          '2026-12-28T09:00:00',
+          '2027-12-27T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo, byDay, week 1 starting in December
+      testRRULE('FREQ=YEARLY;BYWEEKNO=1;BYDAY=MO,FR', {
+        dates: [
+          '2025-12-29T09:00:00',
+          '2026-01-02T09:00:00',
+          '2027-01-04T09:00:00',
+          '2027-01-08T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo, byDay, week 53 ending in January
+      testRRULE('FREQ=YEARLY;BYWEEKNO=53;BYDAY=FR', {
+        dates: [
+          '2021-01-01T09:00:00',
+          '2027-01-01T09:00:00',
+          '2032-12-31T09:00:00'
+        ]
+      });
+
       //yearly, byDay,byMonthday
       testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYMONTHDAY=7', {
         dtStart: '2015-01-01T08:00:00',
