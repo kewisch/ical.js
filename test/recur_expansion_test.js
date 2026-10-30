@@ -346,4 +346,47 @@ suite('recur_expansion', function() {
       ]);
     });
   });
+
+  suite('unsorted and repeated RDATE and EXDATE', function() {
+    test('expanded in order, once', function() {
+      let component = ICAL.Component.fromString([
+        'BEGIN:VEVENT',
+        'DTSTART:20260101T100000Z',
+        'RDATE:20260110T100000Z,20260108T100000Z,20260106T100000Z',
+        'RDATE:20260109T100000Z',
+        'RDATE:20260105T100000Z,20260107T100000Z,20260107T100000Z',
+        'EXDATE:20260109T100000Z,20260106T100000Z',
+        'EXDATE:20260108T100000Z,20260109T100000Z',
+        'END:VEVENT'
+      ].join('\r\n'));
+      let expansion = new ICAL.RecurExpansion({
+        component: component,
+        dtstart: component.getFirstPropertyValue('dtstart')
+      });
+
+      let dates = [], next;
+      while ((next = expansion.next()))
+        dates.push(next.toString());
+      assert.deepEqual(dates, [
+        '2026-01-05T10:00:00Z',
+        '2026-01-07T10:00:00Z',
+        '2026-01-10T10:00:00Z'
+      ]);
+    });
+
+    test('overlapping periods are kept', function() {
+      let component = ICAL.Component.fromString([
+        'BEGIN:VEVENT',
+        'DTSTART:20260101T100000Z',
+        'RDATE;VALUE=PERIOD:20260105T110000Z/PT2H,20260105T100000Z/PT2H',
+        'END:VEVENT'
+      ].join('\r\n'));
+      let expansion = new ICAL.RecurExpansion({
+        component: component,
+        dtstart: component.getFirstPropertyValue('dtstart')
+      });
+
+      assert.lengthOf(expansion.ruleDates, 2);
+    });
+  });
 });
