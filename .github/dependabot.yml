@@ -10,3 +10,6 @@ updates:
         dependency-type: development
       prod-deps:
         dependency-type: production
+    ignore:
+      - dependency-name: "@babel/preset-env"
+        update-types: ["version-update:semver-major"]

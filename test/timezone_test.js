@@ -263,6 +263,55 @@ suite('timezone', function() {
     });
   });
 
+  suite('#_expandComponent', function() {
+    function timezoneWithRdates(daylightRdate, standardRdate) {
+      let component = new ICAL.Component(ICAL.parse(`BEGIN:VTIMEZONE
+TZID:Makebelieve/MultiRdate
+BEGIN:DAYLIGHT
+DTSTART:19800406T030000
+${daylightRdate}
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+END:DAYLIGHT
+BEGIN:STANDARD
+DTSTART:19800928T030000
+${standardRdate}
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+END:STANDARD
+END:VTIMEZONE`));
+
+      return new ICAL.Timezone(component);
+    }
+
+    function assertSummerUtcTime(zone) {
+      let time = ICAL.Time.fromDateTimeString('2026-07-01T12:00:00');
+      time.zone = zone;
+      assert.equal(
+        time.convertToZone(ICAL.Timezone.utcTimezone).toString(),
+        '2026-07-01T10:00:00Z'
+      );
+    }
+
+    test('uses every value in multi-valued RDATE properties', function() {
+      let zone = timezoneWithRdates(
+        'RDATE:20250330T030000,20260329T030000,20270328T030000',
+        'RDATE:20251026T030000,20261025T030000,20271031T030000'
+      );
+
+      assertSummerUtcTime(zone);
+    });
+
+    test('uses the start of every PERIOD-valued RDATE', function() {
+      let zone = timezoneWithRdates(
+        'RDATE;VALUE=PERIOD:20250330T030000/PT1H,20260329T030000/PT1H,20270328T030000/PT1H',
+        'RDATE;VALUE=PERIOD:20251026T030000/PT1H,20261025T030000/PT1H,20271031T030000/PT1H'
+      );
+
+      assertSummerUtcTime(zone);
+    });
+  });
+
   suite('#utcOffset', function() {
     test('empty vtimezone', function() {
       let subject = new ICAL.Timezone({
@@ -294,6 +343,66 @@ suite('timezone', function() {
       assert.equal(timezone.toString(), "test");
       assert.equal(timezone.tzid, "America/Los_Angeles");
       assert.equal(timezone.tznames, "test");
+    });
+  });
+
+  suite('#_expandComponent limits', function() {
+    function makeTimezone(rrule) {
+      return new ICAL.Timezone(ICAL.Component.fromString([
+        'BEGIN:VTIMEZONE',
+        'TZID:Test',
+        'BEGIN:STANDARD',
+        'DTSTART:19700101T000000',
+        'TZOFFSETFROM:+0100',
+        'TZOFFSETTO:+0200',
+        'RRULE:' + rrule,
+        'END:STANDARD',
+        'END:VTIMEZONE'
+      ].join('\r\n')));
+    }
+
+    let time = ICAL.Time.fromDateTimeString('2025-06-01T12:00:00');
+
+    [
+      'FREQ=SECONDLY',
+      'FREQ=MINUTELY',
+      'FREQ=HOURLY;BYMINUTE=30',
+      'FREQ=SECONDLY;BYMONTH=2;BYMONTHDAY=30'
+    ].forEach(function(rrule) {
+      test('sub-daily rule ' + rrule, function() {
+        let zone = makeTimezone(rrule);
+        assert.equal(zone.utcOffset(time), 2 * 3600);
+        assert.lengthOf(zone.changes, 1);
+
+        assert.include(zone.changes[0], {
+          year: 1969, month: 12, day: 31, hour: 23, minute: 0, second: 0
+        });
+      });
+    });
+
+    test('exploding BY* parts', function() {
+      let range = (n) => Array.from({ length: n }, (_, i) => i).join(',');
+      let zone = makeTimezone(
+        'FREQ=DAILY;BYHOUR=' + range(24) +
+        ';BYMINUTE=' + range(60) +
+        ';BYSECOND=' + range(60)
+      );
+      assert.equal(zone.utcOffset(time), 2 * 3600);
+      assert.lengthOf(zone.changes, ICAL.Timezone.MAX_CHANGES);
+    });
+
+    test('extending coverage does not duplicate changes', function() {
+      let rrule = 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU';
+      let later = ICAL.Time.fromDateTimeString('2100-06-01T12:00:00');
+
+      let zone = makeTimezone(rrule);
+      zone.utcOffset(time);
+      zone.utcOffset(later);
+
+      let expected = makeTimezone(rrule);
+      expected.utcOffset(later);
+
+      assert.equal(zone.changes.length, expected.changes.length);
     });
   });
 
