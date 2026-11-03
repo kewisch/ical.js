@@ -94,6 +94,44 @@ suite('ICAL.helpers', function() {
       assert.strictEqual(subject(""), "");
     });
 
+    // RFC 5545 section 3.1: a line is at most 75 octets, and that includes the space that starts
+    // each continuation line
+    function assertFolded(input) {
+      let encoder = new TextEncoder();
+      let folded = subject(input);
+      for (let line of folded.split(ICAL.newLineChar)) {
+        assert.isAtMost(encoder.encode(line).length, ICAL.foldLength, JSON.stringify(line));
+      }
+      assert.equal(folded.split(ICAL.newLineChar + " ").join(""), input);
+    }
+
+    test('lines are not folded when they fit', function() {
+      assert.equal(subject("a".repeat(75)), "a".repeat(75));
+    });
+
+    test('continuation lines include their leading space in the line length', function() {
+      assertFolded("a".repeat(76));
+      assertFolded("a".repeat(200));
+      assertFolded("a".repeat(75 + 74 * 2));
+      assertFolded("a".repeat(75 + 74 * 2 + 1));
+    });
+
+    test('multi-byte characters are folded within the line length', function() {
+      assertFolded("日".repeat(60)); // 3 octets each
+      assertFolded("😀".repeat(40)); // 4 octets each
+      assertFolded("aé".repeat(70)); // 1 and 2 octets
+    });
+
+    test('a tiny fold length still makes progress', function() {
+      let oldLength = ICAL.foldLength;
+      ICAL.foldLength = 1;
+      try {
+        assert.equal(subject("abc"), "a" + ICAL.newLineChar + " b" + ICAL.newLineChar + " c");
+      } finally {
+        ICAL.foldLength = oldLength;
+      }
+    });
+
     // Most other cases are covered by other tests
   });
 
