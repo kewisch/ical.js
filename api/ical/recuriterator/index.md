@@ -32,7 +32,7 @@ Creates a new ICAL.RecurIterator instance. The options object may contain additi
 
 <MemberHeading id="fromdata" depth="3" name="fromData" sig="fromData(options: Object)" />
 
-<MemberMeta sourceHref="/source/recur-iterator-js/#L147" sourceLabel="recur_iterator.js:147" />
+<MemberMeta sourceHref="/source/recur-iterator-js/#L172" sourceLabel="recur_iterator.js:172" />
 
 Initialize the recurrence iterator from the passed data object. This method is usually not called directly, you can initialize the iterator through the constructor.
 
@@ -45,7 +45,7 @@ Initialize the recurrence iterator from the passed data object. This method is u
 
 <MemberHeading id="next" depth="3" name="next" sig="next(): ICAL.Time" />
 
-<MemberMeta sourceHref="/source/recur-iterator-js/#L386" sourceLabel="recur_iterator.js:386" />
+<MemberMeta sourceHref="/source/recur-iterator-js/#L425" sourceLabel="recur_iterator.js:425" />
 
 Retrieve the next occurrence from the iterator.
 
@@ -55,7 +55,7 @@ Retrieve the next occurrence from the iterator.
 
 <MemberHeading id="ruledayofweek" depth="3" name="ruleDayOfWeek" sig="ruleDayOfWeek(dow, aWeekStart?: ICAL.Time.weekDay)" />
 
-<MemberMeta sourceHref="/source/recur-iterator-js/#L951" sourceLabel="recur_iterator.js:951" />
+<MemberMeta sourceHref="/source/recur-iterator-js/#L1245" sourceLabel="recur_iterator.js:1245" />
 
 **Parameters**
 
@@ -68,7 +68,7 @@ Retrieve the next occurrence from the iterator.
 
 <MemberHeading id="tojson" depth="3" name="toJSON" sig="toJSON(): Object" />
 
-<MemberMeta sourceHref="/source/recur-iterator-js/#L1476" sourceLabel="recur_iterator.js:1476" />
+<MemberMeta sourceHref="/source/recur-iterator-js/#L1736" sourceLabel="recur_iterator.js:1736" />
 
 Convert iterator into a serialize-able object. Will preserve current iteration sequence to ensure the seamless continuation of the recurrence rule.
 
