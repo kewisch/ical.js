@@ -849,6 +849,139 @@ suite('recur_iterator', function() {
         noInstance: true,
       });
 
+      // Select the last valid candidate at month end across all month lengths.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=28,29,30,31;BYSETPOS=-1', {
+        dtStart: '2026-01-01',
+        dates: [
+          '2026-01-31',
+          '2026-02-28',
+          '2026-03-31',
+          '2026-04-30',
+          '2026-05-31',
+          '2026-06-30',
+          '2026-07-31',
+          '2026-08-31',
+          '2026-09-30',
+          '2026-10-31',
+          '2026-11-30',
+          '2026-12-31',
+        ]
+      });
+
+      // Apply multiple positions to the same sorted BYMONTHDAY set.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=1,2;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-01-15',
+          '2016-02-01',
+          '2016-02-15',
+        ]
+      });
+
+      // Pick the first occurrence from the same BYMONTHDAY list.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=1;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-01',
+          '2016-02-01',
+          '2016-03-01',
+        ]
+      });
+
+      // Pick the second occurrence from the same BYMONTHDAY list.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=2;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-15',
+          '2016-02-15',
+          '2016-03-15',
+        ]
+      });
+
+      // Pick the last occurrence from the same BYMONTHDAY list.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=-1;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-15',
+          '2016-02-15',
+          '2016-03-15',
+        ]
+      });
+
+      // Negative month days are normalized before applying BYSETPOS.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1;BYSETPOS=1;COUNT=3', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-31',
+          '2016-02-29',
+          '2016-03-31',
+        ]
+      });
+
+      // Duplicate candidates from positive and negative month days are selected once.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=-1,31;BYSETPOS=-1;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-31',
+          '2016-02-29',
+          '2016-03-31',
+          '2016-04-30',
+        ]
+      });
+
+      // BYSETPOS is applied to the full month set, even when the selected date
+      // is before DTSTART.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=5,15,25;BYSETPOS=2;COUNT=4', {
+        dtStart: '2016-01-16',
+        byCount: true,
+        dates: [
+          '2016-02-15',
+          '2016-03-15',
+          '2016-04-15',
+          '2016-05-15',
+        ]
+      });
+
+      // Ignore invalid month days before selecting the last candidate.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31,30;BYSETPOS=-1;COUNT=4', {
+        dtStart: '2016-01-01',
+        byCount: true,
+        dates: [
+          '2016-01-31',
+          '2016-03-31',
+          '2016-04-30',
+          '2016-05-31',
+        ]
+      });
+
+      // Select the 31st when it exists, stopping at UNTIL.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=31;BYSETPOS=1;UNTIL=20161231', {
+        dtStart: '2016-01-01',
+        until: true,
+        dates: [
+          '2016-01-31',
+          '2016-03-31',
+          '2016-05-31',
+          '2016-07-31',
+          '2016-08-31',
+          '2016-10-31',
+          '2016-12-31',
+        ]
+      });
+
+      // A set position larger than the candidate list yields no occurrences.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1,15;BYSETPOS=3', {
+        dtStart: '2016-01-01',
+        noInstance: true
+      });
+
       // monthly + by month
       testRRULE('FREQ=MONTHLY;BYMONTH=1,3,6,9,12', {
         dates: [
