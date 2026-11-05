@@ -1,0 +1,323 @@
+<!doctype html><html lang="en" data-scrollbar="styled"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="generator" content="clean-jsdoc-theme 5.2.1" /><title>helpers.js</title><script>(function(){try{var d=document.documentElement;var t=localStorage.getItem('theme');if(t==='dark'){d.dataset.theme='dark'}else{d.dataset.theme='light'}var fs=localStorage.getItem('clean-font-size');if(fs==='sm'){d.style.fontSize='15px'}else if(fs==='lg'){d.style.fontSize='18px'}var ls=localStorage.getItem('clean-line-spacing');if(ls==='compact'){d.style.setProperty('--clean-line-height','1.4')}else if(ls==='relaxed'){d.style.setProperty('--clean-line-height','1.8')}}catch(_){}}());</script><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&amp;family=Roboto:wght@400;500;600;700&amp;display=swap" /><link rel="stylesheet" href="/_assets/styles.mw3j4ysu-37b43e6e.css" /></head><body><div class="flex min-h-screen flex-col bg-background text-(--clean-fg)"><header class="sticky top-0 z-30 border-b border-(--clean-border) bg-background"><div class="mx-auto flex h-16 w-full min-w-0 max-w-screen-2xl items-center gap-4 px-4"><a href="/" class="flex min-w-0 items-center pl-3 no-underline"><span class="truncate text-lg font-heading font-bold text-(--clean-fg)">Documentation</span></a><div class="ml-auto flex shrink-0 items-center gap-1"><div class="flex items-center gap-1"><div data-island="cmdk" data-island-id="i1"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Search" title="Search (Ctrl K)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></button></div></div><div class="hidden items-center gap-1 md:flex"><div data-island="theme-toggle" data-island-id="i2"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-label="Switch to dark theme" title="Toggle theme"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button></div><div data-island="settings" data-island-id="i3"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Settings" title="Settings"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div><div class="md:hidden"><div data-island="mobile-nav" data-island-id="i4"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Open navigation" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path></svg></button></div></div></div></div></header><div class="mx-auto grid w-full max-w-screen-2xl flex-1 grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[16rem_minmax(0,1fr)]"><aside class="hidden md:block"><div class="sticky overflow-y-auto [scrollbar-gutter:stable] pr-2 top-20 max-h-[calc(100vh-6rem)]"><div data-island="sidebar" data-island-id="i5"><nav aria-label="Documentation navigation" class="text-(--clean-fg)"><div class="mt-4 first:mt-0"><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Home</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Classes</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/binary" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Binary</span></a></li><li class="my-0.5"><a href="/ical/component" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Component</span></a></li><li class="my-0.5"><a href="/ical/componentparser" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ComponentParser</span></a></li><li class="my-0.5"><a href="/ical/duration" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Duration</span></a></li><li class="my-0.5"><a href="/ical/event" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Event</span></a></li><li class="my-0.5"><a href="/invalidrecurrenceruleerror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">InvalidRecurrenceRuleError</span></a></li><li class="my-0.5"><a href="/ical/parse/parsererror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ParserError</span></a></li><li class="my-0.5"><a href="/ical/period" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Period</span></a></li><li class="my-0.5"><a href="/ical/property" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Property</span></a></li><li class="my-0.5"><a href="/ical/recur" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Recur</span></a></li><li class="my-0.5"><a href="/ical/recurexpansion" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">RecurExpansion</span></a></li><li class="my-0.5"><a href="/ical/recuriterator" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">RecurIterator</span></a></li><li class="my-0.5"><a href="/ical/time" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Time</span></a></li><li class="my-0.5"><a href="/ical/timezone" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Timezone</span></a></li><li class="my-0.5"><a href="/ical/utcoffset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">UtcOffset</span></a></li><li class="my-0.5"><a href="/ical/vcardtime" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">VCardTime</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Modules</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/module/design" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">design</span></a></li><li class="my-0.5"><a href="/ical/module/helpers" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">helpers</span></a></li><li class="my-0.5"><a href="/ical/module/timezoneservice" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">TimezoneService</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Namespaces</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ICAL</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Typedefs</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/recur/byparts" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">byParts</span></a></li><li class="my-0.5"><a href="/designset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">designSet</span></a></li><li class="my-0.5"><a href="/ical/design/designset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">designSet</span></a></li><li class="my-0.5"><a href="/frequencyvalues" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">frequencyValues</span></a></li><li class="my-0.5"><a href="/ical/recur/frequencyvalues" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">frequencyValues</span></a></li><li class="my-0.5"><a href="/geo" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Geo</span></a></li><li class="my-0.5"><a href="/jcalcomponent" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">jCalComponent</span></a></li><li class="my-0.5"><a href="/occurrencedetails" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">occurrenceDetails</span></a></li><li class="my-0.5"><a href="/ical/event/occurrencedetails" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">occurrenceDetails</span></a></li><li class="my-0.5"><a href="/ical/componentparser/oncomplete" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">oncomplete</span></a></li><li class="my-0.5"><a href="/ical/componentparser/onerror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">onerror</span></a></li><li class="my-0.5"><a href="/ical/componentparser/onevent" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">onevent</span></a></li><li class="my-0.5"><a href="/ical/componentparser/ontimezone" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ontimezone</span></a></li><li class="my-0.5"><a href="/ical/parse/parserstate" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">parserState</span></a></li><li class="my-0.5"><a href="/timeinit" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">timeInit</span></a></li><li class="my-0.5"><a href="/ical/time/timeinit" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">timeInit</span></a></li><li class="my-0.5"><a href="/weekday" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">weekDay</span></a></li><li class="my-0.5"><a href="/ical/time/weekday" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">weekDay</span></a></li></ul></div><div class="mt-4 first:mt-0"><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/source" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Source Files</span></a></li></ul></div></nav></div></div></aside><main class="min-w-0 px-4 md:px-8 lg:px-12"><div data-island="code-viewer" data-island-id="i0"><div class="my-4 overflow-hidden rounded-lg border border-(--clean-border) bg-(--clean-bg)"><div class="flex items-center justify-between border-b border-(--clean-border) bg-(--clean-bg-muted) px-3 py-2 text-sm"><span class="font-mono text-(--clean-fg)">helpers.js</span><span class="text-xs text-(--clean-fg-muted)">javascript</span></div><div class="h-[calc(100vh-13rem)] min-h-[24rem]"><pre class="m-0 h-full overflow-auto whitespace-pre p-4 text-sm leading-relaxed text-(--clean-fg)"><code class="language-javascript">/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
+
+import TimezoneService from &quot;./timezone_service.js&quot;;
+// needed for typescript type resolution
+// eslint-disable-next-line no-unused-vars
+import Component from &quot;./component.js&quot;;
+import ICALmodule from &quot;./module.js&quot;;
+
+/**
+ * Helper functions used in various places within ical.js
+ * @module ICAL.helpers
+ */
+
+/**
+ * Compiles a list of all referenced TZIDs in all subcomponents and
+ * removes any extra VTIMEZONE subcomponents. In addition, if any TZIDs
+ * are referenced by a component, but a VTIMEZONE does not exist,
+ * an attempt will be made to generate a VTIMEZONE using ICAL.TimezoneService.
+ *
+ * @param {Component} vcal     The top-level VCALENDAR component.
+ * @return {Component}         The ICAL.Component that was passed in.
+ */
+export function updateTimezones(vcal) {
+  let allsubs, properties, vtimezones, reqTzid, i;
+
+  if (!vcal || vcal.name !== &quot;vcalendar&quot;) {
+    //not a top-level vcalendar component
+    return vcal;
+  }
+
+  //Store vtimezone subcomponents in an object reference by tzid.
+  //Store properties from everything else in another array
+  allsubs = vcal.getAllSubcomponents();
+  properties = [];
+  vtimezones = {};
+  for (i = 0; i &lt; allsubs.length; i++) {
+    if (allsubs[i].name === &quot;vtimezone&quot;) {
+      let tzid = allsubs[i].getFirstProperty(&quot;tzid&quot;).getFirstValue();
+      vtimezones[tzid] = allsubs[i];
+    } else {
+      properties = properties.concat(allsubs[i].getAllProperties());
+    }
+  }
+
+  //create an object with one entry for each required tz
+  reqTzid = {};
+  for (i = 0; i &lt; properties.length; i++) {
+    let tzid = properties[i].getParameter(&quot;tzid&quot;);
+    if (tzid) {
+      reqTzid[tzid] = true;
+    }
+  }
+
+  //delete any vtimezones that are not on the reqTzid list.
+  for (let [tzid, comp] of Object.entries(vtimezones)) {
+    if (!reqTzid[tzid]) {
+      vcal.removeSubcomponent(comp);
+    }
+  }
+
+  //create any missing, but registered timezones
+  for (let tzid of Object.keys(reqTzid)) {
+    if (!vtimezones[tzid] &amp;&amp; TimezoneService.has(tzid)) {
+      vcal.addSubcomponent(TimezoneService.get(tzid).component);
+    }
+  }
+
+  return vcal;
+}
+
+/**
+ * Checks if the given type is of the number type and also NaN.
+ *
+ * @param {Number} number     The number to check
+ * @return {Boolean}          True, if the number is strictly NaN
+ */
+export function isStrictlyNaN(number) {
+  return typeof(number) === 'number' &amp;&amp; isNaN(number);
+}
+
+/**
+ * Parses a string value that is expected to be an integer, when the valid is
+ * not an integer throws a decoration error.
+ *
+ * @param {String} string     Raw string input
+ * @return {Number}           Parsed integer
+ */
+export function strictParseInt(string) {
+  let result = parseInt(string, 10);
+
+  if (isStrictlyNaN(result)) {
+    throw new Error(
+      'Could not extract integer from &quot;' + string + '&quot;'
+    );
+  }
+
+  return result;
+}
+
+/**
+ * Creates or returns a class instance of a given type with the initialization
+ * data if the data is not already an instance of the given type.
+ *
+ * @example
+ * var time = new ICAL.Time(...);
+ * var result = ICAL.helpers.formatClassType(time, ICAL.Time);
+ *
+ * (result instanceof ICAL.Time)
+ * // => true
+ *
+ * result = ICAL.helpers.formatClassType({}, ICAL.Time);
+ * (result isntanceof ICAL.Time)
+ * // => true
+ *
+ *
+ * @param {Object} data       object initialization data
+ * @param {Object} type       object type (like ICAL.Time)
+ * @return {?}                An instance of the found type.
+ */
+export function formatClassType(data, type) {
+  if (typeof(data) === 'undefined') {
+    return undefined;
+  }
+
+  if (data instanceof type) {
+    return data;
+  }
+  return new type(data);
+}
+
+/**
+ * Identical to indexOf but will only match values when they are not preceded
+ * by a backslash character.
+ *
+ * @param {String} buffer         String to search
+ * @param {String} search         Value to look for
+ * @param {Number} pos            Start position
+ * @return {Number}               The position, or -1 if not found
+ */
+export function unescapedIndexOf(buffer, search, pos) {
+  while ((pos = buffer.indexOf(search, pos)) !== -1) {
+    if (pos > 0 &amp;&amp; buffer[pos - 1] === '\\') {
+      pos += 1;
+    } else {
+      return pos;
+    }
+  }
+  return -1;
+}
+
+/**
+ * Find the index for insertion using binary search.
+ *
+ * @param {Array} list            The list to search
+ * @param {?} seekVal             The value to insert
+ * @param {function(?,?)} cmpfunc The comparison func, that can
+ *                                  compare two seekVals
+ * @return {Number}               The insert position
+ */
+export function binsearchInsert(list, seekVal, cmpfunc) {
+  if (!list.length)
+    return 0;
+
+  let low = 0, high = list.length - 1,
+      mid, cmpval;
+
+  while (low &lt;= high) {
+    mid = low + Math.floor((high - low) / 2);
+    cmpval = cmpfunc(seekVal, list[mid]);
+
+    if (cmpval &lt; 0)
+      high = mid - 1;
+    else if (cmpval > 0)
+      low = mid + 1;
+    else
+      break;
+  }
+
+  if (cmpval &lt; 0)
+    return mid; // insertion is displacing, so use mid outright.
+  else if (cmpval > 0)
+    return mid + 1;
+  else
+    return mid;
+}
+
+/**
+ * Clone the passed object or primitive. By default a shallow clone will be
+ * executed.
+ *
+ * @param {*} aSrc            The thing to clone
+ * @param {Boolean=} aDeep    If true, a deep clone will be performed
+ * @return {*}                The copy of the thing
+ */
+export function clone(aSrc, aDeep) {
+  if (!aSrc || typeof aSrc != &quot;object&quot;) {
+    return aSrc;
+  } else if (aSrc instanceof Date) {
+    return new Date(aSrc.getTime());
+  } else if (&quot;clone&quot; in aSrc) {
+    return aSrc.clone();
+  } else if (Array.isArray(aSrc)) {
+    let arr = [];
+    for (let i = 0; i &lt; aSrc.length; i++) {
+      arr.push(aDeep ? clone(aSrc[i], true) : aSrc[i]);
+    }
+    return arr;
+  } else {
+    let obj = {};
+    for (let [name, value] of Object.entries(aSrc)) {
+      if (aDeep) {
+        obj[name] = clone(value, true);
+      } else {
+        obj[name] = value;
+      }
+    }
+    return obj;
+  }
+}
+
+/**
+ * Performs iCalendar line folding. A line ending character is inserted and
+ * the next line begins with a whitespace.
+ *
+ * @example
+ * SUMMARY:This line will be fold
+ *  ed right in the middle of a word.
+ *
+ * @param {String} aLine      The line to fold
+ * @return {String}           The folded line
+ */
+export function foldline(aLine) {
+  let result = &quot;&quot;;
+  let line = aLine || &quot;&quot;, pos = 0, line_length = 0;
+  // A line is at most foldLength octets, and that includes the space that starts a continuation line,
+  // so only the first line can use all of them.
+  let max_length = ICALmodule.foldLength;
+  //pos counts position in line for the UTF-16 presentation
+  //line_length counts the bytes for the UTF-8 presentation
+  while (line.length) {
+    let cp = line.codePointAt(pos);
+    if (cp &lt; 128) ++line_length;
+    else if (cp &lt; 2048) line_length += 2;//needs 2 UTF-8 bytes
+    else if (cp &lt; 65536) line_length += 3;
+    else line_length += 4; //cp is less than 1114112
+    // Always take at least one character, so a tiny foldLength cannot make this loop forever
+    if (line_length &lt;= max_length || pos === 0)
+      pos += cp > 65535 ? 2 : 1;
+    else {
+      result += ICALmodule.newLineChar + &quot; &quot; + line.slice(0, Math.max(0, pos));
+      line = line.slice(Math.max(0, pos));
+      pos = line_length = 0;
+      max_length = ICALmodule.foldLength - 1;
+    }
+  }
+  return result.slice(ICALmodule.newLineChar.length + 1);
+}
+
+/**
+ * Pads the given string or number with zeros so it will have at least two
+ * characters.
+ *
+ * @param {String|Number} data    The string or number to pad
+ * @return {String}               The number padded as a string
+ */
+export function pad2(data) {
+  if (typeof(data) !== 'string') {
+    // handle fractions.
+    if (typeof(data) === 'number') {
+      data = parseInt(data);
+    }
+    data = String(data);
+  }
+
+  let len = data.length;
+
+  switch (len) {
+    case 0:
+      return '00';
+    case 1:
+      return '0' + data;
+    default:
+      return data;
+  }
+}
+
+/**
+ * Truncates the given number, correctly handling negative numbers.
+ *
+ * @param {Number} number     The number to truncate
+ * @return {Number}           The truncated number
+ */
+export function trunc(number) {
+  return (number &lt; 0 ? Math.ceil(number) : Math.floor(number));
+}
+
+/**
+ * Poor-man's cross-browser object extension. Doesn't support all the
+ * features, but enough for our usage. Note that the target's properties are
+ * not overwritten with the source properties.
+ *
+ * @example
+ * var child = ICAL.helpers.extend(parent, {
+ *   &quot;bar&quot;: 123
+ * });
+ *
+ * @param {Object} source     The object to extend
+ * @param {Object} target     The object to extend with
+ * @return {Object}           Returns the target.
+ */
+export function extend(source, target) {
+  for (let key in source) {
+    let descr = Object.getOwnPropertyDescriptor(source, key);
+    if (descr &amp;&amp; !Object.getOwnPropertyDescriptor(target, key)) {
+      Object.defineProperty(target, key, descr);
+    }
+  }
+  return target;
+}
+</code></pre></div></div></div></main></div><footer class="border-t border-(--clean-border) bg-background py-6 text-sm text-muted-foreground"><div class="mx-auto flex w-full max-w-screen-2xl flex-col items-start justify-between gap-2 px-4 md:flex-row md:items-center"><div class="flex items-center gap-1.5"><span>Documentation</span><span>© 2026</span></div></div></footer></div><script type="application/json" data-island-props>{"i0":{"language":"javascript","filename":"helpers.js"},"i1":{"basePath":"/","searchIndexUrl":"/_assets/search-index.mw3j4ysu-37b43e6e.json"},"i2":{},"i3":{},"i4":{"nav":[{"label":"Home","slug":"","order":-1},{"label":"Binary","slug":"ical/binary","group":"Classes","order":0},{"label":"Component","slug":"ical/component","group":"Classes","order":0},{"label":"ComponentParser","slug":"ical/componentparser","group":"Classes","order":0},{"label":"Duration","slug":"ical/duration","group":"Classes","order":0},{"label":"Event","slug":"ical/event","group":"Classes","order":0},{"label":"InvalidRecurrenceRuleError","slug":"invalidrecurrenceruleerror","group":"Classes","order":0},{"label":"ParserError","slug":"ical/parse/parsererror","group":"Classes","order":0},{"label":"Period","slug":"ical/period","group":"Classes","order":0},{"label":"Property","slug":"ical/property","group":"Classes","order":0},{"label":"Recur","slug":"ical/recur","group":"Classes","order":0},{"label":"RecurExpansion","slug":"ical/recurexpansion","group":"Classes","order":0},{"label":"RecurIterator","slug":"ical/recuriterator","group":"Classes","order":0},{"label":"Time","slug":"ical/time","group":"Classes","order":0},{"label":"Timezone","slug":"ical/timezone","group":"Classes","order":0},{"label":"UtcOffset","slug":"ical/utcoffset","group":"Classes","order":0},{"label":"VCardTime","slug":"ical/vcardtime","group":"Classes","order":0},{"label":"design","slug":"ical/module/design","group":"Modules","order":1},{"label":"helpers","slug":"ical/module/helpers","group":"Modules","order":1},{"label":"TimezoneService","slug":"ical/module/timezoneservice","group":"Modules","order":1},{"label":"ICAL","slug":"ical","group":"Namespaces","order":4},{"label":"byParts","slug":"ical/recur/byparts","group":"Typedefs","order":7},{"label":"designSet","slug":"designset","group":"Typedefs","order":7},{"label":"designSet","slug":"ical/design/designset","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"frequencyvalues","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"ical/recur/frequencyvalues","group":"Typedefs","order":7},{"label":"Geo","slug":"geo","group":"Typedefs","order":7},{"label":"jCalComponent","slug":"jcalcomponent","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"occurrencedetails","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"ical/event/occurrencedetails","group":"Typedefs","order":7},{"label":"oncomplete","slug":"ical/componentparser/oncomplete","group":"Typedefs","order":7},{"label":"onerror","slug":"ical/componentparser/onerror","group":"Typedefs","order":7},{"label":"onevent","slug":"ical/componentparser/onevent","group":"Typedefs","order":7},{"label":"ontimezone","slug":"ical/componentparser/ontimezone","group":"Typedefs","order":7},{"label":"parserState","slug":"ical/parse/parserstate","group":"Typedefs","order":7},{"label":"timeInit","slug":"timeinit","group":"Typedefs","order":7},{"label":"timeInit","slug":"ical/time/timeinit","group":"Typedefs","order":7},{"label":"weekDay","slug":"weekday","group":"Typedefs","order":7},{"label":"weekDay","slug":"ical/time/weekday","group":"Typedefs","order":7},{"label":"Source Files","slug":"source","order":11}],"currentSlug":"source/helpers-js","basePath":"/","collapsibleGroups":["Classes","Modules","Namespaces","Typedefs"]},"i5":{"nav":[{"label":"Home","slug":"","order":-1},{"label":"Binary","slug":"ical/binary","group":"Classes","order":0},{"label":"Component","slug":"ical/component","group":"Classes","order":0},{"label":"ComponentParser","slug":"ical/componentparser","group":"Classes","order":0},{"label":"Duration","slug":"ical/duration","group":"Classes","order":0},{"label":"Event","slug":"ical/event","group":"Classes","order":0},{"label":"InvalidRecurrenceRuleError","slug":"invalidrecurrenceruleerror","group":"Classes","order":0},{"label":"ParserError","slug":"ical/parse/parsererror","group":"Classes","order":0},{"label":"Period","slug":"ical/period","group":"Classes","order":0},{"label":"Property","slug":"ical/property","group":"Classes","order":0},{"label":"Recur","slug":"ical/recur","group":"Classes","order":0},{"label":"RecurExpansion","slug":"ical/recurexpansion","group":"Classes","order":0},{"label":"RecurIterator","slug":"ical/recuriterator","group":"Classes","order":0},{"label":"Time","slug":"ical/time","group":"Classes","order":0},{"label":"Timezone","slug":"ical/timezone","group":"Classes","order":0},{"label":"UtcOffset","slug":"ical/utcoffset","group":"Classes","order":0},{"label":"VCardTime","slug":"ical/vcardtime","group":"Classes","order":0},{"label":"design","slug":"ical/module/design","group":"Modules","order":1},{"label":"helpers","slug":"ical/module/helpers","group":"Modules","order":1},{"label":"TimezoneService","slug":"ical/module/timezoneservice","group":"Modules","order":1},{"label":"ICAL","slug":"ical","group":"Namespaces","order":4},{"label":"byParts","slug":"ical/recur/byparts","group":"Typedefs","order":7},{"label":"designSet","slug":"designset","group":"Typedefs","order":7},{"label":"designSet","slug":"ical/design/designset","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"frequencyvalues","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"ical/recur/frequencyvalues","group":"Typedefs","order":7},{"label":"Geo","slug":"geo","group":"Typedefs","order":7},{"label":"jCalComponent","slug":"jcalcomponent","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"occurrencedetails","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"ical/event/occurrencedetails","group":"Typedefs","order":7},{"label":"oncomplete","slug":"ical/componentparser/oncomplete","group":"Typedefs","order":7},{"label":"onerror","slug":"ical/componentparser/onerror","group":"Typedefs","order":7},{"label":"onevent","slug":"ical/componentparser/onevent","group":"Typedefs","order":7},{"label":"ontimezone","slug":"ical/componentparser/ontimezone","group":"Typedefs","order":7},{"label":"parserState","slug":"ical/parse/parserstate","group":"Typedefs","order":7},{"label":"timeInit","slug":"timeinit","group":"Typedefs","order":7},{"label":"timeInit","slug":"ical/time/timeinit","group":"Typedefs","order":7},{"label":"weekDay","slug":"weekday","group":"Typedefs","order":7},{"label":"weekDay","slug":"ical/time/weekday","group":"Typedefs","order":7},{"label":"Source Files","slug":"source","order":11}],"currentSlug":"source/helpers-js","basePath":"/","collapsibleGroups":["Classes","Modules","Namespaces","Typedefs"]}}</script><script type="module">(function(){var map={"theme-toggle":"/_islands/theme-toggle-L6U6Y76D.js","settings":"/_islands/settings-NTRYZB5D.js","code-viewer":"/_islands/code-viewer-UXWM2TZA.js","embed":"/_islands/embed-AGJLCMRE.js","playground":"/_islands/playground-MOKSXKVL.js","tabs":"/_islands/tabs-NRSQKCSU.js","sidebar":"/_islands/sidebar-TBT2TK62.js","mobile-nav":"/_islands/mobile-nav-JHOKODY4.js","toc":"/_islands/toc-QUA3AOKN.js","toc-mobile":"/_islands/toc-mobile-LIXIEIU2.js","cmdk":"/_islands/cmdk-TSYHOCEW.js","code-tabs":"/_islands/code-tabs-5EDH5CG3.js","copy-btn":"/_islands/copy-btn-WP7LNUAH.js","copy-page":"/_islands/copy-page-IZ3EPAJX.js"};var seen=new Set();document.querySelectorAll('[data-island]').forEach(function(el){seen.add(el.getAttribute('data-island'));});seen.forEach(function(name){var src=map[name];if(src){import(src);}});})();</script><script>(function(){function flash(h){var b=h.querySelector('[data-heading-anchor]');if(!b)return;b.setAttribute('data-copied','');window.setTimeout(function(){b.removeAttribute('data-copied');},3000);}function onClick(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('a'))return;var h=t.closest('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');if(!h)return;var id=h.id;if(!id)return;var iconOnly=!!t.closest('[data-heading-anchor]');if(!iconOnly){if(location.hash.slice(1)===id){h.scrollIntoView();}else{location.hash=id;}}try{var url=location.origin+location.pathname+location.search+'#'+id;if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){flash(h);}).catch(function(){});}}catch(_){}}document.addEventListener('click',onClick);}());</script><script>(function(){var IDLE=700;var timers=new WeakMap();function onScroll(e){var el=e.target;if(el===document||el===window)el=document.documentElement;if(!el||!el.classList)return;el.classList.add('clean-scrolling');var prev=timers.get(el);if(prev)window.clearTimeout(prev);timers.set(el,window.setTimeout(function(){el.classList.remove('clean-scrolling');},IDLE));}document.addEventListener('scroll',onScroll,true);}());</script></body></html>

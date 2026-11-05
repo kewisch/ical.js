@@ -1,0 +1,1068 @@
+<!doctype html><html lang="en" data-scrollbar="styled"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="generator" content="clean-jsdoc-theme 5.2.1" /><title>design.js</title><script>(function(){try{var d=document.documentElement;var t=localStorage.getItem('theme');if(t==='dark'){d.dataset.theme='dark'}else{d.dataset.theme='light'}var fs=localStorage.getItem('clean-font-size');if(fs==='sm'){d.style.fontSize='15px'}else if(fs==='lg'){d.style.fontSize='18px'}var ls=localStorage.getItem('clean-line-spacing');if(ls==='compact'){d.style.setProperty('--clean-line-height','1.4')}else if(ls==='relaxed'){d.style.setProperty('--clean-line-height','1.8')}}catch(_){}}());</script><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&amp;family=Roboto:wght@400;500;600;700&amp;display=swap" /><link rel="stylesheet" href="/_assets/styles.mw3j4ysu-37b43e6e.css" /></head><body><div class="flex min-h-screen flex-col bg-background text-(--clean-fg)"><header class="sticky top-0 z-30 border-b border-(--clean-border) bg-background"><div class="mx-auto flex h-16 w-full min-w-0 max-w-screen-2xl items-center gap-4 px-4"><a href="/" class="flex min-w-0 items-center pl-3 no-underline"><span class="truncate text-lg font-heading font-bold text-(--clean-fg)">Documentation</span></a><div class="ml-auto flex shrink-0 items-center gap-1"><div class="flex items-center gap-1"><div data-island="cmdk" data-island-id="i1"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Search" title="Search (Ctrl K)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></button></div></div><div class="hidden items-center gap-1 md:flex"><div data-island="theme-toggle" data-island-id="i2"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-label="Switch to dark theme" title="Toggle theme"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button></div><div data-island="settings" data-island-id="i3"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Settings" title="Settings"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div><div class="md:hidden"><div data-island="mobile-nav" data-island-id="i4"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Open navigation" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path></svg></button></div></div></div></div></header><div class="mx-auto grid w-full max-w-screen-2xl flex-1 grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[16rem_minmax(0,1fr)]"><aside class="hidden md:block"><div class="sticky overflow-y-auto [scrollbar-gutter:stable] pr-2 top-20 max-h-[calc(100vh-6rem)]"><div data-island="sidebar" data-island-id="i5"><nav aria-label="Documentation navigation" class="text-(--clean-fg)"><div class="mt-4 first:mt-0"><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Home</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Classes</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/binary" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Binary</span></a></li><li class="my-0.5"><a href="/ical/component" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Component</span></a></li><li class="my-0.5"><a href="/ical/componentparser" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ComponentParser</span></a></li><li class="my-0.5"><a href="/ical/duration" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Duration</span></a></li><li class="my-0.5"><a href="/ical/event" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Event</span></a></li><li class="my-0.5"><a href="/invalidrecurrenceruleerror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">InvalidRecurrenceRuleError</span></a></li><li class="my-0.5"><a href="/ical/parse/parsererror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ParserError</span></a></li><li class="my-0.5"><a href="/ical/period" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Period</span></a></li><li class="my-0.5"><a href="/ical/property" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Property</span></a></li><li class="my-0.5"><a href="/ical/recur" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Recur</span></a></li><li class="my-0.5"><a href="/ical/recurexpansion" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">RecurExpansion</span></a></li><li class="my-0.5"><a href="/ical/recuriterator" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">RecurIterator</span></a></li><li class="my-0.5"><a href="/ical/time" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Time</span></a></li><li class="my-0.5"><a href="/ical/timezone" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Timezone</span></a></li><li class="my-0.5"><a href="/ical/utcoffset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">UtcOffset</span></a></li><li class="my-0.5"><a href="/ical/vcardtime" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">VCardTime</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Modules</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/module/design" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">design</span></a></li><li class="my-0.5"><a href="/ical/module/helpers" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">helpers</span></a></li><li class="my-0.5"><a href="/ical/module/timezoneservice" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">TimezoneService</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Namespaces</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ICAL</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Typedefs</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/recur/byparts" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">byParts</span></a></li><li class="my-0.5"><a href="/designset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">designSet</span></a></li><li class="my-0.5"><a href="/ical/design/designset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">designSet</span></a></li><li class="my-0.5"><a href="/frequencyvalues" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">frequencyValues</span></a></li><li class="my-0.5"><a href="/ical/recur/frequencyvalues" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">frequencyValues</span></a></li><li class="my-0.5"><a href="/geo" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Geo</span></a></li><li class="my-0.5"><a href="/jcalcomponent" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">jCalComponent</span></a></li><li class="my-0.5"><a href="/occurrencedetails" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">occurrenceDetails</span></a></li><li class="my-0.5"><a href="/ical/event/occurrencedetails" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">occurrenceDetails</span></a></li><li class="my-0.5"><a href="/ical/componentparser/oncomplete" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">oncomplete</span></a></li><li class="my-0.5"><a href="/ical/componentparser/onerror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">onerror</span></a></li><li class="my-0.5"><a href="/ical/componentparser/onevent" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">onevent</span></a></li><li class="my-0.5"><a href="/ical/componentparser/ontimezone" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ontimezone</span></a></li><li class="my-0.5"><a href="/ical/parse/parserstate" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">parserState</span></a></li><li class="my-0.5"><a href="/timeinit" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">timeInit</span></a></li><li class="my-0.5"><a href="/ical/time/timeinit" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">timeInit</span></a></li><li class="my-0.5"><a href="/weekday" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">weekDay</span></a></li><li class="my-0.5"><a href="/ical/time/weekday" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">weekDay</span></a></li></ul></div><div class="mt-4 first:mt-0"><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/source" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Source Files</span></a></li></ul></div></nav></div></div></aside><main class="min-w-0 px-4 md:px-8 lg:px-12"><div data-island="code-viewer" data-island-id="i0"><div class="my-4 overflow-hidden rounded-lg border border-(--clean-border) bg-(--clean-bg)"><div class="flex items-center justify-between border-b border-(--clean-border) bg-(--clean-bg-muted) px-3 py-2 text-sm"><span class="font-mono text-(--clean-fg)">design.js</span><span class="text-xs text-(--clean-fg-muted)">javascript</span></div><div class="h-[calc(100vh-13rem)] min-h-[24rem]"><pre class="m-0 h-full overflow-auto whitespace-pre p-4 text-sm leading-relaxed text-(--clean-fg)"><code class="language-javascript">/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
+
+import { isStrictlyNaN, extend } from &quot;./helpers.js&quot;;
+import UtcOffset from &quot;./utc_offset.js&quot;;
+import VCardTime from &quot;./vcard_time.js&quot;;
+import Recur from &quot;./recur.js&quot;;
+import Period from &quot;./period.js&quot;;
+import Duration from &quot;./duration.js&quot;;
+import Time from &quot;./time.js&quot;;
+import Binary from &quot;./binary.js&quot;;
+
+/**
+ * This lets typescript resolve our custom types in the
+ * generated d.ts files (jsdoc typedefs are converted to typescript types).
+ * Ignore prevents the typedefs from being documented more than once.
+ * @ignore
+ * @typedef {import(&quot;./types.js&quot;).designSet} designSet
+ * Imports the 'designSet' type from the &quot;types.js&quot; module
+ */
+
+/** @module ICAL.design */
+
+const FROM_ICAL_NEWLINE = /\\\\|\\;|\\,|\\[Nn]/g;
+const TO_ICAL_NEWLINE = /\\|;|,|\n/g;
+const FROM_VCARD_NEWLINE = /\\\\|\\,|\\[Nn]/g;
+const TO_VCARD_NEWLINE = /\\|,|\n/g;
+const VCARD_BASIC_TIMESTAMP = /^\d{8}T\d{6}(Z|[-+]\d{4})?$/;
+
+function createTextType(fromNewline, toNewline) {
+  let result = {
+    matches: /.*/,
+
+    fromICAL: function(aValue, structuredEscape) {
+      return replaceNewline(aValue, fromNewline, structuredEscape);
+    },
+
+    toICAL: function(aValue, structuredEscape) {
+      let regEx = toNewline;
+      if (structuredEscape)
+         regEx = new RegExp(regEx.source + '|' + structuredEscape, regEx.flags);
+      return aValue.replace(regEx, function(str) {
+        switch (str) {
+        case &quot;\\&quot;:
+          return &quot;\\\\&quot;;
+        case &quot;;&quot;:
+          return &quot;\\;&quot;;
+        case &quot;,&quot;:
+          return &quot;\\,&quot;;
+        case &quot;\n&quot;:
+          return &quot;\\n&quot;;
+        /* c8 ignore next 2 */
+        default:
+          return str;
+        }
+      });
+    }
+  };
+  return result;
+}
+
+// default types used multiple times
+const DEFAULT_TYPE_TEXT = { defaultType: &quot;text&quot; };
+const DEFAULT_TYPE_TEXT_MULTI = { defaultType: &quot;text&quot;, multiValue: &quot;,&quot; };
+const DEFAULT_TYPE_TEXT_STRUCTURED = { defaultType: &quot;text&quot;, structuredValue: &quot;;&quot; };
+const DEFAULT_TYPE_INTEGER = { defaultType: &quot;integer&quot; };
+const DEFAULT_TYPE_DATETIME_DATE = { defaultType: &quot;date-time&quot;, allowedTypes: [&quot;date-time&quot;, &quot;date&quot;] };
+const DEFAULT_TYPE_DATETIME = { defaultType: &quot;date-time&quot; };
+const DEFAULT_TYPE_URI = { defaultType: &quot;uri&quot; };
+const DEFAULT_TYPE_UTCOFFSET = { defaultType: &quot;utc-offset&quot; };
+const DEFAULT_TYPE_RECUR = { defaultType: &quot;recur&quot; };
+const DEFAULT_TYPE_DATE_ANDOR_TIME = { defaultType: &quot;date-and-or-time&quot;, allowedTypes: [&quot;date-time&quot;, &quot;date&quot;, &quot;text&quot;] };
+
+function replaceNewlineReplace(string) {
+  switch (string) {
+    case &quot;\\\\&quot;:
+      return &quot;\\&quot;;
+    case &quot;\\;&quot;:
+      return &quot;;&quot;;
+    case &quot;\\,&quot;:
+      return &quot;,&quot;;
+    case &quot;\\n&quot;:
+    case &quot;\\N&quot;:
+      return &quot;\n&quot;;
+    /* c8 ignore next 2 */
+    default:
+      return string;
+  }
+}
+
+function replaceNewline(value, newline, structuredEscape) {
+  // avoid regex when possible.
+  if (value.indexOf('\\') === -1) {
+    return value;
+  }
+  if (structuredEscape)
+     newline = new RegExp(newline.source + '|\\\\' + structuredEscape, newline.flags);
+  return value.replace(newline, replaceNewlineReplace);
+}
+
+let commonProperties = {
+  &quot;categories&quot;: DEFAULT_TYPE_TEXT_MULTI,
+  &quot;url&quot;: DEFAULT_TYPE_URI,
+  &quot;version&quot;: DEFAULT_TYPE_TEXT,
+  &quot;uid&quot;: DEFAULT_TYPE_TEXT
+};
+
+let commonValues = {
+  &quot;boolean&quot;: {
+    values: [&quot;TRUE&quot;, &quot;FALSE&quot;],
+
+    fromICAL: function(aValue) {
+      switch (aValue) {
+        case 'TRUE':
+          return true;
+        case 'FALSE':
+          return false;
+        default:
+          //TODO: parser warning
+          return false;
+      }
+    },
+
+    toICAL: function(aValue) {
+      if (aValue) {
+        return 'TRUE';
+      }
+      return 'FALSE';
+    }
+
+  },
+  float: {
+    matches: /^[+-]?\d+\.\d+$/,
+
+    fromICAL: function(aValue) {
+      let parsed = parseFloat(aValue);
+      if (isStrictlyNaN(parsed)) {
+        // TODO: parser warning
+        return 0.0;
+      }
+      return parsed;
+    },
+
+    toICAL: function(aValue) {
+      return String(aValue);
+    }
+  },
+  integer: {
+    fromICAL: function(aValue) {
+      let parsed = parseInt(aValue);
+      if (isStrictlyNaN(parsed)) {
+        return 0;
+      }
+      return parsed;
+    },
+
+    toICAL: function(aValue) {
+      return String(aValue);
+    }
+  },
+  &quot;utc-offset&quot;: {
+    toICAL: function(aValue) {
+      if (aValue.length &lt; 7) {
+        // no seconds
+        // -0500
+        return aValue.slice(0, 3) +
+               aValue.slice(4, 6);
+      } else {
+        // seconds
+        // -050000
+        return aValue.slice(0, 3) +
+               aValue.slice(4, 6) +
+               aValue.slice(7, 9);
+      }
+    },
+
+    fromICAL: function(aValue) {
+      if (aValue.length &lt; 6) {
+        // no seconds
+        // -05:00
+        return aValue.slice(0, 3) + ':' +
+               aValue.slice(3, 5);
+      } else {
+        // seconds
+        // -05:00:00
+        return aValue.slice(0, 3) + ':' +
+               aValue.slice(3, 5) + ':' +
+               aValue.slice(5, 7);
+      }
+    },
+
+    decorate: function(aValue) {
+      return UtcOffset.fromString(aValue);
+    },
+
+    undecorate: function(aValue) {
+      return aValue.toString();
+    }
+  }
+};
+
+let icalParams = {
+  // Although the syntax is DQUOTE uri DQUOTE, I don't think we should
+  // enforce anything aside from it being a valid content line.
+  //
+  // At least some params require - if multi values are used - DQUOTEs
+  // for each of its values - e.g. delegated-from=&quot;uri1&quot;,&quot;uri2&quot;
+  // To indicate this, I introduced the new k/v pair
+  // multiValueSeparateDQuote: true
+  //
+  // &quot;ALTREP&quot;: { ... },
+
+  // CN just wants a param-value
+  // &quot;CN&quot;: { ... }
+
+  &quot;cutype&quot;: {
+    values: [&quot;INDIVIDUAL&quot;, &quot;GROUP&quot;, &quot;RESOURCE&quot;, &quot;ROOM&quot;, &quot;UNKNOWN&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  },
+
+  &quot;delegated-from&quot;: {
+    valueType: &quot;cal-address&quot;,
+    multiValue: &quot;,&quot;,
+    multiValueSeparateDQuote: true
+  },
+  &quot;delegated-to&quot;: {
+    valueType: &quot;cal-address&quot;,
+    multiValue: &quot;,&quot;,
+    multiValueSeparateDQuote: true
+  },
+  // &quot;DIR&quot;: { ... }, // See ALTREP
+  &quot;encoding&quot;: {
+    values: [&quot;8BIT&quot;, &quot;BASE64&quot;]
+  },
+  // &quot;FMTTYPE&quot;: { ... }, // See ALTREP
+  &quot;fbtype&quot;: {
+    values: [&quot;FREE&quot;, &quot;BUSY&quot;, &quot;BUSY-UNAVAILABLE&quot;, &quot;BUSY-TENTATIVE&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  },
+  // &quot;LANGUAGE&quot;: { ... }, // See ALTREP
+  &quot;member&quot;: {
+    valueType: &quot;cal-address&quot;,
+    multiValue: &quot;,&quot;,
+    multiValueSeparateDQuote: true
+  },
+  &quot;partstat&quot;: {
+    // TODO These values are actually different per-component
+    values: [&quot;NEEDS-ACTION&quot;, &quot;ACCEPTED&quot;, &quot;DECLINED&quot;, &quot;TENTATIVE&quot;,
+             &quot;DELEGATED&quot;, &quot;COMPLETED&quot;, &quot;IN-PROCESS&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  },
+  &quot;range&quot;: {
+    values: [&quot;THISANDFUTURE&quot;]
+  },
+  &quot;related&quot;: {
+    values: [&quot;START&quot;, &quot;END&quot;]
+  },
+  &quot;reltype&quot;: {
+    values: [&quot;PARENT&quot;, &quot;CHILD&quot;, &quot;SIBLING&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  },
+  &quot;role&quot;: {
+    values: [&quot;REQ-PARTICIPANT&quot;, &quot;CHAIR&quot;,
+             &quot;OPT-PARTICIPANT&quot;, &quot;NON-PARTICIPANT&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  },
+  &quot;rsvp&quot;: {
+    values: [&quot;TRUE&quot;, &quot;FALSE&quot;]
+  },
+  &quot;sent-by&quot;: {
+    valueType: &quot;cal-address&quot;
+  },
+  &quot;tzid&quot;: {
+    matches: /^\//
+  },
+  &quot;value&quot;: {
+    // since the value here is a 'type' lowercase is used.
+    values: [&quot;binary&quot;, &quot;boolean&quot;, &quot;cal-address&quot;, &quot;date&quot;, &quot;date-time&quot;,
+             &quot;duration&quot;, &quot;float&quot;, &quot;integer&quot;, &quot;period&quot;, &quot;recur&quot;, &quot;text&quot;,
+             &quot;time&quot;, &quot;uri&quot;, &quot;utc-offset&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  }
+};
+
+// When adding a value here, be sure to add it to the parameter types!
+const icalValues = extend(commonValues, {
+  text: createTextType(FROM_ICAL_NEWLINE, TO_ICAL_NEWLINE),
+
+  uri: {
+    // TODO
+    /* ... */
+  },
+
+  &quot;binary&quot;: {
+    decorate: function(aString) {
+      return Binary.fromString(aString);
+    },
+
+    undecorate: function(aBinary) {
+      return aBinary.toString();
+    }
+  },
+  &quot;cal-address&quot;: {
+    // needs to be an uri
+  },
+  &quot;date&quot;: {
+    decorate: function(aValue, aProp) {
+      if (design.strict) {
+        return Time.fromDateString(aValue, aProp);
+      } else {
+        return Time.fromString(aValue, aProp);
+      }
+    },
+
+    /**
+     * undecorates a time object.
+     */
+    undecorate: function(aValue) {
+      return aValue.toString();
+    },
+
+    fromICAL: function(aValue) {
+      // from: 20120901
+      // to: 2012-09-01
+      if (!design.strict &amp;&amp; aValue.length >= 15) {
+        // This is probably a date-time, e.g. 20120901T130000Z
+        return icalValues[&quot;date-time&quot;].fromICAL(aValue);
+      } else {
+        return aValue.slice(0, 4) + '-' +
+               aValue.slice(4, 6) + '-' +
+               aValue.slice(6, 8);
+      }
+    },
+
+    toICAL: function(aValue) {
+      // from: 2012-09-01
+      // to: 20120901
+      let len = aValue.length;
+
+      if (len == 10) {
+        return aValue.slice(0, 4) +
+               aValue.slice(5, 7) +
+               aValue.slice(8, 10);
+      } else if (len >= 19) {
+        return icalValues[&quot;date-time&quot;].toICAL(aValue);
+      } else {
+        //TODO: serialize warning?
+        return aValue;
+      }
+
+    }
+  },
+  &quot;date-time&quot;: {
+    fromICAL: function(aValue) {
+      // from: 20120901T130000
+      // to: 2012-09-01T13:00:00
+      if (!design.strict &amp;&amp; aValue.length == 8) {
+        // This is probably a date, e.g. 20120901
+        return icalValues.date.fromICAL(aValue);
+      } else {
+        let result = aValue.slice(0, 4) + '-' +
+                     aValue.slice(4, 6) + '-' +
+                     aValue.slice(6, 8) + 'T' +
+                     aValue.slice(9, 11) + ':' +
+                     aValue.slice(11, 13) + ':' +
+                     aValue.slice(13, 15);
+
+        if (aValue[15] &amp;&amp; aValue[15] === 'Z') {
+          result += 'Z';
+        }
+
+        return result;
+      }
+    },
+
+    toICAL: function(aValue) {
+      // from: 2012-09-01T13:00:00
+      // to: 20120901T130000
+      let len = aValue.length;
+
+      if (len == 10 &amp;&amp; !design.strict) {
+        return icalValues.date.toICAL(aValue);
+      } else if (len >= 19) {
+        let result = aValue.slice(0, 4) +
+                     aValue.slice(5, 7) +
+                     // grab the (DDTHH) segment
+                     aValue.slice(8, 13) +
+                     // MM
+                     aValue.slice(14, 16) +
+                     // SS
+                     aValue.slice(17, 19);
+
+        if (aValue[19] &amp;&amp; aValue[19] === 'Z') {
+          result += 'Z';
+        }
+        return result;
+      } else {
+        // TODO: error
+        return aValue;
+      }
+    },
+
+    decorate: function(aValue, aProp) {
+      if (design.strict) {
+        return Time.fromDateTimeString(aValue, aProp);
+      } else {
+        return Time.fromString(aValue, aProp);
+      }
+    },
+
+    undecorate: function(aValue) {
+      return aValue.toString();
+    }
+  },
+  duration: {
+    decorate: function(aValue) {
+      return Duration.fromString(aValue);
+    },
+    undecorate: function(aValue) {
+      return aValue.toString();
+    }
+  },
+  period: {
+    fromICAL: function(string) {
+      let parts = string.split('/');
+      parts[0] = icalValues['date-time'].fromICAL(parts[0]);
+
+      if (!Duration.isValueString(parts[1])) {
+        parts[1] = icalValues['date-time'].fromICAL(parts[1]);
+      }
+
+      return parts;
+    },
+
+    toICAL: function(parts) {
+      parts = parts.slice();
+      if (!design.strict &amp;&amp; parts[0].length == 10) {
+        parts[0] = icalValues.date.toICAL(parts[0]);
+      } else {
+        parts[0] = icalValues['date-time'].toICAL(parts[0]);
+      }
+
+      if (!Duration.isValueString(parts[1])) {
+        if (!design.strict &amp;&amp; parts[1].length == 10) {
+          parts[1] = icalValues.date.toICAL(parts[1]);
+        } else {
+          parts[1] = icalValues['date-time'].toICAL(parts[1]);
+        }
+      }
+
+      return parts.join(&quot;/&quot;);
+    },
+
+    decorate: function(aValue, aProp) {
+      return Period.fromJSON(aValue, aProp, !design.strict);
+    },
+
+    undecorate: function(aValue) {
+      return aValue.toJSON();
+    }
+  },
+  recur: {
+    fromICAL: function(string) {
+      return Recur._stringToData(string, true);
+    },
+
+    toICAL: function(data) {
+      let str = &quot;&quot;;
+      for (let [k, val] of Object.entries(data)) {
+        if (k == &quot;until&quot;) {
+          if (val.length > 10) {
+            val = icalValues['date-time'].toICAL(val);
+          } else {
+            val = icalValues.date.toICAL(val);
+          }
+        } else if (k == &quot;wkst&quot;) {
+          if (typeof val === 'number') {
+            val = Recur.numericDayToIcalDay(val);
+          }
+        } else if (Array.isArray(val)) {
+          val = val.join(&quot;,&quot;);
+        }
+        str += k.toUpperCase() + &quot;=&quot; + val + &quot;;&quot;;
+      }
+      return str.slice(0, Math.max(0, str.length - 1));
+    },
+
+    decorate: function decorate(aValue) {
+      return Recur.fromData(aValue);
+    },
+
+    undecorate: function(aRecur) {
+      return aRecur.toJSON();
+    }
+  },
+
+  time: {
+    fromICAL: function(aValue) {
+      // from: MMHHSS(Z)?
+      // to: HH:MM:SS(Z)?
+      if (aValue.length &lt; 6) {
+        // TODO: parser exception?
+        return aValue;
+      }
+
+      // HH::MM::SSZ?
+      let result = aValue.slice(0, 2) + ':' +
+                   aValue.slice(2, 4) + ':' +
+                   aValue.slice(4, 6);
+
+      if (aValue[6] === 'Z') {
+        result += 'Z';
+      }
+
+      return result;
+    },
+
+    toICAL: function(aValue) {
+      // from: HH:MM:SS(Z)?
+      // to: MMHHSS(Z)?
+      if (aValue.length &lt; 8) {
+        //TODO: error
+        return aValue;
+      }
+
+      let result = aValue.slice(0, 2) +
+                   aValue.slice(3, 5) +
+                   aValue.slice(6, 8);
+
+      if (aValue[8] === 'Z') {
+        result += 'Z';
+      }
+
+      return result;
+    }
+  }
+});
+
+let icalProperties = extend(commonProperties, {
+
+  &quot;action&quot;: DEFAULT_TYPE_TEXT,
+  &quot;attach&quot;: { defaultType: &quot;uri&quot; },
+  &quot;attendee&quot;: { defaultType: &quot;cal-address&quot; },
+  &quot;calscale&quot;: DEFAULT_TYPE_TEXT,
+  &quot;class&quot;: DEFAULT_TYPE_TEXT,
+  &quot;comment&quot;: DEFAULT_TYPE_TEXT,
+  &quot;completed&quot;: DEFAULT_TYPE_DATETIME,
+  &quot;contact&quot;: DEFAULT_TYPE_TEXT,
+  &quot;created&quot;: DEFAULT_TYPE_DATETIME,
+  &quot;description&quot;: DEFAULT_TYPE_TEXT,
+  &quot;dtend&quot;: DEFAULT_TYPE_DATETIME_DATE,
+  &quot;dtstamp&quot;: DEFAULT_TYPE_DATETIME,
+  &quot;dtstart&quot;: DEFAULT_TYPE_DATETIME_DATE,
+  &quot;due&quot;: DEFAULT_TYPE_DATETIME_DATE,
+  &quot;duration&quot;: { defaultType: &quot;duration&quot; },
+  &quot;exdate&quot;: {
+    defaultType: &quot;date-time&quot;,
+    allowedTypes: [&quot;date-time&quot;, &quot;date&quot;],
+    multiValue: ','
+  },
+  &quot;exrule&quot;: DEFAULT_TYPE_RECUR,
+  &quot;freebusy&quot;: { defaultType: &quot;period&quot;, multiValue: &quot;,&quot; },
+  &quot;geo&quot;: { defaultType: &quot;float&quot;, structuredValue: &quot;;&quot; },
+  &quot;last-modified&quot;: DEFAULT_TYPE_DATETIME,
+  &quot;location&quot;: DEFAULT_TYPE_TEXT,
+  &quot;method&quot;: DEFAULT_TYPE_TEXT,
+  &quot;organizer&quot;: { defaultType: &quot;cal-address&quot; },
+  &quot;percent-complete&quot;: DEFAULT_TYPE_INTEGER,
+  &quot;priority&quot;: DEFAULT_TYPE_INTEGER,
+  &quot;prodid&quot;: DEFAULT_TYPE_TEXT,
+  &quot;related-to&quot;: DEFAULT_TYPE_TEXT,
+  &quot;repeat&quot;: DEFAULT_TYPE_INTEGER,
+  &quot;rdate&quot;: {
+    defaultType: &quot;date-time&quot;,
+    allowedTypes: [&quot;date-time&quot;, &quot;date&quot;, &quot;period&quot;],
+    multiValue: ',',
+    detectType: function(string) {
+      if (string.indexOf('/') !== -1) {
+        return 'period';
+      }
+      return (string.indexOf('T') === -1) ? 'date' : 'date-time';
+    }
+  },
+  &quot;recurrence-id&quot;: DEFAULT_TYPE_DATETIME_DATE,
+  &quot;resources&quot;: DEFAULT_TYPE_TEXT_MULTI,
+  &quot;request-status&quot;: DEFAULT_TYPE_TEXT_STRUCTURED,
+  &quot;rrule&quot;: DEFAULT_TYPE_RECUR,
+  &quot;sequence&quot;: DEFAULT_TYPE_INTEGER,
+  &quot;status&quot;: DEFAULT_TYPE_TEXT,
+  &quot;summary&quot;: DEFAULT_TYPE_TEXT,
+  &quot;transp&quot;: DEFAULT_TYPE_TEXT,
+  &quot;trigger&quot;: { defaultType: &quot;duration&quot;, allowedTypes: [&quot;duration&quot;, &quot;date-time&quot;] },
+  &quot;tzoffsetfrom&quot;: DEFAULT_TYPE_UTCOFFSET,
+  &quot;tzoffsetto&quot;: DEFAULT_TYPE_UTCOFFSET,
+  &quot;tzurl&quot;: DEFAULT_TYPE_URI,
+  &quot;tzid&quot;: DEFAULT_TYPE_TEXT,
+  &quot;tzname&quot;: DEFAULT_TYPE_TEXT
+});
+
+// When adding a value here, be sure to add it to the parameter types!
+const vcardValues = extend(commonValues, {
+  text: createTextType(FROM_VCARD_NEWLINE, TO_VCARD_NEWLINE),
+  uri: createTextType(FROM_VCARD_NEWLINE, TO_VCARD_NEWLINE),
+
+  date: {
+    decorate: function(aValue) {
+      return VCardTime.fromDateAndOrTimeString(aValue, &quot;date&quot;);
+    },
+    undecorate: function(aValue) {
+      return aValue.toString();
+    },
+    fromICAL: function(aValue) {
+      if (aValue.length == 8) {
+        return icalValues.date.fromICAL(aValue);
+      } else if (aValue[0] == '-' &amp;&amp; aValue.length == 6) {
+        return aValue.slice(0, 4) + '-' + aValue.slice(4);
+      } else {
+        return aValue;
+      }
+    },
+    toICAL: function(aValue) {
+      if (aValue.length == 10) {
+        return icalValues.date.toICAL(aValue);
+      } else if (aValue[0] == '-' &amp;&amp; aValue.length == 7) {
+        return aValue.slice(0, 4) + aValue.slice(5);
+      } else {
+        return aValue;
+      }
+    }
+  },
+
+  time: {
+    decorate: function(aValue) {
+      return VCardTime.fromDateAndOrTimeString(&quot;T&quot; + aValue, &quot;time&quot;);
+    },
+    undecorate: function(aValue) {
+      return aValue.toString();
+    },
+    fromICAL: function(aValue) {
+      let splitzone = vcardValues.time._splitZone(aValue, true);
+      let zone = splitzone[0], value = splitzone[1];
+
+      //console.log(&quot;SPLIT: &quot;,splitzone);
+
+      if (value.length == 6) {
+        value = value.slice(0, 2) + ':' +
+                value.slice(2, 4) + ':' +
+                value.slice(4, 6);
+      } else if (value.length == 4 &amp;&amp; value[0] != '-') {
+        value = value.slice(0, 2) + ':' + value.slice(2, 4);
+      } else if (value.length == 5) {
+        value = value.slice(0, 3) + ':' + value.slice(3, 5);
+      }
+
+      if (zone.length == 5 &amp;&amp; (zone[0] == '-' || zone[0] == '+')) {
+        zone = zone.slice(0, 3) + ':' + zone.slice(3);
+      }
+
+      return value + zone;
+    },
+
+    toICAL: function(aValue) {
+      let splitzone = vcardValues.time._splitZone(aValue);
+      let zone = splitzone[0], value = splitzone[1];
+
+      if (value.length == 8) {
+        value = value.slice(0, 2) +
+                value.slice(3, 5) +
+                value.slice(6, 8);
+      } else if (value.length == 5 &amp;&amp; value[0] != '-') {
+        value = value.slice(0, 2) + value.slice(3, 5);
+      } else if (value.length == 6) {
+        value = value.slice(0, 3) + value.slice(4, 6);
+      }
+
+      if (zone.length == 6 &amp;&amp; (zone[0] == '-' || zone[0] == '+')) {
+        zone = zone.slice(0, 3) + zone.slice(4);
+      }
+
+      return value + zone;
+    },
+
+    _splitZone: function(aValue, isFromIcal) {
+      let lastChar = aValue.length - 1;
+      let signChar = aValue.length - (isFromIcal ? 5 : 6);
+      let sign = aValue[signChar];
+      let zone, value;
+
+      if (aValue[lastChar] == 'Z') {
+        zone = aValue[lastChar];
+        value = aValue.slice(0, Math.max(0, lastChar));
+      } else if (aValue.length > 6 &amp;&amp; (sign == '-' || sign == '+')) {
+        zone = aValue.slice(signChar);
+        value = aValue.slice(0, Math.max(0, signChar));
+      } else {
+        zone = &quot;&quot;;
+        value = aValue;
+      }
+
+      return [zone, value];
+    }
+  },
+
+  &quot;date-time&quot;: {
+    decorate: function(aValue) {
+      return VCardTime.fromDateAndOrTimeString(aValue, &quot;date-time&quot;);
+    },
+
+    undecorate: function(aValue) {
+      return aValue.toString();
+    },
+
+    fromICAL: function(aValue) {
+      return vcardValues['date-and-or-time'].fromICAL(aValue);
+    },
+
+    toICAL: function(aValue) {
+      return vcardValues['date-and-or-time'].toICAL(aValue);
+    }
+  },
+
+  &quot;date-and-or-time&quot;: {
+    decorate: function(aValue) {
+      return VCardTime.fromDateAndOrTimeString(aValue, &quot;date-and-or-time&quot;);
+    },
+
+    undecorate: function(aValue) {
+      return aValue.toString();
+    },
+
+    fromICAL: function(aValue) {
+      let parts = aValue.split('T');
+      return (parts[0] ? vcardValues.date.fromICAL(parts[0]) : '') +
+             (parts[1] ? 'T' + vcardValues.time.fromICAL(parts[1]) : '');
+    },
+
+    toICAL: function(aValue) {
+      let parts = aValue.split('T');
+      return vcardValues.date.toICAL(parts[0]) +
+             (parts[1] ? 'T' + vcardValues.time.toICAL(parts[1]) : '');
+
+    }
+  },
+  timestamp: {
+    ...icalValues['date-time'],
+
+    // The iCalendar conversions assume the basic format RFC 6350 requires, but
+    // they insert and remove the separators at fixed offsets, which drops a
+    // numeric utc-offset and mangles a value already in the extended format.
+    // The date-and-or-time conversions probe the value instead, so they handle
+    // both. In strict mode only a conforming value is passed to them, leaving
+    // the extended format to the old behaviour.
+    fromICAL: function(aValue) {
+      if (design.strict &amp;&amp; !VCARD_BASIC_TIMESTAMP.test(aValue)) {
+        return icalValues['date-time'].fromICAL(aValue);
+      }
+      return vcardValues['date-and-or-time'].fromICAL(aValue);
+    },
+
+    toICAL: function(aValue) {
+      return vcardValues['date-and-or-time'].toICAL(aValue);
+    }
+  },
+  &quot;language-tag&quot;: {
+    matches: /^[a-zA-Z0-9-]+$/ // Could go with a more strict regex here
+  },
+  &quot;phone-number&quot;: {
+    fromICAL: function(aValue) {
+      return Array.from(aValue).filter(function(c) {
+          return c === '\\' ? undefined : c;
+        }).join('');
+    },
+    toICAL: function(aValue) {
+      return Array.from(aValue).map(function(c) {
+        return c === ',' || c === &quot;;&quot; ? '\\' + c : c;
+      }).join('');
+    }
+  }
+});
+
+let vcardParams = {
+  &quot;type&quot;: {
+    valueType: &quot;text&quot;,
+    multiValue: &quot;,&quot;
+  },
+  &quot;value&quot;: {
+    // since the value here is a 'type' lowercase is used.
+    values: [&quot;text&quot;, &quot;uri&quot;, &quot;date&quot;, &quot;time&quot;, &quot;date-time&quot;, &quot;date-and-or-time&quot;,
+             &quot;timestamp&quot;, &quot;boolean&quot;, &quot;integer&quot;, &quot;float&quot;, &quot;utc-offset&quot;,
+             &quot;language-tag&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  }
+};
+
+let vcardProperties = extend(commonProperties, {
+  &quot;adr&quot;: { defaultType: &quot;text&quot;, structuredValue: &quot;;&quot;, multiValue: &quot;,&quot; },
+  &quot;anniversary&quot;: DEFAULT_TYPE_DATE_ANDOR_TIME,
+  &quot;bday&quot;: DEFAULT_TYPE_DATE_ANDOR_TIME,
+  &quot;caladruri&quot;: DEFAULT_TYPE_URI,
+  &quot;caluri&quot;: DEFAULT_TYPE_URI,
+  &quot;clientpidmap&quot;: DEFAULT_TYPE_TEXT_STRUCTURED,
+  &quot;email&quot;: DEFAULT_TYPE_TEXT,
+  &quot;fburl&quot;: DEFAULT_TYPE_URI,
+  &quot;fn&quot;: DEFAULT_TYPE_TEXT,
+  &quot;gender&quot;: DEFAULT_TYPE_TEXT_STRUCTURED,
+  &quot;geo&quot;: DEFAULT_TYPE_URI,
+  &quot;impp&quot;: DEFAULT_TYPE_URI,
+  &quot;key&quot;: DEFAULT_TYPE_URI,
+  &quot;kind&quot;: DEFAULT_TYPE_TEXT,
+  &quot;lang&quot;: { defaultType: &quot;language-tag&quot; },
+  &quot;logo&quot;: DEFAULT_TYPE_URI,
+  &quot;member&quot;: DEFAULT_TYPE_URI,
+  &quot;n&quot;: { defaultType: &quot;text&quot;, structuredValue: &quot;;&quot;, multiValue: &quot;,&quot; },
+  &quot;nickname&quot;: DEFAULT_TYPE_TEXT_MULTI,
+  &quot;note&quot;: DEFAULT_TYPE_TEXT,
+  &quot;org&quot;: { defaultType: &quot;text&quot;, structuredValue: &quot;;&quot; },
+  &quot;photo&quot;: DEFAULT_TYPE_URI,
+  &quot;related&quot;: DEFAULT_TYPE_URI,
+  &quot;rev&quot;: { defaultType: &quot;timestamp&quot; },
+  &quot;role&quot;: DEFAULT_TYPE_TEXT,
+  &quot;sound&quot;: DEFAULT_TYPE_URI,
+  &quot;source&quot;: DEFAULT_TYPE_URI,
+  &quot;tel&quot;: { defaultType: &quot;uri&quot;, allowedTypes: [&quot;uri&quot;, &quot;text&quot;] },
+  &quot;title&quot;: DEFAULT_TYPE_TEXT,
+  &quot;tz&quot;: { defaultType: &quot;text&quot;, allowedTypes: [&quot;text&quot;, &quot;utc-offset&quot;, &quot;uri&quot;] },
+  &quot;xml&quot;: DEFAULT_TYPE_TEXT
+});
+
+let vcard3Values = extend(commonValues, {
+  binary: icalValues.binary,
+  date: {
+    // As in vCard, but serialised differently ('-' are included).
+    ...vcardValues.date,
+    toICAL: function(aValue) {
+      return aValue;
+    }
+  },
+  &quot;date-time&quot;: {
+    // As in vCard, but serialised differently ('-' and ':' are included).
+    ...vcardValues['date-time'],
+    toICAL: function(aValue) {
+      return aValue;
+    }
+  },
+  &quot;phone-number&quot;: vcardValues[&quot;phone-number&quot;],
+  uri: icalValues.uri,
+  text: vcardValues.text,
+  time: {
+    // As in vCard, but serialised differently (':' are included).
+    ...vcardValues.time,
+    toICAL: function(aValue) {
+      return aValue;
+    }
+  },
+  vcard: icalValues.text,
+  &quot;utc-offset&quot;: {
+    toICAL: function(aValue) {
+      return aValue.slice(0, 7);
+    },
+
+    fromICAL: function(aValue) {
+      return aValue.slice(0, 7);
+    },
+
+    decorate: function(aValue) {
+      return UtcOffset.fromString(aValue);
+    },
+
+    undecorate: function(aValue) {
+      return aValue.toString();
+    }
+  }
+});
+
+let vcard3Params = {
+  &quot;type&quot;: {
+    valueType: &quot;text&quot;,
+    multiValue: &quot;,&quot;
+  },
+  &quot;value&quot;: {
+    // since the value here is a 'type' lowercase is used.
+    values: [&quot;text&quot;, &quot;uri&quot;, &quot;date&quot;, &quot;date-time&quot;, &quot;phone-number&quot;, &quot;time&quot;,
+             &quot;boolean&quot;, &quot;integer&quot;, &quot;float&quot;, &quot;utc-offset&quot;, &quot;vcard&quot;, &quot;binary&quot;],
+    allowXName: true,
+    allowIanaToken: true
+  }
+};
+
+let vcard3Properties = extend(commonProperties, {
+  fn: DEFAULT_TYPE_TEXT,
+  n: { defaultType: &quot;text&quot;, structuredValue: &quot;;&quot;, multiValue: &quot;,&quot; },
+  nickname: DEFAULT_TYPE_TEXT_MULTI,
+  photo: { defaultType: &quot;binary&quot;, allowedTypes: [&quot;binary&quot;, &quot;uri&quot;] },
+  bday: {
+    defaultType: &quot;date-time&quot;,
+    allowedTypes: [&quot;date-time&quot;, &quot;date&quot;],
+    detectType: function(string) {
+      return (string.indexOf('T') === -1) ? 'date' : 'date-time';
+    }
+  },
+
+  adr: { defaultType: &quot;text&quot;, structuredValue: &quot;;&quot;, multiValue: &quot;,&quot; },
+  label: DEFAULT_TYPE_TEXT,
+
+  tel: { defaultType: &quot;phone-number&quot; },
+  email: DEFAULT_TYPE_TEXT,
+  mailer: DEFAULT_TYPE_TEXT,
+
+  tz: { defaultType: &quot;utc-offset&quot;, allowedTypes: [&quot;utc-offset&quot;, &quot;text&quot;] },
+  geo: { defaultType: &quot;float&quot;, structuredValue: &quot;;&quot; },
+
+  title: DEFAULT_TYPE_TEXT,
+  role: DEFAULT_TYPE_TEXT,
+  logo: { defaultType: &quot;binary&quot;, allowedTypes: [&quot;binary&quot;, &quot;uri&quot;] },
+  agent: { defaultType: &quot;vcard&quot;, allowedTypes: [&quot;vcard&quot;, &quot;text&quot;, &quot;uri&quot;] },
+  org: DEFAULT_TYPE_TEXT_STRUCTURED,
+
+  note: DEFAULT_TYPE_TEXT,
+  prodid: DEFAULT_TYPE_TEXT,
+  rev: {
+    defaultType: &quot;date-time&quot;,
+    allowedTypes: [&quot;date-time&quot;, &quot;date&quot;],
+    detectType: function(string) {
+      return (string.indexOf('T') === -1) ? 'date' : 'date-time';
+    }
+  },
+  &quot;sort-string&quot;: DEFAULT_TYPE_TEXT,
+  sound: { defaultType: &quot;binary&quot;, allowedTypes: [&quot;binary&quot;, &quot;uri&quot;] },
+
+  class: DEFAULT_TYPE_TEXT,
+  key: { defaultType: &quot;binary&quot;, allowedTypes: [&quot;binary&quot;, &quot;text&quot;] }
+});
+
+/**
+ * iCalendar design set
+ * @type {designSet}
+ */
+let icalSet = {
+  name: &quot;ical&quot;,
+  value: icalValues,
+  param: icalParams,
+  property: icalProperties,
+  propertyGroups: false
+};
+
+/**
+ * vCard 4.0 design set
+ * @type {designSet}
+ */
+let vcardSet = {
+  name: &quot;vcard4&quot;,
+  value: vcardValues,
+  param: vcardParams,
+  property: vcardProperties,
+  propertyGroups: true
+};
+
+/**
+ * vCard 3.0 design set
+ * @type {designSet}
+ */
+let vcard3Set = {
+  name: &quot;vcard3&quot;,
+  value: vcard3Values,
+  param: vcard3Params,
+  property: vcard3Properties,
+  propertyGroups: true
+};
+
+/**
+ * The design data, used by the parser to determine types for properties and
+ * other metadata needed to produce correct jCard/jCal data.
+ *
+ * @alias ICAL.design
+ * @exports module:ICAL.design
+ */
+const design = {
+  /**
+   * Can be set to false to make the parser more lenient.
+   */
+  strict: true,
+
+  /**
+   * The default set for new properties and components if none is specified.
+   * @type {designSet}
+   */
+  defaultSet: icalSet,
+
+  /**
+   * The default type for unknown properties
+   * @type {String}
+   */
+  defaultType: 'unknown',
+
+  /**
+   * Holds the design set for known top-level components
+   *
+   * @type {Object}
+   * @property {designSet} vcard       vCard VCARD
+   * @property {designSet} vevent      iCalendar VEVENT
+   * @property {designSet} vtodo       iCalendar VTODO
+   * @property {designSet} vjournal    iCalendar VJOURNAL
+   * @property {designSet} valarm      iCalendar VALARM
+   * @property {designSet} vtimezone   iCalendar VTIMEZONE
+   * @property {designSet} daylight    iCalendar DAYLIGHT
+   * @property {designSet} standard    iCalendar STANDARD
+   *
+   * @example
+   * let propertyName = 'fn';
+   * let componentDesign = ICAL.design.components.vcard;
+   * let propertyDetails = componentDesign.property[propertyName];
+   * if (propertyDetails.defaultType == 'text') {
+   *   // Yep, sure is...
+   * }
+   */
+  components: {
+    vcard: vcardSet,
+    vcard3: vcard3Set,
+    vevent: icalSet,
+    vtodo: icalSet,
+    vjournal: icalSet,
+    valarm: icalSet,
+    vtimezone: icalSet,
+    daylight: icalSet,
+    standard: icalSet
+  },
+
+
+  /**
+   * The design set for iCalendar (rfc5545/rfc7265) components.
+   * @type {designSet}
+   */
+  icalendar: icalSet,
+
+  /**
+   * The design set for vCard (rfc6350/rfc7095) components.
+   * @type {designSet}
+   */
+  vcard: vcardSet,
+
+  /**
+   * The design set for vCard (rfc2425/rfc2426/rfc7095) components.
+   * @type {designSet}
+   */
+  vcard3: vcard3Set,
+
+  /**
+   * Gets the design set for the given component name.
+   *
+   * @param {String} componentName        The name of the component
+   * @return {designSet}      The design set for the component
+   */
+  getDesignSet: function(componentName) {
+    let isInDesign = componentName &amp;&amp; componentName in design.components;
+    return isInDesign ? design.components[componentName] : design.defaultSet;
+  }
+};
+export default design;
+</code></pre></div></div></div></main></div><footer class="border-t border-(--clean-border) bg-background py-6 text-sm text-muted-foreground"><div class="mx-auto flex w-full max-w-screen-2xl flex-col items-start justify-between gap-2 px-4 md:flex-row md:items-center"><div class="flex items-center gap-1.5"><span>Documentation</span><span>© 2026</span></div></div></footer></div><script type="application/json" data-island-props>{"i0":{"language":"javascript","filename":"design.js"},"i1":{"basePath":"/","searchIndexUrl":"/_assets/search-index.mw3j4ysu-37b43e6e.json"},"i2":{},"i3":{},"i4":{"nav":[{"label":"Home","slug":"","order":-1},{"label":"Binary","slug":"ical/binary","group":"Classes","order":0},{"label":"Component","slug":"ical/component","group":"Classes","order":0},{"label":"ComponentParser","slug":"ical/componentparser","group":"Classes","order":0},{"label":"Duration","slug":"ical/duration","group":"Classes","order":0},{"label":"Event","slug":"ical/event","group":"Classes","order":0},{"label":"InvalidRecurrenceRuleError","slug":"invalidrecurrenceruleerror","group":"Classes","order":0},{"label":"ParserError","slug":"ical/parse/parsererror","group":"Classes","order":0},{"label":"Period","slug":"ical/period","group":"Classes","order":0},{"label":"Property","slug":"ical/property","group":"Classes","order":0},{"label":"Recur","slug":"ical/recur","group":"Classes","order":0},{"label":"RecurExpansion","slug":"ical/recurexpansion","group":"Classes","order":0},{"label":"RecurIterator","slug":"ical/recuriterator","group":"Classes","order":0},{"label":"Time","slug":"ical/time","group":"Classes","order":0},{"label":"Timezone","slug":"ical/timezone","group":"Classes","order":0},{"label":"UtcOffset","slug":"ical/utcoffset","group":"Classes","order":0},{"label":"VCardTime","slug":"ical/vcardtime","group":"Classes","order":0},{"label":"design","slug":"ical/module/design","group":"Modules","order":1},{"label":"helpers","slug":"ical/module/helpers","group":"Modules","order":1},{"label":"TimezoneService","slug":"ical/module/timezoneservice","group":"Modules","order":1},{"label":"ICAL","slug":"ical","group":"Namespaces","order":4},{"label":"byParts","slug":"ical/recur/byparts","group":"Typedefs","order":7},{"label":"designSet","slug":"designset","group":"Typedefs","order":7},{"label":"designSet","slug":"ical/design/designset","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"frequencyvalues","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"ical/recur/frequencyvalues","group":"Typedefs","order":7},{"label":"Geo","slug":"geo","group":"Typedefs","order":7},{"label":"jCalComponent","slug":"jcalcomponent","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"occurrencedetails","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"ical/event/occurrencedetails","group":"Typedefs","order":7},{"label":"oncomplete","slug":"ical/componentparser/oncomplete","group":"Typedefs","order":7},{"label":"onerror","slug":"ical/componentparser/onerror","group":"Typedefs","order":7},{"label":"onevent","slug":"ical/componentparser/onevent","group":"Typedefs","order":7},{"label":"ontimezone","slug":"ical/componentparser/ontimezone","group":"Typedefs","order":7},{"label":"parserState","slug":"ical/parse/parserstate","group":"Typedefs","order":7},{"label":"timeInit","slug":"timeinit","group":"Typedefs","order":7},{"label":"timeInit","slug":"ical/time/timeinit","group":"Typedefs","order":7},{"label":"weekDay","slug":"weekday","group":"Typedefs","order":7},{"label":"weekDay","slug":"ical/time/weekday","group":"Typedefs","order":7},{"label":"Source Files","slug":"source","order":11}],"currentSlug":"source/design-js","basePath":"/","collapsibleGroups":["Classes","Modules","Namespaces","Typedefs"]},"i5":{"nav":[{"label":"Home","slug":"","order":-1},{"label":"Binary","slug":"ical/binary","group":"Classes","order":0},{"label":"Component","slug":"ical/component","group":"Classes","order":0},{"label":"ComponentParser","slug":"ical/componentparser","group":"Classes","order":0},{"label":"Duration","slug":"ical/duration","group":"Classes","order":0},{"label":"Event","slug":"ical/event","group":"Classes","order":0},{"label":"InvalidRecurrenceRuleError","slug":"invalidrecurrenceruleerror","group":"Classes","order":0},{"label":"ParserError","slug":"ical/parse/parsererror","group":"Classes","order":0},{"label":"Period","slug":"ical/period","group":"Classes","order":0},{"label":"Property","slug":"ical/property","group":"Classes","order":0},{"label":"Recur","slug":"ical/recur","group":"Classes","order":0},{"label":"RecurExpansion","slug":"ical/recurexpansion","group":"Classes","order":0},{"label":"RecurIterator","slug":"ical/recuriterator","group":"Classes","order":0},{"label":"Time","slug":"ical/time","group":"Classes","order":0},{"label":"Timezone","slug":"ical/timezone","group":"Classes","order":0},{"label":"UtcOffset","slug":"ical/utcoffset","group":"Classes","order":0},{"label":"VCardTime","slug":"ical/vcardtime","group":"Classes","order":0},{"label":"design","slug":"ical/module/design","group":"Modules","order":1},{"label":"helpers","slug":"ical/module/helpers","group":"Modules","order":1},{"label":"TimezoneService","slug":"ical/module/timezoneservice","group":"Modules","order":1},{"label":"ICAL","slug":"ical","group":"Namespaces","order":4},{"label":"byParts","slug":"ical/recur/byparts","group":"Typedefs","order":7},{"label":"designSet","slug":"designset","group":"Typedefs","order":7},{"label":"designSet","slug":"ical/design/designset","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"frequencyvalues","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"ical/recur/frequencyvalues","group":"Typedefs","order":7},{"label":"Geo","slug":"geo","group":"Typedefs","order":7},{"label":"jCalComponent","slug":"jcalcomponent","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"occurrencedetails","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"ical/event/occurrencedetails","group":"Typedefs","order":7},{"label":"oncomplete","slug":"ical/componentparser/oncomplete","group":"Typedefs","order":7},{"label":"onerror","slug":"ical/componentparser/onerror","group":"Typedefs","order":7},{"label":"onevent","slug":"ical/componentparser/onevent","group":"Typedefs","order":7},{"label":"ontimezone","slug":"ical/componentparser/ontimezone","group":"Typedefs","order":7},{"label":"parserState","slug":"ical/parse/parserstate","group":"Typedefs","order":7},{"label":"timeInit","slug":"timeinit","group":"Typedefs","order":7},{"label":"timeInit","slug":"ical/time/timeinit","group":"Typedefs","order":7},{"label":"weekDay","slug":"weekday","group":"Typedefs","order":7},{"label":"weekDay","slug":"ical/time/weekday","group":"Typedefs","order":7},{"label":"Source Files","slug":"source","order":11}],"currentSlug":"source/design-js","basePath":"/","collapsibleGroups":["Classes","Modules","Namespaces","Typedefs"]}}</script><script type="module">(function(){var map={"theme-toggle":"/_islands/theme-toggle-L6U6Y76D.js","settings":"/_islands/settings-NTRYZB5D.js","code-viewer":"/_islands/code-viewer-UXWM2TZA.js","embed":"/_islands/embed-AGJLCMRE.js","playground":"/_islands/playground-MOKSXKVL.js","tabs":"/_islands/tabs-NRSQKCSU.js","sidebar":"/_islands/sidebar-TBT2TK62.js","mobile-nav":"/_islands/mobile-nav-JHOKODY4.js","toc":"/_islands/toc-QUA3AOKN.js","toc-mobile":"/_islands/toc-mobile-LIXIEIU2.js","cmdk":"/_islands/cmdk-TSYHOCEW.js","code-tabs":"/_islands/code-tabs-5EDH5CG3.js","copy-btn":"/_islands/copy-btn-WP7LNUAH.js","copy-page":"/_islands/copy-page-IZ3EPAJX.js"};var seen=new Set();document.querySelectorAll('[data-island]').forEach(function(el){seen.add(el.getAttribute('data-island'));});seen.forEach(function(name){var src=map[name];if(src){import(src);}});})();</script><script>(function(){function flash(h){var b=h.querySelector('[data-heading-anchor]');if(!b)return;b.setAttribute('data-copied','');window.setTimeout(function(){b.removeAttribute('data-copied');},3000);}function onClick(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('a'))return;var h=t.closest('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');if(!h)return;var id=h.id;if(!id)return;var iconOnly=!!t.closest('[data-heading-anchor]');if(!iconOnly){if(location.hash.slice(1)===id){h.scrollIntoView();}else{location.hash=id;}}try{var url=location.origin+location.pathname+location.search+'#'+id;if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){flash(h);}).catch(function(){});}}catch(_){}}document.addEventListener('click',onClick);}());</script><script>(function(){var IDLE=700;var timers=new WeakMap();function onScroll(e){var el=e.target;if(el===document||el===window)el=document.documentElement;if(!el||!el.classList)return;el.classList.add('clean-scrolling');var prev=timers.get(el);if(prev)window.clearTimeout(prev);timers.set(el,window.setTimeout(function(){el.classList.remove('clean-scrolling');},IDLE));}document.addEventListener('scroll',onScroll,true);}());</script></body></html>

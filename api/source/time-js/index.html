@@ -1,0 +1,1408 @@
+<!doctype html><html lang="en" data-scrollbar="styled"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="generator" content="clean-jsdoc-theme 5.2.1" /><title>time.js</title><script>(function(){try{var d=document.documentElement;var t=localStorage.getItem('theme');if(t==='dark'){d.dataset.theme='dark'}else{d.dataset.theme='light'}var fs=localStorage.getItem('clean-font-size');if(fs==='sm'){d.style.fontSize='15px'}else if(fs==='lg'){d.style.fontSize='18px'}var ls=localStorage.getItem('clean-line-spacing');if(ls==='compact'){d.style.setProperty('--clean-line-height','1.4')}else if(ls==='relaxed'){d.style.setProperty('--clean-line-height','1.8')}}catch(_){}}());</script><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&amp;family=Roboto:wght@400;500;600;700&amp;display=swap" /><link rel="stylesheet" href="/_assets/styles.mw3j4ysu-37b43e6e.css" /></head><body><div class="flex min-h-screen flex-col bg-background text-(--clean-fg)"><header class="sticky top-0 z-30 border-b border-(--clean-border) bg-background"><div class="mx-auto flex h-16 w-full min-w-0 max-w-screen-2xl items-center gap-4 px-4"><a href="/" class="flex min-w-0 items-center pl-3 no-underline"><span class="truncate text-lg font-heading font-bold text-(--clean-fg)">Documentation</span></a><div class="ml-auto flex shrink-0 items-center gap-1"><div class="flex items-center gap-1"><div data-island="cmdk" data-island-id="i1"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Search" title="Search (Ctrl K)"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></button></div></div><div class="hidden items-center gap-1 md:flex"><div data-island="theme-toggle" data-island-id="i2"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-label="Switch to dark theme" title="Toggle theme"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></button></div><div data-island="settings" data-island-id="i3"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Settings" title="Settings"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div><div class="md:hidden"><div data-island="mobile-nav" data-island-id="i4"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-muted-foreground hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Open navigation" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path></svg></button></div></div></div></div></header><div class="mx-auto grid w-full max-w-screen-2xl flex-1 grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[16rem_minmax(0,1fr)]"><aside class="hidden md:block"><div class="sticky overflow-y-auto [scrollbar-gutter:stable] pr-2 top-20 max-h-[calc(100vh-6rem)]"><div data-island="sidebar" data-island-id="i5"><nav aria-label="Documentation navigation" class="text-(--clean-fg)"><div class="mt-4 first:mt-0"><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Home</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Classes</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/binary" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Binary</span></a></li><li class="my-0.5"><a href="/ical/component" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Component</span></a></li><li class="my-0.5"><a href="/ical/componentparser" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ComponentParser</span></a></li><li class="my-0.5"><a href="/ical/duration" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Duration</span></a></li><li class="my-0.5"><a href="/ical/event" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Event</span></a></li><li class="my-0.5"><a href="/invalidrecurrenceruleerror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">InvalidRecurrenceRuleError</span></a></li><li class="my-0.5"><a href="/ical/parse/parsererror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ParserError</span></a></li><li class="my-0.5"><a href="/ical/period" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Period</span></a></li><li class="my-0.5"><a href="/ical/property" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Property</span></a></li><li class="my-0.5"><a href="/ical/recur" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Recur</span></a></li><li class="my-0.5"><a href="/ical/recurexpansion" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">RecurExpansion</span></a></li><li class="my-0.5"><a href="/ical/recuriterator" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">RecurIterator</span></a></li><li class="my-0.5"><a href="/ical/time" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Time</span></a></li><li class="my-0.5"><a href="/ical/timezone" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Timezone</span></a></li><li class="my-0.5"><a href="/ical/utcoffset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">UtcOffset</span></a></li><li class="my-0.5"><a href="/ical/vcardtime" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">VCardTime</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Modules</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/module/design" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">design</span></a></li><li class="my-0.5"><a href="/ical/module/helpers" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">helpers</span></a></li><li class="my-0.5"><a href="/ical/module/timezoneservice" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">TimezoneService</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Namespaces</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ICAL</span></a></li></ul></div><div class="mt-4 first:mt-0"><button type="button" aria-expanded="true" class="mb-1 flex w-full items-center rounded-xl py-1.5 px-3 text-left text-sm font-bold text-(--clean-fg) cursor-pointer hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Typedefs</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right ml-auto shrink-0 transition-transform rotate-90" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/ical/recur/byparts" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">byParts</span></a></li><li class="my-0.5"><a href="/designset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">designSet</span></a></li><li class="my-0.5"><a href="/ical/design/designset" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">designSet</span></a></li><li class="my-0.5"><a href="/frequencyvalues" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">frequencyValues</span></a></li><li class="my-0.5"><a href="/ical/recur/frequencyvalues" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">frequencyValues</span></a></li><li class="my-0.5"><a href="/geo" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Geo</span></a></li><li class="my-0.5"><a href="/jcalcomponent" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">jCalComponent</span></a></li><li class="my-0.5"><a href="/occurrencedetails" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">occurrenceDetails</span></a></li><li class="my-0.5"><a href="/ical/event/occurrencedetails" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">occurrenceDetails</span></a></li><li class="my-0.5"><a href="/ical/componentparser/oncomplete" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">oncomplete</span></a></li><li class="my-0.5"><a href="/ical/componentparser/onerror" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">onerror</span></a></li><li class="my-0.5"><a href="/ical/componentparser/onevent" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">onevent</span></a></li><li class="my-0.5"><a href="/ical/componentparser/ontimezone" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">ontimezone</span></a></li><li class="my-0.5"><a href="/ical/parse/parserstate" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">parserState</span></a></li><li class="my-0.5"><a href="/timeinit" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">timeInit</span></a></li><li class="my-0.5"><a href="/ical/time/timeinit" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">timeInit</span></a></li><li class="my-0.5"><a href="/weekday" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">weekDay</span></a></li><li class="my-0.5"><a href="/ical/time/weekday" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">weekDay</span></a></li></ul></div><div class="mt-4 first:mt-0"><ul class="m-0 list-none p-0"><li class="my-0.5"><a href="/source" class="group flex items-start gap-x-3 w-full px-3 py-1.5 text-left text-sm no-underline break-words hyphens-auto overflow-hidden rounded-xl outline-offset-[-1px] cursor-pointer text-[var(--clean-fg)] hover:bg-[var(--clean-bg-muted)]"><span class="min-w-0 wrap-break-words">Source Files</span></a></li></ul></div></nav></div></div></aside><main class="min-w-0 px-4 md:px-8 lg:px-12"><div data-island="code-viewer" data-island-id="i0"><div class="my-4 overflow-hidden rounded-lg border border-(--clean-border) bg-(--clean-bg)"><div class="flex items-center justify-between border-b border-(--clean-border) bg-(--clean-bg-muted) px-3 py-2 text-sm"><span class="font-mono text-(--clean-fg)">time.js</span><span class="text-xs text-(--clean-fg-muted)">javascript</span></div><div class="h-[calc(100vh-13rem)] min-h-[24rem]"><pre class="m-0 h-full overflow-auto whitespace-pre p-4 text-sm leading-relaxed text-(--clean-fg)"><code class="language-javascript">/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Portions Copyright (C) Philipp Kewisch */
+
+import Timezone from &quot;./timezone.js&quot;;
+import Duration from &quot;./duration.js&quot;;
+import Period from &quot;./period.js&quot;;
+import design from &quot;./design.js&quot;;
+// needed for typescript type resolution
+// eslint-disable-next-line no-unused-vars
+import Property from &quot;./property.js&quot;;
+import TimezoneService from &quot;./timezone_service.js&quot;;
+import { strictParseInt, trunc, pad2 } from &quot;./helpers.js&quot;;
+
+/**
+ * This lets typescript resolve our custom types in the
+ * generated d.ts files (jsdoc typedefs are converted to typescript types).
+ * Ignore prevents the typedefs from being documented more than once.
+ *
+ * @ignore
+ * @typedef {import(&quot;./types.js&quot;).weekDay} weekDay
+ * Imports the 'weekDay' type from the &quot;types.js&quot; module
+ *
+ * @ignore
+ * @typedef {import(&quot;./types.js&quot;).timeInit} timeInit
+ * Imports the 'timeInit' type from the &quot;types.js&quot; module
+ */
+
+/**
+ * @classdesc
+ * iCalendar Time representation (similar to JS Date object).  Fully
+ * independent of system (OS) timezone / time.  Unlike JS Date, the month
+ * January is 1, not zero.
+ *
+ * @example
+ * var time = new ICAL.Time({
+ *   year: 2012,
+ *   month: 10,
+ *   day: 11
+ *   minute: 0,
+ *   second: 0,
+ *   isDate: false
+ * });
+ *
+ *
+ * @memberof ICAL
+*/
+class Time {
+  static _dowCache = {};
+  static _wnCache = {};
+
+  /**
+   * Returns the days in the given month
+   *
+   * @param {Number} month      The month to check
+   * @param {Number} year       The year to check
+   * @return {Number}           The number of days in the month
+   */
+  static daysInMonth(month, year) {
+    let _daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let days = 30;
+
+    if (month &lt; 1 || month > 12) return days;
+
+    days = _daysInMonth[month];
+
+    if (month == 2) {
+      days += Time.isLeapYear(year);
+    }
+
+    return days;
+  }
+
+  /**
+   * Checks if the year is a leap year
+   *
+   * @param {Number} year       The year to check
+   * @return {Boolean}          True, if the year is a leap year
+   */
+  static isLeapYear(year) {
+    if (year &lt;= 1752) {
+      return ((year % 4) == 0);
+    } else {
+      return (((year % 4 == 0) &amp;&amp; (year % 100 != 0)) || (year % 400 == 0));
+    }
+  }
+
+  /**
+   * Create a new ICAL.Time from the day of year and year. The date is returned
+   * in floating timezone.
+   *
+   * @param {Number} aDayOfYear     The day of year
+   * @param {Number} aYear          The year to create the instance in
+   * @return {Time}                 The created instance with the calculated date
+   */
+  static fromDayOfYear(aDayOfYear, aYear) {
+    let year = aYear;
+    let doy = aDayOfYear;
+    let tt = new Time();
+    tt.auto_normalize = false;
+    let is_leap = (Time.isLeapYear(year) ? 1 : 0);
+
+    if (doy &lt; 1) {
+      year--;
+      is_leap = (Time.isLeapYear(year) ? 1 : 0);
+      doy += Time.daysInYearPassedMonth[is_leap][12];
+      return Time.fromDayOfYear(doy, year);
+    } else if (doy > Time.daysInYearPassedMonth[is_leap][12]) {
+      is_leap = (Time.isLeapYear(year) ? 1 : 0);
+      doy -= Time.daysInYearPassedMonth[is_leap][12];
+      year++;
+      return Time.fromDayOfYear(doy, year);
+    }
+
+    tt.year = year;
+    tt.isDate = true;
+
+    for (let month = 11; month >= 0; month--) {
+      if (doy > Time.daysInYearPassedMonth[is_leap][month]) {
+        tt.month = month + 1;
+        tt.day = doy - Time.daysInYearPassedMonth[is_leap][month];
+        break;
+      }
+    }
+
+    tt.auto_normalize = true;
+    return tt;
+  }
+
+  /**
+   * Returns a new ICAL.Time instance from a date string, e.g 2015-01-02.
+   *
+   * @deprecated                Use {@link ICAL.Time.fromDateString} instead
+   * @param {String} str        The string to create from
+   * @return {Time}             The date/time instance
+   */
+  static fromStringv2(str) {
+    return new Time({
+      year: parseInt(str.slice(0, 4), 10),
+      month: parseInt(str.slice(5, 7), 10),
+      day: parseInt(str.slice(8, 10), 10),
+      isDate: true
+    });
+  }
+
+  /**
+   * Returns a new ICAL.Time instance from a date string, e.g 2015-01-02.
+   *
+   * @param {String} aValue     The string to create from
+   * @return {Time}             The date/time instance
+   */
+  static fromDateString(aValue) {
+    // Dates should have no timezone.
+    // Google likes to sometimes specify Z on dates
+    // we specifically ignore that to avoid issues.
+
+    // YYYY-MM-DD
+    // 2012-10-10
+    return new Time({
+      year: strictParseInt(aValue.slice(0, 4)),
+      month: strictParseInt(aValue.slice(5, 7)),
+      day: strictParseInt(aValue.slice(8, 10)),
+      isDate: true
+    });
+  }
+
+  /**
+   * Returns a new ICAL.Time instance from a date-time string, e.g
+   * 2015-01-02T03:04:05. If a property is specified, the timezone is set up
+   * from the property's TZID parameter.
+   *
+   * @param {String} aValue         The string to create from
+   * @param {Property=} prop        The property the date belongs to
+   * @return {Time}                 The date/time instance
+   */
+  static fromDateTimeString(aValue, prop) {
+    if (aValue.length &lt; 19) {
+      throw new Error(
+        'invalid date-time value: &quot;' + aValue + '&quot;'
+      );
+    }
+
+    let zone;
+    let zoneId;
+
+    if (aValue.slice(-1) === 'Z') {
+      zone = Timezone.utcTimezone;
+    } else if (prop) {
+      zoneId = prop.getParameter('tzid');
+
+      if (prop.parent) {
+        if (prop.parent.name === 'standard' || prop.parent.name === 'daylight') {
+          // Per RFC 5545 3.8.2.4 and 3.8.2.2, start/end date-times within
+          // these components MUST be specified in local time.
+          zone = Timezone.localTimezone;
+        } else if (zoneId) {
+          // If the desired time zone is defined within the component tree,
+          // fetch its definition and prefer that.
+          zone = prop.parent.getTimeZoneByID(zoneId);
+        }
+      }
+    }
+
+    const timeData = {
+      year: strictParseInt(aValue.slice(0, 4)),
+      month: strictParseInt(aValue.slice(5, 7)),
+      day: strictParseInt(aValue.slice(8, 10)),
+      hour: strictParseInt(aValue.slice(11, 13)),
+      minute: strictParseInt(aValue.slice(14, 16)),
+      second: strictParseInt(aValue.slice(17, 19)),
+    };
+
+    // Although RFC 5545 requires that all TZIDs used within a file have a
+    // corresponding time zone definition, we may not be parsing the full file
+    // or we may be dealing with a non-compliant file; in either case, we can
+    // check our own time zone service for the TZID in a last-ditch effort.
+    if (zoneId &amp;&amp; !zone) {
+      timeData.timezone = zoneId;
+    }
+
+    // 2012-10-10T10:10:10(Z)?
+    return new Time(timeData, zone);
+  }
+
+  /**
+   * Returns a new ICAL.Time instance from a date or date-time string,
+   *
+   * @param {String} aValue         The string to create from
+   * @param {Property=} prop        The property the date belongs to
+   * @return {Time}                 The date/time instance
+   */
+  static fromString(aValue, aProperty) {
+    if (aValue.length > 10) {
+      return Time.fromDateTimeString(aValue, aProperty);
+    } else {
+      return Time.fromDateString(aValue);
+    }
+  }
+
+  /**
+   * Creates a new ICAL.Time instance from the given Javascript Date.
+   *
+   * @param {?Date} aDate             The Javascript Date to read, or null to reset
+   * @param {Boolean} [useUTC=false]  If true, the UTC values of the date will be used
+   */
+  static fromJSDate(aDate, useUTC) {
+    let tt = new Time();
+    return tt.fromJSDate(aDate, useUTC);
+  }
+
+  /**
+   * Creates a new ICAL.Time instance from the the passed data object.
+   *
+   * @param {timeInit} aData          Time initialization
+   * @param {Timezone=} aZone         Timezone this position occurs in
+   */
+  static fromData = function fromData(aData, aZone) {
+    let t = new Time();
+    return t.fromData(aData, aZone);
+  };
+
+  /**
+   * Creates a new ICAL.Time instance from the current moment.
+   * The instance is “floating” - has no timezone relation.
+   * To create an instance considering the time zone, call
+   * ICAL.Time.fromJSDate(new Date(), true)
+   * @return {Time}
+   */
+  static now() {
+    return Time.fromJSDate(new Date(), false);
+  }
+
+  /**
+   * Returns the date on which ISO week number 1 starts.
+   *
+   * @see Time#weekNumber
+   * @param {Number} aYear                  The year to search in
+   * @param {weekDay=} aWeekStart           The week start weekday, used for calculation.
+   * @return {Time}                         The date on which week number 1 starts
+   */
+  static weekOneStarts(aYear, aWeekStart) {
+    let t = Time.fromData({
+      year: aYear,
+      month: 1,
+      day: 1,
+      isDate: true
+    });
+
+    let dow = t.dayOfWeek();
+    let wkst = aWeekStart || Time.DEFAULT_WEEK_START;
+    if (dow > Time.THURSDAY) {
+      t.day += 7;
+    }
+    if (wkst > Time.THURSDAY) {
+      t.day -= 7;
+    }
+
+    t.day -= dow - wkst;
+
+    return t;
+  }
+
+  /**
+   * Get the dominical letter for the given year. Letters range from A - G for
+   * common years, and AG to GF for leap years.
+   *
+   * @param {Number} yr           The year to retrieve the letter for
+   * @return {String}             The dominical letter.
+   */
+  static getDominicalLetter(yr) {
+    let LTRS = &quot;GFEDCBA&quot;;
+    let dom = (yr + (yr / 4 | 0) + (yr / 400 | 0) - (yr / 100 | 0) - 1) % 7;
+    let isLeap = Time.isLeapYear(yr);
+    if (isLeap) {
+      return LTRS[(dom + 6) % 7] + LTRS[dom];
+    } else {
+      return LTRS[dom];
+    }
+  }
+
+  static #epochTime = null;
+  /**
+   * January 1st, 1970 as an ICAL.Time.
+   * @type {Time}
+   * @constant
+   * @instance
+   */
+  static get epochTime() {
+    if (!this.#epochTime) {
+      this.#epochTime = Time.fromData({
+        year: 1970,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        isDate: false,
+        timezone: &quot;Z&quot;
+      });
+    }
+    return this.#epochTime;
+  }
+
+  static _cmp_attr(a, b, attr) {
+    if (a[attr] > b[attr]) return 1;
+    if (a[attr] &lt; b[attr]) return -1;
+    return 0;
+  }
+
+  /**
+   * The days that have passed in the year after a given month. The array has
+   * two members, one being an array of passed days for non-leap years, the
+   * other analog for leap years.
+   * @example
+   * var isLeapYear = ICAL.Time.isLeapYear(year);
+   * var passedDays = ICAL.Time.daysInYearPassedMonth[isLeapYear][month];
+   * @type {Array.&lt;Array.&lt;Number>>}
+   */
+  static daysInYearPassedMonth = [
+    [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365],
+    [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366]
+  ];
+
+  static SUNDAY = 1;
+  static MONDAY = 2;
+  static TUESDAY = 3;
+  static WEDNESDAY = 4;
+  static THURSDAY = 5;
+  static FRIDAY = 6;
+  static SATURDAY = 7;
+
+  /**
+   * The default weekday for the WKST part.
+   * @constant
+   * @default ICAL.Time.MONDAY
+   */
+  static DEFAULT_WEEK_START = 2; // MONDAY
+
+  /**
+   * Creates a new ICAL.Time instance.
+   *
+   * @param {timeInit} data           Time initialization
+   * @param {Timezone} zone           timezone this position occurs in
+   */
+  constructor(data, zone) {
+    this.wrappedJSObject = this;
+
+    /**
+     * @type {timeInit}
+     * @private
+     */
+    this._time = Object.create(null);
+
+    /* time defaults */
+    this._time.year = 0;
+    this._time.month = 1;
+    this._time.day = 1;
+    this._time.hour = 0;
+    this._time.minute = 0;
+    this._time.second = 0;
+    this._time.isDate = false;
+
+    this.fromData(data, zone);
+  }
+
+  /**
+   * The class identifier.
+   * @constant
+   * @type {String}
+   * @default &quot;icaltime&quot;
+   */
+  icalclass = &quot;icaltime&quot;;
+  _cachedUnixTime = null;
+
+  /**
+   * The type name, to be used in the jCal object. This value may change and
+   * is strictly defined by the {@link ICAL.Time#isDate isDate} member.
+   * @type {String}
+   * @default &quot;date-time&quot;
+   */
+  get icaltype() {
+    return this.isDate ? 'date' : 'date-time';
+  }
+
+  /**
+   * The timezone for this time.
+   * @type {Timezone}
+   */
+  zone = null;
+
+  /**
+   * Internal uses to indicate that a change has been made and the next read
+   * operation must attempt to normalize the value (for example changing the
+   * day to 33).
+   *
+   * @type {Boolean}
+   * @private
+   */
+  _pendingNormalization = false;
+
+  /**
+   * The year of this date.
+   * @type {Number}
+   */
+  get year() {
+    return this._getTimeAttr('year');
+  }
+
+  set year(val) {
+    this._setTimeAttr('year', val);
+  }
+
+  /**
+   * The month of this date.
+   * @type {Number}
+   */
+  get month() {
+    return this._getTimeAttr('month');
+  }
+
+  set month(val) {
+    this._setTimeAttr('month', val);
+  }
+
+  /**
+   * The day of this date.
+   * @type {Number}
+   */
+  get day() {
+    return this._getTimeAttr('day');
+  }
+
+  set day(val) {
+    this._setTimeAttr('day', val);
+  }
+
+  /**
+   * The hour of this date-time.
+   * @type {Number}
+   */
+  get hour() {
+    return this._getTimeAttr('hour');
+  }
+
+  set hour(val) {
+    this._setTimeAttr('hour', val);
+  }
+
+  /**
+   * The minute of this date-time.
+   * @type {Number}
+   */
+  get minute() {
+    return this._getTimeAttr('minute');
+  }
+
+  set minute(val) {
+    this._setTimeAttr('minute', val);
+  }
+
+  /**
+   * The second of this date-time.
+   * @type {Number}
+   */
+  get second() {
+    return this._getTimeAttr('second');
+  }
+
+  set second(val) {
+    this._setTimeAttr('second', val);
+  }
+
+  /**
+   * If true, the instance represents a date (as opposed to a date-time)
+   * @type {Boolean}
+   */
+  get isDate() {
+    return this._getTimeAttr('isDate');
+  }
+
+  set isDate(val) {
+    this._setTimeAttr('isDate', val);
+  }
+
+  /**
+   * @private
+   * @param {String} attr             Attribute to get (one of: year, month,
+   *                                  day, hour, minute, second, isDate)
+   * @return {Number|Boolean}         Current value for the attribute
+   */
+  _getTimeAttr(attr) {
+    if (this._pendingNormalization) {
+      this._normalize();
+      this._pendingNormalization = false;
+    }
+
+    return this._time[attr];
+  }
+
+  /**
+   * @private
+   * @param {String} attr             Attribute to set (one of: year, month,
+   *                                  day, hour, minute, second, isDate)
+   * @param {Number|Boolean} val      New value for the attribute
+   */
+  _setTimeAttr(attr, val) {
+    // Check if isDate will be set and if was not set to normalize date.
+    // This avoids losing days when seconds, minutes and hours are zeroed
+    // what normalize will do when time is a date.
+    if (attr === &quot;isDate&quot; &amp;&amp; val &amp;&amp; !this._time.isDate) {
+      this.adjust(0, 0, 0, 0);
+    }
+    this._cachedUnixTime = null;
+    this._pendingNormalization = true;
+    this._time[attr] = val;
+  }
+
+  /**
+   * Returns a clone of the time object.
+   *
+   * @return {Time}              The cloned object
+   */
+  clone() {
+    if (this._pendingNormalization) {
+      this._normalize();
+      this._pendingNormalization = false;
+    }
+    return new Time(this._time, this.zone);
+  }
+
+  /**
+   * Reset the time instance to epoch time
+   */
+  reset() {
+    this.fromData(Time.epochTime);
+    this.zone = Timezone.utcTimezone;
+  }
+
+  /**
+   * Reset the time instance to the given date/time values.
+   *
+   * @param {Number} year             The year to set
+   * @param {Number} month            The month to set
+   * @param {Number} day              The day to set
+   * @param {Number} hour             The hour to set
+   * @param {Number} minute           The minute to set
+   * @param {Number} second           The second to set
+   * @param {Timezone} timezone       The timezone to set
+   */
+  resetTo(year, month, day, hour, minute, second, timezone) {
+    this.fromData({
+      year: year,
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+      second: second,
+      zone: timezone
+    });
+  }
+
+  /**
+   * Set up the current instance from the Javascript date value.
+   *
+   * @param {?Date} aDate             The Javascript Date to read, or null to reset
+   * @param {Boolean} [useUTC=false]  If true, the UTC values of the date will be used
+   */
+  fromJSDate(aDate, useUTC) {
+    if (!aDate) {
+      this.reset();
+    } else {
+      if (useUTC) {
+        this.zone = Timezone.utcTimezone;
+        this.year = aDate.getUTCFullYear();
+        this.month = aDate.getUTCMonth() + 1;
+        this.day = aDate.getUTCDate();
+        this.hour = aDate.getUTCHours();
+        this.minute = aDate.getUTCMinutes();
+        this.second = aDate.getUTCSeconds();
+      } else {
+        this.zone = Timezone.localTimezone;
+        this.year = aDate.getFullYear();
+        this.month = aDate.getMonth() + 1;
+        this.day = aDate.getDate();
+        this.hour = aDate.getHours();
+        this.minute = aDate.getMinutes();
+        this.second = aDate.getSeconds();
+      }
+    }
+    this._cachedUnixTime = null;
+    return this;
+  }
+
+  /**
+   * Sets up the current instance using members from the passed data object.
+   *
+   * @param {timeInit} aData          Time initialization
+   * @param {Timezone=} aZone         Timezone this position occurs in
+   */
+  fromData(aData, aZone) {
+    if (aData) {
+      for (let [key, value] of Object.entries(aData)) {
+          // ical type cannot be set
+          if (key === 'icaltype') continue;
+        this[key] = value;
+      }
+    }
+
+    if (aZone) {
+      this.zone = aZone;
+    }
+
+    if (aData &amp;&amp; !(&quot;isDate&quot; in aData)) {
+      this.isDate = !(&quot;hour&quot; in aData);
+    } else if (aData &amp;&amp; (&quot;isDate&quot; in aData)) {
+      this.isDate = aData.isDate;
+    }
+
+    if (aData &amp;&amp; &quot;timezone&quot; in aData) {
+      let zone = TimezoneService.get(
+        aData.timezone
+      );
+
+      this.zone = zone || Timezone.localTimezone;
+    }
+
+    if (aData &amp;&amp; &quot;zone&quot; in aData) {
+      this.zone = aData.zone;
+    }
+
+    if (!this.zone) {
+      this.zone = Timezone.localTimezone;
+    }
+
+    this._cachedUnixTime = null;
+    return this;
+  }
+
+  /**
+   * Calculate the day of week.
+   * @param {weekDay=} aWeekStart
+   *        The week start weekday, defaults to SUNDAY
+   * @return {weekDay}
+   */
+  dayOfWeek(aWeekStart) {
+    let firstDow = aWeekStart || Time.SUNDAY;
+    let dowCacheKey = (this.year &lt;&lt; 12) + (this.month &lt;&lt; 8) + (this.day &lt;&lt; 3) + firstDow;
+    if (dowCacheKey in Time._dowCache) {
+      return Time._dowCache[dowCacheKey];
+    }
+
+    // Using Zeller's algorithm
+    let q = this.day;
+    let m = this.month + (this.month &lt; 3 ? 12 : 0);
+    let Y = this.year - (this.month &lt; 3 ? 1 : 0);
+
+    let h = (q + Y + trunc(((m + 1) * 26) / 10) + trunc(Y / 4));
+    if (true /* gregorian */) { // eslint-disable-line no-constant-condition
+      h += trunc(Y / 100) * 6 + trunc(Y / 400);
+    } else {
+      /* c8 ignore next 2 */
+      h += 5;
+    }
+
+    // Normalize to 1 = wkst
+    h = ((h + 7 - firstDow) % 7) + 1;
+    Time._dowCache[dowCacheKey] = h;
+    return h;
+  }
+
+  /**
+   * Calculate the day of year.
+   * @return {Number}
+   */
+  dayOfYear() {
+    let is_leap = (Time.isLeapYear(this.year) ? 1 : 0);
+    let diypm = Time.daysInYearPassedMonth;
+    return diypm[is_leap][this.month - 1] + this.day;
+  }
+
+  /**
+   * Returns a copy of the current date/time, rewound to the start of the
+   * week. The resulting ICAL.Time instance is of icaltype date, even if this
+   * is a date-time.
+   *
+   * @param {weekDay=} aWeekStart
+   *        The week start weekday, defaults to SUNDAY
+   * @return {Time}      The start of the week (cloned)
+   */
+  startOfWeek(aWeekStart) {
+    let firstDow = aWeekStart || Time.SUNDAY;
+    let result = this.clone();
+    result.day -= ((this.dayOfWeek() + 7 - firstDow) % 7);
+    result.isDate = true;
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    return result;
+  }
+
+  /**
+   * Returns a copy of the current date/time, shifted to the end of the week.
+   * The resulting ICAL.Time instance is of icaltype date, even if this is a
+   * date-time.
+   *
+   * @param {weekDay=} aWeekStart
+   *        The week start weekday, defaults to SUNDAY
+   * @return {Time}      The end of the week (cloned)
+   */
+  endOfWeek(aWeekStart) {
+    let firstDow = aWeekStart || Time.SUNDAY;
+    let result = this.clone();
+    result.day += (7 - this.dayOfWeek() + firstDow - Time.SUNDAY) % 7;
+    result.isDate = true;
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    return result;
+  }
+
+  /**
+   * Returns a copy of the current date/time, rewound to the start of the
+   * month. The resulting ICAL.Time instance is of icaltype date, even if
+   * this is a date-time.
+   *
+   * @return {Time}      The start of the month (cloned)
+   */
+  startOfMonth() {
+    let result = this.clone();
+    result.day = 1;
+    result.isDate = true;
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    return result;
+  }
+
+  /**
+   * Returns a copy of the current date/time, shifted to the end of the
+   * month.  The resulting ICAL.Time instance is of icaltype date, even if
+   * this is a date-time.
+   *
+   * @return {Time}      The end of the month (cloned)
+   */
+  endOfMonth() {
+    let result = this.clone();
+    result.day = Time.daysInMonth(result.month, result.year);
+    result.isDate = true;
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    return result;
+  }
+
+  /**
+   * Returns a copy of the current date/time, rewound to the start of the
+   * year. The resulting ICAL.Time instance is of icaltype date, even if
+   * this is a date-time.
+   *
+   * @return {Time}      The start of the year (cloned)
+   */
+  startOfYear() {
+    let result = this.clone();
+    result.day = 1;
+    result.month = 1;
+    result.isDate = true;
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    return result;
+  }
+
+  /**
+   * Returns a copy of the current date/time, shifted to the end of the
+   * year.  The resulting ICAL.Time instance is of icaltype date, even if
+   * this is a date-time.
+   *
+   * @return {Time}      The end of the year (cloned)
+   */
+  endOfYear() {
+    let result = this.clone();
+    result.day = 31;
+    result.month = 12;
+    result.isDate = true;
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    return result;
+  }
+
+  /**
+   * First calculates the start of the week, then returns the day of year for
+   * this date. If the day falls into the previous year, the day is zero or negative.
+   *
+   * @param {weekDay=} aFirstDayOfWeek
+   *        The week start weekday, defaults to SUNDAY
+   * @return {Number}     The calculated day of year
+   */
+  startDoyWeek(aFirstDayOfWeek) {
+    let firstDow = aFirstDayOfWeek || Time.SUNDAY;
+    let delta = this.dayOfWeek() - firstDow;
+    if (delta &lt; 0) delta += 7;
+    return this.dayOfYear() - delta;
+  }
+
+  /**
+   * Get the dominical letter for the current year. Letters range from A - G
+   * for common years, and AG to GF for leap years.
+   *
+   * @param {Number} yr           The year to retrieve the letter for
+   * @return {String}             The dominical letter.
+   */
+  getDominicalLetter() {
+    return Time.getDominicalLetter(this.year);
+  }
+
+  /**
+   * Finds the nthWeekDay relative to the current month (not day).  The
+   * returned value is a day relative the month that this month belongs to so
+   * 1 would indicate the first of the month and 40 would indicate a day in
+   * the following month.
+   *
+   * @param {Number} aDayOfWeek   Day of the week see the day name constants
+   * @param {Number} aPos         Nth occurrence of a given week day values
+   *        of 1 and 0 both indicate the first weekday of that type. aPos may
+   *        be either positive or negative
+   *
+   * @return {Number} numeric value indicating a day relative
+   *                   to the current month of this time object
+   */
+  nthWeekDay(aDayOfWeek, aPos) {
+    let daysInMonth = Time.daysInMonth(this.month, this.year);
+    let weekday;
+    let pos = aPos;
+
+    let start = 0;
+
+    let otherDay = this.clone();
+
+    if (pos >= 0) {
+      otherDay.day = 1;
+
+      // because 0 means no position has been given
+      // 1 and 0 indicate the same day.
+      if (pos != 0) {
+        // remove the extra numeric value
+        pos--;
+      }
+
+      // set current start offset to current day.
+      start = otherDay.day;
+
+      // find the current day of week
+      let startDow = otherDay.dayOfWeek();
+
+      // calculate the difference between current
+      // day of the week and desired day of the week
+      let offset = aDayOfWeek - startDow;
+
+
+      // if the offset goes into the past
+      // week we add 7 so it goes into the next
+      // week. We only want to go forward in time here.
+      if (offset &lt; 0)
+        // this is really important otherwise we would
+        // end up with dates from in the past.
+        offset += 7;
+
+      // add offset to start so start is the same
+      // day of the week as the desired day of week.
+      start += offset;
+
+      // because we are going to add (and multiply)
+      // the numeric value of the day we subtract it
+      // from the start position so not to add it twice.
+      start -= aDayOfWeek;
+
+      // set week day
+      weekday = aDayOfWeek;
+    } else {
+
+      // then we set it to the last day in the current month
+      otherDay.day = daysInMonth;
+
+      // find the ends weekday
+      let endDow = otherDay.dayOfWeek();
+
+      pos++;
+
+      weekday = (endDow - aDayOfWeek);
+
+      if (weekday &lt; 0) {
+        weekday += 7;
+      }
+
+      weekday = daysInMonth - weekday;
+    }
+
+    weekday += pos * 7;
+
+    return start + weekday;
+  }
+
+  /**
+   * Checks if current time is the nth weekday, relative to the current
+   * month.  Will always return false when rule resolves outside of current
+   * month.
+   *
+   * @param {weekDay} aDayOfWeek                 Day of week to check
+   * @param {Number} aPos                        Relative position
+   * @return {Boolean}                           True, if it is the nth weekday
+   */
+  isNthWeekDay(aDayOfWeek, aPos) {
+    let dow = this.dayOfWeek();
+
+    if (aPos === 0 &amp;&amp; dow === aDayOfWeek) {
+      return true;
+    }
+
+    // get pos
+    let day = this.nthWeekDay(aDayOfWeek, aPos);
+
+    if (day === this.day) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Calculates the ISO 8601 week number. The first week of a year is the
+   * week that contains the first Thursday. The year can have 53 weeks, if
+   * January 1st is a Friday.
+   *
+   * Note there are regions where the first week of the year is the one that
+   * starts on January 1st, which may offset the week number. Also, if a
+   * different week start is specified, this will also affect the week
+   * number.
+   *
+   * @see Time.weekOneStarts
+   * @param {weekDay} aWeekStart                  The weekday the week starts with
+   * @return {Number}                             The ISO week number
+   */
+  weekNumber(aWeekStart) {
+    let wnCacheKey = (this.year &lt;&lt; 12) + (this.month &lt;&lt; 8) + (this.day &lt;&lt; 3) + aWeekStart;
+    if (wnCacheKey in Time._wnCache) {
+      return Time._wnCache[wnCacheKey];
+    }
+    // This function courtesty of Julian Bucknall, published under the MIT license
+    // http://www.boyet.com/articles/publishedarticles/calculatingtheisoweeknumb.html
+    // plus some fixes to be able to use different week starts.
+    let week1;
+
+    let dt = this.clone();
+    dt.isDate = true;
+    let isoyear = this.year;
+
+    if (dt.month == 12 &amp;&amp; dt.day > 25) {
+      week1 = Time.weekOneStarts(isoyear + 1, aWeekStart);
+      if (dt.compare(week1) &lt; 0) {
+        week1 = Time.weekOneStarts(isoyear, aWeekStart);
+      }
+    } else {
+      week1 = Time.weekOneStarts(isoyear, aWeekStart);
+      if (dt.compare(week1) &lt; 0) {
+        week1 = Time.weekOneStarts(isoyear - 1, aWeekStart);
+      }
+    }
+
+    let daysBetween = (dt.subtractDate(week1).toSeconds() / 86400);
+    let answer = trunc(daysBetween / 7) + 1;
+    Time._wnCache[wnCacheKey] = answer;
+    return answer;
+  }
+
+  /**
+   * Adds the duration to the current time. The instance is modified in
+   * place.
+   *
+   * @param {Duration} aDuration         The duration to add
+   */
+  addDuration(aDuration) {
+    let mult = (aDuration.isNegative ? -1 : 1);
+
+    // because of the duration optimizations it is much
+    // more efficient to grab all the values up front
+    // then set them directly (which will avoid a normalization call).
+    // So we don't actually normalize until we need it.
+    let second = this.second;
+    let minute = this.minute;
+    let hour = this.hour;
+    let day = this.day;
+
+    second += mult * aDuration.seconds;
+    minute += mult * aDuration.minutes;
+    hour += mult * aDuration.hours;
+    day += mult * aDuration.days;
+    day += mult * 7 * aDuration.weeks;
+
+    this.second = second;
+    this.minute = minute;
+    this.hour = hour;
+    this.day = day;
+
+    this._cachedUnixTime = null;
+  }
+
+  /**
+   * Subtract the date details (_excluding_ timezone).  Useful for finding
+   * the relative difference between two time objects excluding their
+   * timezone differences.
+   *
+   * @param {Time} aDate     The date to subtract
+   * @return {Duration}      The difference as a duration
+   */
+  subtractDate(aDate) {
+    let unixTime = this.toUnixTime() + this.utcOffset();
+    let other = aDate.toUnixTime() + aDate.utcOffset();
+    return Duration.fromSeconds(unixTime - other);
+  }
+
+  /**
+   * Subtract the date details, taking timezones into account.
+   *
+   * @param {Time} aDate  The date to subtract
+   * @return {Duration}   The difference in duration
+   */
+  subtractDateTz(aDate) {
+    let unixTime = this.toUnixTime();
+    let other = aDate.toUnixTime();
+    return Duration.fromSeconds(unixTime - other);
+  }
+
+  /**
+   * Compares the ICAL.Time instance with another one, or a period.
+   *
+   * @param {Time|Period} aOther                  The instance to compare with
+   * @return {Number}                             -1, 0 or 1 for less/equal/greater
+   */
+  compare(other) {
+    if (other instanceof Period) {
+      return -1 * other.compare(this);
+    } else {
+      let a = this.toUnixTime();
+      let b = other.toUnixTime();
+
+      if (a > b) return 1;
+      if (b > a) return -1;
+      return 0;
+    }
+  }
+
+  /**
+   * Compares only the date part of this instance with another one.
+   *
+   * @param {Time} other                  The instance to compare with
+   * @param {Timezone} tz                 The timezone to compare in
+   * @return {Number}                     -1, 0 or 1 for less/equal/greater
+   */
+  compareDateOnlyTz(other, tz) {
+    let a = this.convertToZone(tz);
+    let b = other.convertToZone(tz);
+    let rc;
+
+    if ((rc = Time._cmp_attr(a, b, &quot;year&quot;)) != 0) return rc;
+    if ((rc = Time._cmp_attr(a, b, &quot;month&quot;)) != 0) return rc;
+    if ((rc = Time._cmp_attr(a, b, &quot;day&quot;)) != 0) return rc;
+
+    return 0;
+  }
+
+  /**
+   * Convert the instance into another timezone. The returned ICAL.Time
+   * instance is always a copy.
+   *
+   * @param {Timezone} zone      The zone to convert to
+   * @return {Time}              The copy, converted to the zone
+   */
+  convertToZone(zone) {
+    let copy = this.clone();
+    let zone_equals = (this.zone.tzid == zone.tzid);
+
+    if (!this.isDate &amp;&amp; !zone_equals) {
+      Timezone.convert_time(copy, this.zone, zone);
+    }
+
+    copy.zone = zone;
+    return copy;
+  }
+
+  /**
+   * Calculates the UTC offset of the current date/time in the timezone it is
+   * in.
+   *
+   * @return {Number}     UTC offset in seconds
+   */
+  utcOffset() {
+    if (this.zone == Timezone.localTimezone ||
+        this.zone == Timezone.utcTimezone) {
+      return 0;
+    } else {
+      return this.zone.utcOffset(this);
+    }
+  }
+
+  /**
+   * Returns an RFC 5545 compliant ical representation of this object.
+   *
+   * @return {String} ical date/date-time
+   */
+  toICALString() {
+    let string = this.toString();
+
+    if (string.length > 10) {
+      return design.icalendar.value['date-time'].toICAL(string);
+    } else {
+      return design.icalendar.value.date.toICAL(string);
+    }
+  }
+
+  /**
+   * The string representation of this date/time, in jCal form
+   * (including : and - separators).
+   * @return {String}
+   */
+  toString() {
+    let result = this.year + '-' +
+                 pad2(this.month) + '-' +
+                 pad2(this.day);
+
+    if (!this.isDate) {
+        result += 'T' + pad2(this.hour) + ':' +
+                  pad2(this.minute) + ':' +
+                  pad2(this.second);
+
+      if (this.zone === Timezone.utcTimezone) {
+        result += 'Z';
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Converts the current instance to a Javascript date
+   * @return {Date}
+   */
+  toJSDate() {
+    if (this.zone == Timezone.localTimezone) {
+      if (this.isDate) {
+        return new Date(this.year, this.month - 1, this.day);
+      } else {
+        return new Date(this.year, this.month - 1, this.day,
+                        this.hour, this.minute, this.second, 0);
+      }
+    } else {
+      return new Date(this.toUnixTime() * 1000);
+    }
+  }
+
+  _normalize() {
+    if (this._time.isDate) {
+      this._time.hour = 0;
+      this._time.minute = 0;
+      this._time.second = 0;
+    }
+    this.adjust(0, 0, 0, 0);
+
+    return this;
+  }
+
+  /**
+   * Adjust the date/time by the given offset
+   *
+   * @param {Number} aExtraDays       The extra amount of days
+   * @param {Number} aExtraHours      The extra amount of hours
+   * @param {Number} aExtraMinutes    The extra amount of minutes
+   * @param {Number} aExtraSeconds    The extra amount of seconds
+   * @param {Number=} aTime           The time to adjust, defaults to the
+   *                                    current instance.
+   */
+  adjust(aExtraDays, aExtraHours, aExtraMinutes, aExtraSeconds, aTime) {
+
+    let minutesOverflow, hoursOverflow,
+        daysOverflow = 0, yearsOverflow = 0;
+
+    let second, minute, hour, day;
+    let daysInMonth;
+
+    let time = aTime || this._time;
+
+    if (!time.isDate) {
+      second = time.second + aExtraSeconds;
+      time.second = second % 60;
+      minutesOverflow = trunc(second / 60);
+      if (time.second &lt; 0) {
+        time.second += 60;
+        minutesOverflow--;
+      }
+
+      minute = time.minute + aExtraMinutes + minutesOverflow;
+      time.minute = minute % 60;
+      hoursOverflow = trunc(minute / 60);
+      if (time.minute &lt; 0) {
+        time.minute += 60;
+        hoursOverflow--;
+      }
+
+      hour = time.hour + aExtraHours + hoursOverflow;
+
+      time.hour = hour % 24;
+      daysOverflow = trunc(hour / 24);
+      if (time.hour &lt; 0) {
+        time.hour += 24;
+        daysOverflow--;
+      }
+    }
+
+
+    // Adjust month and year first, because we need to know what month the day
+    // is in before adjusting it.
+    if (time.month > 12) {
+      yearsOverflow = trunc((time.month - 1) / 12);
+    } else if (time.month &lt; 1) {
+      yearsOverflow = trunc(time.month / 12) - 1;
+    }
+
+    time.year += yearsOverflow;
+    time.month -= 12 * yearsOverflow;
+
+    // Now take care of the days (and adjust month if needed)
+    day = time.day + aExtraDays + daysOverflow;
+
+    if (day > 0) {
+      for (;;) {
+        daysInMonth = Time.daysInMonth(time.month, time.year);
+        if (day &lt;= daysInMonth) {
+          break;
+        }
+
+        time.month++;
+        if (time.month > 12) {
+          time.year++;
+          time.month = 1;
+        }
+
+        day -= daysInMonth;
+      }
+    } else {
+      while (day &lt;= 0) {
+        if (time.month == 1) {
+          time.year--;
+          time.month = 12;
+        } else {
+          time.month--;
+        }
+
+        day += Time.daysInMonth(time.month, time.year);
+      }
+    }
+
+    time.day = day;
+
+    this._cachedUnixTime = null;
+    return this;
+  }
+
+  /**
+   * Sets up the current instance from unix time, the number of seconds since
+   * January 1st, 1970.
+   *
+   * @param {Number} seconds      The seconds to set up with
+   */
+  fromUnixTime(seconds) {
+    this.zone = Timezone.utcTimezone;
+    // We could use `fromJSDate` here, but this is about twice as fast.
+    // We could also clone `epochTime` and use `adjust` for a more
+    // ical.js-centric approach, but this is about 100 times as fast.
+    let date = new Date(seconds * 1000);
+    this.year = date.getUTCFullYear();
+    this.month = date.getUTCMonth() + 1;
+    this.day = date.getUTCDate();
+    if (this._time.isDate) {
+      this.hour = 0;
+      this.minute = 0;
+      this.second = 0;
+    } else {
+      this.hour = date.getUTCHours();
+      this.minute = date.getUTCMinutes();
+      this.second = date.getUTCSeconds();
+    }
+
+    this._cachedUnixTime = null;
+  }
+
+  /**
+   * Converts the current instance to seconds since January 1st 1970.
+   *
+   * @return {Number}         Seconds since 1970
+   */
+  toUnixTime() {
+    if (this._cachedUnixTime !== null) {
+      return this._cachedUnixTime;
+    }
+    let offset = this.utcOffset();
+
+    // we use the offset trick to ensure
+    // that we are getting the actual UTC time
+    let ms = Date.UTC(
+      this.year,
+      this.month - 1,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second - offset
+    );
+
+    // seconds
+    this._cachedUnixTime = ms / 1000;
+    return this._cachedUnixTime;
+  }
+
+  /**
+   * Converts time to into Object which can be serialized then re-created
+   * using the constructor.
+   *
+   * @example
+   * // toJSON will automatically be called
+   * var json = JSON.stringify(mytime);
+   *
+   * var deserialized = JSON.parse(json);
+   *
+   * var time = new ICAL.Time(deserialized);
+   *
+   * @return {Object}
+   */
+  toJSON() {
+    let copy = [
+      'year',
+      'month',
+      'day',
+      'hour',
+      'minute',
+      'second',
+      'isDate'
+    ];
+
+    let result = Object.create(null);
+
+    let i = 0;
+    let len = copy.length;
+    let prop;
+
+    for (; i &lt; len; i++) {
+      prop = copy[i];
+      result[prop] = this[prop];
+    }
+
+    if (this.zone) {
+      result.timezone = this.zone.tzid;
+    }
+
+    return result;
+  }
+}
+export default Time;
+</code></pre></div></div></div></main></div><footer class="border-t border-(--clean-border) bg-background py-6 text-sm text-muted-foreground"><div class="mx-auto flex w-full max-w-screen-2xl flex-col items-start justify-between gap-2 px-4 md:flex-row md:items-center"><div class="flex items-center gap-1.5"><span>Documentation</span><span>© 2026</span></div></div></footer></div><script type="application/json" data-island-props>{"i0":{"language":"javascript","filename":"time.js"},"i1":{"basePath":"/","searchIndexUrl":"/_assets/search-index.mw3j4ysu-37b43e6e.json"},"i2":{},"i3":{},"i4":{"nav":[{"label":"Home","slug":"","order":-1},{"label":"Binary","slug":"ical/binary","group":"Classes","order":0},{"label":"Component","slug":"ical/component","group":"Classes","order":0},{"label":"ComponentParser","slug":"ical/componentparser","group":"Classes","order":0},{"label":"Duration","slug":"ical/duration","group":"Classes","order":0},{"label":"Event","slug":"ical/event","group":"Classes","order":0},{"label":"InvalidRecurrenceRuleError","slug":"invalidrecurrenceruleerror","group":"Classes","order":0},{"label":"ParserError","slug":"ical/parse/parsererror","group":"Classes","order":0},{"label":"Period","slug":"ical/period","group":"Classes","order":0},{"label":"Property","slug":"ical/property","group":"Classes","order":0},{"label":"Recur","slug":"ical/recur","group":"Classes","order":0},{"label":"RecurExpansion","slug":"ical/recurexpansion","group":"Classes","order":0},{"label":"RecurIterator","slug":"ical/recuriterator","group":"Classes","order":0},{"label":"Time","slug":"ical/time","group":"Classes","order":0},{"label":"Timezone","slug":"ical/timezone","group":"Classes","order":0},{"label":"UtcOffset","slug":"ical/utcoffset","group":"Classes","order":0},{"label":"VCardTime","slug":"ical/vcardtime","group":"Classes","order":0},{"label":"design","slug":"ical/module/design","group":"Modules","order":1},{"label":"helpers","slug":"ical/module/helpers","group":"Modules","order":1},{"label":"TimezoneService","slug":"ical/module/timezoneservice","group":"Modules","order":1},{"label":"ICAL","slug":"ical","group":"Namespaces","order":4},{"label":"byParts","slug":"ical/recur/byparts","group":"Typedefs","order":7},{"label":"designSet","slug":"designset","group":"Typedefs","order":7},{"label":"designSet","slug":"ical/design/designset","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"frequencyvalues","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"ical/recur/frequencyvalues","group":"Typedefs","order":7},{"label":"Geo","slug":"geo","group":"Typedefs","order":7},{"label":"jCalComponent","slug":"jcalcomponent","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"occurrencedetails","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"ical/event/occurrencedetails","group":"Typedefs","order":7},{"label":"oncomplete","slug":"ical/componentparser/oncomplete","group":"Typedefs","order":7},{"label":"onerror","slug":"ical/componentparser/onerror","group":"Typedefs","order":7},{"label":"onevent","slug":"ical/componentparser/onevent","group":"Typedefs","order":7},{"label":"ontimezone","slug":"ical/componentparser/ontimezone","group":"Typedefs","order":7},{"label":"parserState","slug":"ical/parse/parserstate","group":"Typedefs","order":7},{"label":"timeInit","slug":"timeinit","group":"Typedefs","order":7},{"label":"timeInit","slug":"ical/time/timeinit","group":"Typedefs","order":7},{"label":"weekDay","slug":"weekday","group":"Typedefs","order":7},{"label":"weekDay","slug":"ical/time/weekday","group":"Typedefs","order":7},{"label":"Source Files","slug":"source","order":11}],"currentSlug":"source/time-js","basePath":"/","collapsibleGroups":["Classes","Modules","Namespaces","Typedefs"]},"i5":{"nav":[{"label":"Home","slug":"","order":-1},{"label":"Binary","slug":"ical/binary","group":"Classes","order":0},{"label":"Component","slug":"ical/component","group":"Classes","order":0},{"label":"ComponentParser","slug":"ical/componentparser","group":"Classes","order":0},{"label":"Duration","slug":"ical/duration","group":"Classes","order":0},{"label":"Event","slug":"ical/event","group":"Classes","order":0},{"label":"InvalidRecurrenceRuleError","slug":"invalidrecurrenceruleerror","group":"Classes","order":0},{"label":"ParserError","slug":"ical/parse/parsererror","group":"Classes","order":0},{"label":"Period","slug":"ical/period","group":"Classes","order":0},{"label":"Property","slug":"ical/property","group":"Classes","order":0},{"label":"Recur","slug":"ical/recur","group":"Classes","order":0},{"label":"RecurExpansion","slug":"ical/recurexpansion","group":"Classes","order":0},{"label":"RecurIterator","slug":"ical/recuriterator","group":"Classes","order":0},{"label":"Time","slug":"ical/time","group":"Classes","order":0},{"label":"Timezone","slug":"ical/timezone","group":"Classes","order":0},{"label":"UtcOffset","slug":"ical/utcoffset","group":"Classes","order":0},{"label":"VCardTime","slug":"ical/vcardtime","group":"Classes","order":0},{"label":"design","slug":"ical/module/design","group":"Modules","order":1},{"label":"helpers","slug":"ical/module/helpers","group":"Modules","order":1},{"label":"TimezoneService","slug":"ical/module/timezoneservice","group":"Modules","order":1},{"label":"ICAL","slug":"ical","group":"Namespaces","order":4},{"label":"byParts","slug":"ical/recur/byparts","group":"Typedefs","order":7},{"label":"designSet","slug":"designset","group":"Typedefs","order":7},{"label":"designSet","slug":"ical/design/designset","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"frequencyvalues","group":"Typedefs","order":7},{"label":"frequencyValues","slug":"ical/recur/frequencyvalues","group":"Typedefs","order":7},{"label":"Geo","slug":"geo","group":"Typedefs","order":7},{"label":"jCalComponent","slug":"jcalcomponent","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"occurrencedetails","group":"Typedefs","order":7},{"label":"occurrenceDetails","slug":"ical/event/occurrencedetails","group":"Typedefs","order":7},{"label":"oncomplete","slug":"ical/componentparser/oncomplete","group":"Typedefs","order":7},{"label":"onerror","slug":"ical/componentparser/onerror","group":"Typedefs","order":7},{"label":"onevent","slug":"ical/componentparser/onevent","group":"Typedefs","order":7},{"label":"ontimezone","slug":"ical/componentparser/ontimezone","group":"Typedefs","order":7},{"label":"parserState","slug":"ical/parse/parserstate","group":"Typedefs","order":7},{"label":"timeInit","slug":"timeinit","group":"Typedefs","order":7},{"label":"timeInit","slug":"ical/time/timeinit","group":"Typedefs","order":7},{"label":"weekDay","slug":"weekday","group":"Typedefs","order":7},{"label":"weekDay","slug":"ical/time/weekday","group":"Typedefs","order":7},{"label":"Source Files","slug":"source","order":11}],"currentSlug":"source/time-js","basePath":"/","collapsibleGroups":["Classes","Modules","Namespaces","Typedefs"]}}</script><script type="module">(function(){var map={"theme-toggle":"/_islands/theme-toggle-L6U6Y76D.js","settings":"/_islands/settings-NTRYZB5D.js","code-viewer":"/_islands/code-viewer-UXWM2TZA.js","embed":"/_islands/embed-AGJLCMRE.js","playground":"/_islands/playground-MOKSXKVL.js","tabs":"/_islands/tabs-NRSQKCSU.js","sidebar":"/_islands/sidebar-TBT2TK62.js","mobile-nav":"/_islands/mobile-nav-JHOKODY4.js","toc":"/_islands/toc-QUA3AOKN.js","toc-mobile":"/_islands/toc-mobile-LIXIEIU2.js","cmdk":"/_islands/cmdk-TSYHOCEW.js","code-tabs":"/_islands/code-tabs-5EDH5CG3.js","copy-btn":"/_islands/copy-btn-WP7LNUAH.js","copy-page":"/_islands/copy-page-IZ3EPAJX.js"};var seen=new Set();document.querySelectorAll('[data-island]').forEach(function(el){seen.add(el.getAttribute('data-island'));});seen.forEach(function(name){var src=map[name];if(src){import(src);}});})();</script><script>(function(){function flash(h){var b=h.querySelector('[data-heading-anchor]');if(!b)return;b.setAttribute('data-copied','');window.setTimeout(function(){b.removeAttribute('data-copied');},3000);}function onClick(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('a'))return;var h=t.closest('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');if(!h)return;var id=h.id;if(!id)return;var iconOnly=!!t.closest('[data-heading-anchor]');if(!iconOnly){if(location.hash.slice(1)===id){h.scrollIntoView();}else{location.hash=id;}}try{var url=location.origin+location.pathname+location.search+'#'+id;if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){flash(h);}).catch(function(){});}}catch(_){}}document.addEventListener('click',onClick);}());</script><script>(function(){var IDLE=700;var timers=new WeakMap();function onScroll(e){var el=e.target;if(el===document||el===window)el=document.documentElement;if(!el||!el.classList)return;el.classList.add('clean-scrolling');var prev=timers.get(el);if(prev)window.clearTimeout(prev);timers.set(el,window.setTimeout(function(){el.classList.remove('clean-scrolling');},IDLE));}document.addEventListener('scroll',onScroll,true);}());</script></body></html>
