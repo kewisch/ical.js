@@ -8,10 +8,7 @@
     "encoding": "utf8",
     "readme": "README.md",
     "destination": "docs/api/",
-    "template": "node_modules/clean-jsdoc-theme",
-    "theme_opts": {
-      "default_theme": "light"
-    }
+    "template": "node_modules/clean-jsdoc-theme/dist"
   },
   "markdown": {
     "hardwrap": false,
