@@ -14,9 +14,6 @@
     "destination": "docs/api/",
     "template": "node_modules/clean-jsdoc-theme/dist"
   },
-  "theme_opts": {
-    "default_theme": "light"
-  },
   "markdown": {
     "hardwrap": false,
     "idInHeadings": true
