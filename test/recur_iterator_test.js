@@ -477,6 +477,18 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // The first day of the month must not be skipped when searching
+      // for a date matching both BYMONTHDAY and BYDAY.
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=1;BYDAY=WE', {
+        dtStart: '2006-10-04T14:15:00',
+        dates: [
+          '2006-11-01T14:15:00',
+          '2007-08-01T14:15:00',
+          '2008-10-01T14:15:00',
+          '2009-04-01T14:15:00'
+        ]
+      });
+
       //every other month; first and last sunday for 4 occurrences
       testRRULE('FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=1SU,-1SU', {
         dtStart: '2012-11-01T09:00:00',
