@@ -12,7 +12,7 @@
     "encoding": "utf8",
     "readme": "README.md",
     "destination": "docs/api/",
-    "template": "node_modules/clean-jsdoc-theme"
+    "template": "node_modules/clean-jsdoc-theme/dist"
   },
   "theme_opts": {
     "default_theme": "light"

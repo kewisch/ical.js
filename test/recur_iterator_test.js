@@ -1074,6 +1074,56 @@ suite('recur_iterator', function() {
       });
       */
 
+      //yearly, byweekNo, byDay
+      testRRULE('FREQ=YEARLY;BYWEEKNO=9;BYDAY=SA', {
+        dates: [
+          '2022-03-05T09:00:00',
+          '2023-03-04T09:00:00',
+          '2024-03-02T09:00:00',
+          '2025-03-01T09:00:00',
+          '2026-02-28T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo 53, byDay
+      testRRULE('FREQ=YEARLY;BYWEEKNO=53;BYDAY=MO', {
+        dates: [
+          '2015-12-28T09:00:00',
+          '2020-12-28T09:00:00',
+          '2026-12-28T09:00:00',
+          '2032-12-27T09:00:00'
+        ]
+      });
+
+      //yearly, negative byweekNo, byDay
+      testRRULE('FREQ=YEARLY;BYWEEKNO=-1;BYDAY=MO', {
+        dates: [
+          '2024-12-23T09:00:00',
+          '2025-12-22T09:00:00',
+          '2026-12-28T09:00:00',
+          '2027-12-27T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo, byDay, week 1 starting in December
+      testRRULE('FREQ=YEARLY;BYWEEKNO=1;BYDAY=MO,FR', {
+        dates: [
+          '2025-12-29T09:00:00',
+          '2026-01-02T09:00:00',
+          '2027-01-04T09:00:00',
+          '2027-01-08T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo, byDay, week 53 ending in January
+      testRRULE('FREQ=YEARLY;BYWEEKNO=53;BYDAY=FR', {
+        dates: [
+          '2021-01-01T09:00:00',
+          '2027-01-01T09:00:00',
+          '2032-12-31T09:00:00'
+        ]
+      });
+
       //yearly, byDay,byMonthday
       testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYMONTHDAY=7', {
         dtStart: '2015-01-01T08:00:00',
@@ -1590,13 +1640,12 @@ suite('recur_iterator', function() {
       /*
        * Leap-year test for February 29th
        *
-       * See https://github.com/kewisch/ical.js/issues/91
-       * for details
+       * A bare yearly rule anchored on February 29th must recur only in leap
+       * years; non-leap years have no February 29th and per RFC 5545 3.3.10
+       * those invalid instances MUST be ignored (not rolled over to March 1st).
        *
-       * TODO: Uncomment when new recurrence iterator is ready
+       * See https://github.com/kewisch/ical.js/issues/91 for details.
        */
-
-      /*
       testRRULE('FREQ=YEARLY;', {
         dtStart: '2012-02-29T12:00:00',
         dates: [
@@ -1604,7 +1653,6 @@ suite('recur_iterator', function() {
           '2016-02-29T12:00:00'
         ]
       });
-      */
 
       // Multiple BYYEARDAYs, checks that we start on the right one.
       testRRULE('FREQ=YEARLY;BYYEARDAY=73,146,219,292', {

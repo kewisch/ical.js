@@ -231,6 +231,127 @@ suite('timezone', function() {
       let subject3 = subject2.convertToZone(ICAL.Timezone.localTimezone);
       assert.equal(subject3.toString(), '2012-03-11T01:59:00');
     });
+
+    function fromUtc(str) {
+      return ICAL.Time.fromString(str).convertToZone(timezone).toString();
+    }
+
+    // Converts every hour of the given year from UTC and compares to
+    // the offsets expected from the given list of [utc time, new offset] changes.
+    function checkYearFromUtc(year, initialOffset, changes) {
+      let ms = Date.UTC(year, 0, 1);
+      let end = Date.UTC(year + 1, 0, 1);
+      let offset = initialOffset;
+      let changeIdx = 0;
+
+      function toTime(date) {
+        return new ICAL.Time({
+          year: date.getUTCFullYear(),
+          month: date.getUTCMonth() + 1,
+          day: date.getUTCDate(),
+          hour: date.getUTCHours(),
+          minute: date.getUTCMinutes(),
+          second: 0
+        }, ICAL.Timezone.utcTimezone);
+      }
+
+      for (; ms < end; ms += 3600 * 1000) {
+        while (changeIdx < changes.length && ms >= Date.parse(changes[changeIdx][0])) {
+          offset = changes[changeIdx][1];
+          changeIdx++;
+        }
+
+        let utc = toTime(new Date(ms));
+        let expected = toTime(new Date(ms + offset * 3600 * 1000));
+        assert.equal(
+          utc.convertToZone(timezone).toString(),
+          expected.toString().replace('Z', ''),
+          utc.toString()
+        );
+      }
+    }
+
+    // UTC times within a few hours of a change used to be read as local time
+    // when looking up the offset, see #847.
+    timezoneTest('Europe/Berlin', 'convert date-time from utc across changes', function() {
+      // DST starts at 2026-03-29T01:00:00Z
+      assert.equal(fromUtc('2026-03-29T00:59:59Z'), '2026-03-29T01:59:59');
+      assert.equal(fromUtc('2026-03-29T01:00:00Z'), '2026-03-29T03:00:00');
+      assert.equal(fromUtc('2026-03-29T01:45:00Z'), '2026-03-29T03:45:00');
+      assert.equal(fromUtc('2026-03-29T02:00:00Z'), '2026-03-29T04:00:00');
+
+      // DST ends at 2026-10-25T01:00:00Z
+      assert.equal(fromUtc('2026-10-25T00:00:00Z'), '2026-10-25T02:00:00');
+      assert.equal(fromUtc('2026-10-25T00:59:59Z'), '2026-10-25T02:59:59');
+      assert.equal(fromUtc('2026-10-25T01:00:00Z'), '2026-10-25T02:00:00');
+      assert.equal(fromUtc('2026-10-25T01:45:00Z'), '2026-10-25T02:45:00');
+      assert.equal(fromUtc('2026-10-25T02:00:00Z'), '2026-10-25T03:00:00');
+    });
+
+    timezoneTest('America/New_York', 'convert date-time from utc across changes', function() {
+      // DST starts at 2026-03-08T07:00:00Z
+      assert.equal(fromUtc('2026-03-08T02:00:00Z'), '2026-03-07T21:00:00');
+      assert.equal(fromUtc('2026-03-08T06:59:59Z'), '2026-03-08T01:59:59');
+      assert.equal(fromUtc('2026-03-08T07:00:00Z'), '2026-03-08T03:00:00');
+      assert.equal(fromUtc('2026-03-08T07:15:00Z'), '2026-03-08T03:15:00');
+
+      // DST ends at 2026-11-01T06:00:00Z
+      assert.equal(fromUtc('2026-11-01T01:00:00Z'), '2026-10-31T21:00:00');
+      assert.equal(fromUtc('2026-11-01T05:00:00Z'), '2026-11-01T01:00:00');
+      assert.equal(fromUtc('2026-11-01T05:59:59Z'), '2026-11-01T01:59:59');
+      assert.equal(fromUtc('2026-11-01T06:00:00Z'), '2026-11-01T01:00:00');
+      assert.equal(fromUtc('2026-11-01T07:00:00Z'), '2026-11-01T02:00:00');
+    });
+
+    timezoneTest('Australia/Sydney', 'convert date-time from utc across changes', function() {
+      // DST ends at 2026-04-04T16:00:00Z
+      assert.equal(fromUtc('2026-04-04T15:59:59Z'), '2026-04-05T02:59:59');
+      assert.equal(fromUtc('2026-04-04T16:00:00Z'), '2026-04-05T02:00:00');
+      assert.equal(fromUtc('2026-04-04T20:00:00Z'), '2026-04-05T06:00:00');
+
+      // DST starts at 2026-10-03T16:00:00Z
+      assert.equal(fromUtc('2026-10-03T15:59:59Z'), '2026-10-04T01:59:59');
+      assert.equal(fromUtc('2026-10-03T16:00:00Z'), '2026-10-04T03:00:00');
+      assert.equal(fromUtc('2026-10-03T20:00:00Z'), '2026-10-04T07:00:00');
+    });
+
+    timezoneTest('Europe/Berlin', 'convert date-time from utc for a whole year', function() {
+      checkYearFromUtc(2026, 1, [
+        ['2026-03-29T01:00:00Z', 2],
+        ['2026-10-25T01:00:00Z', 1]
+      ]);
+    });
+
+    timezoneTest('America/New_York', 'convert date-time from utc for a whole year', function() {
+      checkYearFromUtc(2026, -5, [
+        ['2026-03-08T07:00:00Z', -4],
+        ['2026-11-01T06:00:00Z', -5]
+      ]);
+    });
+
+    timezoneTest('Australia/Sydney', 'convert date-time from utc for a whole year', function() {
+      checkYearFromUtc(2026, 11, [
+        ['2026-04-04T16:00:00Z', 10],
+        ['2026-10-03T16:00:00Z', 11]
+      ]);
+    });
+
+    timezoneTest('Europe/Berlin', 'convert date-time between zones across changes', async function() {
+      let icsData = await testSupport.loadSample('timezones/America/New_York.ics');
+      let newYork = new ICAL.Timezone(
+        new ICAL.Component(ICAL.parse(icsData)).getFirstSubcomponent('vtimezone')
+      );
+
+      // 2026-03-29T01:00:00Z, the start of DST in Berlin
+      let subject = ICAL.Time.fromString('2026-03-28T21:00:00');
+      subject.zone = newYork;
+      assert.equal(subject.convertToZone(timezone).toString(), '2026-03-29T03:00:00');
+
+      // 2026-10-25T01:00:00Z, the end of DST in Berlin
+      subject = ICAL.Time.fromString('2026-10-24T21:00:00');
+      subject.zone = newYork;
+      assert.equal(subject.convertToZone(timezone).toString(), '2026-10-25T02:00:00');
+    });
   });
 
   suite('#fromData', function() {
