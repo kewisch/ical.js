@@ -727,6 +727,63 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // A month that has no day for the rule has no instance at any of the
+      // times of day either.
+      testRRULE('FREQ=MONTHLY;BYHOUR=9,17', {
+        dtStart: '2026-01-31T09:00:00',
+        max: 8,
+        dates: [
+          '2026-01-31T09:00:00',
+          '2026-01-31T17:00:00',
+          '2026-03-31T09:00:00',
+          '2026-03-31T17:00:00',
+          '2026-05-31T09:00:00',
+          '2026-05-31T17:00:00',
+          '2026-07-31T09:00:00',
+          '2026-07-31T17:00:00'
+        ]
+      });
+      testRRULE('FREQ=MONTHLY;BYDAY=1FR;BYHOUR=9,17', {
+        dtStart: '2026-01-02T09:00:00',
+        max: 8,
+        dates: [
+          '2026-01-02T09:00:00',
+          '2026-01-02T17:00:00',
+          '2026-02-06T09:00:00',
+          '2026-02-06T17:00:00',
+          '2026-03-06T09:00:00',
+          '2026-03-06T17:00:00',
+          '2026-04-03T09:00:00',
+          '2026-04-03T17:00:00'
+        ]
+      });
+      testRRULE('FREQ=MONTHLY;BYMONTHDAY=29,30;BYMINUTE=0,30', {
+        dtStart: '2026-01-29T09:00:00',
+        max: 8,
+        dates: [
+          '2026-01-29T09:00:00',
+          '2026-01-29T09:30:00',
+          '2026-01-30T09:00:00',
+          '2026-01-30T09:30:00',
+          '2026-03-29T09:00:00',
+          '2026-03-29T09:30:00',
+          '2026-03-30T09:00:00',
+          '2026-03-30T09:30:00'
+        ]
+      });
+      testRRULE('FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13;BYHOUR=9,17', {
+        dtStart: '2026-02-13T09:00:00',
+        max: 6,
+        dates: [
+          '2026-02-13T09:00:00',
+          '2026-02-13T17:00:00',
+          '2026-03-13T09:00:00',
+          '2026-03-13T17:00:00',
+          '2026-11-13T09:00:00',
+          '2026-11-13T17:00:00'
+        ]
+      });
+
       // Multiple BYMONTHDAYs, checks that we start on the right one.
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=6,12,18,24', {
         dtStart: '2024-04-03T01:00:00',
