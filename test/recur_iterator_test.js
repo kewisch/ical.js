@@ -477,6 +477,62 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // The months of BYMONTH are stepped through from the month of DTSTART on,
+      // so the ones before it must not come round again in the first year.
+      testRRULE('FREQ=MONTHLY;BYMONTH=3,5;BYDAY=TU', {
+        dtStart: '2026-05-05T09:00:00',
+        max: 9,
+        dates: [
+          '2026-05-05T09:00:00',
+          '2026-05-12T09:00:00',
+          '2026-05-19T09:00:00',
+          '2026-05-26T09:00:00',
+          '2027-03-02T09:00:00',
+          '2027-03-09T09:00:00',
+          '2027-03-16T09:00:00',
+          '2027-03-23T09:00:00',
+          '2027-03-30T09:00:00'
+        ]
+      });
+      testRRULE('FREQ=MONTHLY;BYMONTH=3,5;BYMONTHDAY=7,8', {
+        dtStart: '2026-05-07T09:00:00',
+        max: 6,
+        dates: [
+          '2026-05-07T09:00:00',
+          '2026-05-08T09:00:00',
+          '2027-03-07T09:00:00',
+          '2027-03-08T09:00:00',
+          '2027-05-07T09:00:00',
+          '2027-05-08T09:00:00'
+        ]
+      });
+      // The first BYMONTHDAY is a day the start month does not have.
+      testRRULE('FREQ=MONTHLY;BYMONTH=4;BYMONTHDAY=31,-3,2', {
+        dtStart: '2023-04-01T09:00:00',
+        max: 5,
+        dates: [
+          '2023-04-02T09:00:00',
+          '2023-04-28T09:00:00',
+          '2024-04-02T09:00:00',
+          '2024-04-28T09:00:00',
+          '2025-04-02T09:00:00'
+        ]
+      });
+      // The months do not have to be in order.
+      testRRULE('FREQ=MONTHLY;BYMONTH=5,3;BYDAY=TU', {
+        dtStart: '2026-03-24T09:00:00',
+        max: 7,
+        dates: [
+          '2026-03-24T09:00:00',
+          '2026-03-31T09:00:00',
+          '2026-05-05T09:00:00',
+          '2026-05-12T09:00:00',
+          '2026-05-19T09:00:00',
+          '2026-05-26T09:00:00',
+          '2027-03-02T09:00:00'
+        ]
+      });
+
       // The first day of the month must not be skipped when searching
       // for a date matching both BYMONTHDAY and BYDAY.
       testRRULE('FREQ=MONTHLY;BYMONTHDAY=1;BYDAY=WE', {
