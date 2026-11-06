@@ -49,8 +49,11 @@ jobs:
           gh release upload ${{ github.event.release.tag_name }} \
             dist/ical.js \
             dist/ical.min.js \
-            dist/ical.es5.cjs \
-            dist/ical.es5.min.cjs
+            dist/ical.cjs \
+            dist/ical.min.cjs \
+            dist/ical.browser.js \
+            dist/ical.browser.min.js \
+            dist/ical*.map
 
       - name: "npm publish"
         run: npm publish
