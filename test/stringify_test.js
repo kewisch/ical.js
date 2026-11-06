@@ -120,6 +120,22 @@ suite('ICAL.stringify', function() {
       assert.equal(subject.toICALString(), 'ATTENDEE;CN="X\\:":mailto:id');
     });
 
+    test('URI-like properties percent-encode ASCII control characters', function() {
+      let url = new ICAL.Property('url');
+      url.setValue('https://example.test/\0\t\r\n\x7f');
+      assert.equal(url.toICALString(), 'URL:https://example.test/%00%09%0D%0A%7F');
+
+      url.setValue('https://example.test/%0D%0A');
+      assert.equal(url.toICALString(), 'URL:https://example.test/%0D%0A');
+
+      let attendee = new ICAL.Property('attendee');
+      attendee.setValue('mailto:user@example.test\r\nBEGIN:VEVENT');
+      assert.equal(
+        attendee.toICALString(),
+        'ATTENDEE:mailto:user@example.test%0D%0ABEGIN:VEVENT'
+      );
+    });
+
     test('rfc6868 roundtrip', function() {
       let subject = new ICAL.Property('attendee');
       let input = "caret ^ dquote \" newline \n end";
