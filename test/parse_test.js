@@ -251,6 +251,31 @@ suite('parserv2', function() {
       assert.deepEqual(attendee.toJSON(), expected);
     });
 
+    test('with colon in quoted multi-value parameter', function() {
+      let line = 'X-A;MEMBER="a","b:c":v';
+      let property = ICAL.Property.fromString(line);
+
+      assert.deepEqual(property.getParameter('member'), ['a', 'b:c']);
+      assert.equal(property.getFirstValue(), 'v');
+      assert.equal(property.toICALString(), line);
+    });
+
+    test('with escape in quoted parameter', function() {
+      let line = 'X-A;PARAM="a\\;:":v';
+      let property = ICAL.Property.fromString(line);
+
+      assert.equal(property.getParameter('param'), 'a;:');
+      assert.equal(property.getFirstValue(), 'v');
+
+      // ICAL.stringify does not write the escape back, so the line settles on
+      // after a round trip and then stays the same.
+      let stringified = property.toICALString();
+      let reparsed = ICAL.Property.fromString(stringified);
+
+      assert.equal(reparsed.getFirstValue(), 'v');
+      assert.equal(reparsed.toICALString(), stringified);
+    });
+
     test('with quoted value', function() {
       let input = ';FMTTYPE="text/html":Here is HTML with signs like =;';
       let expected = {
