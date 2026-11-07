@@ -26,6 +26,61 @@ suite('vcard time', function() {
     });
   });
 
+  test('parses RFC 6350 date-and-or-time forms', function() {
+    let subject = ICAL.VCardTime.fromDateAndOrTimeString(
+      '19961022T141234',
+      'date-and-or-time'
+    );
+    assert.hasProperties(subject, {
+      year: 1996,
+      month: 10,
+      day: 22,
+      hour: 14,
+      minute: 12,
+      second: 34
+    });
+
+    subject = ICAL.VCardTime.fromDateAndOrTimeString(
+      '--1022T1400',
+      'date-and-or-time'
+    );
+    assert.hasProperties(subject, {
+      year: null,
+      month: 10,
+      day: 22,
+      hour: 14,
+      minute: 0,
+      second: null
+    });
+
+    subject = ICAL.VCardTime.fromDateAndOrTimeString(
+      'T-2200',
+      'date-and-or-time'
+    );
+    assert.hasProperties(subject, {
+      year: null,
+      month: null,
+      day: null,
+      hour: null,
+      minute: 22,
+      second: 0
+    });
+
+    subject = ICAL.VCardTime.fromDateAndOrTimeString(
+      '19961022T141234-0500',
+      'date-and-or-time'
+    );
+    assert.hasProperties(subject, {
+      year: 1996,
+      month: 10,
+      day: 22,
+      hour: 14,
+      minute: 12,
+      second: 34
+    });
+    assert.equal(subject.zone.toString(), '-05:00');
+  });
+
   suite('#utcOffset', function() {
     testSupport.useTimezones('America/New_York');
 
