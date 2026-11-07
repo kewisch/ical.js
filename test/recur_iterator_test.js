@@ -1081,6 +1081,63 @@ suite('recur_iterator', function() {
         ]
       });
 
+      testRRULE('FREQ=YEARLY;BYMONTH=3,6,9,12;BYMONTHDAY=-1', {
+        dates: [
+          '2026-03-31T09:00:00', '2026-06-30T09:00:00',
+          '2026-09-30T09:00:00', '2026-12-31T09:00:00',
+          '2027-03-31T09:00:00', '2027-06-30T09:00:00',
+          '2027-09-30T09:00:00', '2027-12-31T09:00:00'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMONTH=4,5;BYMONTHDAY=-1,1', {
+        dates: [
+          '2026-04-30T09:00:00', '2026-05-01T09:00:00',
+          '2026-05-31T09:00:00', '2027-04-01T09:00:00',
+          '2027-04-30T09:00:00', '2027-05-01T09:00:00',
+          '2027-05-31T09:00:00', '2028-04-01T09:00:00'
+        ]
+      });
+
+      // April has no 31st.
+      testRRULE('FREQ=YEARLY;BYMONTH=4,5;BYMONTHDAY=31', {
+        dates: [
+          '2026-05-31T09:00:00',
+          '2027-05-31T09:00:00',
+          '2028-05-31T09:00:00'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMONTHDAY=-13;BYDAY=FR,MO', {
+        dates: [
+          '2026-10-19T09:00:00', '2027-03-19T09:00:00',
+          '2027-06-18T09:00:00', '2027-07-19T09:00:00',
+          '2028-05-19T09:00:00', '2028-09-18T09:00:00'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;BYMONTH=1,2,4;BYMONTHDAY=-1;BYDAY=SA,SU,TU', {
+        dates: [
+          '2026-01-31T09:00:00', '2026-02-28T09:00:00',
+          '2027-01-31T09:00:00', '2027-02-28T09:00:00',
+          '2028-02-29T09:00:00', '2028-04-30T09:00:00'
+        ]
+      });
+
+      testRRULE('FREQ=YEARLY;INTERVAL=2;BYMONTH=2,4;BYMONTHDAY=-1', {
+        dates: [
+          '2026-02-28T09:00:00', '2026-04-30T09:00:00',
+          '2028-02-29T09:00:00', '2028-04-30T09:00:00',
+          '2030-02-28T09:00:00', '2030-04-30T09:00:00'
+        ]
+      });
+
+      // February 2026 has no 31st.
+      testRRULE('FREQ=YEARLY;BYMONTHDAY=31', {
+        dtStart: '2026-02-10T09:00:00',
+        noInstance: true
+      });
+
       //Every year the last day of February (rule with BYMONTH)
       testRRULE('FREQ=YEARLY;BYMONTHDAY=-1;BYMONTH=2', {
         dates: [
