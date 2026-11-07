@@ -232,6 +232,56 @@ suite('ICAL.Event', function() {
       });
       assert.ok(subject.strictExceptions);
     });
+
+    suite('with other series in the component\'s parent', function() {
+      let masterA;
+      let masterB;
+      let exceptionB;
+
+      setup(function() {
+        let root = new ICAL.Component(ICAL.parse(
+          'BEGIN:VCALENDAR\r\n' +
+          'VERSION:2.0\r\n' +
+          'BEGIN:VEVENT\r\n' +
+          'UID:series-a@example.com\r\n' +
+          'DTSTART:20260105T090000Z\r\n' +
+          'RRULE:FREQ=WEEKLY;COUNT=3\r\n' +
+          'END:VEVENT\r\n' +
+          'BEGIN:VEVENT\r\n' +
+          'UID:series-b@example.com\r\n' +
+          'RECURRENCE-ID:20260101T090000Z\r\n' +
+          'DTSTART:20260101T100000Z\r\n' +
+          'END:VEVENT\r\n' +
+          'BEGIN:VEVENT\r\n' +
+          'UID:series-b@example.com\r\n' +
+          'DTSTART:20260101T090000Z\r\n' +
+          'RRULE:FREQ=WEEKLY;COUNT=2\r\n' +
+          'END:VEVENT\r\n' +
+          'END:VCALENDAR\r\n'
+        ));
+        let vevents = root.getAllSubcomponents('vevent');
+        masterA = vevents[0];
+        exceptionB = vevents[1];
+        masterB = vevents[2];
+      });
+
+      test('does not relate exceptions of another series', function() {
+        let eventA = new ICAL.Event(masterA);
+        assert.deepEqual(Object.keys(eventA.exceptions), []);
+
+        let eventB = new ICAL.Event(masterB);
+        assert.deepEqual(Object.keys(eventB.exceptions), ['2026-01-01T09:00:00Z']);
+        assert.equal(eventB.exceptions['2026-01-01T09:00:00Z'].component, exceptionB);
+      });
+
+      test('does not throw with strict exceptions', function() {
+        let eventA = new ICAL.Event(masterA, { strictExceptions: true });
+        assert.deepEqual(Object.keys(eventA.exceptions), []);
+
+        let eventB = new ICAL.Event(masterB, { strictExceptions: true });
+        assert.deepEqual(Object.keys(eventB.exceptions), ['2026-01-01T09:00:00Z']);
+      });
+    });
   });
 
   suite('creating a event', function() {
