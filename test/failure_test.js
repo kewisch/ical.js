@@ -27,12 +27,4 @@ suite('Known failures', function() {
   testKnownFailure.only = function(message, testFn) {
     return testKnownFailure(message, testFn, true);
   };
-
-  // Escaped parameters are not correctly parsed
-  // Please see https://github.com/kewisch/ical.js/issues/669
-  testKnownFailure('Parameter escaping', function() {
-    let subject = ICAL.Property.fromString(`ATTENDEE;CN="Z\\;":mailto:z@example.org`);
-    assert.equal(subject.getParameter("cn"), "Z\\;");
-    assert.equal(subject.getFirstValue(), "mailto:z@example.org");
-  });
 });
