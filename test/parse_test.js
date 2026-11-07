@@ -165,16 +165,37 @@ suite('parserv2', function() {
   });
 
   suite('#_parseParameters', function() {
-    test('with processed text', function() {
+    test('preserves backslash escapes in untyped parameters', function() {
       let input = ';FOO=x\\na';
       let expected = {
-        'foo': 'x\na'
+        'foo': 'x\\na'
       };
 
       assert.deepEqual(
         subject._parseParameters(input, 0, ICAL.design.defaultSet)[0],
         expected
       );
+    });
+
+    test('preserves backslash escapes in quoted parameters', function() {
+      let input = ';CN="Z\\;"';
+      let expected = {
+        'cn': 'Z\\;'
+      };
+
+      assert.deepEqual(
+        subject._parseParameters(input, 0, ICAL.design.defaultSet)[0],
+        expected
+      );
+    });
+
+    test('parses quoted parameter escapes in a property', function() {
+      let property = ICAL.Property.fromString(
+        'ATTENDEE;CN="Z\\;":mailto:z@example.org'
+      );
+
+      assert.equal(property.getParameter('cn'), 'Z\\;');
+      assert.equal(property.getFirstValue(), 'mailto:z@example.org');
     });
 
     test('with multiple vCard TYPE parameters', function() {
