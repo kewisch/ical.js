@@ -1081,6 +1081,11 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // Feb 29 only exists in leap years
+      testRRULE('FREQ=YEARLY;BYMONTH=2', {
+        dates: ['2024-02-29T09:00:00', '2028-02-29T09:00:00', '2032-02-29T09:00:00']
+      });
+
       //Every year the last day of February (rule with BYMONTH)
       testRRULE('FREQ=YEARLY;BYMONTHDAY=-1;BYMONTH=2', {
         dates: [
