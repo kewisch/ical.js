@@ -100,6 +100,21 @@ suite('component_parser', function() {
       });
     });
 
+    test('dispatches all calendars in a stream and completes once', function() {
+      let source = ['first', 'second'].map(uid => [
+        'BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT', 'UID:' + uid,
+        'END:VEVENT', 'END:VCALENDAR'
+      ].join('\r\n')).join('\r\n');
+      for (let input of [source, ICAL.parse(source)]) {
+        let calls = [];
+        let parser = new ICAL.ComponentParser();
+        parser.onevent = event => calls.push(event.uid);
+        parser.oncomplete = () => calls.push('complete');
+        parser.process(input);
+        assert.deepEqual(calls, ['first', 'second', 'complete']);
+      }
+    });
+
     suite('alternate input', function() {
       test('parsing component from string', function(done) {
         subject = new ICAL.ComponentParser();
