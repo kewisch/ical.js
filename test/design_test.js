@@ -20,6 +20,18 @@ suite('design', function() {
     subject = ICAL.design.defaultSet;
   });
 
+  test('reads escaped semicolons in vCard 4 photo URIs and notes', function() {
+    let card = new ICAL.Component(ICAL.parse([
+      'BEGIN:VCARD', 'VERSION:4.0', 'FN:Example', 'NOTE:left\\;right',
+      'PHOTO:data:image/jpeg\\;base64\\,YQ==', 'END:VCARD'
+    ].join('\r\n')));
+    let copy = new ICAL.Component(ICAL.parse(card.toString()));
+    for (let item of [card, copy]) {
+      assert.equal(item.getFirstPropertyValue('photo'), 'data:image/jpeg;base64,YQ==');
+      assert.equal(item.getFirstPropertyValue('note'), 'left;right');
+    }
+  });
+
   suite('types', function() {
 
     suite('binary', function() {
