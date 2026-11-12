@@ -2,6 +2,23 @@ suite('icaltime', function() {
   let Time = ICAL.Time;
   let Timezone = ICAL.Timezone;
 
+  test('preserves four-digit years through date and instant conversions', function() {
+    for (let year of ['0001', '0096', '0099', '0100', '0999']) {
+      let day = year === '0096' ? '02-29' : '01-01';
+      let stamp = year + '-' + day + 'T12:34:56Z';
+      let utc = Time.fromString(stamp);
+      assert.equal(utc.toJSDate().toISOString(), stamp.replace('Z', '.000Z'));
+      assert.equal(utc.toString(), stamp);
+      assert.equal(utc.toICALString(), stamp.replace(/[-:]/g, ''));
+      let floating = Time.fromString(stamp.slice(0, -1)).toJSDate();
+      assert.equal(floating.getFullYear(), Number(year));
+      assert.equal(floating.getHours(), 12);
+      let date = Time.fromString(year + '-' + day);
+      assert.equal(date.toJSDate().getFullYear(), Number(year));
+      assert.equal(date.toICALString(), (year + day).replace('-', ''));
+    }
+  });
+
   test('round trip', function() {
     let f = new Time({
       second: 1,
