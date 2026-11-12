@@ -434,6 +434,20 @@ END:VTIMEZONE`));
   });
 
   suite('#utcOffset', function() {
+    test('uses the first TZOFFSETFROM before the first change in either direction', function() {
+      let zone = new ICAL.Timezone(new ICAL.Component(ICAL.parse([
+        'BEGIN:VTIMEZONE', 'TZID:Test/Shift', 'BEGIN:STANDARD',
+        'DTSTART:20260102T000000', 'TZOFFSETFROM:+0530', 'TZOFFSETTO:+0630',
+        'END:STANDARD', 'END:VTIMEZONE'
+      ].join('\r\n'))));
+      let utc = ICAL.Time.fromString('2026-01-01T12:00:00Z');
+      let local = ICAL.Time.fromString('2026-01-01T17:30:00');
+      local.zone = zone;
+      assert.equal(local.toUnixTime(), utc.toUnixTime());
+      assert.equal(utc.convertToZone(zone).toString(), '2026-01-01T17:30:00');
+      assert.equal(ICAL.Time.fromString('2026-01-03T12:00:00Z').convertToZone(zone).hour, 18);
+    });
+
     test('empty vtimezone', function() {
       let subject = new ICAL.Timezone({
         component: new ICAL.Component('vtimezone')
