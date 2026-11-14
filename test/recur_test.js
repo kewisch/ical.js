@@ -454,6 +454,12 @@ suite('recur', function() {
       assert.equal(rec.rscale, "ISLAMIC-CIVIL");
     });
 
+    test('extra structured recur values are serialized', function() {
+      let rec = ICAL.Recur.fromString("FREQ=YEARLY;RSCALE=ISLAMIC-CIVIL;SKIP=FORWARD");
+      assert.equal(rec.toString(), "FREQ=YEARLY;RSCALE=ISLAMIC-CIVIL;SKIP=FORWARD");
+      assert.deepEqual(rec.toJSON(), { freq: "YEARLY", rscale: "ISLAMIC-CIVIL", skip: "FORWARD" });
+    });
+
     test('single BYxxx value from string', function() {
       let rec = ICAL.Recur.fromString("FREQ=MINUTELY;BYSECOND=5");
       let comp = rec.getComponent("bysecond");
