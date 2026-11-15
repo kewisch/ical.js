@@ -1308,6 +1308,42 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // Week 1 is the first week with at least four days in the year, also
+      // when the week starts on a day other than Monday. With WKST=SU the
+      // week holding Thursday 2026-01-01 has only three days in 2026.
+      testRRULE('FREQ=YEARLY;BYWEEKNO=1;BYDAY=SU;WKST=SU', {
+        dates: [
+          '2022-01-02T09:00:00',
+          '2023-01-01T09:00:00',
+          '2023-12-31T09:00:00',
+          '2024-12-29T09:00:00',
+          '2026-01-04T09:00:00',
+          '2027-01-03T09:00:00'
+        ]
+      });
+
+      //yearly, negative byweekNo, byDay, week starting on Thursday
+      testRRULE('FREQ=YEARLY;BYWEEKNO=-1;BYDAY=TH;WKST=TH', {
+        dates: [
+          '2021-12-23T09:00:00',
+          '2022-12-22T09:00:00',
+          '2023-12-28T09:00:00',
+          '2024-12-26T09:00:00',
+          '2025-12-25T09:00:00',
+          '2026-12-24T09:00:00'
+        ]
+      });
+
+      //yearly, byweekNo 53 ending in January, week starting on Sunday
+      testRRULE('FREQ=YEARLY;BYWEEKNO=53;BYDAY=SA;WKST=SU', {
+        dates: [
+          '2026-01-03T09:00:00',
+          '2032-01-03T09:00:00',
+          '2037-01-03T09:00:00',
+          '2043-01-03T09:00:00'
+        ]
+      });
+
       //yearly, byDay,byMonthday
       testRRULE('FREQ=YEARLY;BYDAY=+1MO;BYMONTHDAY=7', {
         dtStart: '2015-01-01T08:00:00',
