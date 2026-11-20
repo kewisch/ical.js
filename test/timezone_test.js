@@ -98,7 +98,7 @@ suite('timezone', function() {
   sanityCheckSuite({
     time: { year: 2004, month: 10, day: 31, hour: 1 },
     offsets: {
-      'America/Denver': -7
+      'America/Denver': -6
     }
   });
 
@@ -114,8 +114,16 @@ suite('timezone', function() {
   });
 
   sanityCheckSuite({
-    // just after DST
+    // At 01:00 only the local RDATE is still in its repeated hour.
     time: { year: 1980, month: 1, day: 1, hour: 1 },
+    offsets: {
+      'Makebelieve/RDATE_test': -4,
+      'Makebelieve/RDATE_utc_test': -5
+    }
+  });
+
+  sanityCheckSuite({
+    time: { year: 1980, month: 1, day: 1, hour: 2 },
     offsets: {
       'Makebelieve/RDATE_test': -5,
       'Makebelieve/RDATE_utc_test': -5
@@ -230,6 +238,26 @@ suite('timezone', function() {
 
       let subject3 = subject2.convertToZone(ICAL.Timezone.localTimezone);
       assert.equal(subject3.toString(), '2012-03-11T01:59:00');
+    });
+
+    function toUtc(str) {
+      let local = ICAL.Time.fromString(str);
+      local.zone = timezone;
+      return local.convertToZone(ICAL.Timezone.utcTimezone).toString();
+    }
+
+    timezoneTest('Europe/Berlin', 'convert repeated local time to utc', function() {
+      assert.equal(toUtc('2026-10-25T01:59:59'), '2026-10-24T23:59:59Z');
+      assert.equal(toUtc('2026-10-25T02:00:00'), '2026-10-25T00:00:00Z');
+      assert.equal(toUtc('2026-10-25T02:59:59'), '2026-10-25T00:59:59Z');
+      assert.equal(toUtc('2026-10-25T03:00:00'), '2026-10-25T02:00:00Z');
+    });
+
+    timezoneTest('America/New_York', 'convert repeated local time to utc', function() {
+      assert.equal(toUtc('2026-11-01T00:59:59'), '2026-11-01T04:59:59Z');
+      assert.equal(toUtc('2026-11-01T01:00:00'), '2026-11-01T05:00:00Z');
+      assert.equal(toUtc('2026-11-01T01:59:59'), '2026-11-01T05:59:59Z');
+      assert.equal(toUtc('2026-11-01T02:00:00'), '2026-11-01T07:00:00Z');
     });
 
     function fromUtc(str) {
@@ -451,6 +479,22 @@ END:VTIMEZONE`));
       });
 
       assert.equal(subject.utcOffset(ICAL.Time.fromString('2012-01-01')), 0);
+    });
+
+    test('first observance moves clocks back half an hour', function() {
+      let zone = new ICAL.Timezone(ICAL.Component.fromString([
+        'BEGIN:VTIMEZONE',
+        'TZID:Test',
+        'BEGIN:STANDARD',
+        'DTSTART:20260101T020000',
+        'TZOFFSETFROM:+0230',
+        'TZOFFSETTO:+0200',
+        'END:STANDARD',
+        'END:VTIMEZONE'
+      ].join('\r\n')));
+
+      assert.equal(zone.utcOffset(ICAL.Time.fromString('2026-01-01T01:30:00')), 9000);
+      assert.equal(zone.utcOffset(ICAL.Time.fromString('2026-01-01T02:00:00')), 7200);
     });
   });
 
