@@ -80,6 +80,15 @@ suite('ICAL.stringify', function() {
       delete ICAL.design.defaultSet.property.custom;
     });
 
+    test('invalid value type', function() {
+      let subject = new ICAL.Property('x-foo');
+      subject.resetType('text:z\nORGANIZER:mailto:evil@example.com');
+      subject.setValue('hello');
+      assert.throws(function() {
+        subject.toICALString();
+      }, /Invalid value type/);
+    });
+
     test('property with multiple parameter values', function() {
       ICAL.design.defaultSet.property.custom = { defaultType: 'text' };
       ICAL.design.defaultSet.param.type = { multiValue: ',' };

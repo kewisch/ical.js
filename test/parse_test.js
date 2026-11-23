@@ -164,6 +164,34 @@ suite('parserv2', function() {
 
   });
 
+  suite('VALUE parameter', function() {
+    test('valid value type', function() {
+      let ical = 'BEGIN:VEVENT\r\n' +
+                 'DTSTART;VALUE=DATE:20261120\r\n' +
+                 'X-FOO;VALUE="INTEGER":5\r\n' +
+                 'END:VEVENT\r\n';
+      let component = new ICAL.Component(subject(ical));
+      assert.equal(component.getFirstProperty('dtstart').type, 'date');
+      assert.equal(component.getFirstProperty('x-foo').type, 'integer');
+    });
+
+    test('invalid value type is ignored', function() {
+      let ical = 'BEGIN:VEVENT\r\n' +
+                 'X-FOO;VALUE="text:z^nORGANIZER:mailto:evil@example.com^nX-BAR":hello\r\n' +
+                 'DTSTART;VALUE="DATE;X=1":20261120\r\n' +
+                 'END:VEVENT\r\n';
+      let component = new ICAL.Component(subject(ical));
+      let prop = component.getFirstProperty('x-foo');
+      assert.equal(prop.type, 'unknown');
+      assert.equal(prop.getFirstValue(), 'hello');
+      assert.equal(component.getFirstProperty('dtstart').type, 'date-time');
+
+      let output = component.toString();
+      assert.notMatch(output, /^ORGANIZER/m);
+      assert.include(output, 'X-FOO:hello');
+    });
+  });
+
   suite('#_parseParameters', function() {
     test('with processed text', function() {
       let input = ';FOO=x\\na';
