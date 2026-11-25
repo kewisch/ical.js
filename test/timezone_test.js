@@ -141,11 +141,12 @@ suite('timezone', function() {
   });
 
   sanityCheckSuite({
-    // just after DST
+    // 02:00 falls inside the repeated hour after the 1990-01-01T07:00Z
+    // fallback; the first occurrence uses the pre-transition offset.
     time: { year: 1990, month: 1, day: 1, hour: 2 },
     offsets: {
-      'Makebelieve/RDATE_test': -5,
-      'Makebelieve/RDATE_utc_test': -5
+      'Makebelieve/RDATE_test': -4,
+      'Makebelieve/RDATE_utc_test': -4
     }
   });
 
