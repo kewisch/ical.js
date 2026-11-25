@@ -1316,6 +1316,52 @@ suite('recur_iterator', function() {
         ]
       });
 
+      // Every 20th Monday of the year (RFC 5545 example).
+      testRRULE('FREQ=YEARLY;BYDAY=20MO;COUNT=3', {
+        dtStart: '1997-05-19T09:00:00',
+        byCount: true,
+        dates: [
+          '1997-05-19T09:00:00',
+          '1998-05-18T09:00:00',
+          '1999-05-17T09:00:00'
+        ]
+      });
+
+      // Every 20th Monday from the end of the year.
+      testRRULE('FREQ=YEARLY;BYDAY=-20MO;COUNT=3', {
+        dtStart: '1997-05-19T09:00:00',
+        byCount: true,
+        dates: [
+          '1997-08-18T09:00:00',
+          '1998-08-17T09:00:00',
+          '1999-08-16T09:00:00'
+        ]
+      });
+
+      // Every 53rd Monday of the year, only in years that have one.
+      testRRULE('FREQ=YEARLY;BYDAY=53MO;COUNT=4', {
+        dtStart: '1997-05-19T09:00:00',
+        byCount: true,
+        dates: [
+          '2001-12-31T09:00:00',
+          '2007-12-31T09:00:00',
+          '2012-12-31T09:00:00',
+          '2018-12-31T09:00:00'
+        ]
+      });
+
+      // Every 53rd Monday from the end of the year, only in years that have one.
+      testRRULE('FREQ=YEARLY;BYDAY=-53MO;COUNT=4', {
+        dtStart: '1997-05-19T09:00:00',
+        byCount: true,
+        dates: [
+          '2001-01-01T09:00:00',
+          '2007-01-01T09:00:00',
+          '2012-01-02T09:00:00',
+          '2018-01-01T09:00:00'
+        ]
+      });
+
       // Invalid recurrence rule. The first Monday can never fall later than the
       // 7th.
       testRRULE('FREQ=YEARLY;BYMONTHDAY=15,16,17,18,19,20,21;BYDAY=1MO', {
