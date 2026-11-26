@@ -261,6 +261,77 @@ suite('timezone', function() {
       assert.equal(toUtc('2026-11-01T02:00:00'), '2026-11-01T07:00:00Z');
     });
 
+    timezoneTest('Australia/Sydney', 'convert date-time to utc in the repeated hour', function() {
+      // DST ends at 2026-04-04T16:00:00Z, 03:00 local goes back to 02:00
+      assert.equal(toUtc('2026-04-05T01:59:59'), '2026-04-04T14:59:59Z');
+      assert.equal(toUtc('2026-04-05T02:00:00'), '2026-04-04T15:00:00Z');
+      assert.equal(toUtc('2026-04-05T02:30:00'), '2026-04-04T15:30:00Z');
+      assert.equal(toUtc('2026-04-05T02:59:59'), '2026-04-04T15:59:59Z');
+      assert.equal(toUtc('2026-04-05T03:00:00'), '2026-04-04T17:00:00Z');
+
+      // DST starts at 2026-10-03T16:00:00Z, 02:00 local goes forward to 03:00
+      assert.equal(toUtc('2026-10-04T01:59:59'), '2026-10-03T15:59:59Z');
+      assert.equal(toUtc('2026-10-04T03:00:00'), '2026-10-03T16:00:00Z');
+    });
+
+    timezoneTest('Australia/Lord_Howe', 'convert date-time to utc in the repeated half hour', function() {
+      // DST ends at 2026-04-04T15:00:00Z, 02:00 local goes back to 01:30
+      assert.equal(toUtc('2026-04-05T01:29:59'), '2026-04-04T14:29:59Z');
+      assert.equal(toUtc('2026-04-05T01:30:00'), '2026-04-04T14:30:00Z');
+      assert.equal(toUtc('2026-04-05T01:45:00'), '2026-04-04T14:45:00Z');
+      assert.equal(toUtc('2026-04-05T01:59:59'), '2026-04-04T14:59:59Z');
+      assert.equal(toUtc('2026-04-05T02:00:00'), '2026-04-04T15:30:00Z');
+
+      // Both occurrences still convert back to the same local time
+      assert.equal(fromUtc('2026-04-04T14:45:00Z'), '2026-04-05T01:45:00');
+      assert.equal(fromUtc('2026-04-04T15:15:00Z'), '2026-04-05T01:45:00');
+
+      // DST starts at 2026-10-03T15:30:00Z, 02:00 local goes forward to 02:30
+      assert.equal(toUtc('2026-10-04T01:59:59'), '2026-10-03T15:29:59Z');
+      assert.equal(toUtc('2026-10-04T02:30:00'), '2026-10-03T15:30:00Z');
+    });
+
+    test('convert date-time to utc in the repeated hour between two standard times', function() {
+      // Europe/Moscow went from +04:00 back to +03:00 on 2014-10-26, both
+      // observances are STANDARD.
+      let moscow = new ICAL.Timezone(ICAL.Component.fromString([
+        'BEGIN:VTIMEZONE',
+        'TZID:Europe/Moscow',
+        'BEGIN:STANDARD',
+        'TZNAME:MSK',
+        'TZOFFSETFROM:+0300',
+        'TZOFFSETTO:+0400',
+        'DTSTART:20110327T020000',
+        'END:STANDARD',
+        'BEGIN:STANDARD',
+        'TZNAME:MSK',
+        'TZOFFSETFROM:+0400',
+        'TZOFFSETTO:+0300',
+        'DTSTART:20141026T020000',
+        'END:STANDARD',
+        'END:VTIMEZONE'
+      ].join('\r\n')));
+
+      function toUtcIn(str, zone) {
+        let local = ICAL.Time.fromString(str);
+        local.zone = zone;
+        return local.convertToZone(ICAL.Timezone.utcTimezone).toString();
+      }
+
+      // 2014-10-25T22:00:00Z, 02:00 local goes back to 01:00
+      assert.equal(toUtcIn('2014-10-26T00:59:59', moscow), '2014-10-25T20:59:59Z');
+      assert.equal(toUtcIn('2014-10-26T01:00:00', moscow), '2014-10-25T21:00:00Z');
+      assert.equal(toUtcIn('2014-10-26T01:30:00', moscow), '2014-10-25T21:30:00Z');
+      assert.equal(toUtcIn('2014-10-26T01:59:59', moscow), '2014-10-25T21:59:59Z');
+      assert.equal(toUtcIn('2014-10-26T02:00:00', moscow), '2014-10-25T23:00:00Z');
+
+      // Both occurrences still convert back to the same local time
+      let first = ICAL.Time.fromString('2014-10-25T21:30:00Z');
+      let second = ICAL.Time.fromString('2014-10-25T22:30:00Z');
+      assert.equal(first.convertToZone(moscow).toString(), '2014-10-26T01:30:00');
+      assert.equal(second.convertToZone(moscow).toString(), '2014-10-26T01:30:00');
+    });
+
     function fromUtc(str) {
       return ICAL.Time.fromString(str).convertToZone(timezone).toString();
     }
