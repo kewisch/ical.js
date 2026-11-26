@@ -67,10 +67,10 @@
     "test-all": "npm run test-unit && npm run test-acceptance && npm run test-performance && npm run test-browser",
     "build": "rollup -c",
     "lint": "eslint",
-    "jsdoc": "rm -rf docs/api && jsdoc --configure jsdoc-prepare.json && rm -rf docs/api && jsdoc --configure jsdoc.json --verbose",
+    "jsdoc": "node tools/jsdoc-build.cjs",
     "validator": "node tools/scriptutils.js replace-unpkg tools/validator.html docs/validator.html",
     "recurtester": "node tools/scriptutils.js replace-unpkg tools/recur-tester.html docs/recur-tester.html",
-    "ghpages": "npm run jsdoc && npm run validator && npm run recurtester"
+    "ghpages": "node tools/jsdoc-build.cjs --base-path /ical.js/api/ && npm run validator && npm run recurtester"
   },
   "exports": {
     "import": "./dist/ical.js",
